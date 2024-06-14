@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
+
+html,
+body {
+	height: 100%;
+	scroll-behavior: smooth;
+	font-family: 'Questrial', sans-serif !important;
+}
+
+:root {
+	min-height: 100vh;
+	font-size: 14px;
+	font-family: 'Questrial', sans-serif !important;
+}
+
+body {
+  margin: 0;
+  font-family: 'Questrial', sans-serif;
+	font-weight: 400;
+  font-style: normal;
+	font-optical-sizing: auto;
+	font-variation-settings:
+    "wdth" 100,
+    "YTLC" 500;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 62.5%;
+	line-height: 1.875rem;
+  background-color: #FFFFFF;
+	--color-primary: #43A749;
+	--color-light-green: #8DC467;
+	--color-secondary: #CE9938;
+	--color-white: #ffffff;
+	--color-black: #000000;
+
+	--font-bigger: 1.5rem;
+	scroll-behavior: smooth;
+}
+
+a,
+a:link,
+a:visited {
+	text-decoration: none;
+	color: inherit;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0;
+}
+
+h1, h2, h3, h4, h5 {
+	font-family: 'Nunito Sans', sans-serif;
+}
+
+h1 {
+	font-size: 50px;
+	font-weight: 800;
+}
+h2 {
+	font-size: 36px;
+  font-weight: 800;
+}
+h3 {
+	font-size: 30px;
+  font-weight: 800;
+}
+h4 {
+	font-size: 24px;
+  font-weight: 800;
+}
+h5 {
+font-size: 18px;
+  font-weight: 400;
+}
+
+
+button {
+  cursor: pointer;
+	font-family: 'Questrial', sans-serif;
+}
+
+// reusable styles
+.space-between {
+	display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-start {
+  align-items: flex-start;
+}
+
+.small-gap {
+	display: flex;
+  align-items: center;
+	gap: 0.938rem;
+}
+
+.underline {
+	display: block;
+	background-color: var(--color-secondary);
+	height: 6px;
+	width: 60%;
+}
