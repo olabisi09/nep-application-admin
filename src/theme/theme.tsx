@@ -5,26 +5,28 @@ export const Theme: FC<PropsWithChildren> = ({ children }) => {
   return (
     <ConfigProvider
       theme={{
+        token: {
+          fontFamily: "Inter",
+          colorPrimary: "#173C19",
+          colorPrimaryHover: "#E7F5E8",
+        },
         components: {
           Table: {
-            // borderColor: "#fffff",
-            headerBg: "#ffffff",
+            headerBg: "#E7F5E8",
             headerBorderRadius: 0,
-            // cellPaddingInline: 20,
-            // cellPaddingBlock: 10,
-            // footerBg: "#11643C",
-            // footerColor: "#011602",
-            fontFamily: "Nunito Sans",
           },
-            Modal:{
+          Modal: {
             padding: 50,
             paddingLG: 50,
             paddingMD: 50,
-           
-           },
-          // Spin: {
-          //   colorPrimary: "#ffffff",
-          // },
+          },
+          Menu: {
+            itemHoverBg: "#E7F5E8",
+            itemActiveBg: "#E7F5E8",
+            itemBorderRadius: 16,
+            itemHoverColor: "#173C19",
+            lineWidth: 0,
+          },
         },
       }}
     >

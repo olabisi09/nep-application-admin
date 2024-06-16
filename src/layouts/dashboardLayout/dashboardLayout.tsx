@@ -21,7 +21,6 @@ const DashboardLayout = () => {
         onClose={handleClose}
         open={openSidebar}
         width={"70%"}
-        style={{ fontFamily: "BRFirma-Medium, sans-serif", background:'#43A749' }}
       >
         <Sidebar />
       </Drawer>
