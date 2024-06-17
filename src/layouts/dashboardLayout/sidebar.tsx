@@ -13,8 +13,16 @@ const Sidebar = () => {
       label: "User Management",
       icon: <Settings />,
       children: [
-        { key: "addUsers", label: <a href="/">Add Users</a>, icon: <Line /> },
-        { key: "addRoles", label: "Add Roles", icon: <Line /> },
+        {
+          key: "addUsers",
+          label: <a href="/admin-users">Add Users</a>,
+          icon: <Line />,
+        },
+        {
+          key: "addRoles",
+          label: <a href="/admin-roles">Add Roles</a>,
+          icon: <Line />,
+        },
       ],
     },
     {

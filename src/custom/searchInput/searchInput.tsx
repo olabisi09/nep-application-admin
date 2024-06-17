@@ -1,4 +1,4 @@
-import {  InputHTMLAttributes } from "react";
+import { InputHTMLAttributes } from "react";
 import { ReactComponent as SearchIcon } from "../../assets/search-real.svg";
 import styles from "./searchInut.module.scss";
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
@@ -6,9 +6,8 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   width?: string;
 }
 const SearchInput: React.FC<Props> = ({ placeholder, width, ...rest }) => {
- 
   return (
-    <form className={styles.searchContainer} >
+    <form className={styles.searchContainer}>
       <input
         type="text"
         className={styles.searchInput}
@@ -16,7 +15,7 @@ const SearchInput: React.FC<Props> = ({ placeholder, width, ...rest }) => {
         style={{ width: width ? width : "30rem" }}
         {...rest}
       />
-      
+
       <button className={styles.searchIcon} type="button">
         <SearchIcon />
       </button>

@@ -6,10 +6,11 @@ export const routes = {
     setup: {
       home: "/",
       facultySetup: "/faculty-setup",
-      studentLife: "/student-life",
-  
     },
-  
+    userMgt: {
+      addUsers: "/admin-users",
+      addRoles: "/admin-roles",
+    },
     onboarding: "/onboarding",
   };
   

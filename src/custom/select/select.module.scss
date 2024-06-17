@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .select {
+    border: 0.5px solid #D1D2D1;
+    border-radius: 4px;
+    padding-inline: 0.714rem;
+    padding-block: 1rem;
+  }
+  
+  label {
+    color: var(--color-black);
+    font-size: 16px;
+    font-weight: bold;
+    width: 100%;
+    // margin-block-end: 0.5rem;
+    text-align: start !important;
+  }
+  
+
+  .asterisk {
+    color: red;
+    font-weight: 700;
+  }
+  
+  

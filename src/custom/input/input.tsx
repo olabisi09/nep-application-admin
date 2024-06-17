@@ -2,6 +2,7 @@ import { Field, FieldProps } from "formik";
 import React, { ChangeEventHandler } from "react";
 
 import styles from "./input.module.scss";
+import classNames from "classnames";
 
 interface ComponentProps {
   label: string;
@@ -68,7 +69,7 @@ const Input: React.FC<ComponentProps> = (props) => {
               type={type}
               placeholder={placeholder}
               disabled={disabled}
-              className={inputClassName}
+              className={classNames(styles.customInput, inputClassName)}
             />
           )}
 

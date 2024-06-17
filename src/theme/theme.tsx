@@ -16,9 +16,12 @@ export const Theme: FC<PropsWithChildren> = ({ children }) => {
             headerBorderRadius: 0,
           },
           Modal: {
-            padding: 50,
-            paddingLG: 50,
-            paddingMD: 50,
+            padding: 0,
+            paddingContentHorizontal: 0,
+            paddingContentVertical: 0,
+            //headerBg: "#E7F5E8",
+            titleColor: "#2D7832",
+            titleFontSize: 20,
           },
           Menu: {
             itemHoverBg: "#E7F5E8",

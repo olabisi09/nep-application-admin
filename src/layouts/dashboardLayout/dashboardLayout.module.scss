@@ -35,11 +35,13 @@
 }
 
 .children {
+  height: 100%;
   padding-inline: 3.69rem;
   // padding-inline-end: 7.56rem;
   padding-block: 2rem;
   display: flex;
   flex-direction: column;
+  background-color: #F6F6F6;
 
   @media (min-width: 2000px) {
     padding-inline-start: 15rem;
@@ -114,7 +116,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-block: 2.9rem;
+  min-height: 5.714rem;
+  padding-block: 1rem;
   padding-inline-start: 3.75rem;
   padding-inline-end: 2.5rem;
   border-block-end: 1px solid #e5e6e6;
@@ -350,29 +353,28 @@
   background-color: #2D7832;
   padding-block: 1.429rem;
   padding-inline: 1.429rem;
+  min-height: 5.714rem;
 }
 
 .search {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  border: 1px solid var(--color-primary);
+  gap: 8px;
+  border: 0.5px solid #BDBDC2;
   color: var(--color-primary);
-  border-radius: 10px;
-  padding-block: 0.5rem;
-  padding-inline: 0.5rem;
+  border-radius: 4px;
+  padding-block: 0.857rem;
+  padding-inline: 0.714rem;
+  width: 22.857rem;
 
-  & input {
+  & .headerInput {
     border: none;
     outline: none;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    width: 100%;
+    color: #181B24;
+  }
 
-    &::placeholder {
-      color: var(--color-primary);
-    }
+  @media (max-width: 912px) {
+    width: auto;
   }
 }
 .avatar {
