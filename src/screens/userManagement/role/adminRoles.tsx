@@ -98,7 +98,6 @@ const AdminRoles = () => {
         <Table
           dataSource={data}
           columns={columns}
-          tableLayout="fixed"
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}
         />
