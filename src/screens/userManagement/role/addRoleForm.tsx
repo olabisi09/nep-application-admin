@@ -6,7 +6,7 @@ const AddRoleForm = () => {
     <section className="fields">
       <Input name="role" label="Role" placeholder="Input role" />
       <Select name="status" label="Status" placeholder="Select status" />
-      <div>fefwb</div>
+      <div>add role</div>
     </section>
   );
 };
