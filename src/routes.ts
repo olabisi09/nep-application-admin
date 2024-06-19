@@ -1,7 +1,8 @@
 export const routes = {
     auth: {
-      login: "/login",
-      register: "/register",
+      login: "/",
+      forgotPassword: "/forgot-password",
+      resetPassword: "/reset-password"
     },
     setup: {
       home: "/",
