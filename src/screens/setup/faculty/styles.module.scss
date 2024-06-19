@@ -1,22 +1,76 @@
 .row {
-    margin-block-start: 3rem;
-    border: solid 2px #e4e7ec;
-    border-radius: 1rem;
-    overflow: hidden;
+  margin-block-start: 3rem;
+  border: solid 2px #e4e7ec;
+  border-radius: 1rem;
+  overflow: hidden;
+  //   width: 50%;
+}
+.row tr > td {
+  @media (max-width: 480px) {
+    padding: 5px 10px !important;
+    font-size: 1rem;
   }
-  .row tr > td {
-    @media (max-width: 480px) {
-      padding: 5px 10px !important;
-      font-size: 1rem;
-    }
+}
+
+.row tr > th {
+  background-color: #e7f5e8 !important;
+
+  @media (max-width: 480px) {
+    padding: 5px !important;
+    font-size: 1rem;
   }
-  
-  .row tr > th {
-    background-color: #f9fafb !important;
-  
-    @media (max-width: 480px) {
-      padding: 5px !important;
-      font-size: 1rem;
-    }
-  }
-  
+}
+
+.card {
+  width: 70%;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 2rem;
+}
+.inside {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.inside div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+//modal styles
+.modalHeading {
+  // background-color: #E7F5E8;
+  // padding-block: 2rem;
+}
+.btnSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-block-start: 2rem;
+  gap: 2rem;
+  flex-direction: row;
+  width: 100%;
+}
+
+.btnWidth {
+  display: flex;
+  gap: 2rem;
+  // width: 60%; /* To make sure the container aligns the buttons correctly */
+  justify-content: flex-end;
+}
+
+.whiteBtn {
+  background-color: #ffffff !important;
+  color: var(--color-primary) !important;
+  border: solid 1px var(--color-primary);
+  // width: 25%;
+  box-sizing: border-box; /* To include padding and border in width */
+}
+
+.modalHeading{
+    color: #2D7832;
+    font-weight: 700;
+    font-size: 2rem;
+}

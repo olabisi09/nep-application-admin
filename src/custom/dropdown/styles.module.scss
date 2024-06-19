@@ -1,6 +1,4 @@
 .dropdown {
-    font-family: "Roboto", sans-serif;
-    // width: 25.1875rem;
     background-color: #FFF;
     border: 1px solid #E5E6E6;
     display: flex;
@@ -9,8 +7,7 @@
     padding-block: 1.5rem;
     padding-inline: 1.5rem;
     color: #242021!important;
-    font-size: 1.6rem;
-    min-width: 16rem;
+    font-size: 1rem;
   
   
     @media (max-width: 768px) {
