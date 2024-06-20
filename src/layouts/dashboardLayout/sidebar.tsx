@@ -30,16 +30,16 @@ const Sidebar = () => {
       label: "Setup Bio-Data",
       icon: <Settings />,
       children: [
-        { key: "addTitle", label: "Add Title", icon: <Line /> },
-        { key: "addGender", label: "Add Gender", icon: <Line /> },
+        { key: "addTitle", label: <NavLink to="/title-setup">Add Title</NavLink>, icon: <Line /> },
+        { key: "addGender", label:<NavLink to="/gender-setup">Add Gender</NavLink>, icon: <Line /> },
         {
           key: "addMaritalStatus",
-          label: "Add Marital Status",
+          label:<NavLink to="/marital-status-setup">Add Marital Status</NavLink>,
           icon: <Line />,
         },
-        { key: "addCountry", label: "Add Country", icon: <Line /> },
-        { key: "addState", label: "Add State", icon: <Line /> },
-        { key: "addLGA", label: "Add LGA", icon: <Line /> },
+        { key: "addCountry", label:<NavLink to="/country-setup">Add Country</NavLink>, icon: <Line /> },
+        { key: "addState", label:<NavLink to="/state-setup">Add State</NavLink>, icon: <Line /> },
+        { key: "addLGA", label:<NavLink to="/lga-setup">Add LGA</NavLink>, icon: <Line /> },
       ],
     },
     {
@@ -47,65 +47,87 @@ const Sidebar = () => {
       label: "Setup Programs",
       icon: <Settings />,
       children: [
-        { key: "faculty", label: <a href="/faculty-setup">Faculty</a>,  icon: <Line /> },
-        { key: "department", label: <a href="/department-setup">Department</a>, icon: <Line /> },
-        { key: "program", label: <a href="/program-setup">Program</a>, icon: <Line /> },
+        { key: "faculty", label: <NavLink to="/faculty-setup">Faculty</NavLink>,  icon: <Line /> },
+        { key: "department", label: <NavLink to="/department-setup">Department</NavLink>, icon: <Line /> },
+        { key: "program", label: <NavLink to="/program-setup">Program</NavLink>, icon: <Line /> },
         {
           key: "readMoreProgram",
-          label: <a href="/read-more-program-setup">Read More - Program</a>,
+          label: <NavLink to="/read-more-program-setup">Read More - Program</NavLink>,
           icon: <Line />,
         },
         {
           key: "readMoreCourse",
-          label: <a href="/read-more-course-overview-setup">Read More -Course Overview</a>,
+          label: <NavLink to="/read-more-course-overview-setup">Read More -Course Overview</NavLink>,
           icon: <Line />,
         },
         {
           key: "admissionRequirements",
-          label: <a href="/read-more-admission-requirement-setup">Admission Requirements</a>,
-
+          label: <NavLink to="/read-more-admission-requirement-setup">Admission Requirements</NavLink>,
           icon: <Line />,
         },
         {
           key: "careerProspects",
-          label: <a href="/career-prospects-setup">Career Prospects</a>,
-
+          label: <NavLink to="/career-prospects-setup">Career Prospects</NavLink>,
           icon: <Line />,
         },
         {
           key: "sessionSetup",
-          label: <a href="/session-setup">Session</a>,
-
+          label: <NavLink to="/session-setup">Session</NavLink>,
           icon: <Line />,
         },
         {
           key: "modeOfStudy",
-          label: <a href="/mode-of-study-setup">Mode Of Study</a>,
-
+          label: <NavLink to="/mode-of-study-setup">Mode Of Study</NavLink>,
           icon: <Line />,
         },
         {
           key: "applicationFee",
-          label: <a href="/application-setup">Application Fee</a>,
-
+          label: <NavLink to="/application-setup">Application Fee</NavLink>,
           icon: <Line />,
         },
         {
           key: "tuitionFee",
-          label: <a href="/tuition-fee-setup">Tuition Fee</a>,
-
+          label: <NavLink to="/tuition-fee-setup">Tuition Fee</NavLink>,
           icon: <Line />,
         },
         {
           key: "level",
-          label: <a href="/level-setup">Level</a>,
-
+          label: <NavLink to="/level-setup">Level</NavLink>,
           icon: <Line />,
         },
         {
           key: "tuitionYears",
-          label: <a href="/tuition-Years-setup">Tuition Years</a>,
-
+          label: <NavLink to="/tuition-Years-setup">Tuition Years</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "curriculum",
+          label: <NavLink to="/curriculum-setup">Curriculum</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "scholarship",
+          label: <NavLink to="/scholarship-setup">Scholarship</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "testimony",
+          label: <NavLink to="/testimony-setup">Testimony</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "accreditation",
+          label: <NavLink to="/accreditation-setup">Accreditation</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "qualificationType",
+          label: <NavLink to="/qualification-type-setup">Qualification Type</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "subject",
+          label: <NavLink to="/subject-setup">Subject</NavLink>,
           icon: <Line />,
         },
       ],

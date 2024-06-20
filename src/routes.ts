@@ -16,9 +16,22 @@ export const routes = {
       modeOfStudy: "/mode-of-study-setup",
       applicationFee: "/application-setup",
       tuitionFee: "/tuition-fee-setup",
-      tuitionYears: "/tuition-years-setup",
       level: "/level-setup",
+      tuitionYears: "/tuition-years-setup",
+      curriculum: "/curriculum-setup",
+      scholarship: "/scholarship-setup",
+      testimony: "/testimony-setup",
+      accreditation: "/accreditation-setup",
+      qualification: "/qualification-type-setup",
+      subject: "/subject-setup",
 
+
+      country : "/country-setup",
+      state: "/state-setup",
+      lga: "/lga-setup",
+      gender: "/gender-setup",
+      title: "/title-setup",
+      maritalStatus: "/marital-status-setup",
 
 
       aboutUs: "/about-us",

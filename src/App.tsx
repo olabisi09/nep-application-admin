@@ -24,6 +24,18 @@ import AuthLayout from "./layouts/authLayout/authLayout";
 import ForgotPassword from "./screens/auth/forgotPassword";
 import ResetPassword from "./screens/auth/resetPassword";
 import AboutUs from "./screens/setup/aboutUs/aboutUs";
+import CurriculumSetup from "./screens/setup/curriculum/curriculum";
+import ScholarShip from "./screens/setup/scholarship/scholarship";
+import TestimonySetup from "./screens/setup/testimonial/testimonial";
+import AccreditationSetup from "./screens/setup/accreditation/accreditation";
+import QualificationTypeSetup from "./screens/setup/qualificationType/qualificationType";
+import SubjectSetup from "./screens/setup/subject/subject";
+import CountrySetup from "./screens/setup/biodata/country/country";
+import StateSetup from "./screens/setup/biodata/state/state";
+import LgaSetup from "./screens/setup/biodata/lga/lga";
+import GenderSetup from "./screens/setup/biodata/gender/gender";
+import TitleSetup from "./screens/setup/biodata/title/title";
+import MaritalSetup from "./screens/setup/biodata/maritalStatus/maritalStatus";
 
 function App() {
   const authRoute = [
@@ -98,6 +110,56 @@ function App() {
       path: routes.setup.tuitionYears,
       element: <TuitionYearsSetup />,
     },
+    {
+      path: routes.setup.curriculum,
+      element: <CurriculumSetup />,
+    },
+    {
+      path: routes.setup.scholarship,
+      element: <ScholarShip />,
+    },
+    {
+      path: routes.setup.testimony,
+      element: <TestimonySetup />,
+    },
+    {
+      path: routes.setup.accreditation,
+      element: <AccreditationSetup />,
+    },
+    {
+      path: routes.setup.qualification,
+      element: <QualificationTypeSetup />,
+    },
+    {
+      path: routes.setup.subject,
+      element: <SubjectSetup />,
+    },
+
+    {
+      path: routes.setup.country,
+      element: <CountrySetup />,
+    },
+    {
+      path: routes.setup.state,
+      element: <StateSetup />,
+    },
+    {
+      path: routes.setup.lga,
+      element: <LgaSetup />,
+    },
+    {
+      path: routes.setup.gender,
+      element: <GenderSetup />,
+    },
+    {
+      path: routes.setup.title,
+      element: <TitleSetup />,
+    },
+    {
+      path: routes.setup.maritalStatus,
+      element: <MaritalSetup />,
+    },
+   
    
 
     {

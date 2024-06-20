@@ -9,10 +9,10 @@ import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./AddSession";
+import AddFaculty from "./addScholarship";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 
-const Session = () => {
+const ScholarShip = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
@@ -81,9 +81,9 @@ const Session = () => {
   return (
     <main>
       <PageLayout
-        paragraph="Session Setup"
+        paragraph="Scholarship Setup"
         firstText="Setup Programs"
-        secondText="Session Setup"
+        secondText="Scholarship Setup"
         iconBefore={<GraterThan />}
         headerActions={
           <Button
@@ -129,7 +129,7 @@ const Session = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Session Setup "
+        title="Scholarship Setup "
         footer={() => (
           <div className="btn-group">
             <Button
@@ -152,7 +152,7 @@ const Session = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Session Setup"
+        title="Scholarship Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -175,4 +175,4 @@ const Session = () => {
   );
 };
 
-export default Session;
+export default ScholarShip;

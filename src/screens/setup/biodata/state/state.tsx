@@ -1,18 +1,18 @@
-import PageLayout from "../../../layouts/pageLayout/pageLayout";
-import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.svg";
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+import PageLayout from "../../../../layouts/pageLayout/pageLayout";
+import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward.svg";
+import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Search } from "../../../../assets/search.svg";
+import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
 import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
 import { Form, Formik } from "formik";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
+import styles from "../../styles.module.scss";
+import Button from "../../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./AddSession";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import SearchInput from "../../../../custom/searchInput/searchInput";
+import AddState from "./addState";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 
-const Session = () => {
+const StateSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
@@ -81,9 +81,9 @@ const Session = () => {
   return (
     <main>
       <PageLayout
-        paragraph="Session Setup"
-        firstText="Setup Programs"
-        secondText="Session Setup"
+        paragraph="State Setup"
+        firstText="Setup Bio-data"
+        secondText="State Setup"
         iconBefore={<GraterThan />}
         headerActions={
           <Button
@@ -129,12 +129,12 @@ const Session = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Session Setup "
+        title="State Setup"
         footer={() => (
           <div className="btn-group">
             <Button
               onClick={() => setShowAddModal(false)}
-              variant="text"
+              variant="text" 
               text="Cancel"
             />
             <Button text="Create" />
@@ -143,7 +143,7 @@ const Session = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddState />
           </Form>
         </Formik>
       </Modal>
@@ -152,7 +152,7 @@ const Session = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Session Setup"
+        title="State Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -166,7 +166,7 @@ const Session = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddState />
           </Form>
         </Formik>
       </Modal>
@@ -175,4 +175,4 @@ const Session = () => {
   );
 };
 
-export default Session;
+export default StateSetup;

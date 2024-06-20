@@ -9,7 +9,7 @@ import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./addProgram";
+import AddProgram from "./addProgram";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 
 const ProgramSetUp = () => {
@@ -143,7 +143,7 @@ const ProgramSetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddProgram />
           </Form>
         </Formik>
       </Modal>
@@ -166,7 +166,7 @@ const ProgramSetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddProgram />
           </Form>
         </Formik>
       </Modal>

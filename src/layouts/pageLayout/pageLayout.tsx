@@ -53,9 +53,9 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   return (
     <div className={styles.pageLayout}>
       <header className={styles.header}>
-        <p className={styles.para}>
-          {firstText} {iconBefore} {secondText}
-        </p>
+        {/* <p className={styles.para}>
+          {firstText} {iconBefore} <span style={{textDecoration:'underline'}}> {secondText} </span>
+        </p> */}
         <section className={styles.section}>
           <p className={styles.heading}>{paragraph}</p>
 

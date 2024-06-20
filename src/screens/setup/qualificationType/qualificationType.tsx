@@ -9,10 +9,10 @@ import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./AddSession";
+import AddQualificationType from "./addQualificationType";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 
-const Session = () => {
+const QualificationSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
@@ -81,9 +81,9 @@ const Session = () => {
   return (
     <main>
       <PageLayout
-        paragraph="Session Setup"
+        paragraph="Qualification Setup"
         firstText="Setup Programs"
-        secondText="Session Setup"
+        secondText="Qualification Setup"
         iconBefore={<GraterThan />}
         headerActions={
           <Button
@@ -129,7 +129,7 @@ const Session = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Session Setup "
+        title="Qualification Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -143,7 +143,7 @@ const Session = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddQualificationType />
           </Form>
         </Formik>
       </Modal>
@@ -152,7 +152,7 @@ const Session = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Session Setup"
+        title="Qualification Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -166,7 +166,7 @@ const Session = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddQualificationType />
           </Form>
         </Formik>
       </Modal>
@@ -175,4 +175,4 @@ const Session = () => {
   );
 };
 
-export default Session;
+export default QualificationSetUp;

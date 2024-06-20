@@ -1,7 +1,7 @@
 import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
 
-const AddCurriculum = () => {
+const AddAccreditation = () => {
   return (
     <section className="fields">
       <Select
@@ -15,18 +15,9 @@ const AddCurriculum = () => {
         label="Description Name"
         type="textarea"
       />
-         <Select
-        name="level "
-        placeholder="Select Level"
-        label="Level"
-      />
-         <Select
-        name="status "
-        placeholder="Select Status"
-        label="Status"
-      />
+        
     </section>
   );
 };
 
-export default AddCurriculum;
+export default AddAccreditation;
