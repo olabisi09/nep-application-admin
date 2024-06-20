@@ -9,15 +9,17 @@ import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./addFaculty";
+import AddAdmissionRequirement from "./addAdmissionRequirement";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import AddDetails from "./addDetails";
 
-const FaultySetUp = () => {
+const AdmissionRequirement = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [showAddDetailsModal, setShowAddDetailsModal] = useState(false);
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -81,9 +83,9 @@ const FaultySetUp = () => {
   return (
     <main>
       <PageLayout
-        paragraph="Faculty Setup"
+        paragraph="Read More - Admission Requirements Setup"
         firstText="Setup Programs"
-        secondText="Faculty Setup"
+        secondText="Read More - Admission Requirements Setup"
         iconBefore={<GraterThan />}
         headerActions={
           <Button
@@ -129,7 +131,7 @@ const FaultySetUp = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Faculty Setup"
+        title="Read More - Admission Req."
         footer={() => (
           <div className="btn-group">
             <Button
@@ -143,7 +145,7 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddAdmissionRequirement />
           </Form>
         </Formik>
       </Modal>
@@ -152,7 +154,7 @@ const FaultySetUp = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Faculty Setup"
+        title="Read More - Admission Req."
         footer={() => (
           <div className="btn-group">
             <Button
@@ -166,7 +168,29 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddAdmissionRequirement />
+          </Form>
+        </Formik>
+      </Modal>
+      <Modal
+        open={showAddDetailsModal}
+        onCancel={() => setShowAddDetailsModal(false)}
+        centered
+        title="Admission Req. Details"
+        footer={() => (
+          <div className="btn-group">
+            <Button
+              onClick={() => setOpenEdit(false)}
+              variant="text"
+              text="Cancel"
+            />
+            <Button text="Add Details" />
+          </div>
+        )}
+      >
+        <Formik initialValues={{}} onSubmit={() => {}}>
+          <Form>
+            <AddDetails />
           </Form>
         </Formik>
       </Modal>
@@ -175,4 +199,4 @@ const FaultySetUp = () => {
   );
 };
 
-export default FaultySetUp;
+export default AdmissionRequirement;

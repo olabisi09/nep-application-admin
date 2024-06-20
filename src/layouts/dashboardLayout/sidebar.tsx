@@ -47,22 +47,65 @@ const Sidebar = () => {
       label: "Setup Programs",
       icon: <Settings />,
       children: [
-        { key: "faculty", label: "Faculty", icon: <Line /> },
-        { key: "department", label: "Department", icon: <Line /> },
-        { key: "program", label: "Program", icon: <Line /> },
+        { key: "faculty", label: <a href="/faculty-setup">Faculty</a>,  icon: <Line /> },
+        { key: "department", label: <a href="/department-setup">Department</a>, icon: <Line /> },
+        { key: "program", label: <a href="/program-setup">Program</a>, icon: <Line /> },
         {
           key: "readMoreProgram",
-          label: "Read More - Program",
+          label: <a href="/read-more-program-setup">Read More - Program</a>,
           icon: <Line />,
         },
         {
           key: "readMoreCourse",
-          label: "Read More -Course Overview",
+          label: <a href="/read-more-course-overview-setup">Read More -Course Overview</a>,
           icon: <Line />,
         },
         {
           key: "admissionRequirements",
-          label: "Admission Requirements",
+          label: <a href="/read-more-admission-requirement-setup">Admission Requirements</a>,
+
+          icon: <Line />,
+        },
+        {
+          key: "careerProspects",
+          label: <a href="/career-prospects-setup">Career Prospects</a>,
+
+          icon: <Line />,
+        },
+        {
+          key: "sessionSetup",
+          label: <a href="/session-setup">Session</a>,
+
+          icon: <Line />,
+        },
+        {
+          key: "modeOfStudy",
+          label: <a href="/mode-of-study-setup">Mode Of Study</a>,
+
+          icon: <Line />,
+        },
+        {
+          key: "applicationFee",
+          label: <a href="/application-setup">Application Fee</a>,
+
+          icon: <Line />,
+        },
+        {
+          key: "tuitionFee",
+          label: <a href="/tuition-fee-setup">Tuition Fee</a>,
+
+          icon: <Line />,
+        },
+        {
+          key: "level",
+          label: <a href="/level-setup">Level</a>,
+
+          icon: <Line />,
+        },
+        {
+          key: "tuitionYears",
+          label: <a href="/tuition-Years-setup">Tuition Years</a>,
+
           icon: <Line />,
         },
       ],

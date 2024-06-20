@@ -3,6 +3,19 @@ import "./index.scss";
 import { Route, Routes } from "react-router-dom";
 import DashboardLayout from "./layouts/dashboardLayout/dashboardLayout";
 import FacultySetUp from "./screens/setup/faculty/faculty";
+import DepartmentSetup from "./screens/setup/department/department";
+import ProgramSetup from "./screens/setup/program/program";
+import ReadMoreProgramSetup from "./screens/setup/readMoreProgram/readMoreProgram";
+import ReadMoreCourseSetup from "./screens/setup/readMoreCourse/readMoreCourse";
+import ReadMoreAdmissionRequirementSetup from "./screens/setup/readMoreAdmissionRequirement/admissionRequirement";
+import CareerProspectsSetup from "./screens/setup/careerProspects/careerProspects";
+import SessionSetup from "./screens/setup/session/session";
+import ModeOfStudySetup from "./screens/setup/modeOfStudy/modeOfStudy";
+import ApplicationFeeSetup from "./screens/setup/applicationFeeSetup/applicationFee";
+import TuitionFeeSetup from "./screens/setup/tuition/tuition";
+import TuitionYearsSetup from "./screens/setup/tuitionYear/tuitionYears";
+import LevelSetup from "./screens/setup/level/level";
+
 import { routes } from "./routes";
 import AddUsers from "./screens/userManagement/user/addUsers";
 import AdminRoles from "./screens/userManagement/role/adminRoles";
@@ -21,13 +34,64 @@ function App() {
 
   const setupRoute = [
     {
-      path: routes.setup.facultySetup,
+      path: routes.setup.faculty,
       element: <FacultySetUp />,
     },
-    // {
-    //   path: routes.main.home,
-    //   element: <Home />,
-    // },
+    {
+      path: routes.setup.department,
+      element: <DepartmentSetup />,
+    },
+    {
+      path: routes.setup.program,
+      element: <ProgramSetup />,
+    },
+    {
+      path: routes.setup.readMoreProgram,
+      element: <ReadMoreProgramSetup />,
+    }, 
+    {
+      path: routes.setup.readMoreCourse,
+      element: <ReadMoreCourseSetup />,
+    },
+    {
+      path: routes.setup.readMoreAdmissionRequirement,
+      element: <ReadMoreAdmissionRequirementSetup />,
+    },
+    {
+      path: routes.setup.careerProspects,
+      element: <CareerProspectsSetup />,
+    },
+    {
+      path: routes.setup.careerProspects,
+      element: <CareerProspectsSetup />,
+    },
+    {
+      path: routes.setup.session,
+      element: <SessionSetup />,
+    },
+    {
+      path: routes.setup.modeOfStudy,
+      element: <ModeOfStudySetup />,
+    },
+    {
+      path: routes.setup.applicationFee,
+      element: <ApplicationFeeSetup />,
+    },
+    {
+      path: routes.setup.tuitionFee,
+      element: <TuitionFeeSetup />,
+    },
+    {
+      path: routes.setup.level,
+      element: <LevelSetup />,
+    },
+    {
+      path: routes.setup.tuitionYears,
+      element: <TuitionYearsSetup />,
+    },
+   
+
+  
   ];
   const userMgtRoutes = [
     {

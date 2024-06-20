@@ -9,15 +9,16 @@ import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./addFaculty";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import AddApplicationFee from "./addApplicationFee";
 
-const FaultySetUp = () => {
+const ApplicationFee = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [showAddItemModal, setShowAddItemModal] = useState(false);
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -34,6 +35,7 @@ const FaultySetUp = () => {
     {
       key: "1",
       label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
+ 
     },
   ];
   const columns = [
@@ -81,9 +83,9 @@ const FaultySetUp = () => {
   return (
     <main>
       <PageLayout
-        paragraph="Faculty Setup"
+        paragraph="Application Fee Setup"
         firstText="Setup Programs"
-        secondText="Faculty Setup"
+        secondText="Application Fee Setup"
         iconBefore={<GraterThan />}
         headerActions={
           <Button
@@ -129,7 +131,7 @@ const FaultySetUp = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Faculty Setup"
+        title="Application Fee Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -143,7 +145,7 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddApplicationFee />
           </Form>
         </Formik>
       </Modal>
@@ -152,7 +154,7 @@ const FaultySetUp = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Faculty Setup"
+        title="Application Fee Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -166,13 +168,14 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddApplicationFee />
           </Form>
         </Formik>
       </Modal>
+
 
     </main>
   );
 };
 
-export default FaultySetUp;
+export default ApplicationFee;

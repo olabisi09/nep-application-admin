@@ -9,10 +9,10 @@ import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./addFaculty";
+import AddDepartment from "./addDepartment";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 
-const FaultySetUp = () => {
+const DepartmentSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
@@ -81,9 +81,9 @@ const FaultySetUp = () => {
   return (
     <main>
       <PageLayout
-        paragraph="Faculty Setup"
+        paragraph="Department Setup"
         firstText="Setup Programs"
-        secondText="Faculty Setup"
+        secondText="Department Setup"
         iconBefore={<GraterThan />}
         headerActions={
           <Button
@@ -129,12 +129,12 @@ const FaultySetUp = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Faculty Setup"
+        title="Department Setup"
         footer={() => (
           <div className="btn-group">
             <Button
               onClick={() => setShowAddModal(false)}
-              variant="text"
+              variant="text" 
               text="Cancel"
             />
             <Button text="Create" />
@@ -143,7 +143,7 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddDepartment />
           </Form>
         </Formik>
       </Modal>
@@ -152,7 +152,7 @@ const FaultySetUp = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Faculty Setup"
+        title="Department Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -166,7 +166,7 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddDepartment />
           </Form>
         </Formik>
       </Modal>
@@ -175,4 +175,4 @@ const FaultySetUp = () => {
   );
 };
 
-export default FaultySetUp;
+export default DepartmentSetup;

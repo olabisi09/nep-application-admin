@@ -9,10 +9,10 @@ import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./addFaculty";
+import AddFaculty from "./AddSession";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 
-const FaultySetUp = () => {
+const Session = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
@@ -81,9 +81,9 @@ const FaultySetUp = () => {
   return (
     <main>
       <PageLayout
-        paragraph="Faculty Setup"
+        paragraph="Session Setup"
         firstText="Setup Programs"
-        secondText="Faculty Setup"
+        secondText="Session Setup"
         iconBefore={<GraterThan />}
         headerActions={
           <Button
@@ -129,7 +129,7 @@ const FaultySetUp = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Faculty Setup"
+        title="Session Setup "
         footer={() => (
           <div className="btn-group">
             <Button
@@ -152,7 +152,7 @@ const FaultySetUp = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Faculty Setup"
+        title="Program Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -175,4 +175,4 @@ const FaultySetUp = () => {
   );
 };
 
-export default FaultySetUp;
+export default Session;
