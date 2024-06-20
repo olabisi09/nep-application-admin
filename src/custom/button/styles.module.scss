@@ -27,6 +27,8 @@ $success:var(--color-primary);
   font-weight: 400;
   padding-inline: 0.857rem;
   padding-block: 1rem;
+  display: flex;
+  align-items: center;
 }
 
 .spinner {
