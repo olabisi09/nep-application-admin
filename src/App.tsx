@@ -6,28 +6,37 @@ import FacultySetUp from "./screens/setup/faculty/faculty";
 import { routes } from "./routes";
 import AddUsers from "./screens/userManagement/user/addUsers";
 import AdminRoles from "./screens/userManagement/role/adminRoles";
+import SignIn from "./screens/auth/signIn";
+import AuthLayout from "./layouts/authLayout/authLayout";
+import ForgotPassword from "./screens/auth/forgotPassword";
+import ResetPassword from "./screens/auth/resetPassword";
+import AboutUs from "./screens/setup/aboutUs/aboutUs";
 
 function App() {
-  // const authRoute = [
-  //   {
-  //     path: routes.auth.login,
-  //     element: <Login />,
-  //   },
-  //   {
-  //     path: routes.auth.register,
-  //     element: <Register />,
-  //   },
-  // ];
+  const authRoute = [
+    {
+      path: routes.auth.login,
+      element: <SignIn />,
+    },
+    {
+      path: routes.auth.forgotPassword,
+      element: <ForgotPassword />,
+    },
+    {
+      path: routes.auth.resetPassword,
+      element: <ResetPassword />,
+    },
+  ];
 
   const setupRoute = [
     {
       path: routes.setup.facultySetup,
       element: <FacultySetUp />,
     },
-    // {
-    //   path: routes.main.home,
-    //   element: <Home />,
-    // },
+    {
+      path: routes.setup.aboutUs,
+      element: <AboutUs />,
+    },
   ];
   const userMgtRoutes = [
     {
@@ -42,11 +51,14 @@ function App() {
 
   return (
     <Routes>
-      <Route element={<DashboardLayout />}>
-        {setupRoute.map((item) => (
+      <Route path="*" element={<SignIn />} />
+      <Route element={<AuthLayout />}>
+        {authRoute.map((item) => (
           <Route key={item.path} path={item.path} element={item.element} />
         ))}
-        {userMgtRoutes.map((item) => (
+      </Route>
+      <Route element={<DashboardLayout />}>
+        {userMgtRoutes.concat(setupRoute).map((item) => (
           <Route key={item.path} path={item.path} element={item.element} />
         ))}
       </Route>

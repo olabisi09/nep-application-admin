@@ -28,8 +28,8 @@ body {
 	line-height: 1.875rem;
   background-color: #FFFFFF;
 	--color-primary: #173C19;
-	--color-light-green: #8DC467;
-	--color-secondary: #CE9938;
+	--color-light-green: #D5E4D6;
+	--color-secondary: #E7F5E8;
 	--color-white: #ffffff;
 	--color-black: #000000;
 
@@ -54,7 +54,6 @@ a:visited {
 
 input, select, textarea {
 	outline: none !important;
-	background: transparent !important;
 	font-family: "Inter", sans-serif;
 }
 
@@ -104,9 +103,11 @@ button {
 	display: flex;
   align-items: center;
   justify-content: space-between;
+	text-wrap: nowrap;
 }
 
 .flex-start {
+	display: flex;
   align-items: flex-start;
 }
 
@@ -134,6 +135,11 @@ button {
 	background-color: var(--color-secondary);
 	height: 6px;
 	width: 60%;
+}
+
+.text-center {
+	display: block;
+	text-align: center;
 }
 
 .ant-modal-content {

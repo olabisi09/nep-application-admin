@@ -78,12 +78,7 @@ const Input: React.FC<ComponentProps> = (props) => {
               className={styles.inputTwo}
               {...field}
               placeholder={placeholder}
-              rows={4}
-              // style={{
-              //   display: "block",
-              //   width: "100%",
-              //   backgroundColor: bg ? bg : "#fff",
-              // }}
+              rows={3}
             />
           )}
 
