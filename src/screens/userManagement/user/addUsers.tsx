@@ -21,8 +21,8 @@ const AddUsers = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
-  const data = Array.from({ length: 5 }, () => ({
-    id: 1234,
+  const data = Array.from({ length: 5 }, (_, index) => ({
+    id: `1234${index}`,
     firstName: "Timi",
     lastName: "John",
     email: "john@gmail.com",
@@ -79,25 +79,6 @@ const AddUsers = () => {
   ];
   return (
     <div>
-      <Breadcrumb
-        items={[
-          {
-            title: "User Management",
-          },
-          {
-            title: (
-              <NavLink
-                className={({ isActive }) =>
-                  isActive ? styles.breadcrumbActive : ""
-                }
-                to="/admin-users"
-              >
-                Admin Users
-              </NavLink>
-            ),
-          },
-        ]}
-      />
       <section className="space-between">
         <h3>Admin Users</h3>
         <Button
@@ -117,7 +98,7 @@ const AddUsers = () => {
           dataSource={data}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          rowKey={(record) => record.id}
         />
       </Card>
       <Modal

@@ -7,6 +7,12 @@ export const routes = {
     setup: {
       home: "/",
       facultySetup: "/faculty-setup",
+      aboutUs: "/about-us",
+      whyUs: "/why-us",
+      faq: "/faq",
+      newsAndEvents: "/news-and-events",
+      history: "/history",
+      schoolMgt: "/school-management",
     },
     userMgt: {
       addUsers: "/admin-users",
@@ -14,4 +20,3 @@ export const routes = {
     },
     onboarding: "/onboarding",
   };
-  

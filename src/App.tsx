@@ -10,6 +10,7 @@ import SignIn from "./screens/auth/signIn";
 import AuthLayout from "./layouts/authLayout/authLayout";
 import ForgotPassword from "./screens/auth/forgotPassword";
 import ResetPassword from "./screens/auth/resetPassword";
+import AboutUs from "./screens/setup/aboutUs/aboutUs";
 
 function App() {
   const authRoute = [
@@ -32,10 +33,10 @@ function App() {
       path: routes.setup.facultySetup,
       element: <FacultySetUp />,
     },
-    // {
-    //   path: routes.main.home,
-    //   element: <Home />,
-    // },
+    {
+      path: routes.setup.aboutUs,
+      element: <AboutUs />,
+    },
   ];
   const userMgtRoutes = [
     {
@@ -50,16 +51,14 @@ function App() {
 
   return (
     <Routes>
+      <Route path="*" element={<SignIn />} />
       <Route element={<AuthLayout />}>
         {authRoute.map((item) => (
           <Route key={item.path} path={item.path} element={item.element} />
         ))}
       </Route>
       <Route element={<DashboardLayout />}>
-        {setupRoute.map((item) => (
-          <Route key={item.path} path={item.path} element={item.element} />
-        ))}
-        {userMgtRoutes.map((item) => (
+        {userMgtRoutes.concat(setupRoute).map((item) => (
           <Route key={item.path} path={item.path} element={item.element} />
         ))}
       </Route>

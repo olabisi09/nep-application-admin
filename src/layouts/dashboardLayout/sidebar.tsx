@@ -15,12 +15,12 @@ const Sidebar = () => {
       children: [
         {
           key: "addUsers",
-          label: <a href="/admin-users">Add Users</a>,
+          label: <NavLink to="/admin-users">Add Users</NavLink>,
           icon: <Line />,
         },
         {
           key: "addRoles",
-          label: <a href="/admin-roles">Add Roles</a>,
+          label: <NavLink to="/admin-roles">Add Roles</NavLink>,
           icon: <Line />,
         },
       ],
@@ -72,12 +72,36 @@ const Sidebar = () => {
       label: "Setup School Info",
       icon: <Settings />,
       children: [
-        { key: "aboutUs", label: "About Us", icon: <Settings /> },
-        { key: "whyUs", label: "Why Us", icon: <Settings /> },
-        { key: "faq", label: "FAQ", icon: <Settings /> },
-        { key: "newsAndEvents", label: "News & Events", icon: <Settings /> },
-        { key: "history", label: "History", icon: <Settings /> },
-        { key: "schoolMgt", label: "School Mgt", icon: <Settings /> },
+        {
+          key: "aboutUs",
+          label: <NavLink to={"/about-us"}>About Us</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "whyUs",
+          label: <NavLink to={"/why-us"}>Why Us</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "faq",
+          label: <NavLink to={"/faq"}>FAQ</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "newsAndEvents",
+          label: <NavLink to={"/news-and-events"}>News & Events</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "history",
+          label: <NavLink to={"/history"}>History</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "schoolMgt",
+          label: <NavLink to={"/school-management"}>School Mgt</NavLink>,
+          icon: <Line />,
+        },
       ],
     },
   ];

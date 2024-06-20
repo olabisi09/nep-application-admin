@@ -27,13 +27,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Theme>
-        <AntdApp notification={{ placement: "top" }}>
-          <BrowserRouter>
+      <BrowserRouter>
+        <Theme>
+          <AntdApp notification={{ placement: "top" }}>
             <App />
-          </BrowserRouter>
-        </AntdApp>
-      </Theme>
+          </AntdApp>
+        </Theme>
+      </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>
 );
