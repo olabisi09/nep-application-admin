@@ -1,41 +1,25 @@
-import { useState } from "react";
 import Input from "../../../custom/input/input";
-import Upload from "../../../custom/upload/upload";
-import { ReactComponent as Image } from "../../../assets/image.svg";
 import Button from "../../../custom/button/button";
 import Select from "../../../custom/select/select";
+import { Form, Formik } from "formik";
 
-const SetupFaq = () => {
-  const [upload, setUpload] = useState<File | null>(null);
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files;
-    if (file) {
-      setUpload(file[0]);
-    }
-  };
-  const clearFile = () => {
-    setUpload(null);
-  };
+const SetupFaq = ({ handleClose }: { handleClose: () => void }) => {
   return (
-    <section className="fields">
-      <Input name="title" label="Title" placeholder="Input title" />
-      <Input
-        type="textarea"
-        name="description"
-        label="Description"
-        placeholder="Input description"
-      />
-      {upload ? (
-        <div className="small-gap">
-          <Image />
-          <span>{upload.name}</span>
-          <Button onClick={clearFile} variant="text" text="x" />
+    <Formik
+      initialValues={{ title: "" }}
+      onSubmit={(values) => {
+        console.log(values);
+      }}
+    >
+      <Form className="fields">
+        <Input name="title" label="Title" placeholder="Input title" />
+        <Select name="status" label="Status" placeholder="Active" />
+        <div className="btn-group">
+          <Button onClick={handleClose} variant="text" text="Cancel" />
+          <Button text="Create" />
         </div>
-      ) : (
-        <Upload name="image" label="Icon Upload" onChange={handleFileChange} />
-      )}
-      <Select name="status" label="Status" placeholder="Active" />
-    </section>
+      </Form>
+    </Formik>
   );
 };
 

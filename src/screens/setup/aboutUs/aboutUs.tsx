@@ -83,6 +83,7 @@ const AboutUs = () => {
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
+          scroll={{ x: true }}
         />
       </Card>
       <Modal
@@ -90,22 +91,9 @@ const AboutUs = () => {
         onCancel={() => setOpen(false)}
         centered
         title="About Us Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpen(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <SetupAboutUs />
-          </Form>
-        </Formik>
+        <SetupAboutUs handleClose={() => setOpen(false)} />
       </Modal>
     </div>
   );

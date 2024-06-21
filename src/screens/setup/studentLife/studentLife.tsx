@@ -10,22 +10,57 @@ import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import { Form, Formik } from "formik";
-import SetupWhySchool from "./setup";
+import StudentLifeSetup from "./setup";
 
-const WhySchool = () => {
+const StudentLife = () => {
   const [open, setOpen] = useState(false);
 
-  const data = Array.from({ length: 5 }, (_, index) => ({
+  const data = Array.from({ length: 3 }, (_, index) => ({
     id: `1234${index}`,
-    title: "Why Kwararafa University",
-    status: "Active",
+    title: "Student Life",
+    description: "Description",
   }));
 
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <button onClick={() => setOpen(true)}>Edit</button>,
+      label: "Edit",
+      onClick: () => setOpen(true),
+    },
+    {
+      key: "2",
+      label: "Overview",
+      onClick: () => setOpen(true),
+    },
+    {
+      key: "3",
+      label: "School Summary",
+      onClick: () => setOpen(true),
+    },
+    {
+      key: "4",
+      label: "Campus Experience",
+      onClick: () => setOpen(true),
+    },
+    {
+      key: "5",
+      label: "Fitness & Athletics",
+      onClick: () => setOpen(true),
+    },
+    {
+      key: "6",
+      label: "Support & Guidance",
+      onClick: () => setOpen(true),
+    },
+    {
+      key: "7",
+      label: "Student Activities",
+      onClick: () => setOpen(true),
+    },
+    {
+      key: "8",
+      label: "Delete",
+      onClick: () => setOpen(true),
     },
   ];
   const columns = [
@@ -40,9 +75,9 @@ const WhySchool = () => {
       dataIndex: "title",
     },
     {
-      key: "status",
-      title: "Status",
-      dataIndex: "status",
+      key: "description",
+      title: "Description",
+      dataIndex: "description",
     },
     {
       key: "action",
@@ -57,7 +92,7 @@ const WhySchool = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Why School Setup</h3>
+        <h3>Student Life Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -78,26 +113,13 @@ const WhySchool = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Why School Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpen(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        title="Student Life Setup"
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <SetupWhySchool />
-          </Form>
-        </Formik>
+        <StudentLifeSetup handleClose={() => setOpen(false)} />
       </Modal>
     </div>
   );
 };
 
-export default WhySchool;
+export default StudentLife;

@@ -11,21 +11,24 @@ import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import { Form, Formik } from "formik";
-import SetupWhySchool from "./setup";
+import SetupSchoolMgt from "./setup";
 
-const WhySchool = () => {
+const SchoolMgt = () => {
   const [open, setOpen] = useState(false);
 
   const data = Array.from({ length: 5 }, (_, index) => ({
     id: `1234${index}`,
-    title: "Why Kwararafa University",
+    title: "School Management",
+    description: "Description",
+    pictureUrl: "blah",
     status: "Active",
   }));
 
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <button onClick={() => setOpen(true)}>Edit</button>,
+      label: "Edit",
+      onClick: () => setOpen(true),
     },
   ];
   const columns = [
@@ -38,6 +41,16 @@ const WhySchool = () => {
       key: "title",
       title: "Title",
       dataIndex: "title",
+    },
+    {
+      key: "description",
+      title: "Description",
+      dataIndex: "description",
+    },
+    {
+      key: "pictureUrl",
+      title: "Picture",
+      dataIndex: "pictureUrl",
     },
     {
       key: "status",
@@ -57,7 +70,7 @@ const WhySchool = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Why School Setup</h3>
+        <h3>School Management Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -78,26 +91,13 @@ const WhySchool = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Why School Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpen(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        title="School Management Setup"
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <SetupWhySchool />
-          </Form>
-        </Formik>
+        <SetupSchoolMgt handleClose={() => setOpen(false)} />
       </Modal>
     </div>
   );
 };
 
-export default WhySchool;
+export default SchoolMgt;

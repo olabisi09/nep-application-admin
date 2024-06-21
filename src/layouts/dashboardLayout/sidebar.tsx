@@ -102,6 +102,16 @@ const Sidebar = () => {
           label: <NavLink to={"/school-management"}>School Mgt</NavLink>,
           icon: <Line />,
         },
+        {
+          key: "schoolInfoTemplate",
+          label: <NavLink to={"/school-info"}>Template</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "socialMedia",
+          label: <NavLink to={"/social-media"}>Social Media Link</NavLink>,
+          icon: <Line />,
+        },
       ],
     },
   ];

@@ -4,8 +4,9 @@ import Upload from "../../../custom/upload/upload";
 import { ReactComponent as Image } from "../../../assets/image.svg";
 import Button from "../../../custom/button/button";
 import { Form, Formik } from "formik";
+import Select from "../../../custom/select/select";
 
-const SetupAboutUs = ({ handleClose }: { handleClose: () => void }) => {
+const SetupSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
   const [upload, setUpload] = useState<File | null>(null);
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
@@ -35,6 +36,7 @@ const SetupAboutUs = ({ handleClose }: { handleClose: () => void }) => {
         ) : (
           <Upload name="image" label="Image" onChange={handleFileChange} />
         )}
+        <Select name="status" label="Status" placeholder="Active" />
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button text="Create" />
@@ -44,4 +46,4 @@ const SetupAboutUs = ({ handleClose }: { handleClose: () => void }) => {
   );
 };
 
-export default SetupAboutUs;
+export default SetupSchoolMgt;

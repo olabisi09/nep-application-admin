@@ -11,6 +11,11 @@ import AuthLayout from "./layouts/authLayout/authLayout";
 import ForgotPassword from "./screens/auth/forgotPassword";
 import ResetPassword from "./screens/auth/resetPassword";
 import AboutUs from "./screens/setup/aboutUs/aboutUs";
+import Faq from "./screens/setup/faq/faq";
+import History from "./screens/setup/history/history";
+import SchoolInfoTemplate from "./screens/setup/schoolInfoTemplate/schoolInfoTemplate";
+import WhySchool from "./screens/setup/whySchool/whySchool";
+import SchoolForm from "./screens/setup/form/form";
 
 function App() {
   const authRoute = [
@@ -36,6 +41,26 @@ function App() {
     {
       path: routes.setup.aboutUs,
       element: <AboutUs />,
+    },
+    {
+      path: routes.setup.faq,
+      element: <Faq />,
+    },
+    {
+      path: routes.setup.history,
+      element: <History />,
+    },
+    {
+      path: routes.setup.schoolInfo,
+      element: <SchoolInfoTemplate />,
+    },
+    {
+      path: routes.setup.whyUs,
+      element: <WhySchool />,
+    },
+    {
+      path: routes.setup.form,
+      element: <SchoolForm />,
     },
   ];
   const userMgtRoutes = [

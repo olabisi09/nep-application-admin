@@ -106,6 +106,14 @@ button {
 	text-wrap: nowrap;
 }
 
+.space-between-grid {
+	display: grid;
+  align-items: center;
+  justify-content: space-between;
+  text-wrap: nowrap;
+	grid-template-columns: 1fr 1fr;
+}
+
 .flex-start {
 	display: flex;
   align-items: flex-start;
@@ -128,6 +136,7 @@ button {
 	text-align: center;
 	justify-content: center;
 	gap: 0.571rem;
+	margin-block-start: 2.5rem;
 }
 
 .underline {
