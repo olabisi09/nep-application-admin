@@ -10,7 +10,7 @@ import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import SetupSchoolMgt from "./setup";
+import SocialMediaSetup from "./setup";
 
 const SocialMedia = () => {
   const [open, setOpen] = useState(false);
@@ -57,7 +57,7 @@ const SocialMedia = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>School Management Setup</h3>
+        <h3>Social Media Link Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -81,7 +81,7 @@ const SocialMedia = () => {
         title="Social Media Link Setup"
         footer={null}
       >
-        <SetupSchoolMgt handleClose={() => setOpen(false)} />
+        <SocialMediaSetup handleClose={() => setOpen(false)} />
       </Modal>
     </div>
   );

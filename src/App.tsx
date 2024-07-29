@@ -16,6 +16,9 @@ import History from "./screens/setup/history/history";
 import SchoolInfoTemplate from "./screens/setup/schoolInfoTemplate/schoolInfoTemplate";
 import WhySchool from "./screens/setup/whySchool/whySchool";
 import SchoolForm from "./screens/setup/form/form";
+import SocialMedia from "./screens/setup/socialMedia/socialMedia";
+import StudentLife from "./screens/setup/studentLife/studentLife";
+import NewsAndEvents from "./screens/setup/newsAndEvents/newsAndEvents";
 
 function App() {
   const authRoute = [
@@ -61,6 +64,18 @@ function App() {
     {
       path: routes.setup.form,
       element: <SchoolForm />,
+    },
+    {
+      path: routes.setup.socialMedia,
+      element: <SocialMedia />,
+    },
+    {
+      path: routes.setup.studentLife,
+      element: <StudentLife />,
+    },
+    {
+      path: routes.setup.newsAndEvents,
+      element: <NewsAndEvents />,
     },
   ];
   const userMgtRoutes = [

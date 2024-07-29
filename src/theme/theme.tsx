@@ -30,6 +30,10 @@ export const Theme: FC<PropsWithChildren> = ({ children }) => {
             itemBorderRadius: 16,
             itemHoverColor: "#173C19",
             lineWidth: 0,
+            subMenuItemBg: "transparent",
+          },
+          Card: {
+            borderRadiusLG: 16,
           },
         },
       }}

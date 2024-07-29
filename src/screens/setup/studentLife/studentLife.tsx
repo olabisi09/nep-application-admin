@@ -10,10 +10,53 @@ import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import StudentLifeSetup from "./setup";
+import {
+  OverviewSetup,
+  StudentActivitiesSetup,
+  StudentLifeSetup,
+} from "./setup";
+
+const forms = [
+  "Edit",
+  "Overview",
+  "School Summary",
+  "Campus Experience",
+  "Fitness & Athletics",
+  "Support & Guidance",
+  "Student Activities",
+] as const;
 
 const StudentLife = () => {
   const [open, setOpen] = useState(false);
+  const [currentForm, setCurrentForm] = useState<(typeof forms)[number] | "">(
+    ""
+  );
+
+  const onFormClick = (form: (typeof forms)[number]) => {
+    setCurrentForm(form);
+    setOpen(true);
+  };
+
+  const renderForms = () => {
+    switch (currentForm) {
+      case "Edit":
+        return <StudentLifeSetup handleClose={() => setOpen(false)} />;
+      case "Overview":
+        return <OverviewSetup handleClose={() => setOpen(false)} />;
+      case "School Summary":
+        return <StudentLifeSetup handleClose={() => setOpen(false)} />;
+      case "Campus Experience":
+        return <StudentLifeSetup handleClose={() => setOpen(false)} />;
+      case "Fitness & Athletics":
+        return <StudentLifeSetup handleClose={() => setOpen(false)} />;
+      case "Support & Guidance":
+        return <StudentLifeSetup handleClose={() => setOpen(false)} />;
+      case "Student Activities":
+        return <StudentActivitiesSetup handleClose={() => setOpen(false)} />;
+      default:
+        return <StudentLifeSetup handleClose={() => setOpen(false)} />;
+    }
+  };
 
   const data = Array.from({ length: 3 }, (_, index) => ({
     id: `1234${index}`,
@@ -25,42 +68,42 @@ const StudentLife = () => {
     {
       key: "1",
       label: "Edit",
-      onClick: () => setOpen(true),
+      onClick: () => onFormClick("Edit"),
     },
     {
       key: "2",
       label: "Overview",
-      onClick: () => setOpen(true),
+      onClick: () => onFormClick("Overview"),
     },
     {
       key: "3",
       label: "School Summary",
-      onClick: () => setOpen(true),
+      onClick: () => onFormClick("School Summary"),
     },
     {
       key: "4",
       label: "Campus Experience",
-      onClick: () => setOpen(true),
+      onClick: () => onFormClick("Campus Experience"),
     },
     {
       key: "5",
       label: "Fitness & Athletics",
-      onClick: () => setOpen(true),
+      onClick: () => onFormClick("Fitness & Athletics"),
     },
     {
       key: "6",
       label: "Support & Guidance",
-      onClick: () => setOpen(true),
+      onClick: () => onFormClick("Support & Guidance"),
     },
     {
       key: "7",
       label: "Student Activities",
-      onClick: () => setOpen(true),
+      onClick: () => onFormClick("Student Activities"),
     },
     {
       key: "8",
       label: "Delete",
-      onClick: () => setOpen(true),
+      onClick: () => {},
     },
   ];
   const columns = [
@@ -113,10 +156,11 @@ const StudentLife = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Student Life Setup"
+        title={currentForm || "Student Life Setup"}
         footer={null}
+        width={500}
       >
-        <StudentLifeSetup handleClose={() => setOpen(false)} />
+        {renderForms()}
       </Modal>
     </div>
   );

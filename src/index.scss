@@ -151,6 +151,10 @@ button {
 	text-align: center;
 }
 
+.rotate {
+	transform: rotate(180deg);
+}
+
 .ant-modal-content {
 	padding: 0 !important;
 }

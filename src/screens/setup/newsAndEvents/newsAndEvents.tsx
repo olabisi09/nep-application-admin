@@ -8,19 +8,19 @@ import {
 } from "antd";
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import placeholder from "../../../assets/placeholder-img.png";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import { Form, Formik } from "formik";
-import SetupSchoolMgt from "./setup";
+import NewsAndEventsSetup from "./setup";
 
-const SchoolMgt = () => {
+const NewsAndEvents = () => {
   const [open, setOpen] = useState(false);
 
-  const data = Array.from({ length: 5 }, (_, index) => ({
+  const data = Array.from({ length: 3 }, (_, index) => ({
     id: `1234${index}`,
-    title: "School Management",
-    description: "Description",
-    pictureUrl: "blah",
+    title: "Facebook",
+    description: "description",
+    picture: placeholder,
     status: "Active",
   }));
 
@@ -48,9 +48,9 @@ const SchoolMgt = () => {
       dataIndex: "description",
     },
     {
-      key: "pictureUrl",
+      key: "picture",
       title: "Picture",
-      dataIndex: "pictureUrl",
+      render: (_: any, record: any) => <img src={record?.picture} alt="" />,
     },
     {
       key: "status",
@@ -70,7 +70,7 @@ const SchoolMgt = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>School Management Setup</h3>
+        <h3>News and Events Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -91,13 +91,13 @@ const SchoolMgt = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="School Management Setup"
+        title="News and Events Setup"
         footer={null}
       >
-        <SetupSchoolMgt handleClose={() => setOpen(false)} />
+        <NewsAndEventsSetup handleClose={() => setOpen(false)} />
       </Modal>
     </div>
   );
 };
 
-export default SchoolMgt;
+export default NewsAndEvents;

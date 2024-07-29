@@ -15,7 +15,8 @@ export const routes = {
       schoolMgt: "/school-management",
       schoolInfo: "/school-info",
       socialMedia: "/social-media",
-      form: "/form-setup"
+      form: "/form-setup",
+      studentLife: "/student-life",
     },
     userMgt: {
       addUsers: "/admin-users",
@@ -60,6 +61,34 @@ export const breadcrumbNames = [
       {
         path: "/social-media",
         title: "Social Media Link"
+      },
+      {
+        path: "/student-life",
+        title: "Student Life"
+      },
+      {
+        path: "/form-setup",
+        title: "Form Setup"
+      },
+      {
+        path: "/faculty-setup",
+        title: "Faculty Setup"
+      },
+      {
+        path: "/why-us",
+        title: "Why Us"
+      },
+      {
+        path: "/news-and-events",
+        title: "News and Events"
+      },
+      {
+        path: "/school-management",
+        title: "School Management"
+      },
+      {
+        path: "/",
+        title: "Home"
       }
     ]
   }
