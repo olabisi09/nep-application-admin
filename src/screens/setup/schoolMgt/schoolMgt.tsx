@@ -5,38 +5,29 @@ import {
   Modal,
   Table,
   Button as AntButton,
-  Spin,
 } from "antd";
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import { CreateAboutUs, EditAboutUs } from "./setup";
-import { useQuery } from "@tanstack/react-query";
-import { getAboutUs } from "../../../requests";
+import SetupSchoolMgt from "./setup";
 
-const AboutUs = () => {
+const SchoolMgt = () => {
   const [open, setOpen] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-about-us"],
-    queryFn: getAboutUs,
-  });
-
-  // const data = Array.from({ length: 5 }, (_, index) => ({
-  //   id: `1234${index}`,
-  //   title: "About Us",
-  //   description: "Description",
-  //   pictureUrl: "blah",
-  //   status: "Active",
-  // }));
+  const data = Array.from({ length: 5 }, (_, index) => ({
+    id: `1234${index}`,
+    title: "School Management",
+    description: "Description",
+    pictureUrl: "blah",
+    status: "Active",
+  }));
 
   const items: MenuProps["items"] = [
     {
       key: "1",
       label: "Edit",
-      onClick: () => setOpenEdit(true),
+      onClick: () => setOpen(true),
     },
   ];
   const columns = [
@@ -58,12 +49,12 @@ const AboutUs = () => {
     {
       key: "pictureUrl",
       title: "Picture",
-      dataIndex: "imageUrl",
+      dataIndex: "pictureUrl",
     },
     {
       key: "status",
       title: "Status",
-      dataIndex: "activeStatus",
+      dataIndex: "status",
     },
     {
       key: "action",
@@ -75,19 +66,10 @@ const AboutUs = () => {
       ),
     },
   ];
-
-  const aboutUs = data?.data as AboutUs[];
-
-  if (isLoading) {
-    return <Spin />;
-  }
-  if (isError) {
-    return <div>Error: {error?.message}</div>;
-  }
   return (
     <div>
       <section className="space-between">
-        <h3>About Us Setup</h3>
+        <h3>School Management Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -97,7 +79,7 @@ const AboutUs = () => {
       <br />
       <Card bordered={false}>
         <Table
-          dataSource={aboutUs}
+          dataSource={data}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -108,22 +90,13 @@ const AboutUs = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="About Us Setup"
+        title="School Management Setup"
         footer={null}
       >
-        <CreateAboutUs handleClose={() => setOpen(false)} />
-      </Modal>
-      <Modal
-        open={openEdit}
-        onCancel={() => setOpenEdit(false)}
-        centered
-        title="Edit About Us Setup"
-        footer={null}
-      >
-        <EditAboutUs handleClose={() => setOpen(false)} />
+        <SetupSchoolMgt handleClose={() => setOpen(false)} />
       </Modal>
     </div>
   );
 };
 
-export default AboutUs;
+export default SchoolMgt;

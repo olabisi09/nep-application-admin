@@ -36,6 +36,14 @@ import LgaSetup from "./screens/setup/biodata/lga/lga";
 import GenderSetup from "./screens/setup/biodata/gender/gender";
 import TitleSetup from "./screens/setup/biodata/title/title";
 import MaritalSetup from "./screens/setup/biodata/maritalStatus/maritalStatus";
+import Faq from "./screens/setup/faq/faq";
+import History from "./screens/setup/history/history";
+import SchoolInfoTemplate from "./screens/setup/schoolInfoTemplate/schoolInfoTemplate";
+import WhySchool from "./screens/setup/whySchool/whySchool";
+import SchoolForm from "./screens/setup/form/form";
+import SocialMedia from "./screens/setup/socialMedia/socialMedia";
+import StudentLife from "./screens/setup/studentLife/studentLife";
+import NewsAndEvents from "./screens/setup/newsAndEvents/newsAndEvents";
 
 function App() {
   const authRoute = [
@@ -165,6 +173,38 @@ function App() {
     {
       path: routes.setup.aboutUs,
       element: <AboutUs />,
+    },
+    {
+      path: routes.setup.faq,
+      element: <Faq />,
+    },
+    {
+      path: routes.setup.history,
+      element: <History />,
+    },
+    {
+      path: routes.setup.schoolInfo,
+      element: <SchoolInfoTemplate />,
+    },
+    {
+      path: routes.setup.whyUs,
+      element: <WhySchool />,
+    },
+    {
+      path: routes.setup.form,
+      element: <SchoolForm />,
+    },
+    {
+      path: routes.setup.socialMedia,
+      element: <SocialMedia />,
+    },
+    {
+      path: routes.setup.studentLife,
+      element: <StudentLife />,
+    },
+    {
+      path: routes.setup.newsAndEvents,
+      element: <NewsAndEvents />,
     },
   ];
   const userMgtRoutes = [

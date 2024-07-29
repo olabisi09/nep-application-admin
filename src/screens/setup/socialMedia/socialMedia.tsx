@@ -10,22 +10,22 @@ import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import { Form, Formik } from "formik";
-import SetupWhySchool from "./setup";
+import SocialMediaSetup from "./setup";
 
-const WhySchool = () => {
+const SocialMedia = () => {
   const [open, setOpen] = useState(false);
 
-  const data = Array.from({ length: 5 }, (_, index) => ({
+  const data = Array.from({ length: 3 }, (_, index) => ({
     id: `1234${index}`,
-    title: "Why Kwararafa University",
-    status: "Active",
+    name: "Facebook",
+    url: "www.facebook.com/kwu",
   }));
 
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <button onClick={() => setOpen(true)}>Edit</button>,
+      label: "Edit",
+      onClick: () => setOpen(true),
     },
   ];
   const columns = [
@@ -35,14 +35,14 @@ const WhySchool = () => {
       dataIndex: "id",
     },
     {
-      key: "title",
-      title: "Title",
-      dataIndex: "title",
+      key: "name",
+      title: "Name",
+      dataIndex: "name",
     },
     {
-      key: "status",
-      title: "Status",
-      dataIndex: "status",
+      key: "url",
+      title: "URL",
+      dataIndex: "url",
     },
     {
       key: "action",
@@ -57,7 +57,7 @@ const WhySchool = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Why School Setup</h3>
+        <h3>Social Media Link Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -78,26 +78,13 @@ const WhySchool = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Why School Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpen(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        title="Social Media Link Setup"
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <SetupWhySchool />
-          </Form>
-        </Formik>
+        <SocialMediaSetup handleClose={() => setOpen(false)} />
       </Modal>
     </div>
   );
 };
 
-export default WhySchool;
+export default SocialMedia;

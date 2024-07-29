@@ -26,9 +26,14 @@ export const Theme: FC<PropsWithChildren> = ({ children }) => {
           Menu: {
             itemHoverBg: "#E7F5E8",
             itemActiveBg: "#E7F5E8",
+            itemSelectedBg: "#E7F5E8",
             itemBorderRadius: 16,
             itemHoverColor: "#173C19",
             lineWidth: 0,
+            subMenuItemBg: "transparent",
+          },
+          Card: {
+            borderRadiusLG: 16,
           },
         },
       }}

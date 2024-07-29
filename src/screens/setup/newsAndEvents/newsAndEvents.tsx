@@ -5,38 +5,30 @@ import {
   Modal,
   Table,
   Button as AntButton,
-  Spin,
 } from "antd";
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import placeholder from "../../../assets/placeholder-img.png";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import { CreateAboutUs, EditAboutUs } from "./setup";
-import { useQuery } from "@tanstack/react-query";
-import { getAboutUs } from "../../../requests";
+import NewsAndEventsSetup from "./setup";
 
-const AboutUs = () => {
+const NewsAndEvents = () => {
   const [open, setOpen] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-about-us"],
-    queryFn: getAboutUs,
-  });
-
-  // const data = Array.from({ length: 5 }, (_, index) => ({
-  //   id: `1234${index}`,
-  //   title: "About Us",
-  //   description: "Description",
-  //   pictureUrl: "blah",
-  //   status: "Active",
-  // }));
+  const data = Array.from({ length: 3 }, (_, index) => ({
+    id: `1234${index}`,
+    title: "Facebook",
+    description: "description",
+    picture: placeholder,
+    status: "Active",
+  }));
 
   const items: MenuProps["items"] = [
     {
       key: "1",
       label: "Edit",
-      onClick: () => setOpenEdit(true),
+      onClick: () => setOpen(true),
     },
   ];
   const columns = [
@@ -56,14 +48,14 @@ const AboutUs = () => {
       dataIndex: "description",
     },
     {
-      key: "pictureUrl",
+      key: "picture",
       title: "Picture",
-      dataIndex: "imageUrl",
+      render: (_: any, record: any) => <img src={record?.picture} alt="" />,
     },
     {
       key: "status",
       title: "Status",
-      dataIndex: "activeStatus",
+      dataIndex: "status",
     },
     {
       key: "action",
@@ -75,19 +67,10 @@ const AboutUs = () => {
       ),
     },
   ];
-
-  const aboutUs = data?.data as AboutUs[];
-
-  if (isLoading) {
-    return <Spin />;
-  }
-  if (isError) {
-    return <div>Error: {error?.message}</div>;
-  }
   return (
     <div>
       <section className="space-between">
-        <h3>About Us Setup</h3>
+        <h3>News and Events Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -97,7 +80,7 @@ const AboutUs = () => {
       <br />
       <Card bordered={false}>
         <Table
-          dataSource={aboutUs}
+          dataSource={data}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -108,22 +91,13 @@ const AboutUs = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="About Us Setup"
+        title="News and Events Setup"
         footer={null}
       >
-        <CreateAboutUs handleClose={() => setOpen(false)} />
-      </Modal>
-      <Modal
-        open={openEdit}
-        onCancel={() => setOpenEdit(false)}
-        centered
-        title="Edit About Us Setup"
-        footer={null}
-      >
-        <EditAboutUs handleClose={() => setOpen(false)} />
+        <NewsAndEventsSetup handleClose={() => setOpen(false)} />
       </Modal>
     </div>
   );
 };
 
-export default AboutUs;
+export default NewsAndEvents;
