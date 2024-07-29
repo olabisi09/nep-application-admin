@@ -7,11 +7,17 @@ import { Form, Formik, FormikValues } from "formik";
 import { useMutation } from "@tanstack/react-query";
 import { createOrUpdateAboutUs } from "../../../requests";
 import { App } from "antd";
+import * as Yup from "yup";
 
 const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const [upload, setUpload] = useState<File | null>(null);
   const addAboutUsMutation = useMutation({ mutationFn: createOrUpdateAboutUs });
+
+  const validate = Yup.object().shape({
+    title: Yup.string().required("Title is required"),
+    description: Yup.string().required("Description is required"),
+  });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
@@ -53,6 +59,7 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
       onSubmit={(values) => {
         handleAddAboutUs(values);
       }}
+      validationSchema={validate}
     >
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />
