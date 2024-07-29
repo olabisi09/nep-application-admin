@@ -27,32 +27,37 @@ const GenderSetup = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [Data, setData] = useState({} as Gender);
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  // const data = Array.from({ length: 5 }, () => ({
-  //   id: 1234,
-  //   firstName: "Timi",
-  //   lastName: "John",
-  //   email: "john@gmail.com",
-  //   role: "Admin User",
-  //   status: "Active",
-  // }));
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-gender"],
     queryFn: getGender,
   });
-  const items: MenuProps["items"] = [
+
+  const handleEdit = (data: Gender) => {
+    setData(data);
+    setOpenEdit(true);
+  };
+
+  const items = (record: Gender): MenuProps["items"] => [
     {
       key: "1",
       label: (
-        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
+        <button
+          style={{ border: "0rem" }}
+          onClick={() => handleEdit(record)}
+        >
           Edit
         </button>
       ),
     },
   ];
+
+  console.log(Data,'Data')
   const columns = [
     {
       key: "id",
@@ -61,15 +66,14 @@ const GenderSetup = () => {
     },
     {
       key: "genderName",
-      title: "gender",
+      title: "Gender",
       dataIndex: "genderName",
     },
-
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
+      render: (_: any, record: Gender) => (
+        <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
       ),
@@ -84,6 +88,7 @@ const GenderSetup = () => {
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
   return (
     <main>
       <PageLayout
@@ -113,7 +118,6 @@ const GenderSetup = () => {
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
-
             {!showAllFilter && (
               <Filter
                 onClick={() =>
@@ -127,7 +131,6 @@ const GenderSetup = () => {
           dataSource={GenderData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 
@@ -139,6 +142,16 @@ const GenderSetup = () => {
         footer={null}
       >
         <AddGender handleClose={() => setShowAddModal(false)} />
+      </Modal>
+
+      <Modal
+        open={openEdit}
+        onCancel={() => setOpenEdit(false)}
+        centered
+        title="Gender Setup"
+        footer={null}
+      >
+        <AddGender handleClose={() => setOpenEdit(false)} data={Data} />
       </Modal>
     </main>
   );
