@@ -11,6 +11,7 @@ interface AboutUs {
   id: number;
 title: string;
 description: string;
+image?: any;
 imageUrl: string;
 activeStatus: boolean;
 isDeleted: boolean;

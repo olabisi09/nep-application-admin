@@ -3,10 +3,16 @@ import Input from "../../../custom/input/input";
 import Upload from "../../../custom/upload/upload";
 import { ReactComponent as Image } from "../../../assets/image.svg";
 import Button from "../../../custom/button/button";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikValues } from "formik";
+import { useMutation } from "@tanstack/react-query";
+import { createOrUpdateAboutUs } from "../../../requests";
+import { App } from "antd";
 
 const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
+  const { notification } = App.useApp();
   const [upload, setUpload] = useState<File | null>(null);
+  const addAboutUsMutation = useMutation({ mutationFn: createOrUpdateAboutUs });
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
     if (file) {
@@ -16,8 +22,38 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
   const clearFile = () => {
     setUpload(null);
   };
+
+  const handleAddAboutUs = async (values: FormikValues) => {
+    const payload: Partial<AboutUs> = {
+      title: values.title,
+      description: values.description,
+      image: upload,
+    };
+
+    try {
+      await addAboutUsMutation.mutateAsync(payload, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
+
   return (
-    <Formik initialValues={{}} onSubmit={() => {}}>
+    <Formik
+      initialValues={{}}
+      onSubmit={(values) => {
+        handleAddAboutUs(values);
+      }}
+    >
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />
         <Input
@@ -37,14 +73,23 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
         )}
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
-          <Button text="Create" />
+          <Button
+            text={addAboutUsMutation.isPending ? "Creating" : "Create"}
+            isLoading={addAboutUsMutation.isPending}
+          />
         </div>
       </Form>
     </Formik>
   );
 };
 
-const EditAboutUs = ({ handleClose }: { handleClose: () => void }) => {
+const EditAboutUs = ({
+  item,
+  handleClose,
+}: {
+  item: AboutUs;
+  handleClose: () => void;
+}) => {
   const [upload, setUpload] = useState<File | null>(null);
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
@@ -56,7 +101,17 @@ const EditAboutUs = ({ handleClose }: { handleClose: () => void }) => {
     setUpload(null);
   };
   return (
-    <Formik initialValues={{}} onSubmit={() => {}}>
+    <Formik
+      initialValues={{
+        title: item?.title,
+        description: item?.description,
+        //image: upload || item?.image,
+      }}
+      onSubmit={(values) => {
+        console.log(values);
+      }}
+      enableReinitialize={true}
+    >
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />
         <Input
