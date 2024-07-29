@@ -19,6 +19,7 @@ const AddMarital = ({ handleClose }: { handleClose: () => void }) => {
   const CreateMaritalStatusHandler = async (values: FormikValues) => {
     const payload: Partial<MaritalStatus> = {
       statusName: values.MaritalName,
+      activeStatus:true,
    
     };
 
@@ -29,6 +30,10 @@ const AddMarital = ({ handleClose }: { handleClose: () => void }) => {
             message: "Success",
             description: data?.message,
           });
+          queryClient.refetchQueries({
+            queryKey: ["get-marital-status"],
+          });
+          handleClose()
         },
       });
     } catch (error: any) {
@@ -43,48 +48,37 @@ const AddMarital = ({ handleClose }: { handleClose: () => void }) => {
     MaritalName: Yup.string().required("Marital Name is required"),
   });
 
-  return (
+ return (
     <Formik
-      initialValues={{}}
+      initialValues={{
+        MaritalName: "",
+      }}
       onSubmit={(values) => {
         CreateMaritalStatusHandler(values);
       }}
+      validationSchema={validationSchema}
     >
-      <Form className="fields">
-        <Input
-          name="MaritalName "
-          placeholder="Input Marital Name"
-          label="Marital Name"
-        />
-        <div className="btn-group">
-          <Button onClick={handleClose} variant="text" text="Cancel" />
-          <Button
-            disabled={CreateMaritalStatusMutation?.isPending}
-            text={
-              CreateMaritalStatusMutation?.isPending ? "Creating..." : "Create"
-            }
+      {({ handleSubmit }) => (
+        <Form className="fields">
+          <Input
+            name="MaritalName"
+            placeholder="Input Marital Name"
+            label="Marital Name"
           />
-        </div>
-      </Form>
+          <div className="btn-group">
+            <Button onClick={handleClose} variant="text" text="Cancel" />
+            <Button
+              onClick={handleSubmit as any} // type casting as any to avoid TypeScript errors
+              disabled={CreateMaritalStatusMutation?.isPending}
+              text={
+                CreateMaritalStatusMutation?.isPending ? "Creating..." : "Create"
+              }
+            />
+          </div>
+        </Form>
+      )}
     </Formik>
   );
 };
 
-// const EditMarital = ({ handleClose }: { handleClose: () => void }) => {
-//   return (
-//     <Formik initialValues={{}} onSubmit={() => {}}>
-//       <Form className="fields">
-//         <Input
-//           name="MaritalName "
-//           placeholder="Input Marital Name"
-//           label="Marital Name"
-//         />
-//         <div className="btn-group">
-//           <Button onClick={handleClose} variant="text" text="Cancel" />
-//           <Button text="Create" />
-//         </div>
-//       </Form>
-//     </Formik>
-//   );
-// };
 export { AddMarital };

@@ -37,7 +37,7 @@ const Button: React.FC<ButtonProps> = ({
         {...rest}
         className={classNames(styles.textButton, className)}
         disabled={disabled}
-        type="submit"
+        type="button"
         style={removePadding ? noPaddingStyle : {}}
       >
         {iconBefore}

@@ -3,7 +3,14 @@ import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps,Spin} from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+} from "antd";
 import { Form, Formik } from "formik";
 import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
@@ -39,7 +46,11 @@ const GenderSetup = () => {
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
+      label: (
+        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
+          Edit
+        </button>
+      ),
     },
   ];
   const columns = [
@@ -49,30 +60,11 @@ const GenderSetup = () => {
       dataIndex: "id",
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
+      key: "genderName",
+      title: "gender",
+      dataIndex: "genderName",
     },
-    {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
-    },
-    {
-      key: "email",
-      title: "Email Address",
-      dataIndex: "email",
-    },
-    {
-      key: "role",
-      title: "Role",
-      dataIndex: "role",
-    },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "status",
-    },
+
     {
       key: "action",
       title: "",
@@ -138,53 +130,16 @@ const GenderSetup = () => {
           //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
-     
+
       <Modal
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
         title="Gender Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text" 
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddGender />
-          </Form>
-        </Formik>
+        <AddGender handleClose={() => setShowAddModal(false)} />
       </Modal>
-
-      <Modal
-        open={openEdit}
-        onCancel={() => setOpenEdit(false)}
-        centered
-        title="Gender Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpenEdit(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Update" />
-          </div>
-        )}
-      >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddGender />
-          </Form>
-        </Formik>
-      </Modal>
-
     </main>
   );
 };
