@@ -17,6 +17,9 @@ const Faq = () => {
   const [open, setOpen] = useState(false);
   const [openQAndA, setOpenQAndA] = useState(false);
 
+
+  
+
   const data = Array.from({ length: 5 }, (_, index) => ({
     id: `1234${index}`,
     title: "Why Kwararafa University",
