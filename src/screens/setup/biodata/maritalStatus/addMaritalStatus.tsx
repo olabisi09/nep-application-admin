@@ -1,11 +1,14 @@
 import Input from "../../../../custom/input/input";
-import { Form, Formik, FormikProvider, FormikValues, useFormik } from "formik";
+import { Form, Formik, FormikValues } from "formik";
 import Button from "../../../../custom/button/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createOrUpdateMaritalStatus } from "../../../../requests";
 import * as Yup from "yup";
+import { App } from "antd";
+
 
 const AddMarital = ({ handleClose }: { handleClose: () => void }) => {
+  const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
   const CreateMaritalStatusMutation = useMutation({
@@ -13,30 +16,26 @@ const AddMarital = ({ handleClose }: { handleClose: () => void }) => {
     mutationKey: ["create-marital-status"],
   });
 
-  const CreateMaritalStatusHandler = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
-    const maritalStatusPayload: MaritalStatus = {
-      statusName: values?.MaritalName,
+  const CreateMaritalStatusHandler = async (values: FormikValues) => {
+    const payload: Partial<MaritalStatus> = {
+      statusName: values.MaritalName,
+   
     };
+
     try {
-      await CreateMaritalStatusMutation.mutateAsync(maritalStatusPayload, {
-        onSuccess: () => {
-          // showNotification({
-          //   message: "Marital Status Added successfully",
-          //   type: "success",
-          // });
-          console.log('success')
-          queryClient.refetchQueries({ queryKey: ["get-marital-status"] });
-          handleClose();
+      await CreateMaritalStatusMutation.mutateAsync(payload, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
         },
       });
     } catch (error: any) {
-      // showNotification({
-      //   message: error?.response?.data.Message || error.message || "Failed",
-      //   type: "error",
-      // });
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
     }
   };
 
@@ -44,17 +43,13 @@ const AddMarital = ({ handleClose }: { handleClose: () => void }) => {
     MaritalName: Yup.string().required("Marital Name is required"),
   });
 
-  const formik = useFormik<FormikValues>({
-    initialValues: {
-      MaritalName: "",
-    },
-    onSubmit: (values, { resetForm }) => {
-      CreateMaritalStatusHandler(values, resetForm);
-    },
-    validationSchema: validationSchema,
-  });
   return (
-    <FormikProvider value={formik} >
+    <Formik
+      initialValues={{}}
+      onSubmit={(values) => {
+        CreateMaritalStatusHandler(values);
+      }}
+    >
       <Form className="fields">
         <Input
           name="MaritalName "
@@ -62,11 +57,16 @@ const AddMarital = ({ handleClose }: { handleClose: () => void }) => {
           label="Marital Name"
         />
         <div className="btn-group">
-          <Button  onClick={handleClose} variant="text" text="Cancel" />
-          <Button disabled={CreateMaritalStatusMutation?.isPending} text={CreateMaritalStatusMutation?.isPending ? 'Creating...' : 'Create'}/>
+          <Button onClick={handleClose} variant="text" text="Cancel" />
+          <Button
+            disabled={CreateMaritalStatusMutation?.isPending}
+            text={
+              CreateMaritalStatusMutation?.isPending ? "Creating..." : "Create"
+            }
+          />
         </div>
       </Form>
-    </FormikProvider>
+    </Formik>
   );
 };
 
