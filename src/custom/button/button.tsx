@@ -1,7 +1,7 @@
 import React from "react";
-import { Spin } from "antd";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
+import Spinner from "../spinner/spinner";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
@@ -40,7 +40,7 @@ const Button: React.FC<ButtonProps> = ({
         style={removePadding ? noPaddingStyle : {}}
       >
         {iconBefore}
-        {isLoading ? <Spin className={styles.spinner} /> : text}
+        {isLoading ? <Spinner /> : text}
       </button>
     );
   }
@@ -53,7 +53,7 @@ const Button: React.FC<ButtonProps> = ({
       disabled={disabled}
     >
       {iconBefore}
-      {isLoading ? <Spin className={styles.spinner} /> : text}
+      {isLoading ? <Spinner /> : text}
     </button>
   );
 };

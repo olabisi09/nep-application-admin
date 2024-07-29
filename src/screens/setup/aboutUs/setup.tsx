@@ -60,7 +60,10 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
 
   return (
     <Formik
-      initialValues={{}}
+      initialValues={{
+        title: "",
+        description: "",
+      }}
       onSubmit={(values) => {
         handleAddAboutUs(values);
       }}
@@ -91,7 +94,8 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
             text="Cancel"
           />
           <Button
-            text={addAboutUsMutation.isPending ? "Creating" : "Create"}
+            text="Create"
+            disabled={addAboutUsMutation.isPending}
             isLoading={addAboutUsMutation.isPending}
           />
         </div>
@@ -194,7 +198,8 @@ const EditAboutUs = ({
           />
           <Button
             type="submit"
-            text={editAboutUsMutation.isPending ? "Updating" : "Update"}
+            text="Update"
+            isLoading={editAboutUsMutation.isPending}
             disabled={editAboutUsMutation.isPending}
           />
         </div>

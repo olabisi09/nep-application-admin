@@ -17,7 +17,7 @@ export const getHistory = async () => {
 }
 
 export const createOrUpdateHistory = async (payload: Partial<SetupPayload>) => {
-  return (await api.post('/AboutUsPage/createUpdateHistorye', payload, { headers: { 'Content-Type': 'multipart/form-data' } }))?.data as Response;
+  return (await api.post('/AboutUsPage/createUpdateHistory', payload, { headers: { 'Content-Type': 'multipart/form-data' } }))?.data as Response;
 }
 
 export const deleteHistory = async (id: number) => {

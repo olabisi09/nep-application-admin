@@ -5,32 +5,31 @@ import {
   Modal,
   Table,
   Button as AntButton,
+  App,
+  Spin,
 } from "antd";
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import { Form, Formik } from "formik";
-import SetupHistory from "./setup";
+import { CreateHistory, EditHistory } from "./setup";
+import { ColumnsType } from "antd/es/table";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteHistory, getHistory } from "../../../requests";
 
 const History = () => {
+  const { notification } = App.useApp();
   const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [history, setHistory] = useState<Setup>({} as Setup);
 
-  const data = Array.from({ length: 5 }, (_, index) => ({
-    id: `1234${index}`,
-    title: "History",
-    description: "Description",
-    pictureUrl: "blah",
-    status: "Active",
-  }));
+  const deleteHistoryMutation = useMutation({ mutationFn: deleteHistory });
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["get-history"],
+    queryFn: getHistory,
+  });
 
-  // const items: MenuProps["items"] = [
-  //   {
-  //     key: "1",
-  //     label: <button onClick={() => setOpenEdit(true)}>Edit</button>,
-  //   },
-  // ];
-  const columns = [
+  const columns: ColumnsType<Setup> = [
     {
       key: "id",
       title: "ID",
@@ -49,23 +48,69 @@ const History = () => {
     {
       key: "pictureUrl",
       title: "Picture",
-      dataIndex: "pictureUrl",
+      dataIndex: "imageUrl",
+      render: (_, { imageUrl }) => <img src={imageUrl} alt="" />,
     },
     {
       key: "status",
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
-    // {
-    //   key: "action",
-    //   title: "",
-    //   render: () => (
-    //     <Dropdown menu={{ items }} trigger={["click"]}>
-    //       <AntButton type="text" icon={<Ellipsis />} />
-    //     </Dropdown>
-    //   ),
-    // },
+    {
+      key: "action",
+      title: "",
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setHistory(record);
+              setOpenEdit(true);
+            },
+          },
+          {
+            key: "2",
+            label: "Delete",
+            onClick: async () => {
+              try {
+                await deleteHistoryMutation.mutateAsync(record.id, {
+                  onSuccess: (data) => {
+                    notification.success({
+                      message: "Success",
+                      description: data?.message,
+                    });
+                    refetch();
+                  },
+                });
+              } catch (error: any) {
+                notification.error({
+                  message: "Error",
+                  description: error?.response?.data?.message,
+                });
+              }
+            },
+          },
+        ];
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
+        );
+      },
+    },
   ];
+
+  const historyData = data?.data as Setup[];
+
+  if (isLoading) {
+    return <Spin />;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
+
   return (
     <div>
       <section className="space-between">
@@ -79,7 +124,7 @@ const History = () => {
       <br />
       <Card bordered={false}>
         <Table
-          dataSource={data}
+          dataSource={historyData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -93,7 +138,16 @@ const History = () => {
         title="History Setup"
         footer={null}
       >
-        <SetupHistory handleClose={() => setOpen(false)} />
+        <CreateHistory handleClose={() => setOpen(false)} />
+      </Modal>
+      <Modal
+        open={openEdit}
+        onCancel={() => setOpenEdit(false)}
+        centered
+        title="Edit History Setup"
+        footer={null}
+      >
+        <EditHistory item={history} handleClose={() => setOpenEdit(false)} />
       </Modal>
     </div>
   );
