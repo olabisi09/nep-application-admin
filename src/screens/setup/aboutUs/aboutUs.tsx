@@ -16,6 +16,7 @@ import { CreateAboutUs, EditAboutUs } from "./setup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteAboutUs, getAboutUs } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
+import DOMPurify from "dompurify";
 
 const AboutUs = () => {
   const { notification } = App.useApp();
@@ -44,6 +45,10 @@ const AboutUs = () => {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      render: (_, { description }) => {
+        const cleanhtml = DOMPurify.sanitize(description);
+        return <div dangerouslySetInnerHTML={{ __html: cleanhtml }} />;
+      },
     },
     {
       key: "pictureUrl",

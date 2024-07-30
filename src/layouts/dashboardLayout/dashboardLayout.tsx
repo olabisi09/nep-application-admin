@@ -22,8 +22,6 @@ const DashboardLayout = () => {
     (x) => x.path === location.pathname
   );
 
-  console.log(screenWidth);
-
   const breadcrumb = [
     {
       title: currentLocation?.title,

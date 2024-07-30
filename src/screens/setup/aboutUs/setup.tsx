@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createOrUpdateAboutUs } from "../../../requests";
 import { App } from "antd";
 import * as Yup from "yup";
+import Editor from "../../../custom/editor/editor";
 
 const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
@@ -69,37 +70,42 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
       }}
       validationSchema={validate}
     >
-      <Form className="fields">
-        <Input name="title" label="Title" placeholder="Input title" />
-        <Input
-          type="textarea"
-          name="description"
-          label="Description"
-          placeholder="Input description"
-        />
-        {upload ? (
-          <div className="small-gap">
-            <Image />
-            <span>{upload.name}</span>
-            <Button onClick={clearFile} variant="text" text="x" />
+      {({ setFieldValue }) => (
+        <Form className="fields">
+          <Input name="title" label="Title" placeholder="Input title" />
+          <Editor
+            name="description"
+            label="Description"
+            onChange={(_, editor) => {
+              const data = editor.getData();
+              setFieldValue("description", data);
+            }}
+          />
+          {upload ? (
+            <div className="small-gap">
+              <Image />
+              <span>{upload.name}</span>
+              <Button onClick={clearFile} variant="text" text="x" />
+            </div>
+          ) : (
+            <Upload name="image" label="Image" onChange={handleFileChange} />
+          )}
+          <div className="btn-group">
+            <Button
+              onClick={handleClose}
+              type="button"
+              variant="text"
+              text="Cancel"
+            />
+            <Button
+              text="Create"
+              type="submit"
+              disabled={addAboutUsMutation.isPending}
+              isLoading={addAboutUsMutation.isPending}
+            />
           </div>
-        ) : (
-          <Upload name="image" label="Image" onChange={handleFileChange} />
-        )}
-        <div className="btn-group">
-          <Button
-            onClick={handleClose}
-            type="button"
-            variant="text"
-            text="Cancel"
-          />
-          <Button
-            text="Create"
-            disabled={addAboutUsMutation.isPending}
-            isLoading={addAboutUsMutation.isPending}
-          />
-        </div>
-      </Form>
+        </Form>
+      )}
     </Formik>
   );
 };
