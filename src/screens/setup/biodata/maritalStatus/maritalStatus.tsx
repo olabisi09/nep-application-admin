@@ -3,14 +3,22 @@ import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
-import { Form, Formik } from "formik";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+} from "antd";
 import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../../custom/searchInput/searchInput";
-import AddMarital from "./addMaritalStatus";
+import  { AddMarital } from "./addMaritalStatus";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import { getMaritalStatus } from "../../../../requests";
+import { useQuery } from "@tanstack/react-query";
 
 const MaritalSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -22,18 +30,20 @@ const MaritalSetup = () => {
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  const data = Array.from({ length: 5 }, () => ({
-    id: 1234,
-    firstName: "Timi",
-    lastName: "John",
-    email: "john@gmail.com",
-    role: "Admin User",
-    status: "Active",
-  }));
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get-marital-status"],
+    queryFn: getMaritalStatus,
+  });
+
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
+      label: (
+        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
+          Edit
+        </button>
+      ),
     },
   ];
   const columns = [
@@ -43,29 +53,9 @@ const MaritalSetup = () => {
       dataIndex: "id",
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
-    },
-    {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
-    },
-    {
-      key: "email",
-      title: "Email Address",
-      dataIndex: "email",
-    },
-    {
-      key: "role",
-      title: "Role",
-      dataIndex: "role",
-    },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "status",
+      key: "statusName",
+      title: "status",
+      dataIndex: "statusName",
     },
     {
       key: "action",
@@ -77,7 +67,14 @@ const MaritalSetup = () => {
       ),
     },
   ];
+  const maritalStatus = data?.data as MaritalStatus[];
 
+  if (isLoading) {
+    return <Spin />;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
   return (
     <main>
       <PageLayout
@@ -118,59 +115,34 @@ const MaritalSetup = () => {
           </div>
         </div>
         <Table
-          dataSource={data}
+          dataSource={maritalStatus}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
-     
+
       <Modal
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
         title="Marital Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text" 
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddMarital />
-          </Form>
-        </Formik>
+        
+            <AddMarital handleClose={() => setShowAddModal(false)}  />
+   
       </Modal>
 
-      <Modal
+      {/* <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Marital Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpenEdit(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Update" />
-          </div>
-        )}
+        title="Edit Marital Setup"
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddMarital />
-          </Form>
-        </Formik>
-      </Modal>
-
+        <AddMarital handleClose={() => setOpenEdit(false)}  />
+      </Modal> */}
     </main>
   );
 };

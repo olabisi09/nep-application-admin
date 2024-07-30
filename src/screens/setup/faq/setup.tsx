@@ -4,11 +4,15 @@ import Select from "../../../custom/select/select";
 import { Form, Formik, FormikProvider, FormikValues, useFormik } from "formik";
 import * as Yup from "yup";
 import { createFaq } from "../../../requests";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FaqPayload } from "./types";
 import { notify } from "../../../utils/notify";
+import { App } from "antd";
 
 const SetupFaq = ({ handleClose }: { handleClose: () => void }) => {
+  const { notification } = App.useApp();
+  const queryClient = useQueryClient();
+
   const FaqsetupMutation = useMutation({
     mutationKey: ["faq-setup"],
     mutationFn: createFaq,
@@ -24,19 +28,23 @@ const SetupFaq = ({ handleClose }: { handleClose: () => void }) => {
       activeStatus: values?.activeStatus === "true",
     };
     try {
-      const data = await FaqsetupMutation.mutateAsync(payload);
-      notify(data?.message, "success");
-      resetForm();
+      await FaqsetupMutation.mutateAsync(payload, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          queryClient.refetchQueries({
+            queryKey: ["get-marital-status"],
+          });
+          handleClose();
+        },
+      });
     } catch (error: any) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.Message
-      ) {
-        notify(error.response.data.Message, "error");
-      } else {
-        notify(error.message, "error");
-      }
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
     }
   };
 
@@ -75,6 +83,7 @@ const SetupFaq = ({ handleClose }: { handleClose: () => void }) => {
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button
             text="Create"
+            type="submit"
             isLoading={FaqsetupMutation?.isPending}
             disabled={FaqsetupMutation?.isPending}
           />

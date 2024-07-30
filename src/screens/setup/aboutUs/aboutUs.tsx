@@ -14,10 +14,12 @@ import { useState } from "react";
 import { CreateAboutUs, EditAboutUs } from "./setup";
 import { useQuery } from "@tanstack/react-query";
 import { getAboutUs } from "../../../requests";
+import { ColumnsType } from "antd/es/table";
 
 const AboutUs = () => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [about, setAbout] = useState<AboutUs>({} as AboutUs);
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-about-us"],
@@ -31,15 +33,7 @@ const AboutUs = () => {
   //   pictureUrl: "blah",
   //   status: "Active",
   // }));
-
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: "Edit",
-      onClick: () => setOpenEdit(true),
-    },
-  ];
-  const columns = [
+  const columns: ColumnsType<AboutUs> = [
     {
       key: "id",
       title: "ID",
@@ -59,20 +53,34 @@ const AboutUs = () => {
       key: "pictureUrl",
       title: "Picture",
       dataIndex: "imageUrl",
+      render: (_, { imageUrl }) => <img src={imageUrl} alt="" />,
     },
     {
       key: "status",
       title: "Status",
       dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
-          <AntButton type="text" icon={<Ellipsis />} />
-        </Dropdown>
-      ),
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setAbout(record);
+              setOpenEdit(true);
+            },
+          },
+        ];
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
+        );
+      },
     },
   ];
 
@@ -120,7 +128,7 @@ const AboutUs = () => {
         title="Edit About Us Setup"
         footer={null}
       >
-        <EditAboutUs handleClose={() => setOpen(false)} />
+        <EditAboutUs item={about} handleClose={() => setOpen(false)} />
       </Modal>
     </div>
   );

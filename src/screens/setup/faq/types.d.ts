@@ -3,3 +3,9 @@ export interface FaqPayload {
     description: string
     activeStatus: boolean
   }
+
+  export interface FaqResponse {
+    statusCode: number
+    message: string
+    data: any
+  }
