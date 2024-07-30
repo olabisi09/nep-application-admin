@@ -22,6 +22,7 @@ const AddGender = ({ handleClose,data }:Props) => {
 
   const CreateGenderHandler = async (values: FormikValues) => {
     const payload: Partial<Gender> = {
+      id:data?.id || 0,
       genderName: values.genderName,
       activeStatus:true,
    

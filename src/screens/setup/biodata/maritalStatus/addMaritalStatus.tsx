@@ -6,8 +6,12 @@ import { createOrUpdateMaritalStatus } from "../../../../requests";
 import * as Yup from "yup";
 import { App } from "antd";
 
+interface Props {
+  data?: MaritalStatus;
+  handleClose: () => void;
+}
 
-const AddMarital = ({ handleClose }: { handleClose: () => void }) => {
+const AddMarital = ({ handleClose,data }:Props)  => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -51,7 +55,7 @@ const AddMarital = ({ handleClose }: { handleClose: () => void }) => {
  return (
     <Formik
       initialValues={{
-        MaritalName: "",
+        MaritalName: data?.statusName,
       }}
       onSubmit={(values) => {
         CreateMaritalStatusHandler(values);

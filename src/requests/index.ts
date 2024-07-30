@@ -27,3 +27,11 @@ export const createOrUpdateMaritalStatus = async (payload: Partial<MaritalStatus
   return (await api.post('/Utilities/Utilities/CreateUpdateMaritalStatus', payload))?.data as Response;
 }
 
+
+export const getCountry = async () => {
+  return (await api.get('/Utilities/Utilities/GetAllCountry'))?.data as CountryResponse;
+}
+
+export const createOrUpdateCountry = async (payload: Partial<Country>) => {
+  return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
+}

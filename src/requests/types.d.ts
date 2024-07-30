@@ -34,3 +34,13 @@ interface MaritalStatus {
   statusName: string;
 activeStatus?: boolean;
 }
+
+interface CountryResponse extends Response {
+  data: Country[]
+}
+
+interface Country {
+  id?: number;
+  countryName: string;
+activeStatus?: boolean;
+}
