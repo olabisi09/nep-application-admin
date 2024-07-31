@@ -36,3 +36,27 @@ export const StatusOptions = [{
   value: false,
   label: 'Inactive',
  }]
+export const getGender = async () => {
+  return (await api.get('/Utilities/Utilities/GetAllGenders'))?.data as GenderResponse;
+}
+
+export const createOrUpdateGender = async (payload: Partial<Gender>) => {
+  return (await api.post('/Utilities/Utilities/CreateUpdateGender', payload))?.data as Response;
+}
+
+export const getMaritalStatus = async () => {
+  return (await api.get('/Utilities/Utilities/GetAllMaritalStatus'))?.data as MaritalStatusResponse;
+}
+
+export const createOrUpdateMaritalStatus = async (payload: Partial<MaritalStatus>) => {
+  return (await api.post('/Utilities/Utilities/CreateUpdateMaritalStatus', payload))?.data as Response;
+}
+
+
+export const getCountry = async () => {
+  return (await api.get('/Utilities/Utilities/GetAllCountry'))?.data as CountryResponse;
+}
+
+export const createOrUpdateCountry = async (payload: Partial<Country>) => {
+  return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
+}
