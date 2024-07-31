@@ -2,16 +2,17 @@ import Input from "../../../../custom/input/input";
 import { Form, Formik, FormikValues } from "formik";
 import Button from "../../../../custom/button/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateGender} from "../../../../requests";
+import { createOrUpdateGender } from "../../../../requests";
 import * as Yup from "yup";
 import { App } from "antd";
+import Select from "../../../../custom/select/select";
 
 interface Props {
   data?: Gender;
   handleClose: () => void;
 }
 
-const AddGender = ({ handleClose,data }:Props) => {
+const AddGender = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -22,10 +23,9 @@ const AddGender = ({ handleClose,data }:Props) => {
 
   const CreateGenderHandler = async (values: FormikValues) => {
     const payload: Partial<Gender> = {
-      id:data?.id || 0,
+      id: data?.id || 0,
       genderName: values.genderName,
-      activeStatus:true,
-   
+      activeStatus: values?.activeStatus,
     };
 
     try {
@@ -38,7 +38,7 @@ const AddGender = ({ handleClose,data }:Props) => {
           queryClient.refetchQueries({
             queryKey: ["get-gender"],
           });
-          handleClose()
+          handleClose();
         },
       });
     } catch (error: any) {
@@ -51,12 +51,34 @@ const AddGender = ({ handleClose,data }:Props) => {
 
   const validationSchema = Yup.object().shape({
     genderName: Yup.string().required("Gender is required"),
+    activeStatus:Yup.string().required("Active Status is required"),
   });
 
- return (
+  const StatusOptions = [
+    {
+      name: "Enable",
+      value: true,
+    },
+    {
+      name: "Disable",
+      value: false,
+    },
+  ];
+
+  const statusData: any =
+    StatusOptions &&
+    StatusOptions?.length > 0 &&
+    StatusOptions?.map((item: any, index: number) => (
+      <option value={item?.value} key={index}>
+        {item?.name}
+      </option>
+    ));
+
+  return (
     <Formik
       initialValues={{
         genderName: data?.genderName || "",
+        activeStatus:data?.activeStatus || '',
       }}
       onSubmit={(values) => {
         CreateGenderHandler(values);
@@ -65,19 +87,19 @@ const AddGender = ({ handleClose,data }:Props) => {
     >
       {({ handleSubmit }) => (
         <Form className="fields">
-          <Input
-            name="genderName"
-            placeholder="Input Gender"
-            label="Gender"
+          <Input name="genderName" placeholder="Input Gender" label="Gender" />
+          <Select
+            name="activeStatus"
+            placeholder="Select Country Name"
+            label="Active Status"
+            options={statusData}
           />
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button
-              onClick={handleSubmit as any} 
+              onClick={handleSubmit as any}
               disabled={CreateGenderMutation?.isPending}
-              text={
-                CreateGenderMutation?.isPending ? "Creating..." : "Create"
-              }
+              text={CreateGenderMutation?.isPending ? "Creating..." : "Create"}
             />
           </div>
         </Form>
@@ -86,4 +108,4 @@ const AddGender = ({ handleClose,data }:Props) => {
   );
 };
 
-export default AddGender ;
+export default AddGender;

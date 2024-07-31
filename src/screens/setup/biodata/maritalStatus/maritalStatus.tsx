@@ -119,6 +119,12 @@ const MaritalSetup = ()=> {
       dataIndex: "statusName",
     },
     {
+      key: "activeStatus",
+      title: "Active Status",
+      dataIndex: "activeStatus",
+    },
+
+    {
       key: "action",
       title: "",
       render: ( record: MaritalStatus) => (

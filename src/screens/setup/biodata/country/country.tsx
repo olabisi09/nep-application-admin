@@ -53,30 +53,16 @@ const CountrySetup = () => {
       dataIndex: "id",
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
+      key: "countryName",
+      title: "country Name",
+      dataIndex: "countryName",
     },
     {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
+      key: "activeStatus",
+      title: "Active Status",
+      dataIndex: "activeStatus",
     },
-    {
-      key: "email",
-      title: "Email Address",
-      dataIndex: "email",
-    },
-    {
-      key: "role",
-      title: "Role",
-      dataIndex: "role",
-    },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "status",
-    },
+
     {
       key: "action",
       title: "",
@@ -136,7 +122,7 @@ const CountrySetup = () => {
           </div>
         </div>
         <Table
-          dataSource={data}
+          dataSource={CountryData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}
