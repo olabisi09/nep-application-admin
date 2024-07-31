@@ -9,15 +9,17 @@ import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./addFaculty";
+import AddCareerProspects from "./addCareerProspects";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import AddItem from "./addItem";
 
-const FaultySetUp = () => {
+const CareerProspects = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [showAddItemModal, setShowAddItemModal] = useState(false);
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -34,6 +36,7 @@ const FaultySetUp = () => {
     {
       key: "1",
       label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
+ 
     },
   ];
   const columns = [
@@ -81,9 +84,9 @@ const FaultySetUp = () => {
   return (
     <main>
       <PageLayout
-        paragraph="Faculty Setup"
+        paragraph="Career Prospects Setup"
         firstText="Setup Programs"
-        secondText="Faculty Setup"
+        secondText="Career Prospects Setup "
         iconBefore={<GraterThan />}
         headerActions={
           <Button
@@ -129,7 +132,7 @@ const FaultySetUp = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Faculty Setup"
+        title="Career Prospects Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -143,7 +146,7 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddCareerProspects />
           </Form>
         </Formik>
       </Modal>
@@ -152,7 +155,7 @@ const FaultySetUp = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Faculty Setup"
+        title="Career Prospects Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -166,7 +169,29 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddCareerProspects />
+          </Form>
+        </Formik>
+      </Modal>
+      <Modal
+        open={showAddItemModal}
+        onCancel={() => setShowAddItemModal(false)}
+        centered
+        title="Career Prospect Item"
+        footer={() => (
+          <div className="btn-group">
+            <Button
+              onClick={() => setShowAddItemModal(false)}
+              variant="text"
+              text="Cancel"
+            />
+            <Button text="Add Details" />
+          </div>
+        )}
+      >
+        <Formik initialValues={{}} onSubmit={() => {}}>
+          <Form>
+            <AddItem />
           </Form>
         </Formik>
       </Modal>
@@ -175,4 +200,4 @@ const FaultySetUp = () => {
   );
 };
 
-export default FaultySetUp;
+export default CareerProspects;

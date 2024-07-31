@@ -1,18 +1,20 @@
-import PageLayout from "../../../layouts/pageLayout/pageLayout";
-import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.svg";
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
+import PageLayout from "../../../../layouts/pageLayout/pageLayout";
+import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward.svg";
+import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Search } from "../../../../assets/search.svg";
+import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin } from "antd";
 import { Form, Formik } from "formik";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
+import styles from "../../styles.module.scss";
+import Button from "../../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./addFaculty";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import SearchInput from "../../../../custom/searchInput/searchInput";
+import AddCountry from "./addCountry";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import { getCountry } from "../../../../requests";
+import { useQuery } from "@tanstack/react-query";
 
-const FaultySetUp = () => {
+const CountrySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
@@ -30,6 +32,14 @@ const FaultySetUp = () => {
     role: "Admin User",
     status: "Active",
   }));
+
+  const { data:data1, isLoading, isError, error } = useQuery({
+    queryKey: ["get-country"],
+    queryFn: getCountry,
+  });
+
+  const CountryData = data1?.data as Country[];
+
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -78,12 +88,20 @@ const FaultySetUp = () => {
     },
   ];
 
+  
+  if (isLoading) {
+    return <Spin />;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
+
   return (
     <main>
       <PageLayout
-        paragraph="Faculty Setup"
-        firstText="Setup Programs"
-        secondText="Faculty Setup"
+        paragraph="Country Setup"
+        firstText="Setup Bio-data"
+        secondText="Country Setup"
         iconBefore={<GraterThan />}
         headerActions={
           <Button
@@ -129,12 +147,12 @@ const FaultySetUp = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Faculty Setup"
+        title="Country Setup"
         footer={() => (
           <div className="btn-group">
             <Button
               onClick={() => setShowAddModal(false)}
-              variant="text"
+              variant="text" 
               text="Cancel"
             />
             <Button text="Create" />
@@ -143,7 +161,7 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddCountry />
           </Form>
         </Formik>
       </Modal>
@@ -152,7 +170,7 @@ const FaultySetUp = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Faculty Setup"
+        title="Country Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -166,7 +184,7 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddCountry />
           </Form>
         </Formik>
       </Modal>
@@ -175,4 +193,4 @@ const FaultySetUp = () => {
   );
 };
 
-export default FaultySetUp;
+export default CountrySetup;

@@ -38,3 +38,31 @@ interface SocialMedia {
   activeStatus: boolean;
   isDeleted: boolean;
 }
+interface GenderResponse extends Response {
+  data: Gender[]
+}
+
+interface Gender {
+  id: number;
+  genderName: string;
+activeStatus: boolean;
+}
+interface MaritalStatusResponse extends Response {
+  data: MaritalStatus[]
+}
+
+interface MaritalStatus {
+  id?: number;
+  statusName: string;
+activeStatus?: boolean;
+}
+
+interface CountryResponse extends Response {
+  data: Country[]
+}
+
+interface Country {
+  id?: number;
+  countryName: string;
+activeStatus?: boolean;
+}

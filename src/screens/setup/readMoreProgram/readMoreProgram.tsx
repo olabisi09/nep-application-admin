@@ -9,10 +9,10 @@ import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./addFaculty";
+import AddReadMoreProgram from "./addReadMoreProgram";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 
-const FaultySetUp = () => {
+const ReadMoreProgram = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
@@ -81,9 +81,9 @@ const FaultySetUp = () => {
   return (
     <main>
       <PageLayout
-        paragraph="Faculty Setup"
+        paragraph="Read More - Program Setup"
         firstText="Setup Programs"
-        secondText="Faculty Setup"
+        secondText="Read More - Program Setup"
         iconBefore={<GraterThan />}
         headerActions={
           <Button
@@ -129,7 +129,7 @@ const FaultySetUp = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Faculty Setup"
+        title="Read More - Program Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -143,7 +143,7 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddReadMoreProgram />
           </Form>
         </Formik>
       </Modal>
@@ -152,7 +152,7 @@ const FaultySetUp = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Faculty Setup"
+        title="Read More - Program Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -166,7 +166,7 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddReadMoreProgram />
           </Form>
         </Formik>
       </Modal>
@@ -175,4 +175,4 @@ const FaultySetUp = () => {
   );
 };
 
-export default FaultySetUp;
+export default ReadMoreProgram;

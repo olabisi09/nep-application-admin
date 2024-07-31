@@ -1,18 +1,18 @@
-import PageLayout from "../../../layouts/pageLayout/pageLayout";
-import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.svg";
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+import PageLayout from "../../../../layouts/pageLayout/pageLayout";
+import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward.svg";
+import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Search } from "../../../../assets/search.svg";
+import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
 import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
 import { Form, Formik } from "formik";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
+import styles from "../../styles.module.scss";
+import Button from "../../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./addFaculty";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import SearchInput from "../../../../custom/searchInput/searchInput";
+import AddLga from "./addLga";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 
-const FaultySetUp = () => {
+const LgaSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
@@ -81,9 +81,9 @@ const FaultySetUp = () => {
   return (
     <main>
       <PageLayout
-        paragraph="Faculty Setup"
-        firstText="Setup Programs"
-        secondText="Faculty Setup"
+        paragraph="LGA Setup"
+        firstText="Setup Bio-data"
+        secondText="LGA Setup"
         iconBefore={<GraterThan />}
         headerActions={
           <Button
@@ -129,12 +129,12 @@ const FaultySetUp = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Faculty Setup"
+        title="LGA Setup"
         footer={() => (
           <div className="btn-group">
             <Button
               onClick={() => setShowAddModal(false)}
-              variant="text"
+              variant="text" 
               text="Cancel"
             />
             <Button text="Create" />
@@ -143,7 +143,7 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddLga />
           </Form>
         </Formik>
       </Modal>
@@ -152,7 +152,7 @@ const FaultySetUp = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Faculty Setup"
+        title="LGA Setup"
         footer={() => (
           <div className="btn-group">
             <Button
@@ -166,7 +166,7 @@ const FaultySetUp = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddLga />
           </Form>
         </Formik>
       </Modal>
@@ -175,4 +175,4 @@ const FaultySetUp = () => {
   );
 };
 
-export default FaultySetUp;
+export default LgaSetup;
