@@ -35,3 +35,31 @@ export const createOrUpdateSchoolMgt = async (payload: Partial<SetupPayload>) =>
 export const deleteSchoolMgt = async (id: number) => {
   return (await api.delete(`/AboutUsPage/DeleteSchoolMgtById?Id=${id}`))?.data as Response;
 }
+
+export const getEvents = async () => {
+  return (await api.get(`/HomePage/HomePage/GetAllNewEvent`))?.data as GetResponse;
+}
+
+export const createOrUpdateEvent = async (payload: Partial<SetupPayload>) => {
+  return (await api.post('/HomePage/HomePage/CreateUpdateNewEvent', payload, { headers: { 'Content-Type': 'multipart/form-data' } }))?.data as Response;
+}
+
+// export const deleteEvents = async (id: number) => {
+//   return (await api.delete(`/HomePage/DeleteNewEventById?Id=${id}`))?.data as Response;
+// }
+
+export const getSocialMedia = async () => {
+  return (await api.get('/GeneralTemplate/GetAllSocialMediaLinks'))?.data as SocialMediaResponse;
+}
+
+export const createOrUpdateSocialMedia = async (payload: Partial<SocialMedia>) => {
+  return (await api.post('/HomePage/HomePage/createUpdateSocialMediaLink', payload))?.data as Response;
+}
+
+export const deleteSocialMedia = async (id: number) => {
+  return (await api.delete(`/AboutUsPage/DeleteSocialMediaLinkById?Id=${id}`))?.data as Response;
+}
+
+export const getStudentLife = async () => {
+  return (await api.get('/StudentLife/studentlife/GetAllStudentLife'))?.data as GetResponse;
+}

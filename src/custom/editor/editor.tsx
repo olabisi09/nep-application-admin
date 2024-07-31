@@ -17,10 +17,12 @@ const Editor = ({
   name,
   label,
   onChange,
+  initialData,
 }: {
   label: string;
   name?: string;
   onChange?: (...args: any[]) => void;
+  initialData?: string;
 }) => {
   return (
     <div>
@@ -53,6 +55,7 @@ const Editor = ({
             List,
             Heading,
           ],
+          initialData: initialData,
         }}
         onChange={onChange}
       />

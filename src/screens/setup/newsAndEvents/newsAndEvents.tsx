@@ -5,33 +5,29 @@ import {
   Modal,
   Table,
   Button as AntButton,
+  Spin,
 } from "antd";
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import placeholder from "../../../assets/placeholder-img.png";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import NewsAndEventsSetup from "./setup";
+import { CreateEvent, EditEvent } from "./setup";
+import { useQuery } from "@tanstack/react-query";
+import { getEvents } from "../../../requests";
+import { ColumnsType } from "antd/es/table";
+import DOMPurify from "dompurify";
 
 const NewsAndEvents = () => {
   const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [event, setEvent] = useState<Setup>({} as Setup);
 
-  const data = Array.from({ length: 3 }, (_, index) => ({
-    id: `1234${index}`,
-    title: "Facebook",
-    description: "description",
-    picture: placeholder,
-    status: "Active",
-  }));
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get-events"],
+    queryFn: getEvents,
+  });
 
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: "Edit",
-      onClick: () => setOpen(true),
-    },
-  ];
-  const columns = [
+  const columns: ColumnsType<Setup> = [
     {
       key: "id",
       title: "ID",
@@ -46,27 +42,55 @@ const NewsAndEvents = () => {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      render: (_, { description }) => {
+        const cleanhtml = DOMPurify.sanitize(description);
+        return <div dangerouslySetInnerHTML={{ __html: cleanhtml }} />;
+      },
     },
     {
       key: "picture",
       title: "Picture",
-      render: (_: any, record: any) => <img src={record?.picture} alt="" />,
+      dataIndex: "imageUrl",
+      render: (_, { imageUrl }) => <img src={imageUrl} alt="" />,
     },
     {
       key: "status",
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
-          <AntButton type="text" icon={<Ellipsis />} />
-        </Dropdown>
-      ),
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setEvent(record);
+              setOpenEdit(true);
+            },
+          },
+        ];
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
+        );
+      },
     },
   ];
+
+  const events = data?.data as Setup[];
+
+  if (isLoading) {
+    return <Spin />;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
+
   return (
     <div>
       <section className="space-between">
@@ -80,7 +104,7 @@ const NewsAndEvents = () => {
       <br />
       <Card bordered={false}>
         <Table
-          dataSource={data}
+          dataSource={events}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -94,7 +118,16 @@ const NewsAndEvents = () => {
         title="News and Events Setup"
         footer={null}
       >
-        <NewsAndEventsSetup handleClose={() => setOpen(false)} />
+        <CreateEvent handleClose={() => setOpen(false)} />
+      </Modal>
+      <Modal
+        open={openEdit}
+        onCancel={() => setOpenEdit(false)}
+        centered
+        title="Edit News and Events Setup"
+        footer={null}
+      >
+        <EditEvent item={event} handleClose={() => setOpen(false)} />
       </Modal>
     </div>
   );

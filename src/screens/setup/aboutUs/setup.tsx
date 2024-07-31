@@ -31,7 +31,10 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
     setUpload(null);
   };
 
-  const handleAddAboutUs = async (values: FormikValues) => {
+  const handleAddAboutUs = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     const payload: Partial<SetupPayload> = {
       Title: values.title,
       Description: values.description,
@@ -49,6 +52,7 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
           });
           queryClient.refetchQueries({ queryKey: ["get-about-us"] });
           handleClose();
+          resetForm();
         },
       });
     } catch (error: any) {
@@ -65,8 +69,8 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
         title: "",
         description: "",
       }}
-      onSubmit={(values) => {
-        handleAddAboutUs(values);
+      onSubmit={(values, { resetForm }) => {
+        handleAddAboutUs(values, resetForm);
       }}
       validationSchema={validate}
     >
@@ -134,7 +138,10 @@ const EditAboutUs = ({
     setUpload(null);
   };
 
-  const handleEditAboutUs = async (values: FormikValues) => {
+  const handleEditAboutUs = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     let payload: Partial<SetupPayload> = {
       Id: item.id,
       Title: values.title,
@@ -156,6 +163,7 @@ const EditAboutUs = ({
           });
           queryClient.refetchQueries({ queryKey: ["get-about-us"] });
           handleClose();
+          resetForm();
         },
       });
     } catch (error: any) {
@@ -173,43 +181,48 @@ const EditAboutUs = ({
         description: item?.description,
         //image: upload || item?.image,
       }}
-      onSubmit={(values) => {
-        handleEditAboutUs(values);
+      onSubmit={(values, { resetForm }) => {
+        handleEditAboutUs(values, resetForm);
       }}
       enableReinitialize={true}
     >
-      <Form className="fields">
-        <Input name="title" label="Title" placeholder="Input title" />
-        <Input
-          type="textarea"
-          name="description"
-          label="Description"
-          placeholder="Input description"
-        />
-        {upload ? (
-          <div className="small-gap">
-            <Image />
-            <span>{upload.name}</span>
-            <Button onClick={clearFile} variant="text" text="x" />
+      {({ setFieldValue }) => (
+        <Form className="fields">
+          <Input name="title" label="Title" placeholder="Input title" />
+          <Editor
+            name="description"
+            label="Description"
+            onChange={(_, editor) => {
+              const data = editor.getData();
+              setFieldValue("description", data);
+            }}
+            initialData={item.description}
+          />
+          {upload ? (
+            <div className="small-gap">
+              <Image />
+              <span>{upload.name}</span>
+              <Button onClick={clearFile} variant="text" text="x" />
+            </div>
+          ) : (
+            <Upload name="image" label="Image" onChange={handleFileChange} />
+          )}
+          <div className="btn-group">
+            <Button
+              onClick={handleClose}
+              type="button"
+              variant="text"
+              text="Cancel"
+            />
+            <Button
+              type="submit"
+              text="Update"
+              isLoading={editAboutUsMutation.isPending}
+              disabled={editAboutUsMutation.isPending}
+            />
           </div>
-        ) : (
-          <Upload name="image" label="Image" onChange={handleFileChange} />
-        )}
-        <div className="btn-group">
-          <Button
-            onClick={handleClose}
-            type="button"
-            variant="text"
-            text="Cancel"
-          />
-          <Button
-            type="submit"
-            text="Update"
-            isLoading={editAboutUsMutation.isPending}
-            disabled={editAboutUsMutation.isPending}
-          />
-        </div>
-      </Form>
+        </Form>
+      )}
     </Formik>
   );
 };

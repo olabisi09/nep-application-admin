@@ -7,6 +7,10 @@ interface GetResponse extends Response {
   data: Setup[]
 }
 
+interface SocialMediaResponse extends Response {
+  data: SocialMedia[]
+}
+
 interface Setup {
   id: number;
   title: string;
@@ -24,4 +28,13 @@ interface SetupPayload {
   Image: any;
   ActiveStatus: boolean;
   IsDeleted: boolean;
+}
+
+interface SocialMedia {
+  id: number;
+  templateId: number;
+  socialMediaName: string;
+  socialMediaUrl: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
 }
