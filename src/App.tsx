@@ -44,6 +44,7 @@ import SchoolForm from "./screens/setup/form/form";
 import SocialMedia from "./screens/setup/socialMedia/socialMedia";
 import StudentLife from "./screens/setup/studentLife/studentLife";
 import NewsAndEvents from "./screens/setup/newsAndEvents/newsAndEvents";
+import SchoolMgt from "./screens/setup/schoolMgt/schoolMgt";
 
 function App() {
   const authRoute = [
@@ -205,6 +206,10 @@ function App() {
     {
       path: routes.setup.newsAndEvents,
       element: <NewsAndEvents />,
+    },
+    {
+      path: routes.setup.schoolMgt,
+      element: <SchoolMgt />,
     },
   ];
   const userMgtRoutes = [

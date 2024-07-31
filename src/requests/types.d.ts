@@ -3,19 +3,41 @@ interface Response {
   message: string;
 }
 
-interface AboutUsResponse extends Response {
-  data: AboutUs[]
+interface GetResponse extends Response {
+  data: Setup[]
 }
 
-interface AboutUs {
+interface Setup {
   id: number;
-title: string;
-description: string;
-image?: any;
-imageUrl: string;
-activeStatus: boolean;
-isDeleted: boolean;
+  title: string;
+  description: string;
+  imageUrl: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
 }
+
+interface GeneralTemplate {
+  id: number;
+  schoolName: string;
+  logo: string;
+  logoUrl: string;
+  homePageImage: string;
+  homePageImageUrl: string;
+  aboutUsImage: string;
+  aboutUsImageUrl: string;
+  loginBackgroundImage: string;
+  loginBackgroundImageUrl: string;
+  schoolEmailAddress: string;
+  schoolPhoneNumber: string;
+  schoolAddress: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface GeneralTemplateResponse extends Response {
+  data: GeneralTemplate[];
+}
+
 interface GenderResponse extends Response {
   data: Gender[]
 }
@@ -43,4 +65,13 @@ interface Country {
   id?: number;
   countryName: string;
 activeStatus?: boolean;
+}
+interface SetupPayload {
+  Id: number;
+  Title: string;
+  Description: string;
+  ImageUrl: string;
+  Image: any;
+  ActiveStatus: boolean;
+  IsDeleted: boolean;
 }
