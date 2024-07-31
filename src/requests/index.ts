@@ -11,3 +11,28 @@ export const createOrUpdateAboutUs = async (payload: Partial<AboutUs>) => {
 export const deleteAboutUs = async (id: number) => {
   return (await api.delete(`/AboutUsPage/DeleteAboutUsById/${id}`))?.data as Response;
 }
+
+export const createUpdateGeneralTemplate  = async(payload: FormData) => {
+  return (await api.post('/GeneralTemplate/createUpdateTemplate', payload))?.data as Response;
+}
+
+export const getGeneralTemplates = async () => {
+  return (await api.get('/GeneralTemplate/GetAllTemplate'))?.data as GeneralTemplateResponse;
+}
+
+export const deleteGeneralTemplate = async (id: number) => {
+  return (await api.delete(`/GeneralTemplate/DeleteTemplateById?Id${id}`))?.data as Response;
+}
+
+export const getGeneralTemplateById = async (id: number) => {
+  return (await api.get(`/GeneralTemplate/GetTemplateById?Id=${id}`))?.data as GeneralTemplate;
+}
+
+export const StatusOptions = [{
+  value: true,
+  label: 'Active',
+}
+ , {
+  value: false,
+  label: 'Inactive',
+ }]
