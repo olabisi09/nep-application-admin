@@ -7,6 +7,7 @@ import { Form, Formik, FormikValues } from "formik";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createUpdateGeneralTemplate, getGeneralTemplateById, StatusOptions } from "../../../requests";
 import Select from "../../../custom/select/select";
+import { App } from "antd";
 
 interface Init {
   schoolName: string;
@@ -46,7 +47,7 @@ const fileValues: { label: string; name: keyof Init }[] = [
 
 const SetupSchoolInfoTemplate = ({ handleClose }: { handleClose: () => void }) => {
   const queryClient = useQueryClient();
-
+  const { notification } = App.useApp();
 
   const CreateUpdateGeneralTemplateMutation = useMutation({
     mutationFn: createUpdateGeneralTemplate,
@@ -67,8 +68,11 @@ const SetupSchoolInfoTemplate = ({ handleClose }: { handleClose: () => void }) =
       formData.append("ActiveStatus", values?.status);
 
       await CreateUpdateGeneralTemplateMutation.mutateAsync(formData, {
-        onSuccess: () => {
-          // notify("Update election Period Successful", "success");
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
           queryClient.refetchQueries({ queryKey: ["get-general-template"] });
           resetForm();
           handleClose();
@@ -76,7 +80,10 @@ const SetupSchoolInfoTemplate = ({ handleClose }: { handleClose: () => void }) =
         },
       });
     } catch (error: any) {
-      // notify(error?.response?.data?.title || error?.message, "error");
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
     }
   };
 
