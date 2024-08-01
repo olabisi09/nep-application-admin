@@ -35,19 +35,19 @@ const SchoolInfoTemplate = () => {
           </div>
           <div className="space-between-grid">
             <b>Home Page</b>
-            <img src={pic} alt="" />
+            <img className="table-img" src={pic} alt="" />
           </div>
           <div className="space-between-grid">
             <b>About Us</b>
-            <img src={pic} alt="" />
+            <img className="table-img" src={pic} alt="" />
           </div>
           <div className="space-between-grid">
             <b>Login</b>
-            <img src={pic} alt="" />
+            <img className="table-img" src={pic} alt="" />
           </div>
           <div className="space-between-grid">
             <b>Contact Us</b>
-            <img src={pic} alt="" />
+            <img className="table-img" src={pic} alt="" />
           </div>
           <div className="space-between-grid">
             <b>Email Address</b>
