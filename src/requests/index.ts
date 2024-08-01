@@ -16,7 +16,7 @@ export const deleteAboutUs = async (id: number) => {
 };
 
 export const createFaq = async (payload: Partial<FaqPayload>) => {
-  return (await api.post(`/HomePage/CreateUpdateFaq`, payload))
+  return (await api.post(`/HomePage/homePage/CreateUpdateFaq`, payload))
     ?.data as FaqResponse;
 };
 
