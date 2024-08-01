@@ -11,6 +11,8 @@ import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import AddFaculty from "./addFaculty";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { useQuery } from "@tanstack/react-query";
+import { getAllCategory } from "../../../requests";
 
 const FaultySetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -19,17 +21,22 @@ const FaultySetUp = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
+  const { data, isLoading, isError, error} = useQuery({
+    queryKey: ["getAll-category"],
+    queryFn: getAllCategory
+  })
+
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  const data = Array.from({ length: 5 }, () => ({
-    id: 1234,
-    firstName: "Timi",
-    lastName: "John",
-    email: "john@gmail.com",
-    role: "Admin User",
-    status: "Active",
-  }));
+  // const data = Array.from({ length: 5 }, () => ({
+  //   id: 1234,
+  //   firstName: "Timi",
+  //   lastName: "John",
+  //   email: "john@gmail.com",
+  //   role: "Admin User",
+  //   status: "Active",
+  // }));
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -43,29 +50,25 @@ const FaultySetUp = () => {
       dataIndex: "id",
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
+      key: "name",
+      title: "Name",
+      dataIndex: "name",
     },
     {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
+      key: "categoryCode",
+      title: "Category Code",
+      dataIndex: "categoryCode",
     },
     {
-      key: "email",
-      title: "Email Address",
-      dataIndex: "email",
+      key: "description",
+      title: "Description",
+      dataIndex: "description",
     },
     {
-      key: "role",
-      title: "Role",
-      dataIndex: "role",
-    },
-    {
-      key: "status",
+      key: "activeStatus",
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "activeStatus",
+      render: (activeStatus: boolean) => (activeStatus ? "Active" : "Not Active"),
     },
     {
       key: "action",
@@ -77,6 +80,8 @@ const FaultySetUp = () => {
       ),
     },
   ];
+
+  const category = data?.data as Category[];
 
   return (
     <main>
@@ -118,7 +123,7 @@ const FaultySetUp = () => {
           </div>
         </div>
         <Table
-          dataSource={data}
+          dataSource={category}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}
