@@ -60,9 +60,6 @@ export const deleteSocialMedia = async (id: number) => {
   return (await api.delete(`/AboutUsPage/DeleteSocialMediaLinkById?Id=${id}`))?.data as Response;
 }
 
-export const getStudentLife = async () => {
-  return (await api.get('/StudentLife/studentlife/GetAllStudentLife'))?.data as GetResponse;
-}
 export const getGender = async () => {
   return (await api.get('/Utilities/Utilities/GetAllGenders'))?.data as GenderResponse;
 }
@@ -85,4 +82,20 @@ export const getCountry = async () => {
 
 export const createOrUpdateCountry = async (payload: Partial<Country>) => {
   return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
+}
+
+export const getStudentLife = async () => {
+  return (await api.get('/StudentLife/studentlife/GetAllStudentLife'))?.data as GetResponse;
+}
+
+export const createOrUpdateStudentLife = async (payload: Partial<Setup>) => {
+  return (await api.post('/StudentLife/studentlife/CreateUpdateStudentLife', payload))?.data as Response;
+}
+
+export const createOrUpdateSchoolSummary = async (payload: Partial<Setup>) => {
+  return (await api.post('/StudentLife/studentlife/CreateUpdateSchoolSummary', payload))?.data as Response;
+}
+
+export const createOrUpdateCampusExperience = async (payload: Partial<Setup>) => {
+  return (await api.post('/StudentLife/studentlife/CreateUpdateCampusExperience', payload))?.data as Response;
 }

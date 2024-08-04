@@ -15,6 +15,7 @@ interface Setup {
   id: number;
   title: string;
   description: string;
+  figure: number;
   imageUrl: string;
   activeStatus: boolean;
   isDeleted: boolean;
