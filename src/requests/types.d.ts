@@ -75,3 +75,18 @@ interface SetupPayload {
   ActiveStatus: boolean;
   IsDeleted: boolean;
 }
+
+interface SocialMediaLink {
+  id: number;
+ templateId: number;
+ socialMediaName: string;
+ socialMediaUrl: string;
+ socialMediaLogo: any;
+ socialMediaLogoUrl: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface SocialMediaLinkResponse extends Response {
+  data: SocialMediaLink[];
+}

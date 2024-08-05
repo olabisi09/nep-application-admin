@@ -194,4 +194,11 @@ button {
 .edit-button{
 	display: flex;
 	justify-content: end;
+	gap: 1rem
+}
+
+.table-img{
+	width: 3.75rem;
+    height: 3.75rem;
+    object-fit: cover;
 }

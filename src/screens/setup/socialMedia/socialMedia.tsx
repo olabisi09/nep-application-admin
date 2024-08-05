@@ -5,55 +5,124 @@ import {
   Modal,
   Table,
   Button as AntButton,
+  App,
+  Spin,
+  Image,
 } from "antd";
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import SocialMediaSetup from "./setup";
+import{ CreateSocialMediaSetup, EditSocialMediaLink } from "./setup";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteSocialMediaLink, getSocialMediaLinks } from "../../../requests";
+import { ColumnsType } from "antd/es/table";
+import { Link } from "react-router-dom";
 
 const SocialMedia = () => {
+  const {notification} = App.useApp()
   const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [socialMediaLink, setAbout] = useState<SocialMediaLink>({} as SocialMediaLink);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
-  const data = Array.from({ length: 3 }, (_, index) => ({
-    id: `1234${index}`,
-    name: "Facebook",
-    url: "www.facebook.com/kwu",
-  }));
+  const deleteSocialMediaLinkMutation = useMutation({ mutationFn: deleteSocialMediaLink });
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["get-social-media-link"],
+    queryFn: getSocialMediaLinks,
+  });
 
-  const items: MenuProps["items"] = [
+  const columns: ColumnsType<SocialMediaLink> = [
     {
-      key: "1",
-      label: "Edit",
-      onClick: () => setOpen(true),
+      title: 'S/N',
+      dataIndex: 'index',
+      key: 'index',
+      render: (text: any, record: any, index: number) => (
+        <span>{((currentPage - 1) * pageSize) + index + 1}</span>
+      ),
     },
-  ];
-  const columns = [
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
+      key: "socialMediaName",
+      title: "Social Media Name",
+      dataIndex: "socialMediaName",
     },
     {
-      key: "name",
-      title: "Name",
-      dataIndex: "name",
+      key: "socialMediaUrl",
+      title: "Social Media Url",
+      dataIndex: "socialMediaUrl",
+      render: (_, { socialMediaUrl }) => <a href={socialMediaUrl} target="_blank">{socialMediaUrl}</a>,
     },
     {
-      key: "url",
-      title: "URL",
-      dataIndex: "url",
+      key: "pictureUrl",
+      title: "Logo",
+      dataIndex: "socialMediaLogoUrl",
+      render: (_, { socialMediaLogoUrl }) => <Image src={socialMediaLogoUrl} alt=""  />,
+    },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
-          <AntButton type="text" icon={<Ellipsis />} />
-        </Dropdown>
-      ),
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setAbout(record);
+              setOpenEdit(true);
+            },
+          },
+          {
+            key: "2",
+            label: "Delete",
+            onClick: async () => {
+              try {
+                await deleteSocialMediaLinkMutation.mutateAsync(record?.id, {
+                  onSuccess: (data) => {
+                    notification.success({
+                      message: "Success",
+                      description: data?.message,
+                    });
+                    refetch();
+                  },
+                });
+              } catch (error: any) {
+                notification.error({
+                  message: "Error",
+                  description: error?.response?.data?.message,
+                });
+              }
+            },
+          },
+        ];
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
+        );
+      },
     },
   ];
+  const socialMediaLinks = data?.data as SocialMediaLink[];
+
+  
+  if (isLoading) {
+    return <Spin />;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
   return (
     <div>
       <section className="space-between">
@@ -67,14 +136,14 @@ const SocialMedia = () => {
       <br />
       <Card bordered={false}>
         <Table
-          dataSource={data}
+          dataSource={socialMediaLinks}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{ position: ["bottomCenter"] , current: currentPage, pageSize: pageSize}}
           rowKey={(record) => record.id}
           scroll={{ x: true }}
         />
       </Card>
-      <Modal
+      {/* <Modal
         open={open}
         onCancel={() => setOpen(false)}
         centered
@@ -82,6 +151,25 @@ const SocialMedia = () => {
         footer={null}
       >
         <SocialMediaSetup handleClose={() => setOpen(false)} />
+      </Modal> */}
+
+      <Modal
+        open={open}
+        onCancel={() => setOpen(false)}
+        centered
+        title="About Us Setup"
+        footer={null}
+      >
+        <CreateSocialMediaSetup handleClose={() => setOpen(false)} />
+      </Modal>
+      <Modal
+        open={openEdit}
+        onCancel={() => setOpenEdit(false)}
+        centered
+        title="Edit About Us Setup"
+        footer={null}
+      >
+        <EditSocialMediaLink socialMediaLink={socialMediaLink} handleClose={() => setOpenEdit(false)} />
       </Modal>
     </div>
   );

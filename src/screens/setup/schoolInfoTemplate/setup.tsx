@@ -20,6 +20,7 @@ interface Init {
   address: string;
   logoImage: any
   phoneNumber: string
+  status: any;
 }
 
 const fileValues: { label: string; name: keyof Init }[] = [
@@ -101,6 +102,7 @@ const SetupSchoolInfoTemplate = ({ handleClose }: { handleClose: () => void }) =
           email: "",
           address: "",
           phoneNumber: "",
+          status:''
         } as Init
       }
       onSubmit={(values, {resetForm}) => {
@@ -177,7 +179,7 @@ interface EditTemplateProps {
 
 const EditTemplate: React.FC<EditTemplateProps> = ({ handleClose, data })  => {
   const queryClient = useQueryClient();
-
+const {notification} = App.useApp()
 
   const CreateUpdateGeneralTemplateMutation = useMutation({
     mutationFn: createUpdateGeneralTemplate,
@@ -187,29 +189,23 @@ const EditTemplate: React.FC<EditTemplateProps> = ({ handleClose, data })  => {
   const CreateUpdateGeneralTemplateHandler = async (values: FormikValues, resetForm:() => void) => {
     try {
       const formData = new FormData();
-      // formData.append("SchoolName", values?.schoolName.trim() || data?.SchoolName);
-      // formData.append("SchoolAddress", values?.address || data?.SchoolAddress);
-      // formData.append("SchoolPhoneNumber", values?.phoneNumber || data?.SchoolPhoneNumber);
-      // formData.append("SchoolEmailAddress", values?.email || data?.SchoolEmailAddress);
-      // formData.append("AboutUsImageUrl", values?.aboutUs || data?.AboutUsImageUrl);
-      // formData.append("LoginBackgroundImageUrl", values?.loginBackground || data?.LoginBackgroundImageUrl);
-      // formData.append("LogoUrl", values?.logoImage || data?.LogoUrl);
-      // formData.append("HomePageUrl", values?.homePage || data?.HomePageImageUrl);
-      // formData.append("ActiveStatus", values?.status || data?.ActiveStatus);
-
+      formData.append("Id", data?.id?.toString());
       formData.append("SchoolName", values?.schoolName?.trim() );
       formData.append("SchoolAddress", values?.address?.trim());
       formData.append("SchoolPhoneNumber", values?.phoneNumber?.trim());
       formData.append("SchoolEmailAddress", values?.email?.trim());
-      formData.append("AboutUsImage", values?.aboutUs);
+      formData.append("AboutUsImage", values?.aboutUs === "" ? data?.aboutUsImageUrl : values?.aboutUs);
       formData.append("LoginBackgroundImage", values?.loginBackground);
-      formData.append("Logo", values?.logoImage);
-      formData.append("HomePageImage", values?.homePage);
+      formData.append("Logo", values?.logoImage === "" ? data?.logoUrl : values?.logo);
+      formData.append("HomePageImage", values?.homePage === "" ? data?.homePageImageUrl : values?.homePage);
       formData.append("ActiveStatus", values?.status);
 
       await CreateUpdateGeneralTemplateMutation.mutateAsync(formData, {
-        onSuccess: () => {
-          // notify("Update election Period Successful", "success");
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
           queryClient.refetchQueries({ queryKey: ["get-general-template"] });
           resetForm();
           handleClose();
@@ -217,7 +213,10 @@ const EditTemplate: React.FC<EditTemplateProps> = ({ handleClose, data })  => {
         },
       });
     } catch (error: any) {
-      // notify(error?.response?.data?.title || error?.message, "error");
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
     }
   };
 
@@ -233,11 +232,12 @@ const EditTemplate: React.FC<EditTemplateProps> = ({ handleClose, data })  => {
         contactUs: "",
         email: data?.schoolEmailAddress,
         address: data?.schoolAddress,
+        status: data?.activeStatus,
+        phoneNumber: data?.schoolPhoneNumber,
       } as Init
     }
     onSubmit={(values, {resetForm}) => {
       CreateUpdateGeneralTemplateHandler(values, resetForm);
-      console.log(values);
     }}
   >
     {({ values, setFieldValue }) => (

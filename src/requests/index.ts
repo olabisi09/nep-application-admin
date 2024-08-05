@@ -21,7 +21,7 @@ export const getGeneralTemplates = async () => {
 }
 
 export const deleteGeneralTemplate = async (id: number) => {
-  return (await api.delete(`/GeneralTemplate/DeleteTemplateById?Id${id}`))?.data as Response;
+  return (await api.delete(`/GeneralTemplate/DeleteTemplateById?Id=${id}`))?.data as Response;
 }
 
 export const getGeneralTemplateById = async (id: number) => {
@@ -85,3 +85,22 @@ export const createOrUpdateSchoolMgt = async (payload: Partial<SetupPayload>) =>
 export const deleteSchoolMgt = async (id: number) => {
   return (await api.delete(`/AboutUsPage/DeleteSchoolMgtById?Id=${id}`))?.data as Response;
 }
+
+
+export const createUpdateSocialMediaLink  = async(payload: Partial<SocialMediaLink>) => {
+  return (await api.post('/GeneralTemplate/createUpdateSocialMediaLink', payload,  { headers: { 'Content-Type': 'multipart/form-data' } }))?.data as Response;
+}
+
+export const getSocialMediaLinks = async () => {
+  return (await api.get('/GeneralTemplate/GetAllSocialMediaLinks'))?.data as SocialMediaLinkResponse;
+}
+
+export const deleteSocialMediaLink = async (id: number) => {
+  return (await api.delete(`/GeneralTemplate/DeleteSocialMediaLinkById?Id=${id}`))?.data as Response;
+}
+
+
+export const getSocialMediaLinkById = async (id: number) => {
+  return (await api.get(`/GeneralTemplate/GetSocialMediaLinkById?Id=${id}`))?.data as GeneralTemplate;
+}
+
