@@ -197,8 +197,12 @@ button {
 	gap: 1rem
 }
 
-.table-img{
+.table-img {
 	width: 3.75rem;
-    height: 3.75rem;
-    object-fit: cover;
+	height: 3.75rem;
+	object-fit: cover;
+}
+
+.ck-editor__editable_inline {
+	padding: 0 30px !important;
 }

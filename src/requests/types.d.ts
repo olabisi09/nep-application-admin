@@ -4,13 +4,18 @@ interface Response {
 }
 
 interface GetResponse extends Response {
-  data: Setup[]
+  data: Setup[];
+}
+
+interface SocialMediaResponse extends Response {
+  data: SocialMedia[];
 }
 
 interface Setup {
   id: number;
   title: string;
   description: string;
+  figure: number;
   imageUrl: string;
   activeStatus: boolean;
   isDeleted: boolean;
@@ -33,38 +38,56 @@ interface GeneralTemplate {
   activeStatus: boolean;
   isDeleted: boolean;
 }
+interface SetupPayload {
+  Id: number;
+  Title: string;
+  Description: string;
+  ImageUrl: string;
+  Image: any;
+  ActiveStatus: boolean;
+  IsDeleted: boolean;
+}
+
+interface SocialMedia {
+  id: number;
+  templateId: number;
+  socialMediaName: string;
+  socialMediaUrl: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
 
 interface GeneralTemplateResponse extends Response {
   data: GeneralTemplate[];
 }
 
 interface GenderResponse extends Response {
-  data: Gender[]
+  data: Gender[];
 }
 
 interface Gender {
   id: number;
   genderName: string;
-activeStatus: boolean;
+  activeStatus: boolean;
 }
 interface MaritalStatusResponse extends Response {
-  data: MaritalStatus[]
+  data: MaritalStatus[];
 }
 
 interface MaritalStatus {
   id?: number;
   statusName: string;
-activeStatus?: boolean;
+  activeStatus?: boolean;
 }
 
 interface CountryResponse extends Response {
-  data: Country[]
+  data: Country[];
 }
 
 interface Country {
   id?: number;
   countryName: string;
-activeStatus?: boolean;
+  activeStatus?: boolean;
 }
 interface SetupPayload {
   Id: number;
@@ -78,11 +101,11 @@ interface SetupPayload {
 
 interface SocialMediaLink {
   id: number;
- templateId: number;
- socialMediaName: string;
- socialMediaUrl: string;
- socialMediaLogo: any;
- socialMediaLogoUrl: string;
+  templateId: number;
+  socialMediaName: string;
+  socialMediaUrl: string;
+  socialMediaLogo: any;
+  socialMediaLogoUrl: string;
   activeStatus: boolean;
   isDeleted: boolean;
 }

@@ -36,7 +36,7 @@ export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
       Title: values.title,
       Description: values.description,
       Image: upload,
-      ActiveStatus: true,
+      ActiveStatus: values.activeStatus === "Active",
       IsDeleted: false,
     };
 
@@ -147,7 +147,7 @@ export const EditHistory = ({
       Id: item.id,
       Title: values.title,
       Description: values.description,
-      ActiveStatus: true,
+      ActiveStatus: values.activeStatus === "Active",
       IsDeleted: false,
     };
 

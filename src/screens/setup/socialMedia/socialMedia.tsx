@@ -23,7 +23,7 @@ const SocialMedia = () => {
   const {notification} = App.useApp()
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [socialMediaLink, setAbout] = useState<SocialMediaLink>({} as SocialMediaLink);
+  const [socialMediaLink, setSocial] = useState<SocialMediaLink>({} as SocialMediaLink);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
@@ -32,6 +32,11 @@ const SocialMedia = () => {
     queryKey: ["get-social-media-link"],
     queryFn: getSocialMediaLinks,
   });
+
+  const handlePaginationChange = (page: number, pageSize: number) => {
+    setCurrentPage(page);
+    setPageSize(pageSize);
+  };
 
   const columns: ColumnsType<SocialMediaLink> = [
     {
@@ -56,7 +61,7 @@ const SocialMedia = () => {
       key: "socialMediaUrl",
       title: "Social Media Url",
       dataIndex: "socialMediaUrl",
-      render: (_, { socialMediaUrl }) => <a href={socialMediaUrl} target="_blank">{socialMediaUrl}</a>,
+      render: (_, { socialMediaUrl }) => <a href={socialMediaUrl} target="_blank" rel="noreferrer">{socialMediaUrl}</a>,
     },
     {
       key: "pictureUrl",
@@ -79,7 +84,7 @@ const SocialMedia = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setAbout(record);
+              setSocial(record);
               setOpenEdit(true);
             },
           },
@@ -138,7 +143,7 @@ const SocialMedia = () => {
         <Table
           dataSource={socialMediaLinks}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] , current: currentPage, pageSize: pageSize}}
+          pagination={{ position: ["bottomCenter"] , current: currentPage, pageSize: pageSize , onChange: handlePaginationChange}}
           rowKey={(record) => record.id}
           scroll={{ x: true }}
         />

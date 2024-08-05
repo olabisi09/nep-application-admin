@@ -35,32 +35,7 @@ export const StatusOptions = [{
  , {
   value: false,
   label: 'Inactive',
- }]
-export const getGender = async () => {
-  return (await api.get('/Utilities/Utilities/GetAllGenders'))?.data as GenderResponse;
-}
-
-export const createOrUpdateGender = async (payload: Partial<Gender>) => {
-  return (await api.post('/Utilities/Utilities/CreateUpdateGender', payload))?.data as Response;
-}
-
-export const getMaritalStatus = async () => {
-  return (await api.get('/Utilities/Utilities/GetAllMaritalStatus'))?.data as MaritalStatusResponse;
-}
-
-export const createOrUpdateMaritalStatus = async (payload: Partial<MaritalStatus>) => {
-  return (await api.post('/Utilities/Utilities/CreateUpdateMaritalStatus', payload))?.data as Response;
-}
-
-
-export const getCountry = async () => {
-  return (await api.get('/Utilities/Utilities/GetAllCountry'))?.data as CountryResponse;
-}
-
-export const createOrUpdateCountry = async (payload: Partial<Country>) => {
-  return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
-}
-
+}]
 
 export const getHistory = async () => {
   return (await api.get('/AboutUsPage/GetAllHistory'))?.data as GetResponse;
@@ -86,7 +61,53 @@ export const deleteSchoolMgt = async (id: number) => {
   return (await api.delete(`/AboutUsPage/DeleteSchoolMgtById?Id=${id}`))?.data as Response;
 }
 
+export const getEvents = async () => {
+  return (await api.get(`/HomePage/HomePage/GetAllNewEvent`))?.data as GetResponse;
+}
 
+export const createOrUpdateEvent = async (payload: Partial<SetupPayload>) => {
+  return (await api.post('/HomePage/HomePage/CreateUpdateNewEvent', payload, { headers: { 'Content-Type': 'multipart/form-data' } }))?.data as Response;
+}
+
+// export const deleteEvents = async (id: number) => {
+//   return (await api.delete(`/HomePage/DeleteNewEventById?Id=${id}`))?.data as Response;
+// }
+
+export const getSocialMedia = async () => {
+  return (await api.get('/GeneralTemplate/GetAllSocialMediaLinks'))?.data as SocialMediaResponse;
+}
+
+export const createOrUpdateSocialMedia = async (payload: Partial<SocialMedia>) => {
+  return (await api.post('/HomePage/HomePage/createUpdateSocialMediaLink', payload))?.data as Response;
+}
+
+export const deleteSocialMedia = async (id: number) => {
+  return (await api.delete(`/AboutUsPage/DeleteSocialMediaLinkById?Id=${id}`))?.data as Response;
+}
+
+export const getGender = async () => {
+  return (await api.get('/Utilities/Utilities/GetAllGenders'))?.data as GenderResponse;
+}
+
+export const createOrUpdateGender = async (payload: Partial<Gender>) => {
+  return (await api.post('/Utilities/Utilities/CreateUpdateGender', payload))?.data as Response;
+}
+
+export const getMaritalStatus = async () => {
+  return (await api.get('/Utilities/Utilities/GetAllMaritalStatus'))?.data as MaritalStatusResponse;
+}
+
+export const createOrUpdateMaritalStatus = async (payload: Partial<MaritalStatus>) => {
+  return (await api.post('/Utilities/Utilities/CreateUpdateMaritalStatus', payload))?.data as Response;
+}
+
+export const getCountry = async () => {
+  return (await api.get('/Utilities/Utilities/GetAllCountry'))?.data as CountryResponse;
+}
+
+export const createOrUpdateCountry = async (payload: Partial<Country>) => {
+  return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
+}
 export const createUpdateSocialMediaLink  = async(payload: Partial<SocialMediaLink>) => {
   return (await api.post('/GeneralTemplate/createUpdateSocialMediaLink', payload,  { headers: { 'Content-Type': 'multipart/form-data' } }))?.data as Response;
 }
@@ -103,4 +124,23 @@ export const deleteSocialMediaLink = async (id: number) => {
 export const getSocialMediaLinkById = async (id: number) => {
   return (await api.get(`/GeneralTemplate/GetSocialMediaLinkById?Id=${id}`))?.data as GeneralTemplate;
 }
+
+export const getStudentLife = async () => {
+  return (await api.get('/StudentLife/studentlife/GetAllStudentLife'))?.data as GetResponse;
+}
+
+export const createOrUpdateStudentLife = async (payload: Partial<Setup>) => {
+  return (await api.post('/StudentLife/studentlife/CreateUpdateStudentLife', payload))?.data as Response;
+}
+
+export const createOrUpdateSchoolSummary = async (payload: Partial<Setup>) => {
+  return (await api.post('/StudentLife/studentlife/CreateUpdateSchoolSummary', payload))?.data as Response;
+}
+
+export const createOrUpdateCampusExperience = async (payload: Partial<Setup>) => {
+  return (await api.post('/StudentLife/studentlife/CreateUpdateCampusExperience', payload))?.data as Response;
+}
+
+
+
 
