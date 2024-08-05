@@ -82,10 +82,10 @@ interface LGAResponse extends Response {
 
 interface LGA {
   id: number;
-  stateName: string;
+  stateId: string;
   lgaName: string;
   activeStatus?: boolean;
-  countryName: string;
+  countryId: string;
 }
 interface SetupPayload {
   Id: number;

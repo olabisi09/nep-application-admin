@@ -1,12 +1,13 @@
 import Input from "../../../../custom/input/input";
 import { Form, Formik, FormikValues } from "formik";
 import Button from "../../../../custom/button/button";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   StatusOptions,
   createOrUpdateLGA,
   createOrUpdateState,
   getCountry,
+  getState,
 } from "../../../../requests";
 import * as Yup from "yup";
 import { App } from "antd";
@@ -32,9 +33,10 @@ const AddLga = ({ handleClose, data }: Props) => {
   ) => {
     const payload: Partial<LGA> = {
       id: data?.id || 0,
-      stateName: values.stateName,
+      stateId: values.stateName,
       activeStatus: values?.status === "true",
-      countryName:values?.countryName,
+      countryId:values?.countryName,
+      lgaName:values?.lgaName,
     };
 
     try {
@@ -45,7 +47,7 @@ const AddLga = ({ handleClose, data }: Props) => {
             description: data?.message,
           });
           queryClient.refetchQueries({
-            queryKey: ["get-LGA"],
+            queryKey: ["get-lga"],
           });
           handleClose();
           resetForm();
@@ -59,17 +61,25 @@ const AddLga = ({ handleClose, data }: Props) => {
     }
   };
 
-  const {
-    data: countryData,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["get-country"],
-    queryFn: getCountry,
+  const [getCountryQuery, getStateQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ["get-counties"],
+        queryFn: getCountry,
+        refetchOnWindowFocus: false,
+        retry: 0,
+        enabled: true,
+      },
+      {
+        queryKey: ["get-state"],
+        queryFn: getState,
+        refetchOnWindowFocus: false,
+        retry: 0,
+      },
+    ],
   });
 
-  const CountryData = countryData?.data as Country[];
+  const CountryData = getCountryQuery?.data?.data as Country[];
 
   const CountryOptions: any =
     CountryData &&
@@ -80,17 +90,30 @@ const AddLga = ({ handleClose, data }: Props) => {
       </option>
     ));
 
+  
+    const StateData = getStateQuery?.data?.data as State[];
+  
+    const StateOptions: any =
+    StateData &&
+    StateData?.length > 0 &&
+    StateData?.map((item: any, index: number) => (
+        <option value={item?.id} key={index}>
+          {item?.stateName}
+        </option>
+      ));
   const validationSchema = Yup.object().shape({
-    countryName: Yup.string().required("State is required"),
+    countryName: Yup.string().required("Country is required"),
     stateName: Yup.string().required("State is required"),
+    lgaName: Yup.string().required("Lga is required"),
     status: Yup.string().required("Active Status is required"),
   });
 
   return (
     <Formik
       initialValues={{
-        countryName:data?.countryName || "",
-        stateName: data?.stateName || "",
+        lgaName:data?.lgaName || "",
+        countryName:data?.countryId || "",
+        stateName: data?.stateId || "",
         status:
           data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
       }}
@@ -109,10 +132,16 @@ const AddLga = ({ handleClose, data }: Props) => {
               label="Country Name"
               options={CountryOptions}
             />
-            <Input
+             <Select
               name="stateName"
               placeholder="Input State Name"
               label="State Name"
+              options={StateOptions}
+            />
+              <Input
+              name="lgaName"
+              placeholder="Input LGA Name"
+              label="LGA Name"
             />
             <Select
               name="status"

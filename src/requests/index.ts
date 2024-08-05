@@ -113,3 +113,6 @@ export const deleteMaritalStatus = async (id: number) => {
 export const deleteState = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteState?Id=${id}`))?.data as Response;
 }
+export const deleteLGA = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteLga?Id=${id}`))?.data as Response;
+}
