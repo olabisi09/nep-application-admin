@@ -18,14 +18,16 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteSocialMediaLink, getSocialMediaLinks } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { Link } from "react-router-dom";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const SocialMedia = () => {
   const {notification} = App.useApp()
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [socialMediaLink, setSocial] = useState<SocialMediaLink>({} as SocialMediaLink);
+  const [socialMediaLink, setSocialMediaLink] = useState<SocialMediaLink>({} as SocialMediaLink);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const deleteSocialMediaLinkMutation = useMutation({ mutationFn: deleteSocialMediaLink });
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -67,7 +69,7 @@ const SocialMedia = () => {
       key: "pictureUrl",
       title: "Logo",
       dataIndex: "socialMediaLogoUrl",
-      render: (_, { socialMediaLogoUrl }) => <Image src={socialMediaLogoUrl} alt=""  />,
+      render: (_, { socialMediaLogoUrl }) => <img src={socialMediaLogoUrl} alt="" className="table-img"/>,
     },
     {
       key: "status",
@@ -84,32 +86,40 @@ const SocialMedia = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setSocial(record);
+              setSocialMediaLink(record);
               setOpenEdit(true);
             },
           },
           {
             key: "2",
-            label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteSocialMediaLinkMutation.mutateAsync(record?.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
-            },
+            label: (
+              <button style={{ border: "0rem" , background: "none"}} onClick={() => handleDelete(record)}>
+                Delete
+              </button>
+            ),
           },
+          // {
+          //   key: "2",
+          //   label: "Delete",
+          //   onClick: async () => {
+          //     try {
+          //       await deleteSocialMediaLinkMutation.mutateAsync(record?.id, {
+          //         onSuccess: (data) => {
+          //           notification.success({
+          //             message: "Success",
+          //             description: data?.message,
+          //           });
+          //           refetch();
+          //         },
+          //       });
+          //     } catch (error: any) {
+          //       notification.error({
+          //         message: "Error",
+          //         description: error?.response?.data?.message,
+          //       });
+          //     }
+          //   },
+          // },
         ];
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
@@ -119,6 +129,31 @@ const SocialMedia = () => {
       },
     },
   ];
+
+  const handleDelete = (data: SocialMediaLink) => {
+    setSocialMediaLink(data);
+    setOpenDelete(true);
+  };
+   
+  const DeleteSocialMediaLinkHandler = async () => {
+    try {
+      await deleteSocialMediaLinkMutation.mutateAsync(socialMediaLink?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete(false);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
   const socialMediaLinks = data?.data as SocialMediaLink[];
 
   
@@ -175,6 +210,24 @@ const SocialMedia = () => {
         footer={null}
       >
         <EditSocialMediaLink socialMediaLink={socialMediaLink} handleClose={() => setOpenEdit(false)} />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Social Media Setup"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={false}
+          // data={Data}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={DeleteSocialMediaLinkHandler}
+          title={socialMediaLink?.socialMediaName}
+          isActive={ false }
+          // btnText={"Disable"}
+        />
       </Modal>
     </div>
   );
