@@ -18,7 +18,7 @@ import SearchInput from "../../../../custom/searchInput/searchInput";
 import AddGender from "./addGender";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import {   useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateGender, getGender } from "../../../../requests";
+import { createOrUpdateGender, deleteGender, getGender } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const GenderSetup = () => {
@@ -51,21 +51,14 @@ const GenderSetup = () => {
     setOpenDelete(true);
   };
       const DeleteGenderMutation = useMutation({
-    mutationFn: createOrUpdateGender,
+    mutationFn: deleteGender,
     mutationKey: ["delete-gender"],
   });
 
 
   const DeleteGenderHandler = async () => {
-    const payload: Partial<Gender> = {
-      id:indexData?.id,
-      genderName: indexData.genderName,
-      activeStatus:false,
-   
-    };
-
     try {
-      await DeleteGenderMutation.mutateAsync(payload, {
+      await DeleteGenderMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -216,13 +209,10 @@ const GenderSetup = () => {
         footer={null}
       >
         <DeleteModalContent
-          isLoading={false}
-          // data={Data}
+          isLoading={DeleteGenderMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={DeleteGenderHandler}
           title={indexData?.genderName}
-          isActive={ false }
-          // btnText={"Disable"}
         />
       </Modal>
     </main>

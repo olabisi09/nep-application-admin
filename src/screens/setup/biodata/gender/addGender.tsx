@@ -25,7 +25,7 @@ const AddGender = ({ handleClose, data }: Props) => {
     const payload: Partial<Gender> = {
       id: data?.id || 0,
       genderName: values.genderName,
-      activeStatus: values?.status,
+      activeStatus: values?.status === "true",  // Convert "true" to true, "false" to false
     };
 
     try {
@@ -60,7 +60,7 @@ const AddGender = ({ handleClose, data }: Props) => {
     <Formik
       initialValues={{
         genderName: data?.genderName || "",
-        activeStatus:data?.activeStatus || '',
+        status: data?.activeStatus !== undefined ? String(data?.activeStatus) : "",  // Initialize with string
       }}
       onSubmit={(values) => {
         CreateGenderHandler(values);

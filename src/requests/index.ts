@@ -62,11 +62,19 @@ export const createOrUpdateCountry = async (payload: Partial<Country>) => {
 }
 
 export const getState = async () => {
-  return (await api.get('/Utilities/Utilities/GetAllCountries'))?.data as StateResponse;
+  return (await api.get('/Utilities/Utilities/GetAllStates'))?.data as StateResponse;
 }
 
 export const createOrUpdateState = async (payload: Partial<State>) => {
-  return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
+  return (await api.post('/Utilities/Utilities/CreateUpdateState', payload))?.data as Response;
+}
+
+export const getLGA = async () => {
+  return (await api.get('/Utilities/Utilities/GetAllLgas'))?.data as LGAResponse;
+}
+
+export const createOrUpdateLGA = async (payload: Partial<LGA>) => {
+  return (await api.post('/Utilities/Utilities/CreateUpdateLga', payload))?.data as Response;
 }
 
 
@@ -92,4 +100,16 @@ export const createOrUpdateSchoolMgt = async (payload: Partial<SetupPayload>) =>
 
 export const deleteSchoolMgt = async (id: number) => {
   return (await api.delete(`/AboutUsPage/DeleteSchoolMgtById?Id=${id}`))?.data as Response;
+}
+export const deleteCountry = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/Deletecountry?Id=${id}`))?.data as Response;
+}
+export const deleteGender = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteGender?Id=${id}`))?.data as Response;
+}
+export const deleteMaritalStatus = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteMaritalStatus?Id=${id}`))?.data as Response;
+}
+export const deleteState = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteState?Id=${id}`))?.data as Response;
 }
