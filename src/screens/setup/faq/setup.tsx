@@ -35,7 +35,7 @@ const SetupFaq = ({ handleClose }: { handleClose: () => void }) => {
             description: data?.message,
           });
           queryClient.refetchQueries({
-            queryKey: ["get-marital-status"],
+            queryKey: ["get-Faq"],
           });
           handleClose();
         },

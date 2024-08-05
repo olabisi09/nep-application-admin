@@ -3,7 +3,14 @@ import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.sv
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+} from "antd";
 import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
@@ -11,6 +18,9 @@ import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import AddSubject from "./addSubject";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { useQuery } from "@tanstack/react-query";
+import { getSubject } from "../../../requests";
+import { Subject } from "./types";
 
 const SubjectSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -18,22 +28,46 @@ const SubjectSetUp = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [indexData, setIndexData] = useState({} as Subject);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  const data = Array.from({ length: 5 }, () => ({
-    id: 1234,
-    firstName: "Timi",
-    lastName: "John",
-    email: "john@gmail.com",
-    role: "Admin User",
-    status: "Active",
-  }));
-  const items: MenuProps["items"] = [
+
+  const handleEdit = (data: Subject) => {
+    setIndexData(data);
+    setOpenEdit(true);
+  };
+
+  const handleDelete = (data: Subject) => {
+    setIndexData(data);
+    setOpenDelete(true);
+  };
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get-subject"],
+    queryFn: getSubject,
+  });
+
+  const SubjectData = data?.data as Subject[];
+
+  const items = (record: Subject): MenuProps["items"] => [
     {
       key: "1",
-      label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
+      label: (
+        <button style={{ border: "0rem" }} onClick={() => handleEdit(record)}>
+          Edit
+        </button>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <button style={{ border: "0rem" }} onClick={() => handleDelete(record)}>
+          Delete
+        </button>
+      ),
     },
   ];
   const columns = [
@@ -43,40 +77,34 @@ const SubjectSetUp = () => {
       dataIndex: "id",
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
+      key: "subject",
+      title: "Subject Name",
+      dataIndex: "subject",
     },
     {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
+      key: "activeStatus",
+      title: "Active Status",
+      dataIndex: "activeStatus",
+      render: (text: boolean) => (text ? "Active" : "Inactive"),
     },
-    {
-      key: "email",
-      title: "Email Address",
-      dataIndex: "email",
-    },
-    {
-      key: "role",
-      title: "Role",
-      dataIndex: "role",
-    },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "status",
-    },
+
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
+      render: (record: Subject) => (
+        <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
       ),
     },
   ];
+
+  if (isLoading) {
+    return <Spin />;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
 
   return (
     <main>
@@ -118,59 +146,32 @@ const SubjectSetUp = () => {
           </div>
         </div>
         <Table
-          dataSource={data}
+          dataSource={SubjectData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
-     
+
       <Modal
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
         title="Subject Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddSubject />
-          </Form>
-        </Formik>
+        <AddSubject handleClose={() => setShowAddModal(false)} />
       </Modal>
 
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Subject Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpenEdit(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Update" />
-          </div>
-        )}
+        title=" Edit Subject Setup"
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddSubject />
-          </Form>
-        </Formik>
+        <AddSubject handleClose={() => setOpenEdit(false)} data={indexData} />
       </Modal>
-
     </main>
   );
 };

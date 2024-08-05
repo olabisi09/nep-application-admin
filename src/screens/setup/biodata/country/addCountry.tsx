@@ -68,8 +68,7 @@ const AddCountry = ({ handleClose, data }: Props) => {
 
       validationSchema={validationSchema}
     >
-      {({ handleSubmit, values }) => {
-        console.log(values.status, 'status');
+      {({ handleSubmit }) => {
         return (
           <Form className="fields">
             <Input
