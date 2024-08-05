@@ -36,9 +36,29 @@ interface SocialMedia {
   templateId: number;
   socialMediaName: string;
   socialMediaUrl: string;
+}
+interface GeneralTemplate {
+  id: number;
+  schoolName: string;
+  logo: string;
+  logoUrl: string;
+  homePageImage: string;
+  homePageImageUrl: string;
+  aboutUsImage: string;
+  aboutUsImageUrl: string;
+  loginBackgroundImage: string;
+  loginBackgroundImageUrl: string;
+  schoolEmailAddress: string;
+  schoolPhoneNumber: string;
+  schoolAddress: string;
   activeStatus: boolean;
   isDeleted: boolean;
 }
+
+interface GeneralTemplateResponse extends Response {
+  data: GeneralTemplate[];
+}
+
 interface GenderResponse extends Response {
   data: Gender[]
 }
@@ -66,4 +86,23 @@ interface Country {
   id?: number;
   countryName: string;
 activeStatus?: boolean;
+}
+
+interface StateResponse extends Response {
+  data: State[]
+}
+
+interface State {
+  id?: number;
+  stateName: string;
+activeStatus?: boolean;
+}
+interface SetupPayload {
+  Id: number;
+  Title: string;
+  Description: string;
+  ImageUrl: string;
+  Image: any;
+  ActiveStatus: boolean;
+  IsDeleted: boolean;
 }
