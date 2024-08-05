@@ -20,30 +20,46 @@ const CountrySetup = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [indexData, setIndexData] = useState({} as Country);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  const data = Array.from({ length: 5 }, () => ({
-    id: 1234,
-    firstName: "Timi",
-    lastName: "John",
-    email: "john@gmail.com",
-    role: "Admin User",
-    status: "Active",
-  }));
 
-  const { data:data1, isLoading, isError, error } = useQuery({
+  const handleEdit = (data: Country) => {
+    setIndexData(data);
+    setOpenEdit(true);
+  };
+
+  const handleDelete = (data: Country) => {
+    setIndexData(data);
+    setOpenDelete(true);
+  };
+
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-country"],
     queryFn: getCountry,
   });
 
-  const CountryData = data1?.data as Country[];
+  const CountryData = data?.data as Country[];
 
-  const items: MenuProps["items"] = [
+  const items = (record: Country): MenuProps["items"] => [
     {
       key: "1",
-      label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
+      label: (
+        <button style={{ border: "0rem" }} onClick={() => handleEdit(record)}>
+          Edit
+        </button>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <button style={{ border: "0rem" }} onClick={() => handleDelete(record)}>
+          Delete
+        </button>
+      ),
     },
   ];
   const columns = [
@@ -61,13 +77,15 @@ const CountrySetup = () => {
       key: "activeStatus",
       title: "Active Status",
       dataIndex: "activeStatus",
+      render: (text:boolean) => (text ? "Active" : "Inactive"),
+
     },
 
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
+      render: ( record: Country) => (
+        <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
       ),
@@ -134,22 +152,11 @@ const CountrySetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Country Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text" 
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddCountry />
-          </Form>
-        </Formik>
+    
+            <AddCountry handleClose={() => setShowAddModal(false)} />
+   
       </Modal>
 
       <Modal
@@ -157,22 +164,10 @@ const CountrySetup = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Country Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpenEdit(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Update" />
-          </div>
-        )}
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddCountry />
-          </Form>
-        </Formik>
+    
+            <AddCountry handleClose={() => setOpenEdit(false)} data={indexData}/>
       </Modal>
 
     </main>

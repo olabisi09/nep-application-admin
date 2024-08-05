@@ -2,7 +2,7 @@ import Input from "../../../../custom/input/input";
 import { Form, Formik, FormikValues } from "formik";
 import Button from "../../../../custom/button/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateGender } from "../../../../requests";
+import { StatusOptions, createOrUpdateGender } from "../../../../requests";
 import * as Yup from "yup";
 import { App } from "antd";
 import Select from "../../../../custom/select/select";
@@ -25,7 +25,7 @@ const AddGender = ({ handleClose, data }: Props) => {
     const payload: Partial<Gender> = {
       id: data?.id || 0,
       genderName: values.genderName,
-      activeStatus: values?.activeStatus,
+      activeStatus: values?.status,
     };
 
     try {
@@ -51,28 +51,10 @@ const AddGender = ({ handleClose, data }: Props) => {
 
   const validationSchema = Yup.object().shape({
     genderName: Yup.string().required("Gender is required"),
-    activeStatus:Yup.string().required("Active Status is required"),
+    status:Yup.string().required("Active Status is required"),
   });
 
-  const StatusOptions = [
-    {
-      name: "Enable",
-      value: true,
-    },
-    {
-      name: "Disable",
-      value: false,
-    },
-  ];
 
-  const statusData: any =
-    StatusOptions &&
-    StatusOptions?.length > 0 &&
-    StatusOptions?.map((item: any, index: number) => (
-      <option value={item?.value} key={index}>
-        {item?.name}
-      </option>
-    ));
 
   return (
     <Formik
@@ -83,17 +65,26 @@ const AddGender = ({ handleClose, data }: Props) => {
       onSubmit={(values) => {
         CreateGenderHandler(values);
       }}
+      enableReinitialize={true}
       validationSchema={validationSchema}
     >
       {({ handleSubmit }) => (
         <Form className="fields">
           <Input name="genderName" placeholder="Input Gender" label="Gender" />
           <Select
-            name="activeStatus"
-            placeholder="Select Country Name"
-            label="Active Status"
-            options={statusData}
-          />
+        name="status"
+        placeholder="Select Status"
+        label="Status"
+        options={
+          <>
+          {StatusOptions.map((option: any) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+          </>
+        }
+      />
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button

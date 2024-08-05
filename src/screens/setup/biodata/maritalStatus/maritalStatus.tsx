@@ -93,7 +93,7 @@ const MaritalSetup = ()=> {
     {
       key: "1",
       label: (
-        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
+        <button style={{ border: "0rem" }} onClick={() => handleEdit(record)}>
           Edit
         </button>
       ),
@@ -122,6 +122,8 @@ const MaritalSetup = ()=> {
       key: "activeStatus",
       title: "Active Status",
       dataIndex: "activeStatus",
+      render: (text:boolean) => (text ? "Active" : "Inactive"),
+
     },
 
     {
