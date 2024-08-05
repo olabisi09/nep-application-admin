@@ -25,8 +25,16 @@ export const getGender = async () => {
     ?.data as GenderResponse;
 };
 
+
+
+
+
+
+
+
+
 export const createOrUpdateGender = async (payload: Partial<Gender>) => {
-  return (await api.post("/AboutUsPage/createUpdateAboutUsPage", payload))
+  return (await api.post("/Utilities/Utilities/CreateUpdateGender", payload))
     ?.data as Response;
 };
 

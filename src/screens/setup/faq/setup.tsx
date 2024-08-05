@@ -50,6 +50,7 @@ const SetupFaq = ({ handleClose }: { handleClose: () => void }) => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Title is required"),
+    activeStatus: Yup.string().required("Active status is required"),
   });
 
   const formik = useFormik<FormikValues>({
