@@ -4,7 +4,7 @@ interface Response {
 }
 
 interface GetResponse extends Response {
-  data: Setup[]
+  data: Setup[];
 }
 
 interface SocialMediaResponse extends Response {
@@ -60,42 +60,54 @@ interface GeneralTemplateResponse extends Response {
 }
 
 interface GenderResponse extends Response {
-  data: Gender[]
+  data: Gender[];
 }
 
 interface Gender {
   id: number;
   genderName: string;
-activeStatus: boolean;
+  activeStatus: boolean;
 }
 interface MaritalStatusResponse extends Response {
-  data: MaritalStatus[]
+  data: MaritalStatus[];
 }
 
 interface MaritalStatus {
-  id?: number;
+  id: number;
   statusName: string;
-activeStatus?: boolean;
+  activeStatus?: boolean;
 }
 
 interface CountryResponse extends Response {
-  data: Country[]
+  data: Country[];
 }
 
 interface Country {
-  id?: number;
+  id: number;
   countryName: string;
-activeStatus?: boolean;
+  activeStatus?: boolean;
 }
 
 interface StateResponse extends Response {
-  data: State[]
+  data: State[];
 }
 
 interface State {
-  id?: number;
+  id: number;
   stateName: string;
-activeStatus?: boolean;
+  activeStatus?: boolean;
+  countryName: string;
+}
+interface LGAResponse extends Response {
+  data: LGA[];
+}
+
+interface LGA {
+  id: number;
+  stateName: string;
+  lgaName: string;
+  activeStatus?: boolean;
+  countryName: string;
 }
 interface SetupPayload {
   Id: number;

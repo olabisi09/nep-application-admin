@@ -33,7 +33,11 @@ const LgaSetup = () => {
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
+      label: (
+        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
+          Edit
+        </button>
+      ),
     },
   ];
   const columns = [
@@ -124,7 +128,7 @@ const LgaSetup = () => {
           //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
-     
+
       <Modal
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
@@ -134,7 +138,7 @@ const LgaSetup = () => {
           <div className="btn-group">
             <Button
               onClick={() => setShowAddModal(false)}
-              variant="text" 
+              variant="text"
               text="Cancel"
             />
             <Button text="Create" />
@@ -142,9 +146,7 @@ const LgaSetup = () => {
         )}
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddLga />
-          </Form>
+          <Form>{/* <AddLga  /> */}</Form>
         </Formik>
       </Modal>
 
@@ -165,12 +167,9 @@ const LgaSetup = () => {
         )}
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddLga />
-          </Form>
+          <Form>{/* <AddLga /> */}</Form>
         </Formik>
       </Modal>
-
     </main>
   );
 };

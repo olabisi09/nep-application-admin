@@ -20,6 +20,7 @@ import { AddMarital } from "./addMaritalStatus";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import {
   createOrUpdateMaritalStatus,
+  deleteMaritalStatus,
   getMaritalStatus,
 } from "../../../../requests";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -57,19 +58,13 @@ const MaritalSetup = ()=> {
   };
 
   const DeleteMaritalStatusMutation = useMutation({
-    mutationFn: createOrUpdateMaritalStatus,
-    mutationKey: ["create-marital-status"],
+    mutationFn: deleteMaritalStatus,
+    mutationKey: ["delete-marital-status"],
   });
 
   const DeleteMaritalStatusHandler = async () => {
-    const payload: Partial<MaritalStatus> = {
-      id: indexData?.id,
-      statusName: indexData.statusName,
-      activeStatus: false,
-    };
-
     try {
-      await DeleteMaritalStatusMutation.mutateAsync(payload, {
+      await DeleteMaritalStatusMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -208,7 +203,7 @@ const MaritalSetup = ()=> {
         title="Edit Marital Setup"
         footer={null}
       >
-        <AddMarital handleClose={() => setOpenEdit(false)} />
+        <AddMarital handleClose={() => setOpenEdit(false)} data={indexData}/>
       </Modal>
 
       <Modal
@@ -219,13 +214,11 @@ const MaritalSetup = ()=> {
         footer={null}
       >
         <DeleteModalContent
-          isLoading={false}
+          isLoading={DeleteMaritalStatusMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={DeleteMaritalStatusHandler}
           title={indexData?.statusName}
-          isActive={false}
-          // btnText={"Disable"}
-        />{" "}
+        />
       </Modal>
     </main>
   );

@@ -21,11 +21,14 @@ const AddCountry = ({ handleClose, data }: Props) => {
     mutationKey: ["create-country"],
   });
 
-  const CreateCountryHandler = async (values: FormikValues, resetForm: () => void) => {
+  const CreateCountryHandler = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     const payload: Partial<Country> = {
       id: data?.id || 0,
       countryName: values.countryName,
-      activeStatus: values?.status === "true",
+      activeStatus: values?.status === "true", // Convert "true" to true, "false" to false
     };
 
     try {
@@ -59,13 +62,13 @@ const AddCountry = ({ handleClose, data }: Props) => {
     <Formik
       initialValues={{
         countryName: data?.countryName || "",
-        status: data?.activeStatus ? "true" : "false",
+        status:
+          data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
       }}
       onSubmit={(values, { resetForm }) => {
         CreateCountryHandler(values, resetForm);
       }}
       enableReinitialize={true}
-
       validationSchema={validationSchema}
     >
       {({ handleSubmit }) => {
@@ -82,8 +85,11 @@ const AddCountry = ({ handleClose, data }: Props) => {
               label="Status"
               options={
                 <>
-                  <option value="true">Active</option>
-                  <option value="false">Disabled</option>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </>
               }
             />
@@ -92,7 +98,9 @@ const AddCountry = ({ handleClose, data }: Props) => {
               <Button
                 onClick={handleSubmit as any}
                 disabled={CreateCountryMutation?.isPending}
-                text={CreateCountryMutation?.isPending ? "Creating..." : "Create"}
+                text={
+                  CreateCountryMutation?.isPending ? "Creating..." : "Create"
+                }
               />
             </div>
           </Form>

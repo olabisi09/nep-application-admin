@@ -1,25 +1,145 @@
 import Input from "../../../../custom/input/input";
+import { Form, Formik, FormikValues } from "formik";
+import Button from "../../../../custom/button/button";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  StatusOptions,
+  createOrUpdateLGA,
+  createOrUpdateState,
+  getCountry,
+} from "../../../../requests";
+import * as Yup from "yup";
+import { App } from "antd";
 import Select from "../../../../custom/select/select";
 
-const AddLga = () => {
+interface Props {
+  data?: LGA;
+  handleClose: () => void;
+}
+
+const AddLga = ({ handleClose, data }: Props) => {
+  const { notification } = App.useApp();
+  const queryClient = useQueryClient();
+
+  const CreateLgaMutation = useMutation({
+    mutationFn: createOrUpdateLGA,
+    mutationKey: ["create-Lga"],
+  });
+
+  const CreateLgaHandler = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
+    const payload: Partial<LGA> = {
+      id: data?.id || 0,
+      stateName: values.stateName,
+      activeStatus: values?.status === "true",
+      countryName:values?.countryName,
+    };
+
+    try {
+      await CreateLgaMutation.mutateAsync(payload, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          queryClient.refetchQueries({
+            queryKey: ["get-LGA"],
+          });
+          handleClose();
+          resetForm();
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
+
+  const {
+    data: countryData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["get-country"],
+    queryFn: getCountry,
+  });
+
+  const CountryData = countryData?.data as Country[];
+
+  const CountryOptions: any =
+    CountryData &&
+    CountryData?.length > 0 &&
+    CountryData?.map((item: any, index: number) => (
+      <option value={item?.id} key={index}>
+        {item?.countryName}
+      </option>
+    ));
+
+  const validationSchema = Yup.object().shape({
+    countryName: Yup.string().required("State is required"),
+    stateName: Yup.string().required("State is required"),
+    status: Yup.string().required("Active Status is required"),
+  });
+
   return (
-    <section className="fields">
-         <Select
-        name="CountryName "
-        placeholder="Input Country Name"
-        label="Country Name"
-      />  
-       <Select
-        name="StateName "
-        placeholder="Input State Name"
-        label="State Name"
-      />  
-       <Input
-        name="LgaName "
-        placeholder="Input LGA Name"
-        label="LGA Name"
-      />  
-    </section>
+    <Formik
+      initialValues={{
+        countryName:data?.countryName || "",
+        stateName: data?.stateName || "",
+        status:
+          data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
+      }}
+      onSubmit={(values, { resetForm }) => {
+        CreateLgaHandler(values, resetForm);
+      }}
+      enableReinitialize={true}
+      validationSchema={validationSchema}
+    >
+      {({ handleSubmit }) => {
+        return (
+          <Form className="fields">
+            <Select
+              name="countryName"
+              placeholder="Input Country Name"
+              label="Country Name"
+              options={CountryOptions}
+            />
+            <Input
+              name="stateName"
+              placeholder="Input State Name"
+              label="State Name"
+            />
+            <Select
+              name="status"
+              placeholder="Select Status"
+              label="Status"
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              }
+            />
+            <div className="btn-group">
+              <Button onClick={handleClose} variant="text" text="Cancel" />
+              <Button
+                onClick={handleSubmit as any}
+                disabled={CreateLgaMutation?.isPending}
+                text={CreateLgaMutation?.isPending ? "Creating..." : "Create"}
+              />
+            </div>
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
 
