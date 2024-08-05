@@ -218,3 +218,20 @@ export const getSubject = async () => {
   return (await api.get(`Utilities/Utilities/GetAllSubject`))
     ?.data as GetSubject;
 };
+
+export const deleteCountry = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/Deletecountry?Id=${id}`))
+    ?.data as Response;
+};
+export const deleteGender = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteGender?Id=${id}`))
+    ?.data as Response;
+};
+export const deleteMaritalStatus = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteMaritalStatus?Id=${id}`))
+    ?.data as Response;
+};
+export const deleteState = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteState?Id=${id}`))
+    ?.data as Response;
+};
