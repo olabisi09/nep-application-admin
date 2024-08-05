@@ -89,6 +89,15 @@ interface Country {
   countryName: string;
   activeStatus?: boolean;
 }
+interface StateResponse extends Response {
+  data: State[]
+}
+
+interface State {
+  id?: number;
+  stateName: string;
+activeStatus?: boolean;
+}
 interface SetupPayload {
   Id: number;
   Title: string;
