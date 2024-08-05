@@ -10,6 +10,7 @@ import {
   Button as AntButton,
   MenuProps,
   Spin,
+  App,
 } from "antd";
 import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
@@ -18,9 +19,10 @@ import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import AddSubject from "./addSubject";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useQuery } from "@tanstack/react-query";
-import { getSubject } from "../../../requests";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteSubject, getSubject } from "../../../requests";
 import { Subject } from "./types";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const SubjectSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -30,6 +32,8 @@ const SubjectSetUp = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as Subject);
   const [openDelete, setOpenDelete] = useState(false);
+  const { notification } = App.useApp();
+  const queryClient = useQueryClient();
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -98,6 +102,30 @@ const SubjectSetUp = () => {
       ),
     },
   ];
+
+  const deleteSubjectMutation = useMutation({ mutationFn: deleteSubject });
+
+  const DeleteCountryHandler = async () => {
+    try {
+      await deleteSubjectMutation.mutateAsync(indexData.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          queryClient.refetchQueries({
+            queryKey: ["get-subject"],
+          });
+          setOpenDelete(false);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   if (isLoading) {
     return <Spin />;
@@ -171,6 +199,21 @@ const SubjectSetUp = () => {
         footer={null}
       >
         <AddSubject handleClose={() => setOpenEdit(false)} data={indexData} />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Country Setup"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteSubjectMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={DeleteCountryHandler}
+          title={indexData?.subject}
+        />
       </Modal>
     </main>
   );

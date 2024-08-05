@@ -68,6 +68,7 @@ const AddSubject = ({ handleClose, data }: Props) => {
       CreateSubjectHandler(values, resetForm);
     },
     validationSchema: validationSchema,
+    enableReinitialize: true,
   });
 
   const statusOptions = (
