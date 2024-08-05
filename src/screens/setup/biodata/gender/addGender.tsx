@@ -6,8 +6,12 @@ import { createOrUpdateGender} from "../../../../requests";
 import * as Yup from "yup";
 import { App } from "antd";
 
+interface Props {
+  data?: Gender;
+  handleClose: () => void;
+}
 
-const AddGender = ({ handleClose }: { handleClose: () => void }) => {
+const AddGender = ({ handleClose,data }:Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -18,6 +22,7 @@ const AddGender = ({ handleClose }: { handleClose: () => void }) => {
 
   const CreateGenderHandler = async (values: FormikValues) => {
     const payload: Partial<Gender> = {
+      id:data?.id || 0,
       genderName: values.genderName,
       activeStatus:true,
    
@@ -33,6 +38,7 @@ const AddGender = ({ handleClose }: { handleClose: () => void }) => {
           queryClient.refetchQueries({
             queryKey: ["get-gender"],
           });
+          handleClose()
         },
       });
     } catch (error: any) {
@@ -50,7 +56,7 @@ const AddGender = ({ handleClose }: { handleClose: () => void }) => {
  return (
     <Formik
       initialValues={{
-        genderName: "",
+        genderName: data?.genderName || "",
       }}
       onSubmit={(values) => {
         CreateGenderHandler(values);
@@ -67,7 +73,7 @@ const AddGender = ({ handleClose }: { handleClose: () => void }) => {
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button
-              onClick={handleSubmit as any} // type casting as any to avoid TypeScript errors
+              onClick={handleSubmit as any} 
               disabled={CreateGenderMutation?.isPending}
               text={
                 CreateGenderMutation?.isPending ? "Creating..." : "Create"

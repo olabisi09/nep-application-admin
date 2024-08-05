@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { Theme } from "./theme/theme";
+import "ckeditor5/ckeditor5.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {

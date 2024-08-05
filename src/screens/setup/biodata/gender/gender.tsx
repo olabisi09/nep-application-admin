@@ -9,17 +9,17 @@ import {
   Table,
   Button as AntButton,
   MenuProps,
-  Spin,
+  Spin,App
 } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../../custom/searchInput/searchInput";
 import AddGender from "./addGender";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { useQuery } from "@tanstack/react-query";
-import { getGender } from "../../../../requests";
+import {   useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createOrUpdateGender, getGender } from "../../../../requests";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const GenderSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -27,32 +27,84 @@ const GenderSetup = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const { notification } = App.useApp();
+  const [indexData, setIndexData] = useState({} as Gender);
+  const queryClient = useQueryClient();
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  // const data = Array.from({ length: 5 }, () => ({
-  //   id: 1234,
-  //   firstName: "Timi",
-  //   lastName: "John",
-  //   email: "john@gmail.com",
-  //   role: "Admin User",
-  //   status: "Active",
-  // }));
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-gender"],
     queryFn: getGender,
   });
-  const items: MenuProps["items"] = [
+
+  const handleEdit = (data: Gender) => {
+    setIndexData(data);
+    setOpenEdit(true);
+  };
+
+  const handleDelete = (data: Gender) => {
+    setIndexData(data);
+    setOpenDelete(true);
+  };
+      const DeleteGenderMutation = useMutation({
+    mutationFn: createOrUpdateGender,
+    mutationKey: ["delete-gender"],
+  });
+
+
+  const DeleteGenderHandler = async () => {
+    const payload: Partial<Gender> = {
+      id:indexData?.id,
+      genderName: indexData.genderName,
+      activeStatus:false,
+   
+    };
+
+    try {
+      await DeleteGenderMutation.mutateAsync(payload, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: 'Deleted Successfully'||data?.message,
+          });
+          queryClient.refetchQueries({
+            queryKey: ["get-gender"],
+          });
+          setOpenDelete(false)
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
+
+
+  const items = (record: Gender): MenuProps["items"] => [
     {
       key: "1",
       label: (
-        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
+        <button style={{ border: "0rem" }} onClick={() => handleEdit(record)}>
           Edit
         </button>
       ),
     },
+    {
+      key: "2",
+      label: (
+        <button style={{ border: "0rem" }} onClick={() => handleDelete(record)}>
+          Delete
+        </button>
+      ),
+    },
   ];
+
   const columns = [
     {
       key: "id",
@@ -61,15 +113,14 @@ const GenderSetup = () => {
     },
     {
       key: "genderName",
-      title: "gender",
+      title: "Gender",
       dataIndex: "genderName",
     },
-
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
+      render: ( record: Gender) => (
+        <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
       ),
@@ -84,6 +135,8 @@ const GenderSetup = () => {
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
+
   return (
     <main>
       <PageLayout
@@ -113,7 +166,6 @@ const GenderSetup = () => {
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
-
             {!showAllFilter && (
               <Filter
                 onClick={() =>
@@ -127,7 +179,6 @@ const GenderSetup = () => {
           dataSource={GenderData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 
@@ -139,6 +190,33 @@ const GenderSetup = () => {
         footer={null}
       >
         <AddGender handleClose={() => setShowAddModal(false)} />
+      </Modal>
+
+      <Modal
+        open={openEdit}
+        onCancel={() => setOpenEdit(false)}
+        centered
+        title="Edit Gender Setup"
+        footer={null}
+      >
+        <AddGender handleClose={() => setOpenEdit(false)} data={indexData} />
+      </Modal>
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title=" Delete Gender Setup"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={false}
+          // data={Data}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={DeleteGenderHandler}
+          title={indexData?.genderName}
+          isActive={ false }
+          // btnText={"Disable"}
+        />
       </Modal>
     </main>
   );
