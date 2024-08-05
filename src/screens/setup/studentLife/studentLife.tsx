@@ -11,18 +11,11 @@ import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import {
-  CreateStudentLife,
-  OverviewSetup,
-  StudentActivitiesSetup,
-  EditStudentLife,
-  SchoolSummarySetup,
-  CampusExperienceSetup,
-} from "./setup";
 import { useQuery } from "@tanstack/react-query";
 import { getStudentLife } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import { CampusExperience, CreateStudentLife, EditStudentLife, Overview, SchoolSummary, StudentActivities } from "./setup";
 
 const forms = [
   "Create",
@@ -61,17 +54,17 @@ const StudentLife = () => {
           <EditStudentLife item={item} handleClose={() => setOpen(false)} />
         );
       case "Overview":
-        return <OverviewSetup handleClose={() => setOpen(false)} />;
+        return <Overview handleClose={() => setOpen(false)} />;
       case "School Summary":
-        return <SchoolSummarySetup handleClose={() => setOpen(false)} />;
+        return <SchoolSummary handleClose={() => setOpen(false)} />;
       case "Campus Experience":
-        return <CampusExperienceSetup handleClose={() => setOpen(false)} />;
+        return <CampusExperience handleClose={() => setOpen(false)} />;
       case "Fitness & Athletics":
         return <CreateStudentLife handleClose={() => setOpen(false)} />;
       case "Support & Guidance":
         return <CreateStudentLife handleClose={() => setOpen(false)} />;
       case "Student Activities":
-        return <StudentActivitiesSetup handleClose={() => setOpen(false)} />;
+        return <StudentActivities handleClose={() => setOpen(false)} />;
       default:
         return <CreateStudentLife handleClose={() => setOpen(false)} />;
     }
