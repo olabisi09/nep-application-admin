@@ -90,6 +90,7 @@ interface Setup {
   imageUrl: string;
   activeStatus: boolean;
   isDeleted: boolean;
+  readMoreId: number;
 }
 
 interface GeneralTemplate {
@@ -124,6 +125,21 @@ interface SocialMedia {
   templateId: number;
   socialMediaName: string;
   socialMediaUrl: string;
+}
+interface GeneralTemplate {
+  id: number;
+  schoolName: string;
+  logo: string;
+  logoUrl: string;
+  homePageImage: string;
+  homePageImageUrl: string;
+  aboutUsImage: string;
+  aboutUsImageUrl: string;
+  loginBackgroundImage: string;
+  loginBackgroundImageUrl: string;
+  schoolEmailAddress: string;
+  schoolPhoneNumber: string;
+  schoolAddress: string;
   activeStatus: boolean;
   isDeleted: boolean;
 }
@@ -146,7 +162,7 @@ interface MaritalStatusResponse extends Response {
 }
 
 interface MaritalStatus {
-  id?: number;
+  id: number;
   statusName: string;
   activeStatus?: boolean;
 }
@@ -156,17 +172,39 @@ interface CountryResponse extends Response {
 }
 
 interface Country {
-  id?: number;
+  id: number;
   countryName: string;
   activeStatus?: boolean;
 }
+
 interface StateResponse extends Response {
   data: State[];
 }
 
 interface State {
-  id?: number;
+  id: number;
   stateName: string;
+  activeStatus?: boolean;
+  countryName: string;
+}
+interface LGAResponse extends Response {
+  data: LGA[];
+}
+
+interface LGA {
+  id: number;
+  stateId: string;
+  lgaName: string;
+  activeStatus?: boolean;
+  countryId: string;
+}
+interface QualificationTypeResponse extends Response {
+  data: QualificationType[];
+}
+
+interface QualificationType {
+  id: number;
+  qualificationType: string;
   activeStatus?: boolean;
 }
 interface SetupPayload {

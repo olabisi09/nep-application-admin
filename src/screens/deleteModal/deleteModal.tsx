@@ -7,9 +7,9 @@ interface Props {
   handleCloseModal?: () => void;
   handleSubmit?: () => void;
   isLoading: boolean;
-  title: any ;
-  isActive?:any;
-  btnText?:any
+  title: any;
+  isActive?: any;
+  btnText?: any;
 }
 
 const DeleteModalContent = ({
@@ -19,33 +19,29 @@ const DeleteModalContent = ({
   isLoading,
   title,
   isActive,
-  btnText
+  btnText,
 }: Props) => {
   return (
     <main className={styles.main}>
-      <section className={styles.Wrapper} >
-        {/* <Icon /> */}
-        {/* <Heading>MESSAGE SENT!</Heading> */}
-        <p  className={styles.para} >You are about to {isActive   || ' delete '}{" "}{ title}</p>
-
+      <section className={styles.Wrapper}>
+        <p className={styles.para}>
+          You are about to {isActive || " delete "} {title}
+        </p>
 
         <div className="btn-group">
-            <Button onClick={handleCloseModal} variant="text" text="Cancel" />
-            <Button
-          type="button"
-          text={isLoading ? (btnText  || "Deleting..." ): ( btnText || "Delete")}
-          disabled={isLoading}
-          // text="Delete"
-          className={styles.deleteButton}
-          onClick={handleSubmit}
-        bgColor={"red"}
-        />
-          </div>
-   
+          <Button onClick={handleCloseModal} variant="text" text="Cancel" />
+          <Button
+            type="button"
+            text={isLoading ? btnText || "Deleting..." : btnText || "Delete"}
+            disabled={isLoading}
+            // text="Delete"
+            className={styles.deleteButton}
+            onClick={handleSubmit}
+            bgColor={"red"}
+          />
+        </div>
       </section>
     </main>
   );
 };
 export default DeleteModalContent;
-
-

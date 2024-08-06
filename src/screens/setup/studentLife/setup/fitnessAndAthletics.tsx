@@ -1,18 +1,23 @@
 import { Form, Formik, FormikValues } from "formik";
 import { Button, Input, Select } from "../../../../custom";
-import { createOrUpdateStudentLife } from "../../../../requests";
+import { createOrUpdateFitnessAthletics } from "../../../../requests";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
 
-const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
+const FitnessAndAthletics = ({
+  handleClose,
+  item,
+}: {
+  handleClose: () => void;
+  item: Setup;
+}) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  
-  const addStudentLifeMutation = useMutation({
-    mutationFn: createOrUpdateStudentLife,
+  const addFitnessAthleticsMutation = useMutation({
+    mutationFn: createOrUpdateFitnessAthletics,
   });
 
-  const handleAddStudentLife = async (
+  const handleAddFitnessAthletics = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
@@ -20,10 +25,42 @@ const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
       title: values.title,
       description: values.description,
       activeStatus: values.status === "Active",
+      isDeleted: false,
     };
 
     try {
-      await addStudentLifeMutation.mutateAsync(payload, {
+      await addFitnessAthleticsMutation.mutateAsync(payload, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          queryClient.refetchQueries({ queryKey: ["get-student-life"] });
+          handleClose();
+          resetForm();
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
+
+  const handleEditFitnessAthletics = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
+    const payload: Partial<Setup> = {
+      id: item.id,
+      title: values.title,
+      description: values.description,
+      activeStatus: values.status === "Active",
+    };
+
+    try {
+      await addFitnessAthleticsMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -57,7 +94,7 @@ const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
         status: "",
       }}
       onSubmit={(values, { resetForm }) =>
-        handleAddStudentLife(values, resetForm)
+        handleAddFitnessAthletics(values, resetForm)
       }
     >
       <Form className="fields">
@@ -67,7 +104,7 @@ const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
           type="textarea"
           label="Description"
           placeholder="Input description"
-        />
+        />{" "}
         <Select
           name="status"
           label="Status"
@@ -83,8 +120,8 @@ const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
           />
           <Button
             type="submit"
-            isLoading={addStudentLifeMutation.isPending}
-            disabled={addStudentLifeMutation.isPending}
+            isLoading={addFitnessAthleticsMutation.isPending}
+            disabled={addFitnessAthleticsMutation.isPending}
             text="Create"
           />
         </div>
@@ -93,4 +130,4 @@ const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
   );
 };
 
-export default CreateStudentLife;
+export default FitnessAndAthletics;
