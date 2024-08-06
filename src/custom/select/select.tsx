@@ -11,7 +11,7 @@ interface ComponentProps {
   bg?: string;
   value?: string;
   asterisk?: boolean;
-  onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
+  onChange?: ChangeEventHandler<HTMLSelectElement> | undefined;
   options?: React.ReactNode;
   placeholder?: string;
 }
