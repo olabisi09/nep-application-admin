@@ -22,6 +22,8 @@ const SubjectSetUp = () => {
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
+
+  
   const data = Array.from({ length: 5 }, () => ({
     id: 1234,
     firstName: "Timi",
