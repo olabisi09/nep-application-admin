@@ -158,9 +158,15 @@ export const createOrUpdateAdmissionRequirement = async(payload: Partial<Admissi
   return (await api.post('/ReadMore/createUpdateAdmissionRequirement', payload))?.data as Response;
 }
 
+export const deleteAdmissionRequirement= async(id:number)=>{
+return (await api.delete(`/ReadMore/DeleteAdmissionRequirementById?Id=${id}`))?.data as Response
+}
+
 export const getAllPrograms = async() => {
   return (await api.get('/Academics/GetAllProgramAsync'))?.data as ProgramResponse;
 }
+
+
 
 
 
