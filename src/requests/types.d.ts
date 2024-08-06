@@ -87,6 +87,15 @@ interface LGA {
   activeStatus?: boolean;
   countryId: string;
 }
+interface QualificationTypeResponse extends Response {
+  data: QualificationType[];
+}
+
+interface QualificationType {
+  id: number;
+  qualificationType: string;
+  activeStatus?: boolean;
+}
 interface SetupPayload {
   Id: number;
   Title: string;

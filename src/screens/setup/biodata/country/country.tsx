@@ -1,5 +1,3 @@
-import PageLayout from "../../../../layouts/pageLayout/pageLayout";
-import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward.svg";
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
@@ -12,7 +10,6 @@ import {
   Spin,
   App,
 } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
 import { useState } from "react";
@@ -134,19 +131,14 @@ const CountrySetup = () => {
 
   return (
     <main>
-      <PageLayout
-        paragraph="Country Setup"
-        firstText="Setup Bio-data"
-        secondText="Country Setup"
-        iconBefore={<GraterThan />}
-        headerActions={
-          <Button
-            onClick={() => setShowAddModal(true)}
-            iconBefore={<Add />}
-            text="Setup"
-          />
-        }
-      />
+      <section className="space-between">
+        <h3>Country Setup</h3>
+        <Button
+          onClick={() => setShowAddModal(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
+      </section>
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>

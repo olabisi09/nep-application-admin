@@ -1,4 +1,3 @@
-import PageLayout from "../../../layouts/pageLayout/pageLayout";
 import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.svg";
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
@@ -80,19 +79,14 @@ const QualificationSetUp = () => {
 
   return (
     <main>
-      <PageLayout
-        paragraph="Qualification Setup"
-        firstText="Setup Programs"
-        secondText="Qualification Setup"
-        iconBefore={<GraterThan />}
-        headerActions={
-          <Button
-            onClick={() => setShowAddModal(true)}
-            iconBefore={<Add />}
-            text="Setup"
-          />
-        }
-      />
+          <section className="space-between">
+        <h3>Qualification Setup</h3>
+        <Button
+          onClick={() => setShowAddModal(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
+      </section>
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -130,22 +124,11 @@ const QualificationSetUp = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Qualification Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddQualificationType />
-          </Form>
-        </Formik>
+     
+            <AddQualificationType  handleClose={() => setShowAddModal(false)}  />
+         
       </Modal>
 
       <Modal
@@ -153,20 +136,11 @@ const QualificationSetUp = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Qualification Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpenEdit(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Update" />
-          </div>
-        )}
+        footer={null}
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddQualificationType />
+            <AddQualificationType  handleClose={() => setShowAddModal(false)}  />
           </Form>
         </Formik>
       </Modal>

@@ -1,5 +1,3 @@
-import PageLayout from "../../../layouts/pageLayout/pageLayout";
-import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.svg";
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
@@ -35,7 +33,11 @@ const AdmissionRequirement = () => {
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
+      label: (
+        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
+          Edit
+        </button>
+      ),
     },
   ];
   const columns = [
@@ -82,19 +84,14 @@ const AdmissionRequirement = () => {
 
   return (
     <main>
-      <PageLayout
-        paragraph="Read More - Admission Requirements Setup"
-        firstText="Setup Programs"
-        secondText="Read More - Admission Requirements Setup"
-        iconBefore={<GraterThan />}
-        headerActions={
-          <Button
-            onClick={() => setShowAddModal(true)}
-            iconBefore={<Add />}
-            text="Setup"
-          />
-        }
-      />
+      <section className="space-between">
+        <h3>Read More - Admission Requirements Setup</h3>
+        <Button
+          onClick={() => setShowAddModal(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
+      </section>
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -126,7 +123,7 @@ const AdmissionRequirement = () => {
           //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
-     
+
       <Modal
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
@@ -194,7 +191,6 @@ const AdmissionRequirement = () => {
           </Form>
         </Formik>
       </Modal>
-
     </main>
   );
 };

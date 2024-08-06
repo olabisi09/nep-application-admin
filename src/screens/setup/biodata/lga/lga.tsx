@@ -1,5 +1,3 @@
-import PageLayout from "../../../../layouts/pageLayout/pageLayout";
-import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward.svg";
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";

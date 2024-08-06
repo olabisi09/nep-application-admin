@@ -1,4 +1,3 @@
-import PageLayout from "../../../../layouts/pageLayout/pageLayout";
 import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward.svg";
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
@@ -141,19 +140,14 @@ const MaritalSetup = ()=> {
   }
   return (
     <main>
-      <PageLayout
-        paragraph="Marital Setup"
-        firstText="Setup Bio-data"
-        secondText="Marital Setup"
-        iconBefore={<GraterThan />}
-        headerActions={
-          <Button
-            onClick={() => setShowAddModal(true)}
-            iconBefore={<Add />}
-            text="Setup"
-          />
-        }
-      />
+        <section className="space-between">
+        <h3>Marital Setup</h3>
+        <Button
+          onClick={() => setShowAddModal(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
+      </section>
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>

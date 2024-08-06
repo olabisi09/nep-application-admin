@@ -61,6 +61,13 @@ export const createOrUpdateCountry = async (payload: Partial<Country>) => {
   return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
 }
 
+export const getQualification = async () => {
+  return (await api.get('/Utilities/Utilities/GetAllCountries'))?.data as CountryResponse;
+}
+
+export const createOrUpdateQualification = async (payload: Partial<QualificationType>) => {
+  return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
+}
 export const getState = async () => {
   return (await api.get('/Utilities/Utilities/GetAllStates'))?.data as StateResponse;
 }
