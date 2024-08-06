@@ -90,13 +90,13 @@ interface Country {
   activeStatus?: boolean;
 }
 interface StateResponse extends Response {
-  data: State[]
+  data: State[];
 }
 
 interface State {
   id?: number;
   stateName: string;
-activeStatus?: boolean;
+  activeStatus?: boolean;
 }
 interface SetupPayload {
   Id: number;
@@ -121,4 +121,38 @@ interface SocialMediaLink {
 
 interface SocialMediaLinkResponse extends Response {
   data: SocialMediaLink[];
+}
+interface AdmissionRequirement {
+  activeStatus: boolean;
+  description: string;
+  id: number;
+  isDeleted: boolean;
+  readMoreId: number;
+}
+interface AdmissionRequirementResponse extends Response {
+  data: AdmissionRequirement[];
+}
+interface Program{
+  categoryCode: string
+  programTypeCode: string
+  programCategoryCode: any
+  code: string
+  name: string
+  description: string
+  requirements: string
+  duration: string
+  qualification: string
+  careerProspect: string
+  tuition: string
+  curriculum: string
+  scholarship: string
+  userStory: string
+  accreditation: string
+  id: number
+  created: string
+  createdBy: any
+  activeStatus: boolean
+}
+interface ProgramResponse extends Response {
+  data: Program[];
 }

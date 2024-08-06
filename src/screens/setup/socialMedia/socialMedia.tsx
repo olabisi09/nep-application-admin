@@ -17,7 +17,6 @@ import{ CreateSocialMediaSetup, EditSocialMediaLink } from "./setup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteSocialMediaLink, getSocialMediaLinks } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
-import { Link } from "react-router-dom";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const SocialMedia = () => {

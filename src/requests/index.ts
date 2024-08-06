@@ -29,11 +29,11 @@ export const getGeneralTemplateById = async (id: number) => {
 }
 
 export const StatusOptions = [{
-  value: true,
+  value: "true",
   label: 'Active',
 }
  , {
-  value: false,
+  value: "false",
   label: 'Inactive',
 }]
 
@@ -150,6 +150,17 @@ export const createOrUpdateCampusExperience = async (payload: Partial<Setup>) =>
   return (await api.post('/StudentLife/studentlife/CreateUpdateCampusExperience', payload))?.data as Response;
 }
 
+export const getAdmissionRequirements = async() => {
+  return (await api.get('/ReadMore/GetAllAdmissionRequirements'))?.data as AdmissionRequirementResponse;
+}
+
+export const createOrUpdateAdmissionRequirement = async(payload: Partial<AdmissionRequirement>) => {
+  return (await api.post('/ReadMore/createUpdateAdmissionRequirement', payload))?.data as Response;
+}
+
+export const getAllPrograms = async() => {
+  return (await api.get('/Academics/GetAllProgramAsync'))?.data as ProgramResponse;
+}
 
 
 
