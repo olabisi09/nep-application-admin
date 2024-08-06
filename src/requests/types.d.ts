@@ -264,3 +264,15 @@ interface Program{
 interface ProgramResponse extends Response {
   data: Program[];
 }
+
+interface CommonPayload {
+  id: number
+  readmoreId: number
+  description: string
+  activeStatus: boolean
+  isDeleted: boolean
+}
+
+interface ScholarshipResponse extends Response {
+  data: CommonPayload[];
+}
