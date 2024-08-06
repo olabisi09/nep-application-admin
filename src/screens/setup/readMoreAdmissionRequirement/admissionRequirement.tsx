@@ -3,7 +3,7 @@ import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.sv
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin } from "antd";
 import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
@@ -12,6 +12,10 @@ import SearchInput from "../../../custom/searchInput/searchInput";
 import AddAdmissionRequirement from "./addAdmissionRequirement";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import AddDetails from "./addDetails";
+import { getAdmissionRequirements } from "../../../requests";
+import { useQuery } from "@tanstack/react-query";
+import { ColumnsType } from "antd/es/table";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 
 const AdmissionRequirement = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -20,54 +24,46 @@ const AdmissionRequirement = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [showAddDetailsModal, setShowAddDetailsModal] = useState(false);
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["get-admission-requirement"],
+    queryFn: getAdmissionRequirements,
+  });
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  const data = Array.from({ length: 5 }, () => ({
-    id: 1234,
-    firstName: "Timi",
-    lastName: "John",
-    email: "john@gmail.com",
-    role: "Admin User",
-    status: "Active",
-  }));
   const items: MenuProps["items"] = [
     {
       key: "1",
       label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
     },
   ];
-  const columns = [
+
+  const columns : ColumnsType<AdmissionRequirement> = [
     {
       key: "id",
       title: "ID",
       dataIndex: "id",
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
+      key: "description",
+      title: "Description",
+      dataIndex: "description",
+      render: (_, { description }) => {
+        const limitedCleanHtml = sanitizeAndLimitString(description);
+        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
+      },
     },
     {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
-    },
-    {
-      key: "email",
-      title: "Email Address",
-      dataIndex: "email",
-    },
-    {
-      key: "role",
-      title: "Role",
-      dataIndex: "role",
+      key: "readMoreId",
+      title: "Program Name",
+      dataIndex: "readMoreId",
     },
     {
       key: "status",
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
@@ -78,8 +74,18 @@ const AdmissionRequirement = () => {
         </Dropdown>
       ),
     },
+
   ];
 
+  const admissionRequirements = data?.data
+  
+    
+  if (isLoading) {
+    return <Spin />;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
   return (
     <main>
       <PageLayout
@@ -120,7 +126,7 @@ const AdmissionRequirement = () => {
           </div>
         </div>
         <Table
-          dataSource={data}
+          dataSource={admissionRequirements}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}
@@ -132,22 +138,11 @@ const AdmissionRequirement = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Read More - Admission Req."
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddAdmissionRequirement />
-          </Form>
-        </Formik>
+       
+            <AddAdmissionRequirement handleClose={()=>setShowAddModal(false)}/>
+         
       </Modal>
 
       <Modal
@@ -168,7 +163,7 @@ const AdmissionRequirement = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddAdmissionRequirement />
+            <AddAdmissionRequirement handleClose={()=>setShowAddModal(false)}/>
           </Form>
         </Formik>
       </Modal>

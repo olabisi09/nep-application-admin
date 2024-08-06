@@ -2,9 +2,10 @@ import Input from "../../../../custom/input/input";
 import { Form, Formik, FormikValues } from "formik";
 import Button from "../../../../custom/button/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateMaritalStatus } from "../../../../requests";
+import { StatusOptions, createOrUpdateMaritalStatus } from "../../../../requests";
 import * as Yup from "yup";
 import { App } from "antd";
+import Select from "../../../../custom/select/select";
 
 interface Props {
   data?: MaritalStatus;
@@ -23,7 +24,7 @@ const AddMarital = ({ handleClose,data }:Props)  => {
   const CreateMaritalStatusHandler = async (values: FormikValues) => {
     const payload: Partial<MaritalStatus> = {
       statusName: values.MaritalName,
-      activeStatus:true,
+      activeStatus:values?.status,
    
     };
 
@@ -50,6 +51,8 @@ const AddMarital = ({ handleClose,data }:Props)  => {
 
   const validationSchema = Yup.object().shape({
     MaritalName: Yup.string().required("Marital Name is required"),
+    status:Yup.string().required("Active Status is required"),
+
   });
 
  return (
@@ -60,6 +63,7 @@ const AddMarital = ({ handleClose,data }:Props)  => {
       onSubmit={(values) => {
         CreateMaritalStatusHandler(values);
       }}
+      enableReinitialize={true}
       validationSchema={validationSchema}
     >
       {({ handleSubmit }) => (
@@ -69,6 +73,20 @@ const AddMarital = ({ handleClose,data }:Props)  => {
             placeholder="Input Marital Name"
             label="Marital Name"
           />
+           <Select
+        name="status"
+        placeholder="Select Status"
+        label="Status"
+        options={
+          <>
+          {StatusOptions.map((option: any) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+          </>
+        }
+      />
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button
