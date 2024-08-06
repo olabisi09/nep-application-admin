@@ -110,6 +110,8 @@ export const createOrUpdateSupportGuidance = async (payload: Partial<Setup>) => 
 
 export const createOrUpdateStudentActivity = async (payload: Partial<Setup>) => {
   return (await api.post('/StudentLife/studentlife/CreateUpdateStudentActivity', payload))?.data as Response;
+}
+
 export const createOrUpdateOverview= async (payload: Partial<Setup>) => {
   return (await api.post('/StudentLife/studentlife/createUpdateOverView', payload))?.data as Response;
 }
