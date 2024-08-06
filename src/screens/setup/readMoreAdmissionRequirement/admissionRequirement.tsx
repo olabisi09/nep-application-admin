@@ -18,6 +18,18 @@ import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 
+const forms = [
+  "Create",
+  "Edit",
+  "Overview",
+  "School Summary",
+  "Campus Experience",
+  "Fitness & Athletics",
+  "Support & Guidance",
+  "Student Activities",
+] as const;
+
+
 const AdmissionRequirement = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,6 +40,10 @@ const AdmissionRequirement = () => {
   const { notification } = App.useApp();
   const [admissionReq, setAdmissionReq] = useState<AdmissionRequirement>({} as AdmissionRequirement);
   const [openDelete, setOpenDelete] = useState(false);
+  const [currentForm, setCurrentForm] = useState<(typeof forms)[number] | "">(
+    ""
+  );
+  const [open, setOpen] = useState(false);
 
   const deleteAdmissionReqMutation = useMutation({ mutationFn: deleteAdmissionRequirement });
 
@@ -42,12 +58,11 @@ const AdmissionRequirement = () => {
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  // const items: MenuProps["items"] = [
-  //   {
-  //     key: "1",
-  //     label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
-  //   },
-  // ];
+  const onFormClick = (form: (typeof forms)[number]) => {
+    setCurrentForm(form);
+    setOpen(true);
+  };
+
 
   const columns: ColumnsType<AdmissionRequirement> = [
     {
@@ -84,6 +99,62 @@ const AdmissionRequirement = () => {
     //     </Dropdown>
     //   ),
     // },
+    {
+      key: "action",
+      title: "",
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setAdmissionReq(record);
+              onFormClick("Edit");
+            },
+          },
+          {
+            key: "2",
+            label: "Overview",
+            onClick: () => onFormClick("Overview"),
+          },
+          {
+            key: "3",
+            label: "School Summary",
+            onClick: () => onFormClick("School Summary"),
+          },
+          {
+            key: "4",
+            label: "Campus Experience",
+            onClick: () => onFormClick("Campus Experience"),
+          },
+          {
+            key: "5",
+            label: "Fitness & Athletics",
+            onClick: () => onFormClick("Fitness & Athletics"),
+          },
+          {
+            key: "6",
+            label: "Support & Guidance",
+            onClick: () => onFormClick("Support & Guidance"),
+          },
+          {
+            key: "7",
+            label: "Student Activities",
+            onClick: () => onFormClick("Student Activities"),
+          },
+          {
+            key: "8",
+            label: "Delete",
+            onClick: () => {},
+          },
+        ];
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
+        );
+      },
+    },
     {
       key: "action",
       title: "",
