@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getStudentLife } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import { CampusExperience, CreateStudentLife, EditStudentLife, Overview, SchoolSummary, StudentActivities } from "./setup";
+import { CampusExperience, CreateStudentLife, EditStudentLife, FitnessAthletics, Overview, SchoolSummary, StudentActivities, SupportGuidance } from "./setup";
 
 const forms = [
   "Create",
@@ -60,9 +60,9 @@ const StudentLife = () => {
       case "Campus Experience":
         return <CampusExperience handleClose={() => setOpen(false)} />;
       case "Fitness & Athletics":
-        return <CreateStudentLife handleClose={() => setOpen(false)} />;
+        return <FitnessAthletics item={item} handleClose={() => setOpen(false)} />;
       case "Support & Guidance":
-        return <CreateStudentLife handleClose={() => setOpen(false)} />;
+        return <SupportGuidance item={item} handleClose={() => setOpen(false)} />;
       case "Student Activities":
         return <StudentActivities handleClose={() => setOpen(false)} />;
       default:

@@ -99,3 +99,15 @@ export const createOrUpdateSchoolSummary = async (payload: Partial<Setup>) => {
 export const createOrUpdateCampusExperience = async (payload: Partial<Setup>) => {
   return (await api.post('/StudentLife/studentlife/CreateUpdateCampusExperience', payload))?.data as Response;
 }
+
+export const createOrUpdateFitnessAthletics = async (payload: Partial<Setup>) => {
+  return (await api.post('/StudentLife/studentlife/CreateUpdateFitnessAthletics', payload))?.data as Response;
+}
+
+export const createOrUpdateSupportGuidance = async (payload: Partial<Setup>) => {
+  return (await api.post('/StudentLife/studentlife/CreateUpdateSupportGuidance', payload))?.data as Response;
+}
+
+export const createOrUpdateStudentActivity = async (payload: Partial<Setup>) => {
+  return (await api.post('/StudentLife/studentlife/CreateUpdateStudentActivity', payload))?.data as Response;
+}
