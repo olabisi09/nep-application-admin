@@ -9,7 +9,6 @@ export const createOrUpdateAboutUs = async (payload: Partial<SetupPayload>) => {
 }
 
 export const deleteAboutUs = async (id: number) => {
-<<<<<<< HEAD
   return (await api.delete(`/AboutUsPage/DeleteAboutUsById/${id}`))?.data as Response;
 }
 
@@ -23,8 +22,17 @@ export const getAllCategory = async () => {
 // export const getAllCareerProspect = async () => {
 //   return (await api.get('/ReadMore/GetAllCareerProspects'))?.data as CareerProspectResponse;
 // }
-=======
-  return (await api.delete(`/AboutUsPage/DeleteAboutUsById?Id=${id}`))?.data as Response;
+
+export const getAllLevel = async () => {
+  return (await api.get('/ReadMore/GetAllLevel'))?.data as LevelResponse;
+}
+
+export const getAllTuitionFee = async () => {
+  return (await api.get('/ReadMore/GetAllTuition'))?.data as TuitionResponse;
+}
+
+export const getAllTuitionYear = async () => {
+  return (await api.get('/ReadMore/GetAllTuitionYear'))?.data as TuitionYearResponse;
 }
 
 export const getHistory = async () => {
@@ -101,4 +109,3 @@ export const getCountry = async () => {
 export const createOrUpdateCountry = async (payload: Partial<Country>) => {
   return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
 }
->>>>>>> 6cc20afc5d63e626bc62dbd77c90e039da5a92ec

@@ -11,6 +11,8 @@ import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import AddTuitionYears from "./addTuitionYears";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { useQuery } from "@tanstack/react-query";
+import { getAllTuitionYear } from "../../../requests";
 
 const TuitionYears = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -19,17 +21,15 @@ const TuitionYears = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
+  const {data, isLoading, isError, error} = useQuery({
+    queryKey: ["getAll-TuitionYear"],
+    queryFn: getAllTuitionYear
+  })
+
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  const data = Array.from({ length: 5 }, () => ({
-    id: 1234,
-    firstName: "Timi",
-    lastName: "John",
-    email: "john@gmail.com",
-    role: "Admin User",
-    status: "Active",
-  }));
+
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -43,29 +43,25 @@ const TuitionYears = () => {
       dataIndex: "id",
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
+      key: "tuitionId",
+      title: "Tuition Id",
+      dataIndex: "tuitionId",
     },
     {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
+      key: "readmoreId",
+      title: "Read More Id",
+      dataIndex: "readmoreId",
     },
     {
-      key: "email",
-      title: "Email Address",
-      dataIndex: "email",
+      key: "feeDescription",
+      title: "Fee Description",
+      dataIndex: "feeDescription",
     },
     {
-      key: "role",
-      title: "Role",
-      dataIndex: "role",
-    },
-    {
-      key: "status",
+      key: "activeStatus",
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "activeStatus",
+      render: (activeStatus: boolean) => (activeStatus ? "Active" : "Not Active"),
     },
     {
       key: "action",
@@ -77,6 +73,8 @@ const TuitionYears = () => {
       ),
     },
   ];
+
+  const tuitionYears = data?.data as TuitionYear[];
 
   return (
     <main>
@@ -118,7 +116,7 @@ const TuitionYears = () => {
           </div>
         </div>
         <Table
-          dataSource={data}
+          dataSource={tuitionYears}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}

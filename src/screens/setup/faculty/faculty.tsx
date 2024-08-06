@@ -3,7 +3,7 @@ import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.sv
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin } from "antd";
 import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
@@ -29,14 +29,7 @@ const FaultySetUp = () => {
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  // const data = Array.from({ length: 5 }, () => ({
-  //   id: 1234,
-  //   firstName: "Timi",
-  //   lastName: "John",
-  //   email: "john@gmail.com",
-  //   role: "Admin User",
-  //   status: "Active",
-  // }));
+ 
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -80,6 +73,13 @@ const FaultySetUp = () => {
       ),
     },
   ];
+
+  if (isLoading) {
+    return <Spin />;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
 
   const category = data?.data as Category[];
 

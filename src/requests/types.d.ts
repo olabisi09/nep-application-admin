@@ -7,7 +7,6 @@ interface GetResponse extends Response {
   data: Setup[]
 }
 
-<<<<<<< HEAD
 interface AboutUs {
 id: number;
 title: string;
@@ -42,7 +41,42 @@ interface Category {
   activeStatus: boolean
 }
 
-=======
+interface LevelResponse extends Response {
+  data: Level[]
+}
+
+interface Level {
+  id: number
+  levelName: string
+  isActive: boolean
+  isDeleted: boolean
+}
+
+interface TuitionResponse extends Response {
+  data: Tuition[]
+}
+
+interface Tuition {
+  id: number
+  readmoreId: number
+  description: string
+  activeStatus: boolean
+}
+
+interface TuitionYearResponse extends Response{
+  data: TuitionYear[]
+}
+
+interface TuitionYear {
+  id: number
+  tuitionId: number
+  levelId: number
+  readmoreId: number
+  feeDescription: string
+  isActive: boolean
+  isDeleted: boolean
+}
+
 interface SocialMediaResponse extends Response {
   data: SocialMedia[]
 }
@@ -102,4 +136,3 @@ interface Country {
   countryName: string;
 activeStatus?: boolean;
 }
->>>>>>> 6cc20afc5d63e626bc62dbd77c90e039da5a92ec
