@@ -4,3 +4,5 @@ export { default as SchoolSummary } from './schoolSummary';
 export { default as CampusExperience } from './campusExperience';
 export { default as Overview } from './overview';
 export { default as StudentActivities } from './studentActivities';
+export { default as FitnessAthletics } from './fitnessAndAthletics';
+export { default as SupportGuidance } from './supportAndGuidance';

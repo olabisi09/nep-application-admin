@@ -23,8 +23,9 @@ const AddMarital = ({ handleClose,data }:Props)  => {
 
   const CreateMaritalStatusHandler = async (values: FormikValues) => {
     const payload: Partial<MaritalStatus> = {
+      id: data?.id || 0,
       statusName: values.MaritalName,
-      activeStatus:values?.status,
+      activeStatus: values?.status === "true",  // Convert "true" to true, "false" to false
    
     };
 
@@ -59,6 +60,8 @@ const AddMarital = ({ handleClose,data }:Props)  => {
     <Formik
       initialValues={{
         MaritalName: data?.statusName,
+        status: data?.activeStatus !== undefined ? String(data?.activeStatus) : "",  // Initialize with string
+
       }}
       onSubmit={(values) => {
         CreateMaritalStatusHandler(values);

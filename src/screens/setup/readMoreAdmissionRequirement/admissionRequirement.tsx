@@ -1,18 +1,30 @@
-import PageLayout from "../../../layouts/pageLayout/pageLayout";
-import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.svg";
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+  App,
+} from "antd";
 import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import { AddAdmissionRequirement, EditAdmissionRequirement } from "./addAdmissionRequirement";
+import {
+  AddAdmissionRequirement,
+  EditAdmissionRequirement,
+} from "./addAdmissionRequirement";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import AddDetails from "./addDetails";
-import { deleteAdmissionRequirement, getAdmissionRequirements } from "../../../requests";
+import {
+  deleteAdmissionRequirement,
+  getAdmissionRequirements,
+} from "../../../requests";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
@@ -38,14 +50,18 @@ const AdmissionRequirement = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [showAddDetailsModal, setShowAddDetailsModal] = useState(false);
   const { notification } = App.useApp();
-  const [admissionReq, setAdmissionReq] = useState<AdmissionRequirement>({} as AdmissionRequirement);
+  const [admissionReq, setAdmissionReq] = useState<AdmissionRequirement>(
+    {} as AdmissionRequirement
+  );
   const [openDelete, setOpenDelete] = useState(false);
   const [currentForm, setCurrentForm] = useState<(typeof forms)[number] | "">(
     ""
   );
   const [open, setOpen] = useState(false);
 
-  const deleteAdmissionReqMutation = useMutation({ mutationFn: deleteAdmissionRequirement });
+  const deleteAdmissionReqMutation = useMutation({
+    mutationFn: deleteAdmissionRequirement,
+  });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-admission-requirement"],
@@ -171,7 +187,10 @@ const AdmissionRequirement = () => {
           {
             key: "2",
             label: (
-              <button style={{ border: "0rem", background: "none" }} onClick={() => handleDelete(record)}>
+              <button
+                style={{ border: "0rem", background: "none" }}
+                onClick={() => handleDelete(record)}
+              >
                 Delete
               </button>
             ),
@@ -216,25 +235,36 @@ const AdmissionRequirement = () => {
   }
   return (
     <main>
-      <PageLayout
-        paragraph="Read More - Admission Requirements Setup"
-        firstText="Setup Programs"
-        secondText="Read More - Admission Requirements Setup"
-        iconBefore={<GraterThan />}
-        headerActions={<Button onClick={() => setShowAddModal(true)} iconBefore={<Add />} text="Setup" />}
-      />
+      <section className="space-between">
+        <h3>Read More - Admission Requirements Setup</h3>
+        <Button
+          onClick={() => setShowAddModal(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
+      </section>
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
           <div>
             {!showSearch && (
               <span>
-                <Search onClick={() => setShowSearch((showSearch) => !showSearch)} />
+                <Search
+                  onClick={() => setShowSearch((showSearch) => !showSearch)}
+                />
               </span>
             )}
-            {showSearch && <SearchInput value={searchTerm} onChange={handleSearch} />}
+            {showSearch && (
+              <SearchInput value={searchTerm} onChange={handleSearch} />
+            )}
 
-            {!showAllFilter && <Filter onClick={() => setShowAllFilter((showAllFilter) => !showAllFilter)} />}
+            {!showAllFilter && (
+              <Filter
+                onClick={() =>
+                  setShowAllFilter((showAllFilter) => !showAllFilter)
+                }
+              />
+            )}
           </div>
         </div>
         <Table
@@ -245,12 +275,27 @@ const AdmissionRequirement = () => {
         />
       </section>
 
-      <Modal open={showAddModal} onCancel={() => setShowAddModal(false)} centered title="Read More - Admission Req." footer={null}>
+      <Modal
+        open={showAddModal}
+        onCancel={() => setShowAddModal(false)}
+        centered
+        title="Read More - Admission Req."
+        footer={null}
+      >
         <AddAdmissionRequirement handleClose={() => setShowAddModal(false)} />
       </Modal>
       {admissionReq?.id && openEdit && (
-        <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Read More - Admission Req." footer={null}>
-          <EditAdmissionRequirement handleClose={() => setOpenEdit(false)} admissionRequirement={admissionReq} />
+        <Modal
+          open={openEdit}
+          onCancel={() => setOpenEdit(false)}
+          centered
+          title="Read More - Admission Req."
+          footer={null}
+        >
+          <EditAdmissionRequirement
+            handleClose={() => setOpenEdit(false)}
+            admissionRequirement={admissionReq}
+          />
         </Modal>
       )}
 
@@ -268,22 +313,25 @@ const AdmissionRequirement = () => {
         </Formik>
       </Modal>
 
-{
-  admissionReq?.id && openDelete && (
-    <Modal open={openDelete} onCancel={() => setOpenDelete(false)} centered title="Delete Admission Requirement Setup" footer={null}>
-    <DeleteModalContent
-      isLoading={deleteAdmissionReqMutation?.isPending}
-      // data={Data}
-      handleCloseModal={() => setOpenDelete(false)}
-      handleSubmit={DeleteAdmissionReqHandler}
-      title={"this item"}
-      isActive={false}
-      // btnText={"Disable"}
-    />
-  </Modal>
-  )
-}
- 
+      {admissionReq?.id && openDelete && (
+        <Modal
+          open={openDelete}
+          onCancel={() => setOpenDelete(false)}
+          centered
+          title="Delete Admission Requirement Setup"
+          footer={null}
+        >
+          <DeleteModalContent
+            isLoading={deleteAdmissionReqMutation?.isPending}
+            // data={Data}
+            handleCloseModal={() => setOpenDelete(false)}
+            handleSubmit={DeleteAdmissionReqHandler}
+            title={"this item"}
+            isActive={false}
+            // btnText={"Disable"}
+          />
+        </Modal>
+      )}
     </main>
   );
 };
