@@ -10,7 +10,6 @@ export const createOrUpdateAboutUs = async (payload: Partial<SetupPayload>) => {
 
 export const deleteAboutUs = async (id: number) => {
   return (await api.delete(`/AboutUsPage/DeleteAboutUsById/${id}`))?.data as Response;
-<<<<<<< HEAD
 }
 
 export const getAllAcademicSession = async () => {
@@ -34,8 +33,6 @@ export const getAllTuitionFee = async () => {
 
 export const getAllTuitionYear = async () => {
   return (await api.get('/ReadMore/GetAllTuitionYear'))?.data as TuitionYearResponse;
-=======
->>>>>>> 6d7801760db670562d7befcfb1f35ac8e7a3d10e
 }
 
 export const createUpdateGeneralTemplate  = async(payload: FormData) => {
@@ -176,11 +173,9 @@ export const createOrUpdateCampusExperience = async (payload: Partial<Setup>) =>
   return (await api.post('/StudentLife/studentlife/CreateUpdateCampusExperience', payload))?.data as Response;
 }
 
-<<<<<<< HEAD
 export const createOrUpdateOverview= async (payload: Partial<Setup>) => {
   return (await api.post('/StudentLife/studentlife/createUpdateOverView', payload))?.data as Response;
 }
-=======
 export const getAdmissionRequirements = async() => {
   return (await api.get('/ReadMore/GetAllAdmissionRequirements'))?.data as AdmissionRequirementResponse;
 }
@@ -195,4 +190,3 @@ export const getAllPrograms = async() => {
 
 
 
->>>>>>> 6d7801760db670562d7befcfb1f35ac8e7a3d10e
