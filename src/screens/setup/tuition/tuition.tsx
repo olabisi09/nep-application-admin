@@ -57,7 +57,7 @@ const Tuition = () => {
       key: "activeStatus",
       title: "Status",
       dataIndex: "activeStatus",
-      render: (activeStatus: boolean) => (activeStatus ? "Active" : "Not Active"),
+      render: (activeStatus: boolean) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
