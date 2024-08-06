@@ -22,6 +22,7 @@ const CareerProspects = () => {
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
+
   const data = Array.from({ length: 5 }, () => ({
     id: 1234,
     firstName: "Timi",
@@ -30,13 +31,18 @@ const CareerProspects = () => {
     role: "Admin User",
     status: "Active",
   }));
+
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
- 
+      label: (
+        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
+          Edit
+        </button>
+      ),
     },
   ];
+
   const columns = [
     {
       key: "id",
@@ -81,8 +87,7 @@ const CareerProspects = () => {
 
   return (
     <main>
-
-            <section className="space-between">
+      <section className="space-between">
         <h3>Career Prospects Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
@@ -90,6 +95,7 @@ const CareerProspects = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -114,6 +120,7 @@ const CareerProspects = () => {
             )}
           </div>
         </div>
+
         <Table
           dataSource={data}
           columns={columns}
@@ -121,7 +128,7 @@ const CareerProspects = () => {
           //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
-     
+
       <Modal
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
@@ -167,6 +174,7 @@ const CareerProspects = () => {
           </Form>
         </Formik>
       </Modal>
+      
       <Modal
         open={showAddItemModal}
         onCancel={() => setShowAddItemModal(false)}
@@ -189,7 +197,6 @@ const CareerProspects = () => {
           </Form>
         </Formik>
       </Modal>
-
     </main>
   );
 };
