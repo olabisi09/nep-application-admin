@@ -7,6 +7,76 @@ interface GetResponse extends Response {
   data: Setup[];
 }
 
+interface AboutUs {
+id: number;
+title: string;
+description: string;
+imageUrl: string;
+activeStatus: boolean;
+isDeleted: boolean;
+}
+
+interface SessionResponse extends Response {
+  data: Session[]
+}
+
+interface Session {
+  id: number
+  name: string
+  activeStatus: boolean
+  isDeleted: boolean
+}
+
+interface CategoryResponse extends Response{
+  data: Category[]
+}
+
+interface Category {
+  categoryCode: string
+  name: string
+  description: string
+  id: number
+  created: string
+  createdBy: any
+  activeStatus: boolean
+}
+
+interface LevelResponse extends Response {
+  data: Level[]
+}
+
+interface Level {
+  id: number
+  levelName: string
+  isActive: boolean
+  isDeleted: boolean
+}
+
+interface TuitionResponse extends Response {
+  data: Tuition[]
+}
+
+interface Tuition {
+  id: number
+  readmoreId: number
+  description: string
+  activeStatus: boolean
+}
+
+interface TuitionYearResponse extends Response{
+  data: TuitionYear[]
+}
+
+interface TuitionYear {
+  id: number
+  tuitionId: number
+  levelId: number
+  readmoreId: number
+  feeDescription: string
+  isActive: boolean
+  isDeleted: boolean
+}
+
 interface SocialMediaResponse extends Response {
   data: SocialMedia[];
 }
@@ -19,8 +89,26 @@ interface Setup {
   imageUrl: string;
   activeStatus: boolean;
   isDeleted: boolean;
+  readMoreId: number;
 }
 
+interface GeneralTemplate {
+  id: number;
+  schoolName: string;
+  logo: string;
+  logoUrl: string;
+  homePageImage: string;
+  homePageImageUrl: string;
+  aboutUsImage: string;
+  aboutUsImageUrl: string;
+  loginBackgroundImage: string;
+  loginBackgroundImageUrl: string;
+  schoolEmailAddress: string;
+  schoolPhoneNumber: string;
+  schoolAddress: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
 interface SetupPayload {
   Id: number;
   Title: string;
@@ -126,4 +214,53 @@ interface SetupPayload {
   Image: any;
   ActiveStatus: boolean;
   IsDeleted: boolean;
+}
+
+interface SocialMediaLink {
+  id: number;
+  templateId: number;
+  socialMediaName: string;
+  socialMediaUrl: string;
+  socialMediaLogo: any;
+  socialMediaLogoUrl: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface SocialMediaLinkResponse extends Response {
+  data: SocialMediaLink[];
+}
+interface AdmissionRequirement {
+  activeStatus: boolean;
+  description: string;
+  id: number;
+  isDeleted: boolean;
+  readMoreId: number;
+}
+interface AdmissionRequirementResponse extends Response {
+  data: AdmissionRequirement[];
+}
+interface Program{
+  categoryCode: string
+  programTypeCode: string
+  programCategoryCode: any
+  code: string
+  name: string
+  description: string
+  requirements: string
+  duration: string
+  qualification: string
+  careerProspect: string
+  tuition: string
+  curriculum: string
+  scholarship: string
+  userStory: string
+  accreditation: string
+  id: number
+  created: string
+  createdBy: any
+  activeStatus: boolean
+}
+interface ProgramResponse extends Response {
+  data: Program[];
 }
