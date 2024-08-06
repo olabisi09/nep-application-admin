@@ -99,3 +99,7 @@ export const createOrUpdateSchoolSummary = async (payload: Partial<Setup>) => {
 export const createOrUpdateCampusExperience = async (payload: Partial<Setup>) => {
   return (await api.post('/StudentLife/studentlife/CreateUpdateCampusExperience', payload))?.data as Response;
 }
+
+export const createOrUpdateOverview= async (payload: Partial<Setup>) => {
+  return (await api.post('/StudentLife/studentlife/createUpdateOverView', payload))?.data as Response;
+}
