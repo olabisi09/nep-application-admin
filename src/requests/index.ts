@@ -16,9 +16,19 @@ export const getAllAcademicSession = async () => {
   return (await api.get('/ReadMore/GetAllAcademicSessions'))?.data as SessionResponse;
 }
 
+export const createOrUpdateSession = async (payload: Partial<Session>) => {
+  return (await api.post('/AboutUsPage/createUpdateHistory', payload))?.data as Response;
+}
+
+export const deleteSession = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteAcademicSessionById=${id}`))?.data as Response;
+}
+
 export const getAllCategory = async () => {
   return (await api.get('/Academics/GetAllCategoryAsync'))?.data as CategoryResponse;
 }
+
+
 // export const getAllCareerProspect = async () => {
 //   return (await api.get('/ReadMore/GetAllCareerProspects'))?.data as CareerProspectResponse;
 // }

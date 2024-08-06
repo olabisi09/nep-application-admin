@@ -27,6 +27,7 @@ interface Session {
   isDeleted: boolean
 }
 
+
 interface CategoryResponse extends Response{
   data: Category[]
 }

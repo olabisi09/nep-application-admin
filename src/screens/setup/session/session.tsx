@@ -3,7 +3,7 @@ import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.sv
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin } from "antd";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
 import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
@@ -11,17 +11,22 @@ import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import AddFaculty from "./AddSession";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useQuery } from "@tanstack/react-query";
-import { getAllAcademicSession } from "../../../requests";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteSession, getAllAcademicSession } from "../../../requests";
+import { ColumnsType } from "antd/es/table";
 
 const Session = () => {
+  const { notification } = App.useApp();
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [session, setSession] = useState<Session>({} as Session);
 
-  const {data, isLoading, isError, error } = useQuery({
+  const deleteSessionMutation = useMutation({ mutationFn: deleteSession});
+
+  const {data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["getAll-sessions"],
     queryFn: getAllAcademicSession
   })
@@ -36,7 +41,7 @@ const Session = () => {
       label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
     },
   ];
-  const columns = [
+  const columns: ColumnsType<Session> = [
     {
       key: "id",
       title: "ID",
@@ -48,19 +53,54 @@ const Session = () => {
       dataIndex: "name",
     },
     {
-      key: "activeStatus",
+      key: "status",
       title: "Status",
       dataIndex: "activeStatus",
-      render: (activeStatus: boolean) => (activeStatus ? "Active" : "Not Active"),
+      render: (_, {activeStatus}) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setSession(record);
+              setOpenEdit(true);
+            }
+          },
+          {
+            key: "2",
+            label: "Delete",
+            onClick: async () => {
+              try {
+                await deleteSessionMutation.mutateAsync(record.id, {
+                  onSuccess: (data) => {
+                    notification.success({
+                      message: "Success",
+                      description: data?.message,
+                    });
+                    refetch();
+                  },
+                });
+              } catch (error: any) {
+                notification.error({
+                  message: "Error",
+                  description: error?.response?.data?.message,
+                });
+              }
+
+            }
+          }
+        ];
+        return(
+          <Dropdown menu={{ items }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
-      ),
+        );
+      },
     },
   ];
 
@@ -71,7 +111,7 @@ const Session = () => {
     return <div>Error: {error?.message}</div>;
   }
 
-  const sessions = data?.data as Session[];
+  const sessionData = data?.data as Session[];
 
   return (
     <main>
@@ -113,10 +153,11 @@ const Session = () => {
           </div>
         </div>
         <Table
-          dataSource={sessions}
+          dataSource={sessionData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          rowKey={(record) => record?.id}
+          scroll={{ x: true}}
         />
       </section>
      
@@ -136,9 +177,10 @@ const Session = () => {
           </div>
         )}
       >
+        
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddFaculty handleClose={() => setOpenEdit(false)} />
           </Form>
         </Formik>
       </Modal>
@@ -161,7 +203,7 @@ const Session = () => {
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddFaculty />
+            <AddFaculty handleClose={() => setOpenEdit(false)}/>
           </Form>
         </Formik>
       </Modal>
