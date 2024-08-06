@@ -9,8 +9,65 @@ export const createOrUpdateAboutUs = async (payload: Partial<SetupPayload>) => {
 }
 
 export const deleteAboutUs = async (id: number) => {
-  return (await api.delete(`/AboutUsPage/DeleteAboutUsById?Id=${id}`))?.data as Response;
+  return (await api.delete(`/AboutUsPage/DeleteAboutUsById/${id}`))?.data as Response;
 }
+
+export const getAllAcademicSession = async () => {
+  return (await api.get('/ReadMore/GetAllAcademicSessions'))?.data as SessionResponse;
+}
+
+export const getAllCategory = async () => {
+  return (await api.get('/Academics/GetAllCategoryAsync'))?.data as CategoryResponse;
+}
+// export const getAllCareerProspect = async () => {
+//   return (await api.get('/ReadMore/GetAllCareerProspects'))?.data as CareerProspectResponse;
+// }
+
+export const getAllLevel = async () => {
+  return (await api.get('/ReadMore/GetAllLevel'))?.data as LevelResponse;
+}
+
+export const getAllTuitionFee = async () => {
+  return (await api.get('/ReadMore/GetAllTuition'))?.data as TuitionResponse;
+}
+
+export const getAllTuitionYear = async () => {
+  return (await api.get('/ReadMore/GetAllTuitionYear'))?.data as TuitionYearResponse;
+}
+
+export const createUpdateGeneralTemplate  = async(payload: FormData) => {
+  return (await api.post('/GeneralTemplate/createUpdateTemplate', payload))?.data as Response;
+}
+
+export const getGeneralTemplates = async () => {
+  return (await api.get('/GeneralTemplate/GetAllTemplate'))?.data as GeneralTemplateResponse;
+}
+
+export const deleteGeneralTemplate = async (id: number) => {
+  return (await api.delete(`/GeneralTemplate/DeleteTemplateById?Id=${id}`))?.data as Response;
+}
+
+export const getGeneralTemplateById = async (id: number) => {
+  return (await api.get(`/GeneralTemplate/GetTemplateById?Id=${id}`))?.data as GeneralTemplate;
+}
+
+export const StatusOptions = [{
+  value: "true",
+  label: 'Active',
+}
+ , {
+  value: "false",
+  label: 'Inactive',
+}]
+
+export const getState = async () => {
+  return (await api.get('/Utilities/Utilities/GetAllCountries'))?.data as StateResponse;
+}
+
+export const createOrUpdateState = async (payload: Partial<State>) => {
+  return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
+}
+
 
 export const getHistory = async () => {
   return (await api.get('/AboutUsPage/GetAllHistory'))?.data as GetResponse;
@@ -83,6 +140,22 @@ export const getCountry = async () => {
 export const createOrUpdateCountry = async (payload: Partial<Country>) => {
   return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
 }
+export const createUpdateSocialMediaLink  = async(payload: Partial<SocialMediaLink>) => {
+  return (await api.post('/GeneralTemplate/createUpdateSocialMediaLink', payload,  { headers: { 'Content-Type': 'multipart/form-data' } }))?.data as Response;
+}
+
+export const getSocialMediaLinks = async () => {
+  return (await api.get('/GeneralTemplate/GetAllSocialMediaLinks'))?.data as SocialMediaLinkResponse;
+}
+
+export const deleteSocialMediaLink = async (id: number) => {
+  return (await api.delete(`/GeneralTemplate/DeleteSocialMediaLinkById?Id=${id}`))?.data as Response;
+}
+
+
+export const getSocialMediaLinkById = async (id: number) => {
+  return (await api.get(`/GeneralTemplate/GetSocialMediaLinkById?Id=${id}`))?.data as GeneralTemplate;
+}
 
 export const getStudentLife = async () => {
   return (await api.get('/StudentLife/studentlife/GetAllStudentLife'))?.data as GetResponse;
@@ -115,3 +188,17 @@ export const createOrUpdateStudentActivity = async (payload: Partial<Setup>) => 
 export const createOrUpdateOverview= async (payload: Partial<Setup>) => {
   return (await api.post('/StudentLife/studentlife/createUpdateOverView', payload))?.data as Response;
 }
+export const getAdmissionRequirements = async() => {
+  return (await api.get('/ReadMore/GetAllAdmissionRequirements'))?.data as AdmissionRequirementResponse;
+}
+
+export const createOrUpdateAdmissionRequirement = async(payload: Partial<AdmissionRequirement>) => {
+  return (await api.post('/ReadMore/createUpdateAdmissionRequirement', payload))?.data as Response;
+}
+
+export const getAllPrograms = async() => {
+  return (await api.get('/Academics/GetAllProgramAsync'))?.data as ProgramResponse;
+}
+
+
+

@@ -3,7 +3,7 @@ import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.sv
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin } from "antd";
 import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
@@ -11,6 +11,8 @@ import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import AddLevel from "./addLevel";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { useQuery } from "@tanstack/react-query";
+import { getAllLevel } from "../../../requests";
 
 const Level = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -19,17 +21,15 @@ const Level = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
+  const {data, isLoading, isError, error } = useQuery({
+    queryKey: ["getAll-level"],
+    queryFn: getAllLevel
+  })
+
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  const data = Array.from({ length: 5 }, () => ({
-    id: 1234,
-    firstName: "Timi",
-    lastName: "John",
-    email: "john@gmail.com",
-    role: "Admin User",
-    status: "Active",
-  }));
+
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -43,29 +43,15 @@ const Level = () => {
       dataIndex: "id",
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
+      key: "levelName",
+      title: "Level Name",
+      dataIndex: "levelName",
     },
     {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
-    },
-    {
-      key: "email",
-      title: "Email Address",
-      dataIndex: "email",
-    },
-    {
-      key: "role",
-      title: "Role",
-      dataIndex: "role",
-    },
-    {
-      key: "status",
+      key: "activeStatus",
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "isActive",
+      render: (isActive: boolean) => (isActive ? "Active" : "Not Active"),
     },
     {
       key: "action",
@@ -77,6 +63,16 @@ const Level = () => {
       ),
     },
   ];
+
+  
+ if (isLoading){
+  return <Spin/>
+ }
+ if (isError){
+  return <div>{error?.message}</div>
+ }
+
+  const level = data?.data as Level[];
 
   return (
     <main>
@@ -118,7 +114,7 @@ const Level = () => {
           </div>
         </div>
         <Table
-          dataSource={data}
+          dataSource={level}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}

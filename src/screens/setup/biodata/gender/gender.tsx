@@ -117,6 +117,13 @@ const GenderSetup = () => {
       dataIndex: "genderName",
     },
     {
+      key: "activeStatus",
+      title: "Active Status",
+      dataIndex: "activeStatus",
+      render: (text:boolean) => (text ? "Active" : "Inactive"),
+
+    },
+    {
       key: "action",
       title: "",
       render: ( record: Gender) => (
