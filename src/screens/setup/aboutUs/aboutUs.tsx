@@ -16,7 +16,7 @@ import { CreateAboutUs, EditAboutUs } from "./setup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteAboutUs, getAboutUs } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
-import { limitString } from "../../../utils/limitString";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 
 const AboutUs = () => {
   const { notification } = App.useApp();
@@ -46,7 +46,7 @@ const AboutUs = () => {
       title: "Description",
       dataIndex: "description",
       render: (_, { description }) => {
-        const limitedCleanHtml = limitString(description);
+        const limitedCleanHtml = sanitizeAndLimitString(description);
         return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
     },

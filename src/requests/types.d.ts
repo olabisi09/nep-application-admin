@@ -4,7 +4,7 @@ interface Response {
 }
 
 interface GetResponse extends Response {
-  data: Setup[]
+  data: Setup[];
 }
 
 interface AboutUs {
@@ -78,13 +78,14 @@ interface TuitionYear {
 }
 
 interface SocialMediaResponse extends Response {
-  data: SocialMedia[]
+  data: SocialMedia[];
 }
 
 interface Setup {
   id: number;
   title: string;
   description: string;
+  figure: number;
   imageUrl: string;
   activeStatus: boolean;
   isDeleted: boolean;
@@ -109,30 +110,34 @@ interface SocialMedia {
   isDeleted: boolean;
 }
 interface GenderResponse extends Response {
-  data: Gender[]
+  data: Gender[];
 }
 
 interface Gender {
   id: number;
   genderName: string;
-activeStatus: boolean;
+  activeStatus: boolean;
 }
 interface MaritalStatusResponse extends Response {
-  data: MaritalStatus[]
+  data: MaritalStatus[];
 }
 
 interface MaritalStatus {
   id?: number;
   statusName: string;
-activeStatus?: boolean;
+  activeStatus?: boolean;
 }
 
 interface CountryResponse extends Response {
-  data: Country[]
+  data: Country[];
 }
 
 interface Country {
   id?: number;
   countryName: string;
+<<<<<<< HEAD
 activeStatus?: boolean;
+=======
+  activeStatus?: boolean;
+>>>>>>> be005b8deb7aa8eedc7e24eb192753d3b2630fb1
 }

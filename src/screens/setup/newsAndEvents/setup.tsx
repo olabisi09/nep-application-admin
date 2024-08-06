@@ -22,7 +22,10 @@ export const CreateEvent = ({ handleClose }: { handleClose: () => void }) => {
   const queryClient = useQueryClient();
   const addEventMutation = useMutation({ mutationFn: createOrUpdateEvent });
 
-  const handleAddEvent = async (values: FormikValues) => {
+  const handleAddEvent = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     const payload: Partial<SetupPayload> = {
       Title: values.title,
       Description: values.description,
@@ -68,7 +71,7 @@ export const CreateEvent = ({ handleClose }: { handleClose: () => void }) => {
           status: "",
         } as Init
       }
-      onSubmit={(values) => handleAddEvent(values)}
+      onSubmit={(values, { resetForm }) => handleAddEvent(values, resetForm)}
       validationSchema={validateSetup}
     >
       {({ values, setFieldValue }) => (
@@ -148,7 +151,7 @@ export const EditEvent = ({
       Id: item.id,
       Title: values.title,
       Description: values.description,
-      ActiveStatus: true,
+      ActiveStatus: values.activeStatus === "Active",
       IsDeleted: false,
     };
 
@@ -175,17 +178,25 @@ export const EditEvent = ({
     }
   };
 
+  const statusOptions = (
+    <>
+      <option>Active</option>
+      <option>Inactive</option>
+    </>
+  );
+
   return (
     <Formik
       initialValues={
         {
-          title: "",
-          description: "",
+          title: item.title,
+          description: item.description,
           image: null,
-          status: "",
+          status: item.activeStatus ? "Active" : "Inactive",
         } as Init
       }
       onSubmit={(values) => handleEditEvent(values)}
+      enableReinitialize
     >
       {({ values, setFieldValue }) => (
         <Form className="fields">
@@ -218,7 +229,12 @@ export const EditEvent = ({
               }}
             />
           )}
-          <Select name="status" label="Status" placeholder="Select status" />
+          <Select
+            name="status"
+            label="Status"
+            placeholder="Select status"
+            options={statusOptions}
+          />
           <div className="btn-group">
             <Button
               type="button"
