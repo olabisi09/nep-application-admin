@@ -5,18 +5,27 @@ import {
   Modal,
   Table,
   Button as AntButton,
+  Spin,
 } from "antd";
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import {
+  CreateStudentLife,
   OverviewSetup,
   StudentActivitiesSetup,
-  StudentLifeSetup,
+  EditStudentLife,
+  SchoolSummarySetup,
+  CampusExperienceSetup,
 } from "./setup";
+import { useQuery } from "@tanstack/react-query";
+import { getStudentLife } from "../../../requests";
+import { ColumnsType } from "antd/es/table";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 
 const forms = [
+  "Create",
   "Edit",
   "Overview",
   "School Summary",
@@ -28,9 +37,15 @@ const forms = [
 
 const StudentLife = () => {
   const [open, setOpen] = useState(false);
+  const [item, setItem] = useState<Setup>({} as Setup);
   const [currentForm, setCurrentForm] = useState<(typeof forms)[number] | "">(
     ""
   );
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get-student-life"],
+    queryFn: getStudentLife,
+  });
 
   const onFormClick = (form: (typeof forms)[number]) => {
     setCurrentForm(form);
@@ -39,74 +54,30 @@ const StudentLife = () => {
 
   const renderForms = () => {
     switch (currentForm) {
+      case "Create":
+        return <CreateStudentLife handleClose={() => setOpen(false)} />;
       case "Edit":
-        return <StudentLifeSetup handleClose={() => setOpen(false)} />;
+        return (
+          <EditStudentLife item={item} handleClose={() => setOpen(false)} />
+        );
       case "Overview":
         return <OverviewSetup handleClose={() => setOpen(false)} />;
       case "School Summary":
-        return <StudentLifeSetup handleClose={() => setOpen(false)} />;
+        return <SchoolSummarySetup handleClose={() => setOpen(false)} />;
       case "Campus Experience":
-        return <StudentLifeSetup handleClose={() => setOpen(false)} />;
+        return <CampusExperienceSetup handleClose={() => setOpen(false)} />;
       case "Fitness & Athletics":
-        return <StudentLifeSetup handleClose={() => setOpen(false)} />;
+        return <CreateStudentLife handleClose={() => setOpen(false)} />;
       case "Support & Guidance":
-        return <StudentLifeSetup handleClose={() => setOpen(false)} />;
+        return <CreateStudentLife handleClose={() => setOpen(false)} />;
       case "Student Activities":
         return <StudentActivitiesSetup handleClose={() => setOpen(false)} />;
       default:
-        return <StudentLifeSetup handleClose={() => setOpen(false)} />;
+        return <CreateStudentLife handleClose={() => setOpen(false)} />;
     }
   };
 
-  const data = Array.from({ length: 3 }, (_, index) => ({
-    id: `1234${index}`,
-    title: "Student Life",
-    description: "Description",
-  }));
-
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: "Edit",
-      onClick: () => onFormClick("Edit"),
-    },
-    {
-      key: "2",
-      label: "Overview",
-      onClick: () => onFormClick("Overview"),
-    },
-    {
-      key: "3",
-      label: "School Summary",
-      onClick: () => onFormClick("School Summary"),
-    },
-    {
-      key: "4",
-      label: "Campus Experience",
-      onClick: () => onFormClick("Campus Experience"),
-    },
-    {
-      key: "5",
-      label: "Fitness & Athletics",
-      onClick: () => onFormClick("Fitness & Athletics"),
-    },
-    {
-      key: "6",
-      label: "Support & Guidance",
-      onClick: () => onFormClick("Support & Guidance"),
-    },
-    {
-      key: "7",
-      label: "Student Activities",
-      onClick: () => onFormClick("Student Activities"),
-    },
-    {
-      key: "8",
-      label: "Delete",
-      onClick: () => {},
-    },
-  ];
-  const columns = [
+  const columns: ColumnsType<Setup> = [
     {
       key: "id",
       title: "ID",
@@ -121,31 +92,92 @@ const StudentLife = () => {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      render: (_, { description }) => {
+        const limitedCleanHtml = sanitizeAndLimitString(description);
+        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
+      },
     },
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
-          <AntButton type="text" icon={<Ellipsis />} />
-        </Dropdown>
-      ),
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setItem(record);
+              onFormClick("Edit");
+            },
+          },
+          {
+            key: "2",
+            label: "Overview",
+            onClick: () => onFormClick("Overview"),
+          },
+          {
+            key: "3",
+            label: "School Summary",
+            onClick: () => onFormClick("School Summary"),
+          },
+          {
+            key: "4",
+            label: "Campus Experience",
+            onClick: () => onFormClick("Campus Experience"),
+          },
+          {
+            key: "5",
+            label: "Fitness & Athletics",
+            onClick: () => onFormClick("Fitness & Athletics"),
+          },
+          {
+            key: "6",
+            label: "Support & Guidance",
+            onClick: () => onFormClick("Support & Guidance"),
+          },
+          {
+            key: "7",
+            label: "Student Activities",
+            onClick: () => onFormClick("Student Activities"),
+          },
+          {
+            key: "8",
+            label: "Delete",
+            onClick: () => {},
+          },
+        ];
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
+        );
+      },
     },
   ];
+
+  const studentLife = data?.data as Setup[];
+
+  if (isLoading) {
+    return <Spin />;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
+
   return (
     <div>
       <section className="space-between">
         <h3>Student Life Setup</h3>
         <Button
-          onClick={() => setOpen(true)}
+          onClick={() => onFormClick("Create")}
           iconBefore={<Plus />}
           text="Setup"
         />
       </section>
       <br />
-      <Card bordered={false}>
+      <Card bordered={false} style={{ maxWidth: "720px" }}>
         <Table
-          dataSource={data}
+          dataSource={studentLife}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}

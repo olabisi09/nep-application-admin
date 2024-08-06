@@ -16,7 +16,7 @@ import { CreateAboutUs, EditAboutUs } from "./setup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteAboutUs, getAboutUs } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
-import DOMPurify from "dompurify";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 
 const AboutUs = () => {
   const { notification } = App.useApp();
@@ -46,15 +46,17 @@ const AboutUs = () => {
       title: "Description",
       dataIndex: "description",
       render: (_, { description }) => {
-        const cleanhtml = DOMPurify.sanitize(description);
-        return <div dangerouslySetInnerHTML={{ __html: cleanhtml }} />;
+        const limitedCleanHtml = sanitizeAndLimitString(description);
+        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
     },
     {
       key: "pictureUrl",
       title: "Picture",
       dataIndex: "imageUrl",
-      render: (_, { imageUrl }) => <img src={imageUrl} alt="" />,
+      render: (_, { imageUrl }) => (
+        <img className="table-img" src={imageUrl} alt="" />
+      ),
     },
     {
       key: "status",

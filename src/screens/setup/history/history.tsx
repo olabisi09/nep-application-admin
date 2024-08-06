@@ -49,7 +49,9 @@ const History = () => {
       key: "pictureUrl",
       title: "Picture",
       dataIndex: "imageUrl",
-      render: (_, { imageUrl }) => <img src={imageUrl} alt="" />,
+      render: (_, { imageUrl }) => (
+        <img className="table-img" src={imageUrl} alt="" />
+      ),
     },
     {
       key: "status",

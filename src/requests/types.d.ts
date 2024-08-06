@@ -7,15 +7,36 @@ interface GetResponse extends Response {
   data: Setup[];
 }
 
+interface SocialMediaResponse extends Response {
+  data: SocialMedia[]
+}
+
 interface Setup {
   id: number;
   title: string;
   description: string;
+  figure: number;
   imageUrl: string;
   activeStatus: boolean;
   isDeleted: boolean;
 }
 
+interface SetupPayload {
+  Id: number;
+  Title: string;
+  Description: string;
+  ImageUrl: string;
+  Image: any;
+  ActiveStatus: boolean;
+  IsDeleted: boolean;
+}
+
+interface SocialMedia {
+  id: number;
+  templateId: number;
+  socialMediaName: string;
+  socialMediaUrl: string;
+}
 interface GeneralTemplate {
   id: number;
   schoolName: string;
@@ -66,6 +87,7 @@ interface Country {
   countryName: string;
   activeStatus?: boolean;
 }
+
 interface StateResponse extends Response {
   data: State[];
 }
