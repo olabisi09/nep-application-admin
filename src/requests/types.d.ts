@@ -135,9 +135,5 @@ interface CountryResponse extends Response {
 interface Country {
   id?: number;
   countryName: string;
-<<<<<<< HEAD
-activeStatus?: boolean;
-=======
   activeStatus?: boolean;
->>>>>>> be005b8deb7aa8eedc7e24eb192753d3b2630fb1
 }

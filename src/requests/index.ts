@@ -106,8 +106,6 @@ export const getCountry = async () => {
 export const createOrUpdateCountry = async (payload: Partial<Country>) => {
   return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
 }
-<<<<<<< HEAD
-=======
 
 export const getStudentLife = async () => {
   return (await api.get('/StudentLife/studentlife/GetAllStudentLife'))?.data as GetResponse;
@@ -128,4 +126,3 @@ export const createOrUpdateCampusExperience = async (payload: Partial<Setup>) =>
 export const createOrUpdateOverview= async (payload: Partial<Setup>) => {
   return (await api.post('/StudentLife/studentlife/createUpdateOverView', payload))?.data as Response;
 }
->>>>>>> be005b8deb7aa8eedc7e24eb192753d3b2630fb1
