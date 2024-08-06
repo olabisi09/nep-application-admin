@@ -7,6 +7,7 @@ import { App } from "antd";
 const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
+  
   const addStudentLifeMutation = useMutation({
     mutationFn: createOrUpdateStudentLife,
   });

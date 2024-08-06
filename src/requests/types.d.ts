@@ -19,6 +19,7 @@ interface Setup {
   imageUrl: string;
   activeStatus: boolean;
   isDeleted: boolean;
+  readMoreId: number;
 }
 
 interface SetupPayload {
