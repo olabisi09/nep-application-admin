@@ -71,6 +71,7 @@ const WhySchool = () => {
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
+          scroll={{ x: true }}
         />
       </Card>
       <Modal

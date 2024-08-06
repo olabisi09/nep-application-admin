@@ -3,6 +3,7 @@ import { ReactComponent as KwarafaLogo } from "../../assets/logo.svg";
 import { ReactComponent as Settings } from "../../assets/settings.svg";
 import { ReactComponent as Line } from "../../assets/line.svg";
 import { ReactComponent as Logout } from "../../assets/logout.svg";
+import { ReactComponent as Arrow } from "../../assets/menu-arrow.svg";
 import styles from "./dashboardLayout.module.scss";
 import { Menu } from "antd";
 
@@ -167,6 +168,21 @@ const Sidebar = () => {
           label: <NavLink to={"/school-management"}>School Mgt</NavLink>,
           icon: <Line />,
         },
+        {
+          key: "schoolInfoTemplate",
+          label: <NavLink to={"/school-info"}>Template</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "socialMedia",
+          label: <NavLink to={"/social-media"}>Social Media Link</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "studentLifte",
+          label: <NavLink to={"/student-life"}>Student Life</NavLink>,
+          icon: <Line />,
+        },
       ],
     },
   ];
@@ -180,7 +196,15 @@ const Sidebar = () => {
           </span>
         </div>
         <div className={styles.menuItems}>
-          <Menu items={items} mode="inline" inlineIndent={0} />
+          <Menu
+            items={items}
+            mode="inline"
+            inlineIndent={0}
+            defaultOpenKeys={["schoolInfo"]}
+            expandIcon={(info) => (
+              <Arrow className={info.isOpen ? "rotate" : ""} />
+            )}
+          />
         </div>
       </section>
       <button className={styles.logout}>

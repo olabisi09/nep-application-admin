@@ -1,7 +1,7 @@
 import React from "react";
-import { Spin } from "antd";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
+import Spinner from "../spinner/spinner";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
@@ -9,6 +9,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   iconBefore?: React.ReactNode;
   variant?: "default" | "text";
   bgColor?: string; // New prop for background color
+  removePadding?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -19,10 +20,15 @@ const Button: React.FC<ButtonProps> = ({
   disabled,
   bgColor,
   variant,
+  removePadding,
   ...rest
 }) => {
   const buttonStyle = {
     backgroundColor: bgColor || "var(--color-primary)", // Use the passed bgColor or fallback to default
+  };
+  const noPaddingStyle = {
+    paddingInline: 0,
+    paddingBlock: 0,
   };
 
   if (variant === "text") {
@@ -31,9 +37,11 @@ const Button: React.FC<ButtonProps> = ({
         {...rest}
         className={classNames(styles.textButton, className)}
         disabled={disabled}
+        type="button"
+        style={removePadding ? noPaddingStyle : {}}
       >
         {iconBefore}
-        {isLoading ? <Spin className={styles.spinner} /> : text}
+        {isLoading ? <Spinner /> : text}
       </button>
     );
   }
@@ -46,7 +54,7 @@ const Button: React.FC<ButtonProps> = ({
       disabled={disabled}
     >
       {iconBefore}
-      {isLoading ? <Spin className={styles.spinner} /> : text}
+      {isLoading ? <Spinner /> : text}
     </button>
   );
 };

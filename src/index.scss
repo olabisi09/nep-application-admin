@@ -98,12 +98,25 @@ button {
 	font-family: 'Inter', sans-serif;
 }
 
+.error {
+	font-size: 0.875rem;
+	color: red;
+}
+
 // reusable styles
 .space-between {
 	display: flex;
   align-items: center;
   justify-content: space-between;
 	text-wrap: nowrap;
+}
+
+.space-between-grid {
+	display: grid;
+  align-items: center;
+  justify-content: space-between;
+  text-wrap: nowrap;
+	grid-template-columns: 1fr 1fr;
 }
 
 .flex-start {
@@ -128,6 +141,7 @@ button {
 	text-align: center;
 	justify-content: center;
 	gap: 0.571rem;
+	margin-block-start: 2.5rem;
 }
 
 .underline {
@@ -140,6 +154,10 @@ button {
 .text-center {
 	display: block;
 	text-align: center;
+}
+
+.rotate {
+	transform: rotate(180deg);
 }
 
 .ant-modal-content {
@@ -162,4 +180,13 @@ button {
   position: absolute !important;
   right: 20px !important;
 	top: 20px !important;
+}
+
+.table-img {
+	width: 3.75rem;
+	height: 3.75rem;
+}
+
+.ck-editor__editable_inline {
+	padding: 0 30px !important;
 }

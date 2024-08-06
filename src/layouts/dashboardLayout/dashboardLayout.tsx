@@ -1,19 +1,30 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import Header from "./header";
 import Sidebar from "./sidebar";
 import styles from "./dashboardLayout.module.scss";
 import { Breadcrumb, Drawer } from "antd";
 import { useState, memo } from "react";
+import { breadcrumbNames } from "../../routes";
+import { useScreenWidth } from "../../utils/useScreenWidth";
 
 const DashboardLayout = () => {
+  const location = useLocation();
+  const { width: screenWidth } = useScreenWidth();
   const [openSidebar, setOpenSidebar] = useState(false);
 
   const handleOpen = () => setOpenSidebar(true);
   const handleClose = () => setOpenSidebar(false);
 
+  const currentLocation = breadcrumbNames?.find((x) =>
+    x.routes?.find((y) => y.path === location.pathname)
+  );
+  const currentRoute = currentLocation?.routes?.find(
+    (x) => x.path === location.pathname
+  );
+
   const breadcrumb = [
     {
-      title: "User Management",
+      title: currentLocation?.title,
     },
     {
       title: (
@@ -21,9 +32,9 @@ const DashboardLayout = () => {
           className={({ isActive }) =>
             isActive ? styles.breadcrumbActive : ""
           }
-          to="/admin-users"
+          to={currentRoute?.path || ""}
         >
-          Admin Users
+          {currentRoute?.title}
         </NavLink>
       ),
     },
@@ -38,7 +49,7 @@ const DashboardLayout = () => {
         onClose={handleClose}
         placement={"left"}
         open={openSidebar}
-        width={"70%"}
+        width={screenWidth < 1024 ? "75%" : "22%"}
       >
         <Sidebar />
       </Drawer>

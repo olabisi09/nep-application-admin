@@ -10,11 +10,12 @@ import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import { Form, Formik } from "formik";
 import SetupFaq from "./setup";
+import QAndA from "./qAndA";
 
 const Faq = () => {
   const [open, setOpen] = useState(false);
+  const [openQAndA, setOpenQAndA] = useState(false);
 
   const data = Array.from({ length: 5 }, (_, index) => ({
     id: `1234${index}`,
@@ -25,7 +26,23 @@ const Faq = () => {
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <button onClick={() => setOpen(true)}>Edit</button>,
+      label: "Edit FAQ Setup",
+      onClick: () => setOpen(true),
+    },
+    {
+      key: "2",
+      label: "Add Questions & Answers",
+      onClick: () => setOpenQAndA(true),
+    },
+    {
+      key: "3",
+      label: "Edit Questions & Answers",
+      onClick: () => setOpen(true),
+    },
+    {
+      key: "4",
+      label: "Delete",
+      onClick: () => setOpen(true),
     },
   ];
   const columns = [
@@ -57,7 +74,7 @@ const Faq = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Why School Setup</h3>
+        <h3>FAQ Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -71,29 +88,26 @@ const Faq = () => {
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
+          scroll={{ x: true }}
         />
       </Card>
       <Modal
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Why School Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpen(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        title="FAQ Setup"
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <SetupFaq />
-          </Form>
-        </Formik>
+        <SetupFaq handleClose={() => setOpen(false)} />
+      </Modal>
+      <Modal
+        open={openQAndA}
+        onCancel={() => setOpenQAndA(false)}
+        centered
+        title="FAQ Items Setup"
+        footer={null}
+      >
+        <QAndA handleClose={() => setOpenQAndA(false)} />
       </Modal>
     </div>
   );

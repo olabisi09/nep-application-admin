@@ -3,7 +3,7 @@ import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin } from "antd";
 import { Form, Formik } from "formik";
 import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
@@ -11,6 +11,8 @@ import { useState } from "react";
 import SearchInput from "../../../../custom/searchInput/searchInput";
 import AddCountry from "./addCountry";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import { getCountry } from "../../../../requests";
+import { useQuery } from "@tanstack/react-query";
 
 const CountrySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -30,6 +32,14 @@ const CountrySetup = () => {
     role: "Admin User",
     status: "Active",
   }));
+
+  const { data:data1, isLoading, isError, error } = useQuery({
+    queryKey: ["get-country"],
+    queryFn: getCountry,
+  });
+
+  const CountryData = data1?.data as Country[];
+
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -77,6 +87,14 @@ const CountrySetup = () => {
       ),
     },
   ];
+
+  
+  if (isLoading) {
+    return <Spin />;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
 
   return (
     <main>
