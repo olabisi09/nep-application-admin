@@ -85,11 +85,12 @@ interface Setup {
   id: number;
   title: string;
   description: string;
-  figure: number;
+  figure: string;
   imageUrl: string;
   activeStatus: boolean;
   isDeleted: boolean;
   readMoreId: number;
+  studentLifeId: string;
 }
 
 interface GeneralTemplate {
@@ -277,5 +278,18 @@ interface Overview {
   imageUrl: string;
   studentLifeId: number;
   activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface SchoolSummaryResponse extends GetResponse {
+  data: SchoolSummary[];
+}
+
+interface SchoolSummary {
+  id: number;
+  title: string;
+  figure: string;
+  activeStatus: boolean;
+  studentLifeId: number;
   isDeleted: boolean;
 }

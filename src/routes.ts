@@ -45,6 +45,7 @@ export const routes = {
       form: "/form-setup",
       studentLife: "/student-life",
       overview: "/student-life/:id/overview",
+      schoolSummary: "/student-life/:id/school-summary",
     },
     userMgt: {
       addUsers: "/admin-users",

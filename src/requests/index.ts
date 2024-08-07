@@ -396,3 +396,12 @@ export const deleteOverview = async (id: number) => {
   return (await api.delete(`/StudentLife/studentlife/DeleteOverview?Id=${id}`))
     ?.data as Response;
 };
+
+export const getSchoolSummaryByStudentLifeId = async (id: string | number) => {
+  return (
+    await api.get(
+      `/StudentLife/studentlife/GetSchoolsummaryByStudentLifeId?Id=${id}`
+    )
+  )?.data as SchoolSummaryResponse;
+};
+

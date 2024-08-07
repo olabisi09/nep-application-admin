@@ -46,6 +46,7 @@ import StudentLife from "./screens/setup/studentLife/studentLife";
 import NewsAndEvents from "./screens/setup/newsAndEvents/newsAndEvents";
 import SchoolMgt from "./screens/setup/schoolMgt/schoolMgt";
 import Overview from "./screens/setup/studentLife/overview/overview";
+import SchoolSummary from "./screens/setup/studentLife/schoolSummary/schoolSummary";
 
 function App() {
   const authRoute = [
@@ -213,6 +214,10 @@ function App() {
     {
       path: routes.setup.overview,
       element: <Overview />,
+    },
+    {
+      path: routes.setup.schoolSummary,
+      element: <SchoolSummary />,
     },
   ];
   const userMgtRoutes = [
