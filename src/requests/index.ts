@@ -405,3 +405,8 @@ export const getSchoolSummaryByStudentLifeId = async (id: string | number) => {
   )?.data as SchoolSummaryResponse;
 };
 
+export const deleteSchoolSummary = async (id: number) => {
+  return (await api.delete(`/StudentLife/studentlife/DeleteSchoolSummary?Id=${id}`))
+    ?.data as Response;
+};
+

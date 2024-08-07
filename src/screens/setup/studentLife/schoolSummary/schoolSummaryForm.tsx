@@ -10,7 +10,7 @@ const SchoolSummaryForm = ({
   item,
 }: {
   handleClose: () => void;
-  item?: Partial<SchoolSummary>;
+  item: Partial<SchoolSummary>;
 }) => {
   const { id } = useParams();
   const { notification } = App.useApp();
@@ -51,10 +51,7 @@ const SchoolSummaryForm = ({
     }
   };
 
-  const handleEditSchoolSummary = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
+  const handleEditSchoolSummary = async (values: FormikValues) => {
     const payload: Partial<Setup> = {
       id: item?.id,
       title: values.title,
@@ -73,7 +70,6 @@ const SchoolSummaryForm = ({
           });
           queryClient.refetchQueries({ queryKey: ["get-school-summary"] });
           handleClose();
-          resetForm();
         },
       });
     } catch (error: any) {
@@ -92,6 +88,7 @@ const SchoolSummaryForm = ({
   );
 
   const initialStatus = item?.activeStatus ? "Active" : "Inactive";
+  const hasRecords = Object.keys(item).length > 0;
 
   return (
     <Formik
@@ -100,9 +97,13 @@ const SchoolSummaryForm = ({
         figure: item?.figure ?? "",
         status: initialStatus ?? "",
       }}
-      onSubmit={(values, { resetForm }) =>
-        handleAddSchoolSummary(values, resetForm)
-      }
+      onSubmit={(values, { resetForm }) => {
+        if (hasRecords) {
+          handleEditSchoolSummary(values);
+        } else {
+          handleAddSchoolSummary(values, resetForm);
+        }
+      }}
     >
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />
@@ -124,7 +125,7 @@ const SchoolSummaryForm = ({
             type="submit"
             isLoading={addSchoolSummaryMutation.isPending}
             disabled={addSchoolSummaryMutation.isPending}
-            text="Create"
+            text={hasRecords ? "Update" : "Create"}
           />
         </div>
       </Form>
