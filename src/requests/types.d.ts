@@ -275,3 +275,20 @@ interface FAQ {
 interface FaqResponse extends Response {
   data: FAQ[];
 }
+interface AccreditationResponse extends AdmissionRequirementResponse {}
+
+interface Accreditation extends Response {
+  data: AdmissionRequirement;
+}
+
+interface AccreditationType {
+  status: string;
+  description: string;
+  id: number;
+  program: number;
+}
+
+interface AccreditationSetup {
+  Id: string;
+  description: string;
+}
