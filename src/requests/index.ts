@@ -1,4 +1,3 @@
-import { FaqPayload, FaqResponse } from "../screens/setup/faq/types";
 import {
   GetSubject,
   SubjectPayload,
@@ -47,14 +46,20 @@ export const getAllTuitionYear = async () => {
   return (await api.get('/ReadMore/GetAllTuitionYear'))?.data as TuitionYearResponse;
 }
 
-export const createFaq = async (payload: Partial<FaqPayload>) => {
+export const createFaq = async (payload: Partial<FAQ>) => {
   return (await api.post(`/HomePage/homePage/CreateUpdateFaq`, payload))
     ?.data as FaqResponse;
 };
 
-// export const deleteAboutUs = async (id: number) => {
-//   return (await api.delete(`/AboutUsPage/DeleteAboutUsById?Id=${id}`))?.data as Response;
-// }
+export const getAllFAQ = async () => {
+  return (await api.get("/HomePage/homePage/GetAllFaq"))
+    ?.data as FaqResponse;
+};
+export const deleteFAQ = async (id: number) => {
+  return (await api.delete(`/HomePage/DeleteFaqId?Id=${id}`))
+    ?.data as Response;
+};
+
 
 export const createUpdateGeneralTemplate = async (payload: FormData) => {
   return (await api.post("/GeneralTemplate/createUpdateTemplate", payload))
@@ -116,12 +121,12 @@ export const createOrUpdateCountry = async (payload: Partial<Country>) => {
     ?.data as Response;
 };
 
-export const getQualification = async () => {
-  return (await api.get('/Utilities/Utilities/GetAllCountries'))?.data as CountryResponse;
+export const getQualificationType = async () => {
+  return (await api.get('/Utilities/Utilities/GetAllQualificationType'))?.data as QualificationTypeResponse;
 }
 
-export const createOrUpdateQualification = async (payload: Partial<QualificationType>) => {
-  return (await api.post('/Utilities/Utilities/CreateUpdateCountry', payload))?.data as Response;
+export const createOrUpdateQualificationType= async (payload: Partial<QualificationType>) => {
+  return (await api.post('/Utilities/Utilities/CreateUpdateQualificationType', payload))?.data as Response;
 }
 
 
@@ -329,6 +334,11 @@ export const getAllPrograms = async() => {
 }
 
 
+export const deleteQualificationType= async(id:number)=>{
+  return (await api.delete(`/Utilities/Utilities/DeleteQualificationType?Id=${id}`))?.data as Response
+  }
 
 
 
+
+  
