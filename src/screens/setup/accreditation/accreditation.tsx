@@ -1,5 +1,3 @@
-import PageLayout from "../../../layouts/pageLayout/pageLayout";
-import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.svg";
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
@@ -125,20 +123,14 @@ const AccreditationSetup = () => {
 
   return (
     <main>
-      <PageLayout
-        paragraph="Accreditation Setup"
-        firstText="Setup Programs"
-        secondText="Accreditation Setup"
-        iconBefore={<GraterThan />}
-        headerActions={
-          <Button
-            onClick={() => setShowAddModal(true)}
-            iconBefore={<Add />}
-            text="Setup"
-          />
-        }
-      />
-
+      <section className="space-between">
+        <h3>Accreditation Setup</h3>
+        <Button
+          onClick={() => setShowAddModal(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
+      </section>
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
