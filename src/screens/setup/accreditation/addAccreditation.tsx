@@ -3,14 +3,17 @@ import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
 import { getAllPrograms } from "../../../requests";
 import { Form, Formik } from "formik";
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 import { Button } from "../../../custom";
+
 
 interface ComponentProps {
   record: AccreditationType;
+  
+
 }
 
-const AddAccreditation: FC<ComponentProps> = ({ record }) => {
+const AddAccreditation: FC<ComponentProps> = ({ record, }) => {
   const { data, error, isError } = useQuery({
     queryKey: ["get-programs"],
     queryFn: getAllPrograms,

@@ -22,7 +22,6 @@ import { useQueries, useQuery } from "@tanstack/react-query";
 import { getAccreditationById, getAllAccreditation } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 
-
 const AccreditationSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -33,7 +32,7 @@ const AccreditationSetup = () => {
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
-  };  
+  };
 
   const { data, error, isError, isLoading } = useQuery({
     queryKey: ["get-all-accreditation"],
@@ -214,7 +213,6 @@ const AccreditationSetup = () => {
         //   </div>
         // )}
       >
-        
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
             <AddAccreditation record={item} />

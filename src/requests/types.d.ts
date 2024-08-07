@@ -228,7 +228,7 @@ interface ProgramResponse extends Response {
   data: Program[];
 }
 
-interface AccreditationResponse extends AdmissionRequirementResponse { }
+interface AccreditationResponse extends AdmissionRequirementResponse {}
 
 interface Accreditation extends Response {
   data: AdmissionRequirement;
@@ -239,4 +239,9 @@ interface AccreditationType {
   description: string;
   id: number;
   program: number;
+}
+
+interface AccreditationSetup {
+  Id: string;
+  description: string;
 }
