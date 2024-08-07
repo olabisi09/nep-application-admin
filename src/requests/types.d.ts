@@ -264,3 +264,18 @@ interface Program{
 interface ProgramResponse extends Response {
   data: Program[];
 }
+
+interface OverviewResponse extends GetResponse {
+  data: Overview[];
+  studentLifeId: number;
+}
+
+interface Overview {
+  id: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+  studentLifeId: number;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}

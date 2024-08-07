@@ -45,6 +45,7 @@ import SocialMedia from "./screens/setup/socialMedia/socialMedia";
 import StudentLife from "./screens/setup/studentLife/studentLife";
 import NewsAndEvents from "./screens/setup/newsAndEvents/newsAndEvents";
 import SchoolMgt from "./screens/setup/schoolMgt/schoolMgt";
+import Overview from "./screens/setup/studentLife/overview/overview";
 
 function App() {
   const authRoute = [
@@ -78,7 +79,7 @@ function App() {
     {
       path: routes.setup.readMoreProgram,
       element: <ReadMoreProgramSetup />,
-    }, 
+    },
     {
       path: routes.setup.readMoreCourse,
       element: <ReadMoreCourseSetup />,
@@ -168,8 +169,6 @@ function App() {
       path: routes.setup.maritalStatus,
       element: <MaritalSetup />,
     },
-   
-   
 
     {
       path: routes.setup.aboutUs,
@@ -210,6 +209,10 @@ function App() {
     {
       path: routes.setup.schoolMgt,
       element: <SchoolMgt />,
+    },
+    {
+      path: routes.setup.overview,
+      element: <Overview />,
     },
   ];
   const userMgtRoutes = [
