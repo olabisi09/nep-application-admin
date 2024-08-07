@@ -22,7 +22,7 @@ const DashboardLayout = () => {
     (x) => x.path === location.pathname
   );
 
-  const breadcrumb = [
+  let breadcrumb = [
     {
       title: currentLocation?.title,
     },
@@ -39,6 +39,23 @@ const DashboardLayout = () => {
       ),
     },
   ];
+
+  // if (currentRoute?.children) {
+  //   currentRoute?.children?.forEach((x) => {
+  //     breadcrumb.push({
+  //       title: (
+  //         <NavLink
+  //           className={({ isActive }) =>
+  //             isActive ? styles.breadcrumbActive : ""
+  //           }
+  //           to={x.path}
+  //         >
+  //           {x.title}
+  //         </NavLink>
+  //       ),
+  //     });
+  //   });
+  // }
 
   return (
     <main className={styles.container}>

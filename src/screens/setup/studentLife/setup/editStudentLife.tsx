@@ -76,6 +76,7 @@ const EditStudentLife = ({
               const data = editor.getData();
               setFieldValue("description", data);
             }}
+            initialData={item.description}
           />
           <Select
             name="status"
