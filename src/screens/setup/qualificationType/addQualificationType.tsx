@@ -2,7 +2,7 @@ import Input from "../../../custom/input/input";
 import { Form, Formik, FormikValues } from "formik";
 import Button from "../../../custom/button/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { StatusOptions, createOrUpdateCountry } from "../../../requests";
+import { StatusOptions, createOrUpdateQualificationType,  } from "../../../requests";
 import * as Yup from "yup";
 import { App } from "antd";
 import Select from "../../../custom/select/select";
@@ -16,30 +16,30 @@ const AddQualificationType = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const CreateCountryMutation = useMutation({
-    mutationFn: createOrUpdateCountry,
+  const CreateQualificationTypeMutation = useMutation({
+    mutationFn: createOrUpdateQualificationType,
     mutationKey: ["create-qualification-type"],
   });
 
-  const CreateCountryHandler = async (
+  const CreateQualificationTypeHandler = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
     const payload: Partial<QualificationType> = {
       id: data?.id || 0,
-      qualificationType: values.qualificationType,
+      qualificationName: values.qualificationType,
       activeStatus: values?.status === "true", // Convert "true" to true, "false" to false
     };
 
     try {
-      await CreateCountryMutation.mutateAsync(payload, {
+      await CreateQualificationTypeMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
           queryClient.refetchQueries({
-            queryKey: ["get-country"],
+            queryKey: ["get-QualificationType"],
           });
           handleClose();
           resetForm();
@@ -54,19 +54,19 @@ const AddQualificationType = ({ handleClose, data }: Props) => {
   };
 
   const validationSchema = Yup.object().shape({
-    countryName: Yup.string().required("Country is required"),
+    qualificationType: Yup.string().required("Qualification Type is required"),
     status: Yup.string().required("Active Status is required"),
   });
 
   return (
     <Formik
       initialValues={{
-        countryName: data?.qualificationType || "",
+        qualificationType: data?.qualificationName || "",
         status:
           data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
       }}
       onSubmit={(values, { resetForm }) => {
-        CreateCountryHandler(values, resetForm);
+        CreateQualificationTypeHandler(values, resetForm);
       }}
       enableReinitialize={true}
       validationSchema={validationSchema}
@@ -98,9 +98,9 @@ const AddQualificationType = ({ handleClose, data }: Props) => {
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button
                 onClick={handleSubmit as any}
-                disabled={CreateCountryMutation?.isPending}
+                disabled={CreateQualificationTypeMutation?.isPending}
                 text={
-                  CreateCountryMutation?.isPending ? "Creating..." : "Create"
+                  CreateQualificationTypeMutation?.isPending ? "Creating..." : "Create"
                 }
               />
             </div>

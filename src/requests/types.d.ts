@@ -8,73 +8,73 @@ interface GetResponse extends Response {
 }
 
 interface AboutUs {
-id: number;
-title: string;
-description: string;
-imageUrl: string;
-activeStatus: boolean;
-isDeleted: boolean;
+  id: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
 }
 
 interface SessionResponse extends Response {
-  data: Session[]
+  data: Session[];
 }
 
 interface Session {
-  id: number
-  name: string
-  activeStatus: boolean
-  isDeleted: boolean
+  id: number;
+  name: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
 }
 
-interface CategoryResponse extends Response{
-  data: Category[]
+interface CategoryResponse extends Response {
+  data: Category[];
 }
 
 interface Category {
-  categoryCode: string
-  name: string
-  description: string
-  id: number
-  created: string
-  createdBy: any
-  activeStatus: boolean
+  categoryCode: string;
+  name: string;
+  description: string;
+  id: number;
+  created: string;
+  createdBy: any;
+  activeStatus: boolean;
 }
 
 interface LevelResponse extends Response {
-  data: Level[]
+  data: Level[];
 }
 
 interface Level {
-  id: number
-  levelName: string
-  isActive: boolean
-  isDeleted: boolean
+  id: number;
+  levelName: string;
+  isActive: boolean;
+  isDeleted: boolean;
 }
 
 interface TuitionResponse extends Response {
-  data: Tuition[]
+  data: Tuition[];
 }
 
 interface Tuition {
-  id: number
-  readmoreId: number
-  description: string
-  activeStatus: boolean
+  id: number;
+  readmoreId: number;
+  description: string;
+  activeStatus: boolean;
 }
 
-interface TuitionYearResponse extends Response{
-  data: TuitionYear[]
+interface TuitionYearResponse extends Response {
+  data: TuitionYear[];
 }
 
 interface TuitionYear {
-  id: number
-  tuitionId: number
-  levelId: number
-  readmoreId: number
-  feeDescription: string
-  isActive: boolean
-  isDeleted: boolean
+  id: number;
+  tuitionId: number;
+  levelId: number;
+  readmoreId: number;
+  feeDescription: string;
+  isActive: boolean;
+  isDeleted: boolean;
 }
 
 interface SocialMediaResponse extends Response {
@@ -204,7 +204,7 @@ interface QualificationTypeResponse extends Response {
 
 interface QualificationType {
   id: number;
-  qualificationType: string;
+  qualificationName: string;
   activeStatus?: boolean;
 }
 interface SetupPayload {
@@ -241,26 +241,26 @@ interface AdmissionRequirement {
 interface AdmissionRequirementResponse extends Response {
   data: AdmissionRequirement[];
 }
-interface Program{
-  categoryCode: string
-  programTypeCode: string
-  programCategoryCode: any
-  code: string
-  name: string
-  description: string
-  requirements: string
-  duration: string
-  qualification: string
-  careerProspect: string
-  tuition: string
-  curriculum: string
-  scholarship: string
-  userStory: string
-  accreditation: string
-  id: number
-  created: string
-  createdBy: any
-  activeStatus: boolean
+interface Program {
+  categoryCode: string;
+  programTypeCode: string;
+  programCategoryCode: any;
+  code: string;
+  name: string;
+  description: string;
+  requirements: string;
+  duration: string;
+  qualification: string;
+  careerProspect: string;
+  tuition: string;
+  curriculum: string;
+  scholarship: string;
+  userStory: string;
+  accreditation: string;
+  id: number;
+  created: string;
+  createdBy: any;
+  activeStatus: boolean;
 }
 interface ProgramResponse extends Response {
   data: Program[];
@@ -305,4 +305,45 @@ interface FitnessAthletics {
   activeStatus: boolean;
   isDeleted: boolean;
   studentLifeId: number;
+}
+interface FAQ {
+  id: number;
+  name: string;
+  description: string;
+  activeStatus: boolean;
+}
+
+interface FaqResponse extends Response {
+  data: FAQ[];
+}
+interface AccreditationResponse extends AdmissionRequirementResponse {}
+
+interface Accreditation extends Response {
+  data: AdmissionRequirement;
+}
+
+interface AccreditationPayload extends AdmissionRequirement {}
+
+interface AccreditationType {
+  description: string;
+  id: number;
+  program: number;
+  activeStatus: boolean;
+  readMoreId: number;
+}
+
+interface AccreditationSetup {
+  Id: string;
+  description: string;
+}
+interface CommonPayload {
+  id: number;
+  readmoreId: number;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface ScholarshipResponse extends Response {
+  data: CommonPayload[];
 }
