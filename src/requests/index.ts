@@ -405,6 +405,16 @@ export const getAllAccreditation = async () => {
   return (await api.get("/ReadMore/GetAllAccreditations"))
     ?.data as AccreditationResponse;
 };
+export const createOrUpdateScholarship = async(payload: Partial<CommonPayload>) => {
+  return(await api.post(`/ReadMore/CreateUpdateScholarship`, payload))?.data as Response
+}
+export const getAllScholarships = async() => {
+  return (await api.get('/ReadMore/GetAllScholarship'))?.data as ScholarshipResponse;
+}
+
+export const deleteScholarship = async(id:number) => {
+  return (await api.delete(`/ReadMore/DeleteScholarshipById?Id=${id}`))?.data as Response;
+}
 
 export const getAccreditationById = async (id: number) => {
   return (await api.get(`/ReadMore/GetAccreditationById?Id=${id}`))

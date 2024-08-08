@@ -293,3 +293,14 @@ interface AccreditationSetup {
   Id: string;
   description: string;
 }
+interface CommonPayload {
+  id: number
+  readmoreId: number
+  description: string
+  activeStatus: boolean
+  isDeleted: boolean
+}
+
+interface ScholarshipResponse extends Response {
+  data: CommonPayload[];
+}
