@@ -347,3 +347,6 @@ interface CommonPayload {
 interface ScholarshipResponse extends Response {
   data: CommonPayload[];
 }
+
+interface SupportAndGuidanceResponse extends FitnessAthleticsResponse {}
+interface SupportAndGuidance extends FitnessAthletics {}

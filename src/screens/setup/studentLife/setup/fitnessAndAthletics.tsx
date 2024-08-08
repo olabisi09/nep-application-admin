@@ -3,6 +3,8 @@ import { Button, Input, Select } from "../../../../custom";
 import { createOrUpdateFitnessAthletics } from "../../../../requests";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
+import * as Yup from "yup";
+import { validator } from "../../../../utils/validator";
 
 const FitnessAndAthletics = ({
   handleClose,
@@ -86,6 +88,12 @@ const FitnessAndAthletics = ({
     </>
   );
 
+  const validationSchema = Yup.object().shape({
+    title: validator.title,
+    description: validator.description,
+    status: validator.status,
+  });
+
   return (
     <Formik
       initialValues={{
@@ -96,7 +104,7 @@ const FitnessAndAthletics = ({
       onSubmit={(values, { resetForm }) =>
         handleAddFitnessAthletics(values, resetForm)
       }
-    >
+      validationSchema={validationSchema}>
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />
         <Input

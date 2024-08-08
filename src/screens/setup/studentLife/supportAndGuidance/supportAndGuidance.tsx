@@ -16,30 +16,32 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   deleteFitnessAthletics,
   getFitnessAndAthleticsByStudentLifeId,
+  getSupportAndGuidanceByStudentLifeId,
 } from "../../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { useParams } from "react-router-dom";
-import FitnessAndAthleticsForm from "./fitnessAndAthleticsForm";
+import SupportAndGuidanceForm from "./supportAndGuidanceForm";
+import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
 
-const FitnessAndAthletics = () => {
+const SupportAndGuidance = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [fitnessAthleticsItems, setFitnessAthleticsItems] =
-    useState<FitnessAthletics>({} as FitnessAthletics);
+  const [supportAndGuidanceItems, setSupportAndGuidanceItems] =
+    useState<SupportAndGuidance>({} as SupportAndGuidance);
 
-  const deleteFitnessAthleticsMutation = useMutation({
+  const deleteSupportAndStudentMutation = useMutation({
     mutationFn: deleteFitnessAthletics,
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-fitness-athletics"],
-    queryFn: () => getFitnessAndAthleticsByStudentLifeId(id!),
+    queryKey: ["get-support-guidance"],
+    queryFn: () => getSupportAndGuidanceByStudentLifeId(id!),
     enabled: !!id,
   });
 
-  const columns: ColumnsType<FitnessAthletics> = [
+  const columns: ColumnsType<SupportAndGuidance> = [
     {
       key: "id",
       title: "ID",
@@ -54,6 +56,10 @@ const FitnessAndAthletics = () => {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      render: (_: any, { description }: any) => {
+        const limitedCleanHtml = sanitizeAndLimitString(description);
+        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
+      },
     },
     {
       key: "status",
@@ -70,7 +76,7 @@ const FitnessAndAthletics = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setFitnessAthleticsItems(record);
+              setSupportAndGuidanceItems(record);
               setOpenEdit(true);
             },
           },
@@ -79,7 +85,7 @@ const FitnessAndAthletics = () => {
             label: "Delete",
             onClick: async () => {
               try {
-                await deleteFitnessAthleticsMutation.mutateAsync(record.id, {
+                await deleteSupportAndStudentMutation.mutateAsync(record.id, {
                   onSuccess: (data) => {
                     notification.success({
                       message: "Success",
@@ -107,7 +113,7 @@ const FitnessAndAthletics = () => {
     },
   ];
 
-  const fitnessAthleticsData = data?.data as FitnessAthletics[];
+  const supportAndGuidanceData = data?.data as SupportAndGuidance[];
 
   if (isLoading) {
     return <Spin />;
@@ -120,7 +126,7 @@ const FitnessAndAthletics = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Student Life: Fitness and Athletics Setup</h3>
+        <h3>Student Life: Support And Guidance Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -130,7 +136,7 @@ const FitnessAndAthletics = () => {
       <br />
       <Card bordered={false}>
         <Table
-          dataSource={fitnessAthleticsData}
+          dataSource={supportAndGuidanceData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -144,8 +150,8 @@ const FitnessAndAthletics = () => {
         centered
         title="Create Overview"
         footer={null}>
-        <FitnessAndAthleticsForm
-          item={fitnessAthleticsItems}
+        <SupportAndGuidanceForm
+          item={supportAndGuidanceItems}
           handleClose={() => setOpen(false)}
         />
       </Modal>
@@ -156,8 +162,8 @@ const FitnessAndAthletics = () => {
         centered
         title="Edit Overview"
         footer={null}>
-        <FitnessAndAthleticsForm
-          item={fitnessAthleticsItems}
+        <SupportAndGuidanceForm
+          item={supportAndGuidanceItems}
           handleClose={() => setOpenEdit(false)}
         />
       </Modal>
@@ -165,4 +171,4 @@ const FitnessAndAthletics = () => {
   );
 };
 
-export default FitnessAndAthletics;
+export default SupportAndGuidance;

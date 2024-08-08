@@ -114,7 +114,8 @@ const StudentLife = () => {
           {
             key: "3",
             label: "School Summary",
-            onClick: () => navigate(`/student-life/${record.id}/school-summary`),
+            onClick: () =>
+              navigate(`/student-life/${record.id}/school-summary`),
           },
           {
             key: "4",
@@ -124,12 +125,14 @@ const StudentLife = () => {
           {
             key: "5",
             label: "Fitness & Athletics",
-            onClick: () => navigate(`/student-life/${record.id}/fitness-and-athletics`),
+            onClick: () =>
+              navigate(`/student-life/${record.id}/fitness-and-athletics`),
           },
           {
             key: "6",
             label: "Support & Guidance",
-            onClick: () => onFormClick("Support & Guidance"),
+            onClick: () =>
+              navigate(`/student-life/${record.id}/support-and-guidance`),
           },
           {
             key: "7",

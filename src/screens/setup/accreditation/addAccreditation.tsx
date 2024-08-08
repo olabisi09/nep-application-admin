@@ -17,6 +17,7 @@ import { FC, PropsWithChildren } from "react";
 import { Button, Editor } from "../../../custom";
 import { App } from "antd";
 import * as Yup from "yup";
+import { validator } from "../../../utils/validator";
 
 interface ComponentProps {
   record: AccreditationType;
@@ -89,9 +90,9 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
   ));
 
   const validationSchema = Yup.object().shape({
-    programName: Yup.string().required("Program Name is required"),
-    status: Yup.string().required("Active Status is required"),
-    description: Yup.string().required("Description is required"),
+    programName: validator.programName,
+    status: validator.status,
+    description: validator.title,
   });
 
   return (

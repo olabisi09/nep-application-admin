@@ -138,7 +138,7 @@ export const createOrUpdateQualification = async (
 ) => {
   return (await api.post("/Utilities/Utilities/CreateUpdateCountry", payload))
     ?.data as Response;
-}
+};
 
 export const getQualificationType = async () => {
   return (await api.get("/Utilities/Utilities/GetAllQualificationType"))
@@ -488,11 +488,14 @@ export const getSchoolSummaryByStudentLifeId = async (id: string | number) => {
 };
 
 export const deleteSchoolSummary = async (id: number) => {
-  return (await api.delete(`/StudentLife/studentlife/DeleteSchoolSummary?Id=${id}`))
-    ?.data as Response;
+  return (
+    await api.delete(`/StudentLife/studentlife/DeleteSchoolSummary?Id=${id}`)
+  )?.data as Response;
 };
 
-export const getFitnessAndAthleticsByStudentLifeId = async (id: string | number) => {
+export const getFitnessAndAthleticsByStudentLifeId = async (
+  id: string | number
+) => {
   return (
     await api.get(
       `/StudentLife/studentlife/GetFitnessAthleticsByStudentLifeId?Id=${id}`
@@ -501,6 +504,15 @@ export const getFitnessAndAthleticsByStudentLifeId = async (id: string | number)
 };
 
 export const deleteFitnessAthletics = async (id: number) => {
-  return (await api.delete(`/StudentLife/studentlife/DeleteFitnessAthletics?Id=${id}`))
-    ?.data as Response;
+  return (
+    await api.delete(`/StudentLife/studentlife/DeleteFitnessAthletics?Id=${id}`)
+  )?.data as Response;
+};
+
+export const getSupportAndGuidanceByStudentLifeId = async (id: string | number) => {
+  return (
+    await api.get(
+      `/StudentLife/studentlife/GetSupportGuidanceByStudentLifeId?Id=${id}`
+    )
+  )?.data as SupportAndGuidanceResponse;
 };
