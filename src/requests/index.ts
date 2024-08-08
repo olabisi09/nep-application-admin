@@ -1,9 +1,11 @@
+import { number } from "yup";
 import {
   GetSubject,
   SubjectPayload,
   SubjectResponse,
 } from "../screens/setup/subject/types";
 import api from "../utils/api";
+import { wait } from "@testing-library/user-event/dist/utils";
 
 export const getAboutUs = async () => {
   return (await api.get("/AboutUsPage/GetAllAboutUs"))?.data as GetResponse;
@@ -405,16 +407,21 @@ export const getAllAccreditation = async () => {
   return (await api.get("/ReadMore/GetAllAccreditations"))
     ?.data as AccreditationResponse;
 };
-export const createOrUpdateScholarship = async(payload: Partial<CommonPayload>) => {
-  return(await api.post(`/ReadMore/CreateUpdateScholarship`, payload))?.data as Response
-}
-export const getAllScholarships = async() => {
-  return (await api.get('/ReadMore/GetAllScholarship'))?.data as ScholarshipResponse;
-}
+export const createOrUpdateScholarship = async (
+  payload: Partial<CommonPayload>
+) => {
+  return (await api.post(`/ReadMore/CreateUpdateScholarship`, payload))
+    ?.data as Response;
+};
+export const getAllScholarships = async () => {
+  return (await api.get("/ReadMore/GetAllScholarship"))
+    ?.data as ScholarshipResponse;
+};
 
-export const deleteScholarship = async(id:number) => {
-  return (await api.delete(`/ReadMore/DeleteScholarshipById?Id=${id}`))?.data as Response;
-}
+export const deleteScholarship = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteScholarshipById?Id=${id}`))
+    ?.data as Response;
+};
 
 export const getAccreditationById = async (id: number) => {
   return (await api.get(`/ReadMore/GetAccreditationById?Id=${id}`))
@@ -425,5 +432,10 @@ export const createOrUpdateAccreditation = async (
   payload: Partial<AccreditationType>
 ) => {
   return (await api.post("/ReadMore/createUpdateAccreditation", payload))
+    ?.data as Response;
+};
+
+export const deleteAccreditationById = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteAccreditationById?Id=${id}`))
     ?.data as Response;
 };

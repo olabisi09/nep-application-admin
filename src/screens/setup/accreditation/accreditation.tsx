@@ -8,6 +8,7 @@ import {
   Button as AntButton,
   MenuProps,
   Spin,
+  notification,
 } from "antd";
 import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
@@ -16,9 +17,14 @@ import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import AddAccreditation from "./addAccreditation";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useQueries, useQuery } from "@tanstack/react-query";
-import { getAccreditationById, getAllAccreditation } from "../../../requests";
-import { ColumnsType } from "antd/es/table";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
+import {
+  deleteAccreditationById,
+  getAccreditationById,
+  getAllAccreditation,
+} from "../../../requests";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import { ColumnGroupType, ColumnsType } from "antd/es/table";
 
 const AccreditationSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -32,31 +38,36 @@ const AccreditationSetup = () => {
     setSearchTerm(e.target.value);
   };
 
-  const { data, error, isError, isLoading } = useQuery({
+  const deleteAccreditationMutation = useMutation({
+    mutationFn: deleteAccreditationById,
+  });
+
+  const { data, error, isError, isLoading, refetch } = useQuery({
     queryKey: ["get-all-accreditation"],
     queryFn: getAllAccreditation,
     retry: 1,
   });
 
-  const queries = useQueries({
-    queries: [
-      {
-        queryKey: ["get-all-accreditation"],
-        queryFn: getAllAccreditation,
-        retry: 1,
-      },
-      {
-        queryKey: ["get-accreditation-id"],
-        queryFn: () => getAccreditationById(item?.id),
-        retry: 1,
-      },
-    ],
-  });
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteAccreditationMutation.mutateAsync(id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
-  const allAccreditationQuery = queries[0];
-  const accreditationQuery = queries[1];
-
-  const accreditationData = allAccreditationQuery?.data?.data ?? [];
+  const accreditationData = data?.data ?? [];
 
   const dataSource = accreditationData?.map((item) => {
     return {
@@ -67,6 +78,7 @@ const AccreditationSetup = () => {
     };
   });
 
+  //const dataSource = data
   const columns = [
     {
       key: "id",
@@ -82,6 +94,10 @@ const AccreditationSetup = () => {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      render: (_: any, { description }: any) => {
+        const limitedCleanHtml = sanitizeAndLimitString(description);
+        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
+      },
     },
     {
       key: "status",
@@ -103,6 +119,18 @@ const AccreditationSetup = () => {
                   setItem(record);
                 }}>
                 Edit
+              </button>
+            ),
+          },
+          {
+            key: "1",
+            label: (
+              <button
+                style={{ border: "0rem" }}
+                onClick={() => {
+                  handleDelete(record.id);
+                }}>
+                Delete
               </button>
             ),
           },

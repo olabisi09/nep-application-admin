@@ -281,6 +281,8 @@ interface Accreditation extends Response {
   data: AdmissionRequirement;
 }
 
+interface AccreditationPayload extends AdmissionRequirement {}
+
 interface AccreditationType {
   description: string;
   id: number;
@@ -294,11 +296,11 @@ interface AccreditationSetup {
   description: string;
 }
 interface CommonPayload {
-  id: number
-  readmoreId: number
-  description: string
-  activeStatus: boolean
-  isDeleted: boolean
+  id: number;
+  readmoreId: number;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
 }
 
 interface ScholarshipResponse extends Response {

@@ -8,12 +8,13 @@ import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
 import {
   createOrUpdateAccreditation,
+  getAccreditationById,
   getAllPrograms,
   StatusOptions,
 } from "../../../requests";
 import { Form, Formik, FormikValues } from "formik";
 import { FC, PropsWithChildren } from "react";
-import { Button } from "../../../custom";
+import { Button, Editor } from "../../../custom";
 import { App } from "antd";
 import * as Yup from "yup";
 
@@ -30,6 +31,19 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
     mutationFn: createOrUpdateAccreditation,
     mutationKey: ["create-update-accreditation"],
   });
+
+  const {
+    data: getAccreditationByIdData,
+    isLoading,
+    error: getAccreditationByIdError,
+  } = useQuery({
+    queryKey: ["get-accreditation-id"],
+    queryFn: () => getAccreditationById(record?.id),
+    // retry: 1,
+    enabled: !!record?.id,
+  });
+
+  const accreditationData = getAccreditationByIdData?.data;
 
   const updateAccreditationHandler = async (values: FormikValues) => {
     const payload: Partial<AccreditationType> = {
@@ -104,11 +118,15 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
                 label="Program Name"
                 options={programOptions}
               />
-              <Input
+
+              <Editor
                 name="description"
-                placeholder="Input Description"
-                label="Description Name"
-                type="textarea"
+                label="Description"
+                onChange={(_, record) => {
+                  const data = record.getData();
+                  props.setFieldValue("description", data);
+                }}
+                // initialData={""} //}
               />
               <Select
                 name="status"
