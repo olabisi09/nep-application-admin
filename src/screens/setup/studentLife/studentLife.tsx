@@ -124,7 +124,7 @@ const StudentLife = () => {
           {
             key: "5",
             label: "Fitness & Athletics",
-            onClick: () => onFormClick("Fitness & Athletics"),
+            onClick: () => navigate(`/student-life/${record.id}/fitness-and-athletics`),
           },
           {
             key: "6",

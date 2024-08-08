@@ -47,6 +47,7 @@ import NewsAndEvents from "./screens/setup/newsAndEvents/newsAndEvents";
 import SchoolMgt from "./screens/setup/schoolMgt/schoolMgt";
 import Overview from "./screens/setup/studentLife/overview/overview";
 import SchoolSummary from "./screens/setup/studentLife/schoolSummary/schoolSummary";
+import FitnessAndAthletics from "./screens/setup/studentLife/fitnessAndAthletics.tsx/fitnessAndAthletics";
 
 function App() {
   const authRoute = [
@@ -218,6 +219,10 @@ function App() {
     {
       path: routes.setup.schoolSummary,
       element: <SchoolSummary />,
+    },
+    {
+      path: routes.setup.fitnessAndAthletics,
+      element: <FitnessAndAthletics />,
     },
   ];
   const userMgtRoutes = [

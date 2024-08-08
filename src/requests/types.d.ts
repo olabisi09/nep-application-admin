@@ -293,3 +293,16 @@ interface SchoolSummary {
   studentLifeId: number;
   isDeleted: boolean;
 }
+
+interface FitnessAthleticsResponse extends GetResponse {
+  data: FitnessAthletics[];
+}
+
+interface FitnessAthletics {
+  id: number;
+  title: string;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+  studentLifeId: number;
+}

@@ -410,3 +410,15 @@ export const deleteSchoolSummary = async (id: number) => {
     ?.data as Response;
 };
 
+export const getFitnessAndAthleticsByStudentLifeId = async (id: string | number) => {
+  return (
+    await api.get(
+      `/StudentLife/studentlife/GetFitnessAthleticsByStudentLifeId?Id=${id}`
+    )
+  )?.data as FitnessAthleticsResponse;
+};
+
+export const deleteFitnessAthletics = async (id: number) => {
+  return (await api.delete(`/StudentLife/studentlife/DeleteFitnessAthletics?Id=${id}`))
+    ?.data as Response;
+};

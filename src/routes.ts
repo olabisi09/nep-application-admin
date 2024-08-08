@@ -46,6 +46,7 @@ export const routes = {
       studentLife: "/student-life",
       overview: "/student-life/:id/overview",
       schoolSummary: "/student-life/:id/school-summary",
+      fitnessAndAthletics: "/student-life/:id/fitness-and-athletics"
     },
     userMgt: {
       addUsers: "/admin-users",
