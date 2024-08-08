@@ -266,7 +266,7 @@ interface ProgramResponse extends Response {
 }
 
 interface FAQ {
-  id:number;
+  id: number;
   name: string;
   description: string;
   activeStatus: boolean;
@@ -282,10 +282,11 @@ interface Accreditation extends Response {
 }
 
 interface AccreditationType {
-  status: string;
   description: string;
   id: number;
   program: number;
+  activeStatus: boolean;
+  readMoreId: number;
 }
 
 interface AccreditationSetup {

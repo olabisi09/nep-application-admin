@@ -67,7 +67,7 @@ const AccreditationSetup = () => {
     };
   });
 
-  const columns: ColumnsType<AccreditationType> = [
+  const columns = [
     {
       key: "id",
       title: "ID",
@@ -91,7 +91,7 @@ const AccreditationSetup = () => {
     {
       key: "action",
       title: "",
-      render: (_, record) => {
+      render: (record: AccreditationType) => {
         const items: MenuProps["items"] = [
           {
             key: "1",
@@ -181,11 +181,10 @@ const AccreditationSetup = () => {
         //   </div>
         // )}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddAccreditation record={item} />
-          </Form>
-        </Formik>
+        <AddAccreditation
+          record={item}
+          handleClose={() => setShowAddModal(false)}
+        />
       </Modal>
 
       <Modal
@@ -205,11 +204,10 @@ const AccreditationSetup = () => {
         //   </div>
         // )}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddAccreditation record={item} />
-          </Form>
-        </Formik>
+        <AddAccreditation
+          record={item}
+          handleClose={() => setOpenEdit(false)}
+        />
       </Modal>
     </main>
   );

@@ -22,7 +22,6 @@ export const deleteAboutUs = async (id: number) => {
     ?.data as Response;
 };
 
-
 export const getAllAcademicSession = async () => {
   return (await api.get("/ReadMore/GetAllAcademicSessions"))
     ?.data as SessionResponse;
@@ -45,8 +44,9 @@ export const getAllTuitionFee = async () => {
 };
 
 export const getAllTuitionYear = async () => {
-  return (await api.get('/ReadMore/GetAllTuitionYear'))?.data as TuitionYearResponse;
-}
+  return (await api.get("/ReadMore/GetAllTuitionYear"))
+    ?.data as TuitionYearResponse;
+};
 
 export const createFaq = async (payload: Partial<FAQ>) => {
   return (await api.post(`/HomePage/homePage/CreateUpdateFaq`, payload))
@@ -54,15 +54,11 @@ export const createFaq = async (payload: Partial<FAQ>) => {
 };
 
 export const getAllFAQ = async () => {
-  return (await api.get("/HomePage/homePage/GetAllFaq"))
-    ?.data as FaqResponse;
+  return (await api.get("/HomePage/homePage/GetAllFaq"))?.data as FaqResponse;
 };
 export const deleteFAQ = async (id: number) => {
-  return (await api.delete(`/HomePage/DeleteFaqId?Id=${id}`))
-    ?.data as Response;
+  return (await api.delete(`/HomePage/DeleteFaqId?Id=${id}`))?.data as Response;
 };
-
-
 
 // export const createFaq = async (payload: Partial<FAQ>) => {
 //   return (await api.post(`/HomePage/homePage/CreateUpdateFaq`, payload))
@@ -104,8 +100,6 @@ export const StatusOptions = [
   },
 ];
 
-
-
 export const getCountry = async () => {
   return (await api.get("/Utilities/Utilities/GetAllCountries"))
     ?.data as CountryResponse;
@@ -117,14 +111,20 @@ export const createOrUpdateCountry = async (payload: Partial<Country>) => {
 };
 
 export const getQualificationType = async () => {
-  return (await api.get('/Utilities/Utilities/GetAllQualificationType'))?.data as QualificationTypeResponse;
+  return (await api.get("/Utilities/Utilities/GetAllQualificationType"))
+    ?.data as QualificationTypeResponse;
+};
 
-}
-
-export const createOrUpdateQualificationType= async (payload: Partial<QualificationType>) => {
-  return (await api.post('/Utilities/Utilities/CreateUpdateQualificationType', payload))?.data as Response;
-}
-
+export const createOrUpdateQualificationType = async (
+  payload: Partial<QualificationType>
+) => {
+  return (
+    await api.post(
+      "/Utilities/Utilities/CreateUpdateQualificationType",
+      payload
+    )
+  )?.data as Response;
+};
 
 export const getState = async () => {
   return (await api.get("/Utilities/Utilities/GetAllStates"))
@@ -240,10 +240,15 @@ export const createOrUpdateMaritalStatus = async (
   )?.data as Response;
 };
 
-
-export const createUpdateSocialMediaLink  = async(payload: Partial<SocialMediaLink>) => {
-  return (await api.post('/GeneralTemplate/createUpdateSocialMediaLink', payload,  { headers: { 'Content-Type': 'multipart/form-data' } }))?.data as Response;
-}
+export const createUpdateSocialMediaLink = async (
+  payload: Partial<SocialMediaLink>
+) => {
+  return (
+    await api.post("/GeneralTemplate/createUpdateSocialMediaLink", payload, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+  )?.data as Response;
+};
 
 export const getSocialMediaLinks = async () => {
   return (await api.get("/GeneralTemplate/GetAllSocialMediaLinks"))
@@ -269,15 +274,6 @@ export const getStudentLife = async () => {
 export const createOrUpdateStudentLife = async (payload: Partial<Setup>) => {
   return (
     await api.post("/StudentLife/studentlife/CreateUpdateStudentLife", payload)
-  )?.data as Response;
-};
-
-export const createOrUpdateSchoolSummary = async (payload: Partial<Setup>) => {
-  return (
-    await api.post(
-      "/StudentLife/studentlife/CreateUpdateSchoolSummary",
-      payload
-    )
   )?.data as Response;
 };
 
@@ -325,11 +321,11 @@ export const createOrUpdateStudentActivity = async (
   )?.data as Response;
 };
 
-
-
-export const createOrUpdateOverview= async (payload: Partial<Setup>) => {
-  return (await api.post('/StudentLife/studentlife/createUpdateOverView', payload))?.data as Response;
-}
+export const createOrUpdateOverview = async (payload: Partial<Setup>) => {
+  return (
+    await api.post("/StudentLife/studentlife/createUpdateOverView", payload)
+  )?.data as Response;
+};
 
 export const createOrUpdateSubject = async (
   payload: Partial<SubjectPayload>
@@ -351,51 +347,73 @@ export const deleteGender = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteGender?Id=${id}`))
     ?.data as Response;
 };
+
+export const createOrUpdateSchoolSummary = async (payload: Partial<Setup>) => {
+  return (
+    await api.post(
+      "/StudentLife/studentlife/CreateUpdateSchoolSummary",
+      payload
+    )
+  )?.data as Response;
+};
+
 export const deleteMaritalStatus = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteMaritalStatus?Id=${id}`))
     ?.data as Response;
 };
 export const deleteState = async (id: number) => {
-  return (await api.delete(`/Utilities/Utilities/DeleteState?Id=${id}`))?.data as Response;
-}
+  return (await api.delete(`/Utilities/Utilities/DeleteState?Id=${id}`))
+    ?.data as Response;
+};
 export const deleteLGA = async (id: number) => {
-  return (await api.delete(`/Utilities/Utilities/DeleteLga?Id=${id}`))?.data as Response;
-}
+  return (await api.delete(`/Utilities/Utilities/DeleteLga?Id=${id}`))
+    ?.data as Response;
+};
 export const deleteSubject = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteSubject?Id=${id}`))
     ?.data as Response;
 };
-export const getAdmissionRequirements = async() => {
-  return (await api.get('/ReadMore/GetAllAdmissionRequirements'))?.data as AdmissionRequirementResponse;
-}
+export const getAdmissionRequirements = async () => {
+  return (await api.get("/ReadMore/GetAllAdmissionRequirements"))
+    ?.data as AdmissionRequirementResponse;
+};
 
-export const createOrUpdateAdmissionRequirement = async(payload: Partial<AdmissionRequirement>) => {
-  return (await api.post('/ReadMore/createUpdateAdmissionRequirement', payload))?.data as Response;
-}
+export const createOrUpdateAdmissionRequirement = async (
+  payload: Partial<AdmissionRequirement>
+) => {
+  return (await api.post("/ReadMore/createUpdateAdmissionRequirement", payload))
+    ?.data as Response;
+};
 
+export const getAllPrograms = async () => {
+  return (await api.get("/Academics/GetAllProgramAsync"))
+    ?.data as ProgramResponse;
+};
 
-export const getAllPrograms = async() => {
-  return (await api.get('/Academics/GetAllProgramAsync'))?.data as ProgramResponse;
-}
-
-
-export const deleteQualificationType= async(id:number)=>{
-  return (await api.delete(`/Utilities/Utilities/DeleteQualificationType?Id=${id}`))?.data as Response
-  }
+export const deleteQualificationType = async (id: number) => {
+  return (
+    await api.delete(`/Utilities/Utilities/DeleteQualificationType?Id=${id}`)
+  )?.data as Response;
+};
 
 export const deleteAdmissionRequirement = async (id: number) => {
   return (await api.delete(`/ReadMore/DeleteAdmissionRequirementById?Id=${id}`))
     ?.data as Response;
 };
 
-
-
-  
 export const getAllAccreditation = async () => {
   return (await api.get("/ReadMore/GetAllAccreditations"))
     ?.data as AccreditationResponse;
 };
 
 export const getAccreditationById = async (id: number) => {
-  return (await api.get(`/ReadMore/GetAccreditationById?Id=${id}`))?.data as Accreditation;
+  return (await api.get(`/ReadMore/GetAccreditationById?Id=${id}`))
+    ?.data as Accreditation;
+};
+
+export const createOrUpdateAccreditation = async (
+  payload: Partial<AccreditationType>
+) => {
+  return (await api.post("/ReadMore/createUpdateAccreditation", payload))
+    ?.data as Response;
 };
