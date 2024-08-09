@@ -5,11 +5,15 @@ import { Form, Formik, FormikProvider, FormikValues, useFormik } from "formik";
 import * as Yup from "yup";
 import { createFaq } from "../../../requests";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FaqPayload } from "./types";
 import { notify } from "../../../utils/notify";
 import { App } from "antd";
 
-const SetupFaq = ({ handleClose }: { handleClose: () => void }) => {
+interface Props {
+  data?: FAQ;
+  handleClose: () => void;
+}
+
+const SetupFaq = ({handleClose, data}:Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -22,7 +26,8 @@ const SetupFaq = ({ handleClose }: { handleClose: () => void }) => {
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: FaqPayload = {
+    const payload: FAQ = {
+      id:0,
       name: values?.name,
       description: values?.description,
       activeStatus: values?.activeStatus === "true",
@@ -55,7 +60,8 @@ const SetupFaq = ({ handleClose }: { handleClose: () => void }) => {
 
   const formik = useFormik<FormikValues>({
     initialValues: {
-      name: "",
+      name: data?.name,
+      
       description: "null description",
     },
     onSubmit: (values, { resetForm }) => {
