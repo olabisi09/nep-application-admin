@@ -112,8 +112,8 @@ const Sidebar = () => {
           icon: <Line />,
         },
         {
-          key: "testimony",
-          label: <NavLink to="/testimony-setup">Testimony</NavLink>,
+          key: "testimonial",
+          label: <NavLink to="/testimonial-setup">Testimonial</NavLink>,
           icon: <Line />,
         },
         {

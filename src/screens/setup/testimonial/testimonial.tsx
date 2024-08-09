@@ -1,33 +1,46 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
-import { Form, Formik } from "formik";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddTestimonial from "./addTestimonial";
+import { AddTestimonial, EditTestimonial } from "./addTestimonial";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { deleteTestimonial, getAllTestimonials } from "../../../requests";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { ColumnsType } from "antd/es/table";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const TestimonySetup = () => {
+  const { notification } = App.useApp();
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [testimonial, setTestimonial] = useState<Testimonial>({} as Testimonial);
+  const [openDelete, setOpenDelete] = useState(false);
+  const deleteTestimonialMutation = useMutation({
+    mutationFn: deleteTestimonial,
+  });
+
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["get-testimonials"],
+    queryFn: getAllTestimonials,
+  });
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  const data = Array.from({ length: 5 }, () => ({
-    id: 1234,
-    firstName: "Timi",
-    lastName: "John",
-    email: "john@gmail.com",
-    role: "Admin User",
-    status: "Active",
-  }));
+  const handleDelete = (data: Testimonial) => {
+    setTestimonial(data);
+    setOpenDelete(true);
+  };
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -38,57 +51,103 @@ const TestimonySetup = () => {
       ),
     },
   ];
-  const columns = [
+  const columns: ColumnsType<Testimonial> = [
     {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
+      title: "S/N",
+      dataIndex: "index",
+      key: "index",
+      render: (text: any, record: any, index: number) => <span>{(currentPage - 1) * pageSize + index + 1}</span>,
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
+      key: "programName",
+      title: "Program Name",
+      dataIndex: "programName",
     },
     {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
+      key: "description",
+      title: "Description",
+      dataIndex: "description",
+      render: (_, { description }) => {
+        const limitedCleanHtml = sanitizeAndLimitString(description);
+        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
+      },
     },
     {
-      key: "email",
-      title: "Email Address",
-      dataIndex: "email",
-    },
-    {
-      key: "role",
-      title: "Role",
-      dataIndex: "role",
+      key: "imageUrl",
+      title: "Picture",
+      dataIndex: "imageUrl",
+      render: (_, { imageUrl }) => <img className="table-img" src={imageUrl} alt="" />,
     },
     {
       key: "status",
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
-          <AntButton type="text" icon={<Ellipsis />} />
-        </Dropdown>
-      ),
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setTestimonial(record);
+              setOpenEdit(true);
+            },
+          },
+          {
+            key: "2",
+            label: (
+              <button style={{ border: "0rem", background: "none" }} onClick={() => handleDelete(record)}>
+                Delete
+              </button>
+            ),
+          },
+        ];
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
+        );
+      },
     },
   ];
 
+  const DeleteTestimonialHandler = async () => {
+    try {
+      await deleteTestimonialMutation.mutateAsync(testimonial?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete(false);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
+
+  const testimonialsData = data?.data;
+
+  if (isLoading) {
+    return <Spin />;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
   return (
     <main>
       <section className="space-between">
         <h3>Testimonial Setup</h3>
-        <Button
-          onClick={() => setShowAddModal(true)}
-          iconBefore={<Add />}
-          text="Setup"
-        />
+        <Button onClick={() => setShowAddModal(true)} iconBefore={<Add />} text="Setup" />
       </section>
       <section className={styles.card}>
         <div className={styles.inside}>
@@ -96,77 +155,51 @@ const TestimonySetup = () => {
           <div>
             {!showSearch && (
               <span>
-                <Search
-                  onClick={() => setShowSearch((showSearch) => !showSearch)}
-                />
+                <Search onClick={() => setShowSearch((showSearch) => !showSearch)} />
               </span>
             )}
-            {showSearch && (
-              <SearchInput value={searchTerm} onChange={handleSearch} />
-            )}
+            {showSearch && <SearchInput value={searchTerm} onChange={handleSearch} />}
 
-            {!showAllFilter && (
-              <Filter
-                onClick={() =>
-                  setShowAllFilter((showAllFilter) => !showAllFilter)
-                }
-              />
-            )}
+            {!showAllFilter && <Filter onClick={() => setShowAllFilter((showAllFilter) => !showAllFilter)} />}
           </div>
         </div>
         <Table
-          dataSource={data}
+          dataSource={testimonialsData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 
-      <Modal
-        open={showAddModal}
-        onCancel={() => setShowAddModal(false)}
-        centered
-        title="Testimonial Setup "
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
-      >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddTestimonial />
-          </Form>
-        </Formik>
+      <Modal open={showAddModal} onCancel={() => setShowAddModal(false)} centered title="Testimonial Setup " footer={null}>
+        <AddTestimonial handleClose={() => setShowAddModal(false)} />
       </Modal>
 
-      <Modal
-        open={openEdit}
-        onCancel={() => setOpenEdit(false)}
-        centered
-        title="Testimonial Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpenEdit(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Update" />
-          </div>
-        )}
-      >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddTestimonial />
-          </Form>
-        </Formik>
+      {testimonial?.id && openEdit && (
+        <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Testimonial Setup" footer={null}>
+        <EditTestimonial handleClose={() => setOpenEdit(false)} testimonial={testimonial} />
       </Modal>
+      )}
+
+      {testimonial?.id && openDelete && (
+        <Modal
+          open={openDelete}
+          onCancel={() => setOpenDelete(false)}
+          centered
+          title="Delete Testimonial Setup"
+          footer={null}
+        >
+          <DeleteModalContent
+            isLoading={deleteTestimonialMutation?.isPending}
+            // data={Data}
+            handleCloseModal={() => setOpenDelete(false)}
+            handleSubmit={DeleteTestimonialHandler}
+            title={"this item"}
+            isActive={false}
+            // btnText={"Disable"}
+          />
+        </Modal>
+      )}
     </main>
   );
 };

@@ -276,3 +276,17 @@ interface CommonPayload {
 interface ScholarshipResponse extends Response {
   data: CommonPayload[];
 }
+
+interface Testimonial {
+  id: number
+  readMoreId: number
+  image: any
+  imageUrl: string
+  description: string
+  activeStatus: boolean
+  isDeleted: boolean
+}
+
+interface TestimonialResponse extends Response {
+  data: Testimonial[];
+}

@@ -339,4 +339,19 @@ export const deleteScholarship = async(id:number) => {
   return (await api.delete(`/ReadMore/DeleteScholarshipById?Id=${id}`))?.data as Response;
 }
 
+export const createOrUpdateTestimonial = async (payload: Partial<Testimonial>) => {
+  return (
+    await api.post("/ReadMore/createUpdateTestimonial", payload, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+  )?.data as Response;
+};
+export const getAllTestimonials = async() => {
+  return(await api.get(`/ReadMore/GetAllTestimonials`))?.data as TestimonialResponse
+}
+
+export const deleteTestimonial= async(id:number) => {
+  return (await api.delete(`/ReadMore/DeleteTestimonialById?Id=${id}`))?.data as Response;
+}
+
 

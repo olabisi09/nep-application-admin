@@ -96,9 +96,9 @@ const AdmissionRequirement = () => {
       },
     },
     {
-      key: "readMoreId",
+      key: "programName",
       title: "Program Name",
-      dataIndex: "readMoreId",
+      dataIndex: "programName",
     },
     {
       key: "status",
