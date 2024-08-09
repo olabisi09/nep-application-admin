@@ -44,6 +44,7 @@ export const routes = {
       socialMedia: "/social-media",
       form: "/form-setup",
       studentLife: "/student-life",
+      overview: "/student-life/:id/overview",
     },
     userMgt: {
       addUsers: "/admin-users",
@@ -91,7 +92,8 @@ export const breadcrumbNames = [
       },
       {
         path: "/student-life",
-        title: "Student Life"
+        title: "Student Life",
+        //children: [{title: "Overview", path: "/student-life/overview"}]
       },
       {
         path: "/form-setup",

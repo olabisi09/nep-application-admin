@@ -15,7 +15,17 @@ import { useQuery } from "@tanstack/react-query";
 import { getStudentLife } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import { CampusExperience, CreateStudentLife, EditStudentLife, FitnessAthletics, Overview, SchoolSummary, StudentActivities, SupportGuidance } from "./setup";
+import {
+  CampusExperience,
+  CreateStudentLife,
+  EditStudentLife,
+  FitnessAthletics,
+  Overview,
+  SchoolSummary,
+  StudentActivities,
+  SupportGuidance,
+} from "./setup";
+import { useNavigate } from "react-router-dom";
 
 const forms = [
   "Create",
@@ -29,6 +39,7 @@ const forms = [
 ] as const;
 
 const StudentLife = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [item, setItem] = useState<Setup>({} as Setup);
   const [currentForm, setCurrentForm] = useState<(typeof forms)[number] | "">(
@@ -106,7 +117,7 @@ const StudentLife = () => {
           {
             key: "2",
             label: "Overview",
-            onClick: () => onFormClick("Overview"),
+            onClick: () => navigate(`/student-life/${record.id}/overview`),
           },
           {
             key: "3",

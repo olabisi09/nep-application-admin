@@ -273,6 +273,13 @@ export const createOrUpdateSupportGuidance = async (payload: Partial<Setup>) => 
 export const createOrUpdateStudentActivity = async (payload: Partial<Setup>) => {
   return (await api.post('/StudentLife/studentlife/CreateUpdateStudentActivity', payload))?.data as Response;
 }
+export const getOverview = async () => {
+  return (await api.get('/StudentLife/studentlife/GetAllOverview'))?.data as OverviewResponse;
+}
+
+export const getOverviewByStudentLifeId = async (id: string | number) => {
+  return (await api.get(`/StudentLife/studentlife/GetOverviewByStudentLifeId?Id=${id}`))?.data as OverviewResponse;
+}
 
 export const createOrUpdateOverview= async (payload: Partial<Setup>) => {
   return (await api.post('/StudentLife/studentlife/createUpdateOverView', payload))?.data as Response;
@@ -355,3 +362,6 @@ export const deleteTestimonial= async(id:number) => {
 }
 
 
+export const deleteOverview = async (id: number) => {
+  return (await api.delete(`/StudentLife/studentlife/DeleteOverview?Id=${id}`))?.data as Response;
+}
