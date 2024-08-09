@@ -184,7 +184,7 @@ interface State {
   id: number;
   stateName: string;
   activeStatus?: boolean;
-  countryName: string;
+  countryId: string;
 }
 interface LGAResponse extends Response {
   data: LGA[];
@@ -192,10 +192,10 @@ interface LGAResponse extends Response {
 
 interface LGA {
   id: number;
-  stateId: string;
+  stateId: number;
   lgaName: string;
   activeStatus?: boolean;
-  countryId: string;
+  countryId: number;
 }
 interface QualificationTypeResponse extends Response {
   data: QualificationType[];

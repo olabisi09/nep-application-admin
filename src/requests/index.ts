@@ -131,6 +131,11 @@ export const getState = async () => {
     ?.data as StateResponse;
 };
 
+export const getStateByCountryId = async (id: number) => {
+  return (await api.get(`/Utilities/Utilities/GetStateByCountryId?id=${id}`))
+    ?.data as StateResponse;
+};
+
 export const createOrUpdateState = async (payload: Partial<State>) => {
   return (await api.post("/Utilities/Utilities/CreateUpdateState", payload))
     ?.data as Response;

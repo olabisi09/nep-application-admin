@@ -1,6 +1,5 @@
-import { Field, FieldProps } from "formik";
+import { Field, FieldProps, useFormikContext } from "formik";
 import React, { ChangeEventHandler } from "react";
-
 import styles from "./select.module.scss";
 
 interface ComponentProps {
@@ -11,7 +10,7 @@ interface ComponentProps {
   bg?: string;
   value?: string;
   asterisk?: boolean;
-  onChange?: ChangeEventHandler<HTMLSelectElement> | undefined;
+  onChange?: ChangeEventHandler<HTMLSelectElement>; // Ensure onChange is defined
   options?: React.ReactNode;
   placeholder?: string;
 }
@@ -24,7 +23,18 @@ const Select: React.FC<ComponentProps> = (props) => {
     options,
     placeholder,
     asterisk = false,
+    onChange, // Destructure onChange
   } = props;
+
+  const { setFieldValue } = useFormikContext();
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value;
+    setFieldValue(name, value);
+    if (onChange) {
+      onChange(event);
+    }
+  };
 
   return (
     <Field name={name}>
@@ -41,7 +51,12 @@ const Select: React.FC<ComponentProps> = (props) => {
             )}
           </label>
 
-          <select {...field} disabled={disabled} className={styles.select}>
+          <select
+            {...field}
+            disabled={disabled}
+            className={styles.select}
+            onChange={handleChange} // Apply handleChange to select
+          >
             {!meta.value && <option value="">{placeholder}</option>}
             {options}
           </select>

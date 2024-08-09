@@ -25,7 +25,7 @@ const AddGender = ({ handleClose, data }: Props) => {
     const payload: Partial<Gender> = {
       id: data?.id || 0,
       genderName: values.genderName,
-      activeStatus: values?.status === "true",  // Convert "true" to true, "false" to false
+      activeStatus: values?.status === "true", // Convert "true" to true, "false" to false
     };
 
     try {
@@ -51,16 +51,15 @@ const AddGender = ({ handleClose, data }: Props) => {
 
   const validationSchema = Yup.object().shape({
     genderName: Yup.string().required("Gender is required"),
-    status:Yup.string().required("Active Status is required"),
+    status: Yup.string().required("Active Status is required"),
   });
-
-
 
   return (
     <Formik
       initialValues={{
         genderName: data?.genderName || "",
-        status: data?.activeStatus !== undefined ? String(data?.activeStatus) : "",  // Initialize with string
+        status:
+          data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
       }}
       onSubmit={(values) => {
         CreateGenderHandler(values);
@@ -72,25 +71,33 @@ const AddGender = ({ handleClose, data }: Props) => {
         <Form className="fields">
           <Input name="genderName" placeholder="Input Gender" label="Gender" />
           <Select
-        name="status"
-        placeholder="Select Status"
-        label="Status"
-        options={
-          <>
-          {StatusOptions.map((option: any) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-          </>
-        }
-      />
+            name="status"
+            placeholder="Select Status"
+            label="Status"
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
+          />
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button
               onClick={handleSubmit as any}
               disabled={CreateGenderMutation?.isPending}
-              text={CreateGenderMutation?.isPending ? "Creating..." : "Create"}
+              text={
+                data
+                  ? CreateGenderMutation?.isPending
+                    ? "Updating"
+                    : "Update"
+                  : CreateGenderMutation?.isPending
+                  ? "Creating"
+                  : "Create"
+              }
             />
           </div>
         </Form>

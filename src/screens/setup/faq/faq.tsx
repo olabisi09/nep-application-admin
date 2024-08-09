@@ -21,6 +21,7 @@ import DeleteModalContent from "../../deleteModal/deleteModal";
 const Faq = () => {
   const [open, setOpen] = useState(false);
   const [openQAndA, setOpenQAndA] = useState(false);
+  const [openEditQAndA, setOpenEditQAndA] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
@@ -64,12 +65,29 @@ const Faq = () => {
     {
       key: "2",
       label: (
+        <button style={{ border: "0rem" }} onClick={() => setOpenQAndA(true)}>
+          Add Questions & Answers
+        </button>
+      ),
+    },
+    {
+      key: "3",
+      label: (
+        <button style={{ border: "0rem" }} onClick={() => setOpenEditQAndA(true)}>
+          Edit Questions & Answers
+        </button>
+      ),
+    },
+    {
+      key: "3",
+      label: (
         <button style={{ border: "0rem" }} onClick={() => handleDelete(record)}>
           Delete
         </button>
       ),
     },
   ];
+
   const columns = [
     {
       key: "id",
@@ -160,13 +178,13 @@ const Faq = () => {
         <SetupFaq handleClose={() => setOpen(false)} />
       </Modal>
       <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
+        open={openEdit}
+        onCancel={() => setOpenEdit(false)}
         centered
         title="Edit FAQ Setup"
         footer={null}
       >
-        <SetupFaq handleClose={() => setOpen(false)}  data={indexData}   />
+        <SetupFaq handleClose={() => setOpenEdit(false)}  data={indexData}   />
       </Modal>
       <Modal
         open={openQAndA}
@@ -178,10 +196,19 @@ const Faq = () => {
         <QAndA handleClose={() => setOpenQAndA(false)} />
       </Modal>
       <Modal
+        open={openEditQAndA}
+        onCancel={() => setOpenEditQAndA(false)}
+        centered
+        title="Edit FAQ Items Setup"
+        footer={null}
+      >
+        <QAndA handleClose={() => setOpenEditQAndA(false)} />
+      </Modal>
+      <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete Country Setup"
+        title="Delete FAQ Setup"
         footer={null}
       >
         <DeleteModalContent

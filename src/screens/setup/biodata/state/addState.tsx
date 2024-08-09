@@ -33,7 +33,7 @@ const AddState = ({ handleClose, data }: Props) => {
       id: data?.id || 0,
       stateName: values.stateName,
       activeStatus: values?.status === "true",
-      countryName:values?.countryName,
+      countryId:values?.countryId,
     };
 
     try {
@@ -80,7 +80,7 @@ const AddState = ({ handleClose, data }: Props) => {
     ));
 
   const validationSchema = Yup.object().shape({
-    countryName: Yup.string().required("State is required"),
+    countryId: Yup.string().required("country is required"),
     stateName: Yup.string().required("State is required"),
     status: Yup.string().required("Active Status is required"),
   });
@@ -88,7 +88,7 @@ const AddState = ({ handleClose, data }: Props) => {
   return (
     <Formik
       initialValues={{
-        countryName:data?.countryName || "",
+        countryId:data?.countryId || "",
         stateName: data?.stateName || "",
         status:
           data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
@@ -103,15 +103,15 @@ const AddState = ({ handleClose, data }: Props) => {
         return (
           <Form className="fields">
             <Select
-              name="countryName"
+              name="countryId"
               placeholder="Input Country Name"
               label="Country Name"
               options={CountryOptions}
             />
             <Input
               name="stateName"
-              placeholder="Input State Name"
-              label="State Name"
+              placeholder="Input State/Province/District Name"
+              label="State/Province/District Name"
             />
             <Select
               name="status"
@@ -132,7 +132,15 @@ const AddState = ({ handleClose, data }: Props) => {
               <Button
                 onClick={handleSubmit as any}
                 disabled={CreateStateMutation?.isPending}
-                text={CreateStateMutation?.isPending ? "Creating..." : "Create"}
+                text={
+                  data
+                  ? CreateStateMutation?.isPending
+                    ? "Updating"
+                    : "Update"
+                  : CreateStateMutation?.isPending
+                  ? "Creating"
+                  : "Create"
+                }
               />
             </div>
           </Form>
