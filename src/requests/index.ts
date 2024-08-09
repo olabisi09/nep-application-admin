@@ -365,9 +365,29 @@ export const createOrUpdateAdmissionRequirement = async(payload: Partial<Admissi
 }
 
 
+export const deleteAdmissionRequirement = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteAdmissionRequirementById?Id=${id}`))
+    ?.data as Response;
+};
+
+
+
 export const getAllPrograms = async() => {
   return (await api.get('/Academics/GetAllProgramAsync'))?.data as ProgramResponse;
 }
+
+
+
+
+  
+export const getAllAccreditation = async () => {
+  return (await api.get("/ReadMore/GetAllAccreditations"))
+    ?.data as AccreditationResponse;
+};
+
+export const getAccreditationById = async (id: number) => {
+  return (await api.get(`/ReadMore/GetAccreditationById?Id=${id}`))?.data as Accreditation;
+};
 
 
 
