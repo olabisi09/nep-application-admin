@@ -516,3 +516,9 @@ export const getSupportAndGuidanceByStudentLifeId = async (id: string | number) 
     )
   )?.data as SupportAndGuidanceResponse;
 };
+
+export const createOrUpdateStudentActivities = async (payload: FormData) => {
+  return (
+    await api.post("/StudentLife/studentlife/CreateUpdateStudentActivityItem", payload)
+  )?.data as Response;
+};

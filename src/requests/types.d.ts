@@ -91,6 +91,7 @@ interface Setup {
   isDeleted: boolean;
   readMoreId: number;
   studentLifeId: string;
+  image: any;
 }
 
 interface GeneralTemplate {

@@ -70,6 +70,7 @@ const DashboardLayout = () => {
       >
         <Sidebar />
       </Drawer>
+      
       <section className={styles.mainContent}>
         <Header handleOpenSidebar={handleOpen} />
         <div className={styles.children}>

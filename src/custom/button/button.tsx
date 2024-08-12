@@ -26,6 +26,7 @@ const Button: React.FC<ButtonProps> = ({
   const buttonStyle = {
     backgroundColor: bgColor || "var(--color-primary)", // Use the passed bgColor or fallback to default
   };
+  
   const noPaddingStyle = {
     paddingInline: 0,
     paddingBlock: 0,

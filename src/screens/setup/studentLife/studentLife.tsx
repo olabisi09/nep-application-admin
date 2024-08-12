@@ -174,7 +174,7 @@ const StudentLife = () => {
         />
       </section>
       <br />
-      <Card bordered={false} style={{ maxWidth: "720px" }}>
+      <Card bordered={false} style={{ minWidth: "720px" }}>
         <Table
           dataSource={studentLife}
           columns={columns}
