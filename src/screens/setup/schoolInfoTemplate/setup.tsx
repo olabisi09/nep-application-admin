@@ -3,8 +3,13 @@ import Upload from "../../../custom/upload/upload";
 import { ReactComponent as Image } from "../../../assets/image.svg";
 import Button from "../../../custom/button/button";
 import { Form, Formik, FormikValues } from "formik";
-import { useMutation } from "@tanstack/react-query";
-import { createOrUpdateTemplate } from "../../../requests";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createUpdateGeneralTemplate,
+  getGeneralTemplateById,
+  StatusOptions,
+} from "../../../requests";
+import Select from "../../../custom/select/select";
 import { App } from "antd";
 import { validateTemplate } from "../../../utils/validations";
 
@@ -14,60 +19,68 @@ interface Init {
   homePage: any;
   aboutUs: any;
   loginBackground: any;
-  phoneNumber: any;
   email: string;
   address: string;
+  logoImage: any;
+  phoneNumber: string;
+  status: any;
 }
 
-export const CreateTemplate = ({
+const fileValues: { label: string; name: keyof Init }[] = [
+  {
+    label: "Logo Image",
+    name: "logoImage",
+  },
+  {
+    label: "Home Page Image",
+    name: "homePage",
+  },
+  {
+    label: "About Us Image",
+    name: "aboutUs",
+  },
+  {
+    label: "Login Background Image",
+    name: "loginBackground",
+  },
+];
+
+const SetupSchoolInfoTemplate = ({
   handleClose,
 }: {
   handleClose: () => void;
 }) => {
+  const queryClient = useQueryClient();
   const { notification } = App.useApp();
-  const createTemplateMutation = useMutation({
-    mutationFn: createOrUpdateTemplate,
-  });
-  const fileValues: { label: string; name: keyof Init }[] = [
-    {
-      label: "Logo",
-      name: "logoUrl",
-    },
-    {
-      label: "Home Page Image",
-      name: "homePage",
-    },
-    {
-      label: "About Us Image",
-      name: "aboutUs",
-    },
-    {
-      label: "Login Background Image",
-      name: "loginBackground",
-    },
-  ];
 
-  const handleAddTemplate = async (
+  const CreateUpdateGeneralTemplateMutation = useMutation({
+    mutationFn: createUpdateGeneralTemplate,
+    mutationKey: ["create-update-general-template"],
+  });
+
+  const CreateUpdateGeneralTemplateHandler = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload = {
-      SchoolName: values.schoolName,
-      Logo: values.logoUrl,
-      HomePageImage: values.homePage,
-      AboutUsImage: values.aboutUs,
-      LoginBackgroundImage: values.loginBackground,
-      SchoolEmailAddress: values.email,
-      SchoolPhoneNumber: values.phoneNumber,
-      SchoolAddress: values.address,
-    };
     try {
-      await createTemplateMutation.mutateAsync(payload, {
+      const formData = new FormData();
+      formData.append("SchoolName", values?.schoolName?.trim());
+      formData.append("SchoolAddress", values?.address?.trim());
+      formData.append("SchoolPhoneNumber", values?.phoneNumber?.trim());
+      formData.append("SchoolEmailAddress", values?.email?.trim());
+      formData.append("AboutUsImage", values?.aboutUs);
+      formData.append("LoginBackgroundImage", values?.loginBackground);
+      formData.append("Logo", values?.logoImage);
+      formData.append("HomePageImage", values?.homePage);
+      formData.append("ActiveStatus", values?.status);
+
+      await CreateUpdateGeneralTemplateMutation.mutateAsync(formData, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
+          queryClient.refetchQueries({ queryKey: ["get-general-template"] });
           resetForm();
           handleClose();
         },
@@ -92,10 +105,12 @@ export const CreateTemplate = ({
           phoneNumber: "",
           email: "",
           address: "",
+          status: "",
         } as Init
       }
       onSubmit={(values, { resetForm }) => {
-        handleAddTemplate(values, resetForm);
+        CreateUpdateGeneralTemplateHandler(values, resetForm);
+        console.log(values);
       }}
       validationSchema={validateTemplate}
     >
@@ -106,6 +121,7 @@ export const CreateTemplate = ({
             label="School Name"
             placeholder="Input title"
           />
+          <Input name="logoUrl" label="Logo Url" placeholder="Input url" />
           {fileValues.map((value) => (
             <>
               {!!values[value.name] ? (
@@ -143,61 +159,81 @@ export const CreateTemplate = ({
             label="Contact Address"
             placeholder="Input Address"
           />
+          <Select
+            name="status"
+            placeholder="Select Status"
+            label="Status"
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
+          />
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
-            <Button text="Create" />
+            <Button
+              text="Create"
+              disabled={CreateUpdateGeneralTemplateMutation?.isPending}
+              isLoading={CreateUpdateGeneralTemplateMutation.isPending}
+            />
           </div>
         </Form>
       )}
     </Formik>
   );
 };
-export const EditTemplate = ({ handleClose }: { handleClose: () => void }) => {
-  const { notification } = App.useApp();
-  const editTemplateMutation = useMutation({
-    mutationFn: createOrUpdateTemplate,
-  });
-  const fileValues: { label: string; name: keyof Init }[] = [
-    {
-      label: "Logo",
-      name: "logoUrl",
-    },
-    {
-      label: "Home Page Image",
-      name: "homePage",
-    },
-    {
-      label: "About Us Image",
-      name: "aboutUs",
-    },
-    {
-      label: "Login Background Image",
-      name: "loginBackground",
-    },
-  ];
 
-  const handleEditTemplate = async (
+interface EditTemplateProps {
+  handleClose: () => void;
+  data: GeneralTemplate;
+}
+
+const EditTemplate: React.FC<EditTemplateProps> = ({ handleClose, data }) => {
+  const queryClient = useQueryClient();
+  const { notification } = App.useApp();
+
+  const CreateUpdateGeneralTemplateMutation = useMutation({
+    mutationFn: createUpdateGeneralTemplate,
+    mutationKey: ["create-update-general-template"],
+  });
+
+  const CreateUpdateGeneralTemplateHandler = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload = {
-      Id: 3,
-      SchoolName: values.schoolName,
-      Logo: values.logoUrl,
-      HomePageImage: values.homePage,
-      AboutUsImage: values.aboutUs,
-      LoginBackgroundImage: values.loginBackground,
-      SchoolEmailAddress: values.email,
-      SchoolPhoneNumber: values.phoneNumber,
-      SchoolAddress: values.address,
-    };
     try {
-      await editTemplateMutation.mutateAsync(payload, {
+      const formData = new FormData();
+      formData.append("Id", data?.id?.toString());
+      formData.append("SchoolName", values?.schoolName?.trim());
+      formData.append("SchoolAddress", values?.address?.trim());
+      formData.append("SchoolPhoneNumber", values?.phoneNumber?.trim());
+      formData.append("SchoolEmailAddress", values?.email?.trim());
+      formData.append(
+        "AboutUsImage",
+        values?.aboutUs === "" ? data?.aboutUsImageUrl : values?.aboutUs
+      );
+      formData.append("LoginBackgroundImage", values?.loginBackground);
+      formData.append(
+        "Logo",
+        values?.logoImage === "" ? data?.logoUrl : values?.logo
+      );
+      formData.append(
+        "HomePageImage",
+        values?.homePage === "" ? data?.homePageImageUrl : values?.homePage
+      );
+      formData.append("ActiveStatus", values?.status);
+
+      await CreateUpdateGeneralTemplateMutation.mutateAsync(formData, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
+          queryClient.refetchQueries({ queryKey: ["get-general-template"] });
           resetForm();
           handleClose();
         },
@@ -214,18 +250,19 @@ export const EditTemplate = ({ handleClose }: { handleClose: () => void }) => {
     <Formik
       initialValues={
         {
-          schoolName: "",
+          schoolName: data?.schoolName,
           logoUrl: "",
           homePage: "",
           aboutUs: "",
           loginBackground: "",
-          phoneNumber: "",
-          email: "",
-          address: "",
+          email: data?.schoolEmailAddress,
+          address: data?.schoolAddress,
+          status: data?.activeStatus,
+          phoneNumber: data?.schoolPhoneNumber,
         } as Init
       }
       onSubmit={(values, { resetForm }) => {
-        handleEditTemplate(values, resetForm);
+        CreateUpdateGeneralTemplateHandler(values, resetForm);
       }}
     >
       {({ values, setFieldValue }) => (
@@ -235,6 +272,7 @@ export const EditTemplate = ({ handleClose }: { handleClose: () => void }) => {
             label="School Name"
             placeholder="Input title"
           />
+          <Input name="logoUrl" label="Logo Url" placeholder="Input url" />
           {fileValues.map((value) => (
             <>
               {!!values[value.name] ? (
@@ -272,12 +310,32 @@ export const EditTemplate = ({ handleClose }: { handleClose: () => void }) => {
             label="Contact Address"
             placeholder="Input Address"
           />
+          <Select
+            name="status"
+            placeholder="Select Status"
+            label="Status"
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
+          />
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
-            <Button text="Create" />
+            <Button
+              text="Update"
+              disabled={CreateUpdateGeneralTemplateMutation?.isPending}
+              isLoading={CreateUpdateGeneralTemplateMutation.isPending}
+            />
           </div>
         </Form>
       )}
     </Formik>
   );
 };
+
+export { SetupSchoolInfoTemplate, EditTemplate };

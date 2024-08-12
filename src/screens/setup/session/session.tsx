@@ -1,9 +1,7 @@
-import PageLayout from "../../../layouts/pageLayout/pageLayout";
-import { ReactComponent as GraterThan } from "../../../assets/chevron_forward.svg";
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin } from "antd";
 import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
@@ -11,6 +9,8 @@ import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import AddFaculty from "./AddSession";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { useQuery } from "@tanstack/react-query";
+import { getAllAcademicSession } from "../../../requests";
 
 const Session = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -19,17 +19,15 @@ const Session = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
+  const {data, isLoading, isError, error } = useQuery({
+    queryKey: ["getAll-sessions"],
+    queryFn: getAllAcademicSession
+  })
+
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  const data = Array.from({ length: 5 }, () => ({
-    id: 1234,
-    firstName: "Timi",
-    lastName: "John",
-    email: "john@gmail.com",
-    role: "Admin User",
-    status: "Active",
-  }));
+
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -43,29 +41,15 @@ const Session = () => {
       dataIndex: "id",
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
+      key: "name",
+      title: "Session",
+      dataIndex: "name",
     },
     {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
-    },
-    {
-      key: "email",
-      title: "Email Address",
-      dataIndex: "email",
-    },
-    {
-      key: "role",
-      title: "Role",
-      dataIndex: "role",
-    },
-    {
-      key: "status",
+      key: "activeStatus",
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "activeStatus",
+      render: (activeStatus: boolean) => (activeStatus ? "Active" : "Not Active"),
     },
     {
       key: "action",
@@ -78,21 +62,26 @@ const Session = () => {
     },
   ];
 
+  if (isLoading) {
+    return <Spin/>;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
+
+  const sessions = data?.data as Session[];
+
   return (
     <main>
-      <PageLayout
-        paragraph="Session Setup"
-        firstText="Setup Programs"
-        secondText="Session Setup"
-        iconBefore={<GraterThan />}
-        headerActions={
-          <Button
-            onClick={() => setShowAddModal(true)}
-            iconBefore={<Add />}
-            text="Setup"
-          />
-        }
-      />
+  
+         <section className="space-between">
+        <h3>Session Setup</h3>
+        <Button
+          onClick={() => setShowAddModal(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
+      </section>
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -118,7 +107,7 @@ const Session = () => {
           </div>
         </div>
         <Table
-          dataSource={data}
+          dataSource={sessions}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}

@@ -1,38 +1,70 @@
-import { Card, Dropdown, Empty, MenuProps, Modal, Spin } from "antd";
+import { App, Card, Image, Modal, Spin } from "antd";
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import { CreateTemplate, EditTemplate } from "./setup";
-import { useQuery } from "@tanstack/react-query";
-import { getTemplate } from "../../../requests";
+import { EditTemplate, SetupSchoolInfoTemplate } from "./setup";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteGeneralTemplate, getGeneralTemplates } from "../../../requests";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const SchoolInfoTemplate = () => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [id, setId] = useState(0);
+  const [openDelete, setOpenDelete] = useState(false);
+  const { notification } = App.useApp();
+  const queryClient = useQueryClient();
+
+  const handleOpenEditModal = (template: GeneralTemplate) => {
+    setId(template?.id);
+    setOpenEdit(true);
+  };
+
+  const handleDelete = (data: GeneralTemplate) => {
+    setId(data?.id);
+    setOpenDelete(true);
+  };
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-school-info-template"],
-    queryFn: getTemplate,
+    queryKey: ["get-general-template"],
+    queryFn: getGeneralTemplates,
   });
 
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: "Edit",
-      onClick: () => setOpenEdit(true),
-    },
-  ];
+  const DeleteTemplateMutation = useMutation({
+    mutationFn: () => deleteGeneralTemplate(id),
+    mutationKey: ["delete-template"],
+  });
 
-  const template = data?.data?.[0] as Template;
+  const DeleteTemplateHandler = async () => {
+    try {
+      await DeleteTemplateMutation.mutateAsync(undefined, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          queryClient.refetchQueries({
+            queryKey: ["get-general-template"],
+          });
+          setOpenDelete(false);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
+  const generalTemplateData = data?.data;
   if (isLoading) {
     return <Spin />;
   }
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
-
   return (
     <div>
       <section className="space-between">
@@ -44,95 +76,122 @@ const SchoolInfoTemplate = () => {
         />
       </section>
       <br />
-      {data?.data && data.data?.length > 0 ? (
-        <>
-          <Card bordered={false} style={{ maxWidth: "34.286rem" }}>
-            <Dropdown menu={{ items }} trigger={["click"]}>
-              <Button
-                removePadding
-                bgColor="transparent"
-                variant="text"
-                iconBefore={<Ellipsis />}
-                className="align-end"
-              />
-            </Dropdown>
-            <div className="fields">
-              <div className="space-between-grid">
-                <b>ID</b>
-                <p>{template.id}</p>
+
+      <div className="cards">
+        {data &&
+          generalTemplateData &&
+          generalTemplateData.map((template) => (
+            <Card
+              bordered={false}
+              style={{ maxWidth: "34.286rem" }}
+              key={template?.id}
+            >
+              <div className="fields">
+                <div className="space-between-grid">
+                  <b>School Name</b>
+                  <p>{template?.schoolName}</p>
+                </div>
+                {/* <div className="space-between-grid">
+              <b>Logo Url</b>
+              <p>www.kuw.edu.ng</p>
+            </div> */}
+                <div className="space-between-grid">
+                  <b>Home Page</b>
+                  <Image
+                    src={template?.homePageImageUrl}
+                    alt=""
+                    className="table-img"
+                  />
+                </div>
+                <div className="space-between-grid">
+                  <b>About Us</b>
+                  <Image
+                    src={template?.aboutUsImageUrl}
+                    alt=""
+                    className="table-img"
+                  />
+                </div>
+                <div className="space-between-grid">
+                  <b>Login</b>
+                  <Image
+                    src={template?.loginBackgroundImageUrl}
+                    alt=""
+                    className="table-img"
+                  />
+                </div>
+                {/* <div className="space-between-grid">
+              <b>Contact Us</b>
+              <Image src={pic} alt="" />
+            </div> */}
+                <div className="space-between-grid">
+                  <b>Email Address</b>
+                  <p>{template?.schoolEmailAddress}</p>
+                </div>
+                <div className="space-between-grid">
+                  <b>Phone Number</b>
+                  <p>{template?.schoolPhoneNumber}</p>
+                </div>
+                <div className="space-between-grid">
+                  <b>Address</b>
+                  <p>{template?.schoolAddress}</p>
+                </div>
+                <div className="edit-button">
+                  <Button
+                    onClick={() => handleOpenEditModal(template)}
+                    text="Edit"
+                  />
+                  <Button
+                    onClick={() => handleDelete(template)}
+                    text="Delete"
+                    bgColor="red"
+                  />
+                </div>
               </div>
-              <div className="space-between-grid">
-                <b>School Name</b>
-                <p>{template.schoolName}</p>
-              </div>
-              <div className="space-between-grid">
-                <b>Logo Url</b>
-                <p>{template.logoUrl || "N/A"}</p>
-              </div>
-              <div className="space-between-grid">
-                <b>Home Page</b>
-                <img
-                  className="table-img"
-                  src={template.homePageImageUrl}
-                  alt=""
-                />
-              </div>
-              <div className="space-between-grid">
-                <b>About Us</b>
-                <img
-                  className="table-img"
-                  src={template.aboutUsImageUrl}
-                  alt=""
-                />
-              </div>
-              <div className="space-between-grid">
-                <b>Login</b>
-                <img
-                  className="table-img"
-                  src={template.loginBackgroundImageUrl}
-                  alt=""
-                />
-              </div>
-              {/* <div className="space-between-grid">
-                <b>Contact Us</b>
-                <img className="table-img" src={pic} alt="" />
-              </div> */}
-              <div className="space-between-grid">
-                <b>Email Address</b>
-                <p>{template.schoolEmailAddress}</p>
-              </div>
-              <div className="space-between-grid">
-                <b>Phone Number</b>
-                <p>{template.schoolPhoneNumber}</p>
-              </div>
-              <div className="space-between-grid">
-                <b>Address</b>
-                <p>{template.schoolAddress}</p>
-              </div>
-            </div>
-          </Card>
-          <Modal
-            open={open}
-            onCancel={() => setOpen(false)}
-            centered
-            title="Template Setup"
-            footer={null}
-          >
-            <CreateTemplate handleClose={() => setOpen(false)} />
-          </Modal>
-          <Modal
-            open={openEdit}
-            onCancel={() => setOpenEdit(false)}
-            centered
-            title="Edit Template"
-            footer={null}
-          >
-            <EditTemplate handleClose={() => setOpenEdit(false)} />
-          </Modal>
-        </>
-      ) : (
-        <Empty />
-      )}
+
+              {id === template?.id && openEdit && (
+                <Modal
+                  open={openEdit}
+                  onCancel={() => setOpenEdit(false)}
+                  centered
+                  title="Edit Template Setup"
+                  footer={null}
+                >
+                  <EditTemplate
+                    handleClose={() => setOpenEdit(false)}
+                    data={template}
+                  />
+                </Modal>
+              )}
+
+              {id === template?.id && openDelete && (
+                <Modal
+                  open={openDelete}
+                  onCancel={() => setOpenDelete(false)}
+                  centered
+                  title=" Delete Template Setup"
+                  footer={null}
+                >
+                  <DeleteModalContent
+                    isLoading={DeleteTemplateMutation?.isPending}
+                    handleCloseModal={() => setOpenDelete(false)}
+                    handleSubmit={DeleteTemplateHandler}
+                    title={"this template"}
+                  />
+                </Modal>
+              )}
+            </Card>
+          ))}
+      </div>
+
+      <Modal
+        open={open}
+        onCancel={() => setOpen(false)}
+        centered
+        title="Template Setup"
+        footer={null}
+      >
+        <SetupSchoolInfoTemplate handleClose={() => setOpen(false)} />
+      </Modal>
     </div>
   );
 };

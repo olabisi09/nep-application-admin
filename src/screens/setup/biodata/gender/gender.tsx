@@ -1,5 +1,3 @@
-import PageLayout from "../../../../layouts/pageLayout/pageLayout";
-import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward.svg";
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
@@ -9,7 +7,8 @@ import {
   Table,
   Button as AntButton,
   MenuProps,
-  Spin,App
+  Spin,
+  App,
 } from "antd";
 import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
@@ -17,8 +16,12 @@ import { useState } from "react";
 import SearchInput from "../../../../custom/searchInput/searchInput";
 import AddGender from "./addGender";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import {   useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateGender, getGender } from "../../../../requests";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createOrUpdateGender,
+  deleteGender,
+  getGender,
+} from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const GenderSetup = () => {
@@ -50,31 +53,23 @@ const GenderSetup = () => {
     setIndexData(data);
     setOpenDelete(true);
   };
-      const DeleteGenderMutation = useMutation({
-    mutationFn: createOrUpdateGender,
+  const DeleteGenderMutation = useMutation({
+    mutationFn: deleteGender,
     mutationKey: ["delete-gender"],
   });
 
-
   const DeleteGenderHandler = async () => {
-    const payload: Partial<Gender> = {
-      id:indexData?.id,
-      genderName: indexData.genderName,
-      activeStatus:false,
-   
-    };
-
     try {
-      await DeleteGenderMutation.mutateAsync(payload, {
+      await DeleteGenderMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
-            description: 'Deleted Successfully'||data?.message,
+            description: "Deleted Successfully" || data?.message,
           });
           queryClient.refetchQueries({
             queryKey: ["get-gender"],
           });
-          setOpenDelete(false)
+          setOpenDelete(false);
         },
       });
     } catch (error: any) {
@@ -84,7 +79,6 @@ const GenderSetup = () => {
       });
     }
   };
-
 
   const items = (record: Gender): MenuProps["items"] => [
     {
@@ -117,9 +111,15 @@ const GenderSetup = () => {
       dataIndex: "genderName",
     },
     {
+      key: "activeStatus",
+      title: "Active Status",
+      dataIndex: "activeStatus",
+      render: (text: boolean) => (text ? "Active" : "Inactive"),
+    },
+    {
       key: "action",
       title: "",
-      render: ( record: Gender) => (
+      render: (record: Gender) => (
         <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
@@ -136,22 +136,16 @@ const GenderSetup = () => {
     return <div>Error: {error?.message}</div>;
   }
 
-
   return (
     <main>
-      <PageLayout
-        paragraph="Gender Setup"
-        firstText="Setup Bio-data"
-        secondText="Gender Setup"
-        iconBefore={<GraterThan />}
-        headerActions={
-          <Button
-            onClick={() => setShowAddModal(true)}
-            iconBefore={<Add />}
-            text="Setup"
-          />
-        }
-      />
+      <section className="space-between">
+        <h3>Gender Setup</h3>
+        <Button
+          onClick={() => setShowAddModal(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
+      </section>
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -209,13 +203,10 @@ const GenderSetup = () => {
         footer={null}
       >
         <DeleteModalContent
-          isLoading={false}
-          // data={Data}
+          isLoading={DeleteGenderMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={DeleteGenderHandler}
           title={indexData?.genderName}
-          isActive={ false }
-          // btnText={"Disable"}
         />
       </Modal>
     </main>

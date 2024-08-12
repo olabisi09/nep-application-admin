@@ -1,4 +1,3 @@
-import PageLayout from "../../../../layouts/pageLayout/pageLayout";
 import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward.svg";
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
@@ -20,6 +19,7 @@ import { AddMarital } from "./addMaritalStatus";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import {
   createOrUpdateMaritalStatus,
+  deleteMaritalStatus,
   getMaritalStatus,
 } from "../../../../requests";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -57,19 +57,13 @@ const MaritalSetup = ()=> {
   };
 
   const DeleteMaritalStatusMutation = useMutation({
-    mutationFn: createOrUpdateMaritalStatus,
-    mutationKey: ["create-marital-status"],
+    mutationFn: deleteMaritalStatus,
+    mutationKey: ["delete-marital-status"],
   });
 
   const DeleteMaritalStatusHandler = async () => {
-    const payload: Partial<MaritalStatus> = {
-      id: indexData?.id,
-      statusName: indexData.statusName,
-      activeStatus: false,
-    };
-
     try {
-      await DeleteMaritalStatusMutation.mutateAsync(payload, {
+      await DeleteMaritalStatusMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -93,7 +87,7 @@ const MaritalSetup = ()=> {
     {
       key: "1",
       label: (
-        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
+        <button style={{ border: "0rem" }} onClick={() => handleEdit(record)}>
           Edit
         </button>
       ),
@@ -119,6 +113,14 @@ const MaritalSetup = ()=> {
       dataIndex: "statusName",
     },
     {
+      key: "activeStatus",
+      title: "Active Status",
+      dataIndex: "activeStatus",
+      render: (text:boolean) => (text ? "Active" : "Inactive"),
+
+    },
+
+    {
       key: "action",
       title: "",
       render: ( record: MaritalStatus) => (
@@ -138,19 +140,14 @@ const MaritalSetup = ()=> {
   }
   return (
     <main>
-      <PageLayout
-        paragraph="Marital Setup"
-        firstText="Setup Bio-data"
-        secondText="Marital Setup"
-        iconBefore={<GraterThan />}
-        headerActions={
-          <Button
-            onClick={() => setShowAddModal(true)}
-            iconBefore={<Add />}
-            text="Setup"
-          />
-        }
-      />
+        <section className="space-between">
+        <h3>Marital Setup</h3>
+        <Button
+          onClick={() => setShowAddModal(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
+      </section>
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -200,7 +197,7 @@ const MaritalSetup = ()=> {
         title="Edit Marital Setup"
         footer={null}
       >
-        <AddMarital handleClose={() => setOpenEdit(false)} />
+        <AddMarital handleClose={() => setOpenEdit(false)} data={indexData}/>
       </Modal>
 
       <Modal
@@ -211,13 +208,11 @@ const MaritalSetup = ()=> {
         footer={null}
       >
         <DeleteModalContent
-          isLoading={false}
+          isLoading={DeleteMaritalStatusMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={DeleteMaritalStatusHandler}
           title={indexData?.statusName}
-          isActive={false}
-          // btnText={"Disable"}
-        />{" "}
+        />
       </Modal>
     </main>
   );

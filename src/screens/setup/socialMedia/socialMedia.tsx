@@ -7,45 +7,74 @@ import {
   Button as AntButton,
   App,
   Spin,
+  Image,
 } from "antd";
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import { CreateSocialMedia, EditSocialMedia } from "./setup";
+import{ CreateSocialMediaSetup, EditSocialMediaLink } from "./setup";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteSocialMedia, getSocialMedia } from "../../../requests";
+import { deleteSocialMediaLink, getSocialMediaLinks } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const SocialMedia = () => {
-  const { notification } = App.useApp();
+  const {notification} = App.useApp()
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [social, setSocial] = useState<SocialMedia>({} as SocialMedia);
+  const [socialMediaLink, setSocialMediaLink] = useState<SocialMediaLink>({} as SocialMediaLink);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [openDelete, setOpenDelete] = useState(false);
 
-  const deleteSocialMediaMutation = useMutation({
-    mutationFn: deleteSocialMedia,
-  });
+  const deleteSocialMediaLinkMutation = useMutation({ mutationFn: deleteSocialMediaLink });
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-about-us"],
-    queryFn: getSocialMedia,
+    queryKey: ["get-social-media-link"],
+    queryFn: getSocialMediaLinks,
   });
 
-  const columns: ColumnsType<SocialMedia> = [
+  const handlePaginationChange = (page: number, pageSize: number) => {
+    setCurrentPage(page);
+    setPageSize(pageSize);
+  };
+
+  const columns: ColumnsType<SocialMediaLink> = [
     {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
+      title: 'S/N',
+      dataIndex: 'index',
+      key: 'index',
+      render: (text: any, record: any, index: number) => (
+        <span>{((currentPage - 1) * pageSize) + index + 1}</span>
+      ),
+    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
+    {
+      key: "socialMediaName",
+      title: "Social Media Name",
+      dataIndex: "socialMediaName",
     },
     {
-      key: "name",
-      title: "Name",
-      dataIndex: "name",
+      key: "socialMediaUrl",
+      title: "Social Media Url",
+      dataIndex: "socialMediaUrl",
+      render: (_, { socialMediaUrl }) => <a href={socialMediaUrl} target="_blank" rel="noreferrer">{socialMediaUrl}</a>,
     },
     {
-      key: "url",
-      title: "URL",
-      dataIndex: "url",
+      key: "pictureUrl",
+      title: "Logo",
+      dataIndex: "socialMediaLogoUrl",
+      render: (_, { socialMediaLogoUrl }) => <img src={socialMediaLogoUrl} alt="" className="table-img"/>,
+    },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
@@ -56,32 +85,40 @@ const SocialMedia = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setSocial(record);
+              setSocialMediaLink(record);
               setOpenEdit(true);
             },
           },
           {
             key: "2",
-            label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteSocialMediaMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
-            },
+            label: (
+              <button style={{ border: "0rem" , background: "none"}} onClick={() => handleDelete(record)}>
+                Delete
+              </button>
+            ),
           },
+          // {
+          //   key: "2",
+          //   label: "Delete",
+          //   onClick: async () => {
+          //     try {
+          //       await deleteSocialMediaLinkMutation.mutateAsync(record?.id, {
+          //         onSuccess: (data) => {
+          //           notification.success({
+          //             message: "Success",
+          //             description: data?.message,
+          //           });
+          //           refetch();
+          //         },
+          //       });
+          //     } catch (error: any) {
+          //       notification.error({
+          //         message: "Error",
+          //         description: error?.response?.data?.message,
+          //       });
+          //     }
+          //   },
+          // },
         ];
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
@@ -92,15 +129,39 @@ const SocialMedia = () => {
     },
   ];
 
-  const socialMedia = data?.data as SocialMedia[];
+  const handleDelete = (data: SocialMediaLink) => {
+    setSocialMediaLink(data);
+    setOpenDelete(true);
+  };
+   
+  const DeleteSocialMediaLinkHandler = async () => {
+    try {
+      await deleteSocialMediaLinkMutation.mutateAsync(socialMediaLink?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete(false);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
+  const socialMediaLinks = data?.data as SocialMediaLink[];
 
+  
   if (isLoading) {
     return <Spin />;
   }
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
-
   return (
     <div>
       <section className="space-between">
@@ -114,21 +175,58 @@ const SocialMedia = () => {
       <br />
       <Card bordered={false}>
         <Table
-          dataSource={socialMedia}
+          dataSource={socialMediaLinks}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{ position: ["bottomCenter"] , current: currentPage, pageSize: pageSize , onChange: handlePaginationChange}}
           rowKey={(record) => record.id}
           scroll={{ x: true }}
         />
       </Card>
-      <Modal
+      {/* <Modal
         open={open}
         onCancel={() => setOpen(false)}
         centered
         title="Social Media Link Setup"
         footer={null}
       >
-        <CreateSocialMedia handleClose={() => setOpen(false)} />
+        <SocialMediaSetup handleClose={() => setOpen(false)} />
+      </Modal> */}
+
+      <Modal
+        open={open}
+        onCancel={() => setOpen(false)}
+        centered
+        title="About Us Setup"
+        footer={null}
+      >
+        <CreateSocialMediaSetup handleClose={() => setOpen(false)} />
+      </Modal>
+      <Modal
+        open={openEdit}
+        onCancel={() => setOpenEdit(false)}
+        centered
+        title="Edit About Us Setup"
+        footer={null}
+      >
+        <EditSocialMediaLink socialMediaLink={socialMediaLink} handleClose={() => setOpenEdit(false)} />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Social Media Setup"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={false}
+          // data={Data}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={DeleteSocialMediaLinkHandler}
+          title={socialMediaLink?.socialMediaName}
+          isActive={ false }
+          // btnText={"Disable"}
+        />
       </Modal>
     </div>
   );

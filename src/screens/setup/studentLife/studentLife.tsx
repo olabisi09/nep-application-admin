@@ -19,9 +19,11 @@ import {
   CampusExperience,
   CreateStudentLife,
   EditStudentLife,
+  FitnessAthletics,
   Overview,
   SchoolSummary,
   StudentActivities,
+  SupportGuidance,
 } from "./setup";
 import { useNavigate } from "react-router-dom";
 
@@ -69,9 +71,13 @@ const StudentLife = () => {
       case "Campus Experience":
         return <CampusExperience handleClose={() => setOpen(false)} />;
       case "Fitness & Athletics":
-        return <CreateStudentLife handleClose={() => setOpen(false)} />;
+        return (
+          <FitnessAthletics item={item} handleClose={() => setOpen(false)} />
+        );
       case "Support & Guidance":
-        return <CreateStudentLife handleClose={() => setOpen(false)} />;
+        return (
+          <SupportGuidance item={item} handleClose={() => setOpen(false)} />
+        );
       case "Student Activities":
         return <StudentActivities handleClose={() => setOpen(false)} />;
       default:
