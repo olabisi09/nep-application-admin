@@ -96,22 +96,42 @@ export const createOrUpdateSchoolSummary = async (payload: Partial<Setup>) => {
   return (await api.post('/StudentLife/studentlife/CreateUpdateSchoolSummary', payload))?.data as Response;
 }
 
-export const createOrUpdateCampusExperience = async (payload: Partial<Setup>) => {
+export const getCampusExperienceByStudentLifeId = async (studentLifeId: string) => {
+  return (await api.get(`/StudentLife/studentlife/GetCampusExperienceByStudentLifeId?Id=${studentLifeId}`))?.data as GetByStudentLifeResponse;
+}
+
+export const createOrUpdateCampusExperience = async (payload: Partial<ItemByStudentLifePayload>) => {
   return (await api.post('/StudentLife/studentlife/CreateUpdateCampusExperience', payload))?.data as Response;
 }
 
+export const deleteCampusExperience = async (id: number) => {
+  return (await api.delete(`/StudentLife/studentlife/DeleteCampusExperience?Id=${id}`))?.data as Response;
+}
+
 export const getOverview = async () => {
-  return (await api.get('/StudentLife/studentlife/GetAllOverview'))?.data as OverviewResponse;
+  return (await api.get('/StudentLife/studentlife/GetAllOverview'))?.data as GetByStudentLifeResponse;
 }
 
 export const getOverviewByStudentLifeId = async (id: string | number) => {
-  return (await api.get(`/StudentLife/studentlife/GetOverviewByStudentLifeId?Id=${id}`))?.data as OverviewResponse;
+  return (await api.get(`/StudentLife/studentlife/GetOverviewByStudentLifeId?Id=${id}`))?.data as GetByStudentLifeResponse;
 }
 
-export const createOrUpdateOverview= async (payload: Partial<Setup>) => {
-  return (await api.post('/StudentLife/studentlife/createUpdateOverView', payload))?.data as Response;
+export const createOrUpdateOverview= async (payload: Partial<ItemByStudentLifePayload>) => {
+  return (await api.post('/StudentLife/studentlife/createUpdateOverView', payload, { headers: { 'Content-Type': 'multipart/form-data' } }))?.data as Response;
 }
 
 export const deleteOverview = async (id: number) => {
   return (await api.delete(`/StudentLife/studentlife/DeleteOverview?Id=${id}`))?.data as Response;
+}
+
+export const getTemplate = async () => {
+  return (await api.get(`/GeneralTemplate/GetAllTemplate`))?.data as GetTemplateResponse;
+}
+
+export const createOrUpdateTemplate = async (payload: Partial<TemplatePayload>) => {
+  return (await api.post(`/GeneralTemplate/createUpdateTemplate`, payload, { headers: { 'Content-Type': 'multipart/form-data' } }))?.data as Response
+}
+
+export const deleteTemplate = async (id: number | string) => {
+  return (await api.delete(`/GeneralTemplate/DeleteTemplateById?Id=${id}`))?.data as Response;
 }

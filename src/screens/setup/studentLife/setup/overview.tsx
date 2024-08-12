@@ -23,11 +23,13 @@ const Overview = ({ handleClose }: { handleClose: () => void }) => {
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: Partial<Setup> = {
-      title: values.title,
-      figure: values.figure,
-      activeStatus: values.status === "Active",
-      isDeleted: false,
+    const payload = {
+      Title: values.title,
+      Description: values.description,
+      StudentLifeId: 3,
+      Image: values.image,
+      ActiveStatus: values.status === "Active",
+      IsDeleted: false,
     };
 
     try {

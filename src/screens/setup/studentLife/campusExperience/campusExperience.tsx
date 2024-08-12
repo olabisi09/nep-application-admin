@@ -14,27 +14,29 @@ import { Button } from "../../../../custom";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  deleteOverview,
-  getOverviewByStudentLifeId,
+  deleteCampusExperience,
+  getCampusExperienceByStudentLifeId,
 } from "../../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
-import { CreateOverview, EditOverview } from "./setup";
+import { CreateCampusExperience, EditCampusExperience } from "./setup";
 import { useParams } from "react-router-dom";
 
-const Overview = () => {
+const CampusExperience = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [overview, setOverview] = useState<ItemByStudentLife>(
+  const [campus, setCampus] = useState<ItemByStudentLife>(
     {} as ItemByStudentLife
   );
 
-  const deleteOverviewMutation = useMutation({ mutationFn: deleteOverview });
+  const deleteCampusExperienceMutation = useMutation({
+    mutationFn: deleteCampusExperience,
+  });
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-overview"],
-    queryFn: () => getOverviewByStudentLifeId(id!),
+    queryKey: ["get-campus-experience"],
+    queryFn: () => getCampusExperienceByStudentLifeId(id!),
     enabled: !!id,
   });
 
@@ -81,7 +83,7 @@ const Overview = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setOverview(record);
+              setCampus(record);
               setOpenEdit(true);
             },
           },
@@ -90,7 +92,7 @@ const Overview = () => {
             label: "Delete",
             onClick: async () => {
               try {
-                await deleteOverviewMutation.mutateAsync(record.id, {
+                await deleteCampusExperienceMutation.mutateAsync(record.id, {
                   onSuccess: (data) => {
                     notification.success({
                       message: "Success",
@@ -117,7 +119,7 @@ const Overview = () => {
     },
   ];
 
-  const overviewData = data?.data as ItemByStudentLife[];
+  const campusData = data?.data as ItemByStudentLife[];
 
   if (isLoading) {
     return <Spin />;
@@ -128,7 +130,7 @@ const Overview = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Student Life: Overview Setup</h3>
+        <h3>Student Life: Campus Experience Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -138,7 +140,7 @@ const Overview = () => {
       <br />
       <Card bordered={false}>
         <Table
-          dataSource={overviewData}
+          dataSource={campusData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -149,10 +151,10 @@ const Overview = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create Overview"
+        title="Create Campus Experience"
         footer={null}
       >
-        <CreateOverview
+        <CreateCampusExperience
           studentLifeId={id!}
           handleClose={() => setOpen(false)}
         />
@@ -161,13 +163,16 @@ const Overview = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit Overview"
+        title="Edit Campus Experience"
         footer={null}
       >
-        <EditOverview item={overview} handleClose={() => setOpenEdit(false)} />
+        <EditCampusExperience
+          item={campus}
+          handleClose={() => setOpenEdit(false)}
+        />
       </Modal>
     </div>
   );
 };
 
-export default Overview;
+export default CampusExperience;

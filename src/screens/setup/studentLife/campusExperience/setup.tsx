@@ -3,7 +3,7 @@ import { Button, Editor, Input, Select, Upload } from "../../../../custom";
 import { ReactComponent as Image } from "../../../../assets/image.svg";
 import { App } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateOverview } from "../../../../requests";
+import { createOrUpdateCampusExperience } from "../../../../requests";
 
 interface SetupInit {
   title: string;
@@ -13,7 +13,7 @@ interface SetupInit {
   status?: string;
 }
 
-export const CreateOverview = ({
+export const CreateCampusExperience = ({
   studentLifeId,
   handleClose,
 }: {
@@ -22,11 +22,11 @@ export const CreateOverview = ({
 }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const addOverviewMutation = useMutation({
-    mutationFn: createOrUpdateOverview,
+  const addCampusExperienceMutation = useMutation({
+    mutationFn: createOrUpdateCampusExperience,
   });
 
-  const handleAddOverview = async (
+  const handleAddCampusExperience = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
@@ -40,13 +40,13 @@ export const CreateOverview = ({
     };
 
     try {
-      await addOverviewMutation.mutateAsync(payload, {
+      await addCampusExperienceMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-overview"] });
+          queryClient.refetchQueries({ queryKey: ["get-campus-experience"] });
           handleClose();
           resetForm();
         },
@@ -77,7 +77,9 @@ export const CreateOverview = ({
           status: "",
         } as SetupInit
       }
-      onSubmit={(values, { resetForm }) => handleAddOverview(values, resetForm)}
+      onSubmit={(values, { resetForm }) =>
+        handleAddCampusExperience(values, resetForm)
+      }
     >
       {({ values, setFieldValue }) => (
         <Form className="fields">
@@ -127,8 +129,8 @@ export const CreateOverview = ({
             />
             <Button
               type="submit"
-              isLoading={addOverviewMutation.isPending}
-              disabled={addOverviewMutation.isPending}
+              isLoading={addCampusExperienceMutation.isPending}
+              disabled={addCampusExperienceMutation.isPending}
               text="Create"
             />
           </div>
@@ -138,7 +140,7 @@ export const CreateOverview = ({
   );
 };
 
-export const EditOverview = ({
+export const EditCampusExperience = ({
   item,
   handleClose,
 }: {
@@ -147,11 +149,11 @@ export const EditOverview = ({
 }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const editOverviewMutation = useMutation({
-    mutationFn: createOrUpdateOverview,
+  const editCampusExperienceMutation = useMutation({
+    mutationFn: createOrUpdateCampusExperience,
   });
 
-  const handleEditOverview = async (
+  const handleEditCampusExperience = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
@@ -166,13 +168,13 @@ export const EditOverview = ({
     };
 
     try {
-      await editOverviewMutation.mutateAsync(payload, {
+      await editCampusExperienceMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-overview"] });
+          queryClient.refetchQueries({ queryKey: ["get-campus-experience"] });
           handleClose();
           resetForm();
         },
@@ -204,7 +206,7 @@ export const EditOverview = ({
       }
       enableReinitialize
       onSubmit={(values, { resetForm }) =>
-        handleEditOverview(values, resetForm)
+        handleEditCampusExperience(values, resetForm)
       }
     >
       {({ values, setFieldValue }) => (
@@ -256,8 +258,8 @@ export const EditOverview = ({
             />
             <Button
               type="submit"
-              isLoading={editOverviewMutation.isPending}
-              disabled={editOverviewMutation.isPending}
+              isLoading={editCampusExperienceMutation.isPending}
+              disabled={editCampusExperienceMutation.isPending}
               text="Create"
             />
           </div>

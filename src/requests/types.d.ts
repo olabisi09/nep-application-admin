@@ -69,12 +69,12 @@ interface Country {
 }
 
 
-interface OverviewResponse extends GetResponse {
-  data: Overview[];
+interface GetByStudentLifeResponse extends GetResponse {
+  data: ItemByStudentLife[];
   studentLifeId: number;
 }
 
-interface Overview {
+interface ItemByStudentLife {
   id: number;
   title: string;
   description: string;
@@ -82,4 +82,40 @@ interface Overview {
   studentLifeId: number;
   activeStatus: boolean;
   isDeleted: boolean;
+}
+
+interface ItemByStudentLifePayload extends SetupPayload {
+  StudentLifeId: number | string;
+}
+
+interface GetTemplateResponse extends Response {
+  data: Template[];
+}
+
+interface Template {
+  id: number;
+  schoolName: string;
+  logoUrl: string;
+  homePageImageUrl: string;
+  aboutUsImageUrl: string;
+  loginBackgroundImageUrl: string;
+  schoolEmailAddress: string;
+  schoolPhoneNumber: string;
+  schoolAddress: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface TemplatePayload {
+  Id: number;
+  SchoolName: string;
+  Logo: any;
+  HomePageImage: any;
+  AboutUsImage: any;
+  LoginBackgroundImage: any;
+  SchoolEmailAddress: string;
+  SchoolPhoneNumber: string;
+  SchoolAddress: string;
+  ActivStatus: boolean;
+  IsDeleted: boolean;
 }
