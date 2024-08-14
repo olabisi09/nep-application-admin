@@ -2,27 +2,27 @@ import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddFaculty from "./AddSession";
+import { EditSession } from "./AddSession";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteSession, getAllAcademicSession } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
+import AddSession from "./AddSession";
+import { deleteSession, getAllAcademicSession } from "../../../requests";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const Session = () => {
   const { notification } = App.useApp();
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [session, setSession] = useState<Session>({} as Session);
-
-  const deleteSessionMutation = useMutation({ mutationFn: deleteSession});
+  const [openDelete, setOpenDelete] = useState(false);
 
   const {data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["getAll-sessions"],
@@ -33,12 +33,34 @@ const Session = () => {
     setSearchTerm(e.target.value);
   };
 
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
-    },
-  ];
+  const handleDelete = (data: Session) => {
+    setSession(data);
+    setOpenDelete(true);
+  }
+
+  const deleteSessionMutation = useMutation({ mutationFn: deleteSession});
+
+  const DeleteSessionHandler = async () => {
+    try {
+      await deleteSessionMutation.mutateAsync(session?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete(false);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+
+  }
+
   const columns: ColumnsType<Session> = [
     {
       key: "id",
@@ -73,23 +95,7 @@ const Session = () => {
             key: "2",
             label: "Delete",
             onClick: async () => {
-              try {
-                await deleteSessionMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
-
+             handleDelete(record);
             }
           }
         ];
@@ -114,13 +120,13 @@ const Session = () => {
   return (
     <main>
   
-         <section className="space-between">
-        <h3>Session Setup</h3>
-        <Button
-          onClick={() => setShowAddModal(true)}
-          iconBefore={<Add />}
-          text="Setup"
-        />
+      <section className="space-between">
+      <h3>Session Setup</h3>
+      <Button
+        onClick={() => setOpen(true)}
+        iconBefore={<Add />}
+        text="Setup"
+      />
       </section>
       <section className={styles.card}>
         <div className={styles.inside}>
@@ -156,50 +162,38 @@ const Session = () => {
       </section>
      
       <Modal
-        open={showAddModal}
-        onCancel={() => setShowAddModal(false)}
+        open={open}
+        onCancel={() => setOpen(false)}
         centered
         title="Session Setup "
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        footer={null}
       >
-        
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddFaculty handleClose={() => setOpenEdit(false)} />
-          </Form>
-        </Formik>
+        <AddSession handleClose={() => setOpen(false)}/>
       </Modal>
 
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Session Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpenEdit(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Update" />
-          </div>
-        )}
+        title="Edit Session Setup"
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddFaculty handleClose={() => setOpenEdit(false)}/>
-          </Form>
-        </Formik>
+        <EditSession item={session} handleClose={() => setOpenEdit(false)}/>
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Session Setup"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteSessionMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={DeleteSessionHandler}
+          title={session?.name}
+        />
       </Modal>
 
     </main>
