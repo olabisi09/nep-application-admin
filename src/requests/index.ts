@@ -317,9 +317,20 @@ export const createOrUpdateSupportGuidance = async (
 export const createOrUpdateStudentActivity = async (payload: Partial<Setup>) => {
   return (await api.post('/StudentLife/studentlife/CreateUpdateStudentActivity', payload))?.data as Response;
 }
+export const getOverview = async () => {
+  return (await api.get('/StudentLife/studentlife/GetAllOverview'))?.data as OverviewResponse;
+}
+
+export const getOverviewByStudentLifeId = async (id: string | number) => {
+  return (await api.get(`/StudentLife/studentlife/GetOverviewByStudentLifeId?Id=${id}`))?.data as OverviewResponse;
+}
 
 export const createOrUpdateOverview= async (payload: Partial<Setup>) => {
   return (await api.post('/StudentLife/studentlife/createUpdateOverView', payload))?.data as Response;
+}
+
+export const deleteOverview = async (id: number) => {
+  return (await api.delete(`/StudentLife/studentlife/DeleteOverview?Id=${id}`))?.data as Response;
 }
 
 export const createOrUpdateSubject = async (
@@ -377,6 +388,10 @@ export const getAllPrograms = async() => {
 }
 
 
+export const deleteQualificationType= async(id:number)=>{
+  return (await api.delete(`/Utilities/Utilities/DeleteQualificationType?Id=${id}`))?.data as Response
+  }
+
 
 
   
@@ -389,7 +404,52 @@ export const getAccreditationById = async (id: number) => {
   return (await api.get(`/ReadMore/GetAccreditationById?Id=${id}`))?.data as Accreditation;
 };
 
+export const createOrUpdateScholarship = async (
+  payload: Partial<CommonPayload>
+) => {
+  return (await api.post(`/ReadMore/CreateUpdateScholarship`, payload))
+    ?.data as Response;
+};
+export const getAllScholarships = async () => {
+  return (await api.get("/ReadMore/GetAllScholarship"))
+    ?.data as ScholarshipResponse;
+};
+
+export const deleteScholarship = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteScholarshipById?Id=${id}`))
+    ?.data as Response;
+};
+
+export const createOrUpdateTestimonial = async (payload: Partial<Testimonial>) => {
+  return (
+    await api.post("/ReadMore/createUpdateTestimonial", payload, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+  )?.data as Response;
+};
+export const getAllTestimonials = async() => {
+  return(await api.get(`/ReadMore/GetAllTestimonials`))?.data as TestimonialResponse
+}
+
+export const deleteTestimonial= async(id:number) => {
+  return (await api.delete(`/ReadMore/DeleteTestimonialById?Id=${id}`))?.data as Response;
+}
 
 
+export const getAllModeOfStudy = async() =>{
+  return (await api.get('/Utilities/Utilities/GetAllModeOfStudy'))?.data as ModeOfStudyResponse
+}
+
+export const deleteModeOfStudy = async(id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteModeOfStudy?Id=${id}`))?.data as Response
+}
+
+
+export const createOrUpdateModeOfStudy = async (
+  payload: Partial<ModeOfStudy>
+) => {
+  return (await api.post(`/Utilities/Utilities/CreateUpdateModeOfStudy`, payload))
+    ?.data as Response;
+};
 
 

@@ -332,3 +332,14 @@ interface AccreditationSetup {
   Id: string;
   description: string;
 }
+
+interface ModeOfStudy{
+  id: number,
+  name: string,
+  activeStatus: boolean,
+  isDeleted: boolean
+}
+
+interface ModeOfStudyResponse extends Response {
+  data: ModeOfStudy[];
+}

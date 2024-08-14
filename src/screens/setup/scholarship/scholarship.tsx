@@ -168,11 +168,10 @@ const ScholarShip = () => {
       </Modal>
 
       {scholarship?.id && openEdit && (
-  <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Scholarship Setup" footer={null}>
-  <EditScholarship scholarship={scholarship} handleClose={() => setOpenEdit(false)} />
-</Modal>
+        <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Scholarship Setup" footer={null}>
+          <EditScholarship scholarship={scholarship} handleClose={() => setOpenEdit(false)} />
+        </Modal>
       )}
-    
 
       {scholarship?.id && openDelete && (
         <Modal open={openDelete} onCancel={() => setOpenDelete(false)} centered title="Delete Scholarship Setup" footer={null}>

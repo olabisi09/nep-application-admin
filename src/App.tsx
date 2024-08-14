@@ -46,6 +46,8 @@ import StudentLife from "./screens/setup/studentLife/studentLife";
 import NewsAndEvents from "./screens/setup/newsAndEvents/newsAndEvents";
 import SchoolMgt from "./screens/setup/schoolMgt/schoolMgt";
 import Overview from "./screens/setup/studentLife/overview/overview";
+import AdmissionRequirementDetail from "./screens/setup/readMoreAdmissionRequirement/admissionReqDetails";
+import AdmissionReqDetail from "./screens/setup/readMoreAdmissionRequirement/admissionRequirementDetail/admissionReqDetail";
 
 function App() {
   const authRoute = [
@@ -213,6 +215,10 @@ function App() {
     {
       path: routes.setup.overview,
       element: <Overview />,
+    },
+    {
+      path: routes.setup.admissionRequirementDetail,
+      element: <AdmissionReqDetail />,
     },
   ];
   const userMgtRoutes = [

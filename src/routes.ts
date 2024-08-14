@@ -24,6 +24,7 @@ export const routes = {
       accreditation: "/accreditation-setup",
       qualification: "/qualification-type-setup",
       subject: "/subject-setup",
+      admissionRequirementDetail: "/admission-requirement/:id/details",
 
 
       country : "/country-setup",
