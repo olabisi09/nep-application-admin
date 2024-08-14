@@ -1,32 +1,115 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin } from "antd";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
 import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddTuitionYears from "./addTuitionYears";
+import AddTuitionYears, { EditTuitionYears } from "./addTuitionYears";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useQuery } from "@tanstack/react-query";
-import { getAllTuitionYear } from "../../../requests";
+import { useMutation, useQueries } from "@tanstack/react-query";
+import { deleteTuitionYear, getAllLevel, getAllPrograms, getAllTuitionFee, getAllTuitionYear } from "../../../requests";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import { ColumnsType } from "antd/es/table";
 
 const TuitionYears = () => {
+  const { notification } = App.useApp();
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
+  const [open, setOpen] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [tuitionYear, setTuitionYear] = useState<TuitionYear>({} as TuitionYear)
+  const [openDelete, setOpenDelete] = useState(false);
 
-  const {data, isLoading, isError, error} = useQuery({
-    queryKey: ["getAll-TuitionYear"],
-    queryFn: getAllTuitionYear
-  })
+  // Merged useQueries
+  const queryResults = useQueries({
+    queries: [
+      {
+        queryKey: ["getAll-TuitionYear"],
+        queryFn: getAllTuitionYear,
+      },
+      {
+        queryKey: ["getAll-Level"],
+        queryFn: getAllLevel,
+      },
+      {
+        queryKey: ["getAll-Tuition"],
+        queryFn: getAllTuitionFee,
+      },
+      {
+        queryKey: ["getAll-programs"],
+        queryFn: getAllPrograms,
+      },
+    ],
+  });
+
+  const {
+    data: tuitionYearData,
+    isLoading: isTuitionYearLoading,
+    isError: isTuitionYearError,
+    error: tuitionYearError,
+    refetch: refetchTuitionYear,
+  } = queryResults[0];
+
+  const {
+    data: levelData,
+    isLoading: isLevelLoading,
+    isError: isLevelError,
+    error: levelError,
+    refetch: refetchLevel,
+  } = queryResults[1];
+
+  const {
+    data: tuitionFeeData,
+    isLoading: isTuitionFeeLoading,
+    isError: isTuitionFeeError,
+    error: tuitionFeeError,
+    refetch: refetchTuitionFee,
+  } = queryResults[2];
+
+  const {
+    data: programsData,
+    isLoading: isProgramsLoading,
+    isError: isProgramsError,
+    error: programsError,
+    refetch: refetchPrograms,
+  } = queryResults[3];
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
+
+  const handleDelete = (data: TuitionYear) => {
+    setTuitionYear(data);
+    setOpenDelete(true);
+  };
+
+  const DeleteTuitionHandler = async () => {
+    try {
+      await deleteTuitionYearMutation.mutateAsync(tuitionYear?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetchTuitionYear();
+          setOpenDelete(false);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
+
+  const deleteTuitionYearMutation = useMutation({ mutationFn: deleteTuitionYear });
+
 
   const items: MenuProps["items"] = [
     {
@@ -38,7 +121,8 @@ const TuitionYears = () => {
       ),
     },
   ];
-  const columns = [
+
+  const columns: ColumnsType<TuitionYear> = [
     {
       key: "id",
       title: "ID",
@@ -60,29 +144,60 @@ const TuitionYears = () => {
       dataIndex: "feeDescription",
     },
     {
-      key: "activeStatus",
+      key: "programName",
+      title: "Program Name",
+      dataIndex: "programName",
+    },
+    {
+      key: "isActive",
       title: "Status",
-      dataIndex: "activeStatus",
-      render: (activeStatus: boolean) => (activeStatus ? "Active" : "Not Active"),
+      dataIndex: "isActive",
+      render: (isActive: boolean) => (isActive ? "Active" : "Inactive"),
     },
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
-          <AntButton type="text" icon={<Ellipsis />} />
-        </Dropdown>
-      ),
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setTuitionYear(record);
+              setOpenEdit(true);
+            },
+          },
+          {
+            key: "2",
+            label: "Delete",
+            onClick: async () => {
+              handleDelete(record);
+            },
+          },
+        ];
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
+        );
+      },
     },
   ];
 
-  const tuitionYears = data?.data as TuitionYear[];
+  const tuitionYears = tuitionYearData?.data as TuitionYear[];
 
-  if (isLoading) {
-    return <Spin/>;
+  if (isTuitionYearLoading || isLevelLoading || isTuitionFeeLoading || isProgramsLoading) {
+    return <Spin />;
   }
-  if (isError) {
-    return <div>Error: {error?.message}</div>;
+
+  if (isTuitionYearError || isLevelError || isTuitionFeeError || isProgramsError) {
+    const errorMessage = 
+      tuitionYearError?.message ||
+      levelError?.message ||
+      tuitionFeeError?.message ||
+      programsError?.message;
+
+    return <div>Error: {errorMessage}</div>;
   }
 
   return (
@@ -123,7 +238,6 @@ const TuitionYears = () => {
           dataSource={tuitionYears}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 
@@ -132,45 +246,44 @@ const TuitionYears = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Tuition Years Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddTuitionYears />
-          </Form>
-        </Formik>
+       <AddTuitionYears
+        programItem={programsData?.data || []} 
+        levelItem={levelData?.data || []}
+        tuitionFeeItem={tuitionFeeData?.data || []}  
+        handleClose={() => setOpen(false)}
+      />
       </Modal>
 
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Tuition Years Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpenEdit(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Update" />
-          </div>
-        )}
+        title="Edit Tuition Years Setup"
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddTuitionYears />
-          </Form>
-        </Formik>
+        <EditTuitionYears 
+          item={tuitionYear} 
+          programItem={programsData?.data || []} 
+          levelItem={levelData?.data || []}
+          tuitionFeeItem={tuitionFeeData?.data || []} 
+          handleClose={() => setOpenEdit(false)}/>
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Tuition Setup"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteTuitionYearMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={DeleteTuitionHandler}
+          title={tuitionYear?.feeDescription}
+        />
       </Modal>
     </main>
   );

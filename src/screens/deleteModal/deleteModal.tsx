@@ -25,7 +25,7 @@ const DeleteModalContent = ({
     <main className={styles.main}>
       <section className={styles.Wrapper}>
         <p className={styles.para}>
-          You are about to {isActive || " delete "} {title}
+          Are you sure you want to{isActive || " delete "} {title} ?
         </p>
 
         <div className="btn-group">

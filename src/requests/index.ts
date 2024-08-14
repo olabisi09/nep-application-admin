@@ -28,24 +28,59 @@ export const getAllAcademicSession = async () => {
     ?.data as SessionResponse;
 };
 
+export const createUpdateSession = async (payload: Partial<Session>) => {
+  return (await api.post('/ReadMore/createUpdateAcademicSession', payload))?.data as Response;
+}
+
+export const deleteSession = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteAcademicSessionById?Id=${id}`))?.data as Response;
+}
+
 export const getAllCategory = async () => {
-  return (await api.get("/Academics/GetAllCategoryAsync"))
-    ?.data as CategoryResponse;
-};
+  return (await api.get('/Academics/GetAllCategoryAsync'))?.data as CategoryResponse;
+}
+
+
 // export const getAllCareerProspect = async () => {
 //   return (await api.get('/ReadMore/GetAllCareerProspects'))?.data as CareerProspectResponse;
 // }
+
+
+export const createUpdateLevel = async (payload: Partial<Level>) => {
+  return (await api.post('/ReadMore/CreateUpdateLevel', payload))?.data as Response;
+}
 
 export const getAllLevel = async () => {
   return (await api.get("/ReadMore/GetAllLevel"))?.data as LevelResponse;
 };
 
+
+export const deleteLevel = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteLevelById?Id=${id}`))?.data as Response;
+}
+
+export const createUpdateTuition = async (payload: Partial<Tuition>) => {
+  return (await api.post('/ReadMore/CreateUpdateTuition', payload))?.data as Response;
+}
+
 export const getAllTuitionFee = async () => {
   return (await api.get("/ReadMore/GetAllTuition"))?.data as TuitionResponse;
 };
 
+export const deleteTuition = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteTuitionById?Id=${id}`))?.data as Response;
+}
+
+export const createUpdateTuitionYear = async (payload: Partial<TuitionYear>) => {
+  return (await api.post('/ReadMore/CreateUpdateTuitionYear', payload))?.data as Response;
+}
+
 export const getAllTuitionYear = async () => {
   return (await api.get('/ReadMore/GetAllTuitionYear'))?.data as TuitionYearResponse;
+}
+
+export const deleteTuitionYear = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteTuitionYearById?Id=${id}`))?.data as Response;
 }
 
 export const createFaq = async (payload: Partial<FAQ>) => {
