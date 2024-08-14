@@ -1,0 +1,67 @@
+.loginContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  .customInput {
+    flex: 1;
+    border: 0.5px solid #D1D2D1;
+    border-radius: 4px;
+    padding-inline: 0.714rem;
+    padding-block: 1rem;
+    background-color: #fff;
+  }
+  
+  .inputTwo {
+    @extend input;
+    width: 100%;
+    border: 0.5px solid #D1D2D1;
+    margin-block-start: 0;
+    padding-inline: 0.714rem;
+    padding-block: 1rem;
+    background-color: #fff;
+    resize: none;
+  }
+  
+  input:disabled {
+    background-color: #eff0ef !important;
+  }
+  
+  // .input:hover,
+  // .input:focus,
+  // .input:active,
+  // input:focus-visible {
+  //   border: 1px solid var(--color-primary);
+  //   background-color: var(--color-white);
+  // }
+  
+  .textarea {
+    @extend .inputTwo;
+    padding-block: 0px;
+    min-height: 10rem;
+  }
+  
+  label {
+    color: var(--color-black);
+    font-size: 1.6rem;
+    font-weight: 700;
+    //   width: 100%;
+    margin-bottom: 0px;
+    text-align: end !important;
+    white-space: nowrap;
+    width: 25%;
+  }
+  
+  .error {
+    font-size: 0.875rem;
+    color: red;
+  }
+  
+  .asterisk {
+    color: red;
+    font-weight: 700;
+  }
+  

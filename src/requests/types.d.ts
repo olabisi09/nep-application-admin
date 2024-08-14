@@ -1,0 +1,416 @@
+interface Response {
+  statusCode: number;
+  message: string;
+}
+
+interface GetResponse extends Response {
+  data: Setup[];
+}
+
+interface AboutUs {
+  id: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface SessionResponse extends Response {
+  data: Session[];
+}
+
+interface Session {
+  id: number;
+  name: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+
+interface CategoryResponse extends Response {
+  data: Category[];
+}
+
+interface Category {
+  categoryCode: string;
+  name: string;
+  description: string;
+  id: number;
+  created: string;
+  createdBy: any;
+  activeStatus: boolean;
+}
+
+interface LevelResponse extends Response {
+  data: Level[];
+}
+
+interface Level {
+  id: number;
+  levelName: string;
+  isActive: boolean;
+  isDeleted: boolean;
+}
+
+interface TuitionResponse extends Response {
+  data: Tuition[];
+}
+
+interface Tuition {
+  id: number;
+  readmoreId: number;
+  description: string;
+  activeStatus: boolean;
+}
+
+interface TuitionYearResponse extends Response {
+  data: TuitionYear[];
+}
+
+interface TuitionYear {
+  id: number;
+  tuitionId: number;
+  levelId: number;
+  readmoreId: number;
+  feeDescription: string;
+  isActive: boolean;
+  isDeleted: boolean;
+}
+
+interface SocialMediaResponse extends Response {
+  data: SocialMedia[];
+}
+
+interface Setup {
+  id: number;
+  title: string;
+  description: string;
+  figure: string;
+  imageUrl: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+  readMoreId: number;
+  studentLifeId: string;
+  image: any;
+}
+
+interface GeneralTemplate {
+  id: number;
+  schoolName: string;
+  logo: string;
+  logoUrl: string;
+  homePageImage: string;
+  homePageImageUrl: string;
+  aboutUsImage: string;
+  aboutUsImageUrl: string;
+  loginBackgroundImage: string;
+  loginBackgroundImageUrl: string;
+  schoolEmailAddress: string;
+  schoolPhoneNumber: string;
+  schoolAddress: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+interface SetupPayload {
+  Id: number;
+  Title: string;
+  Description: string;
+  ImageUrl: string;
+  Image: any;
+  ActiveStatus: boolean;
+  IsDeleted: boolean;
+}
+
+interface SocialMedia {
+  id: number;
+  templateId: number;
+  socialMediaName: string;
+  socialMediaUrl: string;
+}
+interface GeneralTemplate {
+  id: number;
+  schoolName: string;
+  logo: string;
+  logoUrl: string;
+  homePageImage: string;
+  homePageImageUrl: string;
+  aboutUsImage: string;
+  aboutUsImageUrl: string;
+  loginBackgroundImage: string;
+  loginBackgroundImageUrl: string;
+  schoolEmailAddress: string;
+  schoolPhoneNumber: string;
+  schoolAddress: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface GeneralTemplateResponse extends Response {
+  data: GeneralTemplate[];
+}
+
+interface GenderResponse extends Response {
+  data: Gender[];
+}
+
+interface Gender {
+  id: number;
+  genderName: string;
+  activeStatus: boolean;
+}
+interface MaritalStatusResponse extends Response {
+  data: MaritalStatus[];
+}
+
+interface MaritalStatus {
+  id: number;
+  statusName: string;
+  activeStatus?: boolean;
+}
+
+interface CountryResponse extends Response {
+  data: Country[];
+}
+
+interface Country {
+  id: number;
+  countryName: string;
+  activeStatus?: boolean;
+}
+
+
+interface GetByStudentLifeResponse extends GetResponse {
+  data: ItemByStudentLife[];
+  studentLifeId: number;
+}
+
+interface ItemByStudentLife {
+  id: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+  studentLifeId: number;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface ItemByStudentLifePayload extends SetupPayload {
+  StudentLifeId: number | string;
+}
+
+interface GetTemplateResponse extends Response {
+  data: Template[];
+}
+
+interface Template {
+  id: number;
+  schoolName: string;
+  logoUrl: string;
+  homePageImageUrl: string;
+  aboutUsImageUrl: string;
+  loginBackgroundImageUrl: string;
+  schoolEmailAddress: string;
+  schoolPhoneNumber: string;
+  schoolAddress: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface TemplatePayload {
+  Id: number;
+  SchoolName: string;
+  Logo: any;
+  HomePageImage: any;
+  AboutUsImage: any;
+  LoginBackgroundImage: any;
+  SchoolEmailAddress: string;
+  SchoolPhoneNumber: string;
+  SchoolAddress: string;
+  ActivStatus: boolean;
+  IsDeleted: boolean;
+}
+interface StateResponse extends Response {
+  data: State[];
+}
+
+interface State {
+  id: number;
+  stateName: string;
+  activeStatus?: boolean;
+  countryId: string;
+}
+interface LGAResponse extends Response {
+  data: LGA[];
+}
+
+interface LGA {
+  id: number;
+  stateId: number;
+  lgaName: string;
+  activeStatus?: boolean;
+  countryId: number;
+}
+interface QualificationTypeResponse extends Response {
+  data: QualificationType[];
+}
+
+interface QualificationType {
+  id: number;
+  qualificationName: string;
+  activeStatus?: boolean;
+}
+interface SetupPayload {
+  Id: number;
+  Title: string;
+  Description: string;
+  ImageUrl: string;
+  Image: any;
+  ActiveStatus: boolean;
+  IsDeleted: boolean;
+}
+
+interface SocialMediaLink {
+  id: number;
+  templateId: number;
+  socialMediaName: string;
+  socialMediaUrl: string;
+  socialMediaLogo: any;
+  socialMediaLogoUrl: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface SocialMediaLinkResponse extends Response {
+  data: SocialMediaLink[];
+}
+interface AdmissionRequirement {
+  activeStatus: boolean;
+  description: string;
+  id: number;
+  isDeleted: boolean;
+  readMoreId: number;
+}
+interface AdmissionRequirementResponse extends Response {
+  data: AdmissionRequirement[];
+}
+interface Program {
+  categoryCode: string;
+  programTypeCode: string;
+  programCategoryCode: any;
+  code: string;
+  name: string;
+  description: string;
+  requirements: string;
+  duration: string;
+  qualification: string;
+  careerProspect: string;
+  tuition: string;
+  curriculum: string;
+  scholarship: string;
+  userStory: string;
+  accreditation: string;
+  id: number;
+  created: string;
+  createdBy: any;
+  activeStatus: boolean;
+}
+interface ProgramResponse extends Response {
+  data: Program[];
+}
+
+interface OverviewResponse extends GetResponse {
+  data: Overview[];
+  studentLifeId: number;
+}
+
+interface Overview {
+  id: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+  studentLifeId: number;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface SchoolSummaryResponse extends GetResponse {
+  data: SchoolSummary[];
+}
+
+interface SchoolSummary {
+  id: number;
+  title: string;
+  figure: string;
+  activeStatus: boolean;
+  studentLifeId: number;
+  isDeleted: boolean;
+}
+
+interface FitnessAthleticsResponse extends GetResponse {
+  data: FitnessAthletics[];
+}
+
+interface FitnessAthletics {
+  id: number;
+  title: string;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+  studentLifeId: number;
+}
+interface FAQ {
+  id: number;
+  name: string;
+  description: string;
+  activeStatus: boolean;
+}
+
+interface FaqResponse extends Response {
+  data: FAQ[];
+}
+interface FaqItemResponse extends Response {
+  data: FaqItem[];
+}
+interface FaqItem {
+  id: number;
+  question: string;
+  answer: string;
+  faqId: number;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+interface AccreditationResponse extends AdmissionRequirementResponse {}
+
+interface Accreditation extends Response {
+  data: AdmissionRequirement;
+}
+
+interface AccreditationPayload extends AdmissionRequirement {}
+
+interface AccreditationType {
+  description: string;
+  id: number;
+  program: number;
+  activeStatus: boolean;
+  readMoreId: number;
+}
+
+interface AccreditationSetup {
+  Id: string;
+  description: string;
+}
+interface CommonPayload {
+  id: number;
+  readmoreId: number;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface ScholarshipResponse extends Response {
+  data: CommonPayload[];
+}
+
+interface SupportAndGuidanceResponse extends FitnessAthleticsResponse {}
+interface SupportAndGuidance extends FitnessAthletics {}

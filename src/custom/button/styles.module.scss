@@ -1,0 +1,40 @@
+$white: #fff;
+$success:var(--color-primary);
+
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  border-radius: 4px;
+  padding-inline: 2.19rem;
+  padding-block: 1.2rem;
+  color: $white;
+  font-size: 1rem;
+  font-weight: bold;
+  outline: none;
+  border: none;
+  //width: 100%;
+  cursor: pointer;
+}
+
+.textButton {
+  background: transparent;
+  border: none;
+  color: $success;
+  font-weight: 400;
+  padding-inline: 0.857rem;
+  padding-block: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.spinner {
+  margin: 0;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  color: white;
+}

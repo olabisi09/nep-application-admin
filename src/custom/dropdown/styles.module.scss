@@ -1,0 +1,19 @@
+.dropdown {
+    background-color: #FFF;
+    border: 1px solid #E5E6E6;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-block: 1.5rem;
+    padding-inline: 1.5rem;
+    color: #242021!important;
+    font-size: 1rem;
+  
+  
+    @media (max-width: 768px) {
+      // width: 20rem;
+      padding-inline: 0.5rem;
+    }
+  }
+  
+  

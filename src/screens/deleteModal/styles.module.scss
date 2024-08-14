@@ -1,0 +1,16 @@
+.para{
+  font-weight: 400;
+  font-size: 1.2rem;
+  line-height: 3.2rem;
+}
+.Wrapper{
+  text-align: center;
+  line-height: 3.2rem;
+}
+.Main{
+  display: flex;
+  justify-content: center;
+  @media screen and (max-width: 540px) {
+    padding: 0rem;
+  }
+}
