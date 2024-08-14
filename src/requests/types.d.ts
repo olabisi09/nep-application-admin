@@ -326,6 +326,17 @@ interface FAQ {
 interface FaqResponse extends Response {
   data: FAQ[];
 }
+interface FaqItemResponse extends Response {
+  data: FaqItem[];
+}
+interface FaqItem {
+  id: number;
+  question: string;
+  answer: string;
+  faqId: number;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
 interface AccreditationResponse extends AdmissionRequirementResponse {}
 
 interface Accreditation extends Response {

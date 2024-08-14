@@ -62,8 +62,17 @@ export const deleteFAQ = async (id: number) => {
     ?.data as Response;
 };
 
-
-
+export const getFAQItemsByFaqId = async (id: number | string) => {
+  return (await api.get(`/HomePage/homePage/GetFaqItemsByFaqId?Id=${id}`))
+    ?.data as FaqItemResponse;
+}
+export const createOrUpdateFaqItem = async (payload: Partial<FaqItem>) => {
+  return (await api.post(`/HomePage/homePage/CreateUpdateFaqItems`, payload))?.data as Response;
+};
+export const deleteFAQItem = async (id: number) => {
+  return (await api.delete(`/HomePage/DeleteFaqItemId?Id=${id}`))
+    ?.data as Response;
+};
 // export const createFaq = async (payload: Partial<FAQ>) => {
 //   return (await api.post(`/HomePage/homePage/CreateUpdateFaq`, payload))
 //     ?.data as FaqResponse;

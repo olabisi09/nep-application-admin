@@ -8,110 +8,100 @@ import {
   Spin,
   App,
 } from "antd";
-import { ReactComponent as Plus } from "../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import Button from "../../../custom/button/button";
+import { ReactComponent as Plus } from "../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import { Button } from "../../../../custom";
 import { useState } from "react";
-import SetupFaq from "./setup";
-import QAndA from "./qAndA";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteFAQ, getAllFAQ } from "../../../requests";
-import DeleteModalContent from "../../deleteModal/deleteModal";
-import { useNavigate } from "react-router-dom";
+import { deleteFAQItem, getFAQItemsByFaqId } from "../../../../requests";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
+import { useParams } from "react-router-dom";
+import { ColumnsType } from "antd/es/table";
+import { CreateFaqItem } from "./setup";
 
-const Faq = () => {
+const FaqItem = () => {
+  const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openQAndA, setOpenQAndA] = useState(false);
   const [openEditQAndA, setOpenEditQAndA] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [indexData, setIndexData] = useState({} as FAQ);
   const [openDelete, setOpenDelete] = useState(false);
+  const [indexData, setIndexData] = useState({} as FaqItem);
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const deleteFaqItemMutation = useMutation({ mutationFn: deleteFAQItem });
 
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleEdit = (data: FAQ) => {
-    setIndexData(data);
+  const handleEdit = (data: FaqItem) => {
     setOpenEdit(true);
   };
 
-  const handleDelete = (data: FAQ) => {
+  const handleDelete = (data: FaqItem) => {
     setIndexData(data);
     setOpenDelete(true);
   };
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-AllFAQ"],
-    queryFn: getAllFAQ,
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["get-faq-items-by-faq-id"],
+    queryFn: () => getFAQItemsByFaqId(id!),
+    enabled: !!id,
   });
 
-  const FAQData = data?.data as FAQ[];
+  const faqItems = data?.data as FaqItem[];
 
-  const items = (record: FAQ): MenuProps["items"] => [
-    {
-      key: "1",
-      label: "Edit",
-      onClick: () => handleEdit(record),
-    },
-    {
-      key: "2",
-      label: "Questions & Answers",
-      onClick: () => navigate(`/faq/${record.id}/faq-items`),
-    },
-    // {
-    //   key: "3",
-    //   label: "Edit Questions & Answers",
-    //   onClick: () => setOpenEditQAndA(true),
-    // },
-    {
-      key: "3",
-      label: "Delete",
-      onClick: () => handleDelete(record),
-    },
-  ];
-
-  const columns = [
+  const columns: ColumnsType<FaqItem> = [
     {
       key: "id",
       title: "ID",
       dataIndex: "id",
     },
     {
-      key: "name",
-      title: "Name",
-      dataIndex: "name",
+      key: "question",
+      title: "Question",
+      dataIndex: "question",
     },
     {
-      key: "activeStatus",
-      title: "Active Status",
-      dataIndex: "activeStatus",
-      render: (text: boolean) => (text ? "Active" : "Inactive"),
+      key: "answer",
+      title: "Answer",
+      dataIndex: "answer",
     },
-
     {
       key: "action",
       title: "",
-      render: (record: FAQ) => (
-        <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
-          <AntButton type="text" icon={<Ellipsis />} />
-        </Dropdown>
-      ),
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => handleEdit(record),
+          },
+          {
+            key: "2",
+            label: "Add Questions & Answers",
+            onClick: () => setOpenQAndA(true),
+          },
+          {
+            key: "3",
+            label: "Edit Questions & Answers",
+            onClick: () => setOpenEditQAndA(true),
+          },
+          {
+            key: "4",
+            label: "Delete",
+            onClick: () => handleDelete(record),
+          },
+        ];
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
+        );
+      },
     },
   ];
 
-  const deleteFAQMutation = useMutation({ mutationFn: deleteFAQ });
-
   const DeleteFAQHandler = async () => {
     try {
-      await deleteFAQMutation.mutateAsync(indexData.id, {
+      await deleteFaqItemMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -140,7 +130,7 @@ const Faq = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>FAQ Setup</h3>
+        <h3>FAQ Item Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -150,7 +140,7 @@ const Faq = () => {
       <br />
       <Card bordered={false}>
         <Table
-          dataSource={FAQData}
+          dataSource={faqItems}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -161,12 +151,16 @@ const Faq = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="FAQ Setup"
+        title="Create FAQ Item"
         footer={null}
       >
-        <SetupFaq handleClose={() => setOpen(false)} />
+        <CreateFaqItem
+          handleClose={() => setOpen(false)}
+          refetch={refetch}
+          faqId={id!}
+        />
       </Modal>
-      <Modal
+      {/* <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
@@ -192,7 +186,7 @@ const Faq = () => {
         footer={null}
       >
         <QAndA handleClose={() => setOpenEditQAndA(false)} />
-      </Modal>
+      </Modal> */}
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
@@ -201,14 +195,14 @@ const Faq = () => {
         footer={null}
       >
         <DeleteModalContent
-          isLoading={deleteFAQMutation?.isPending}
+          isLoading={deleteFaqItemMutation.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={DeleteFAQHandler}
-          title={indexData.name}
+          title={indexData.question}
         />
       </Modal>
     </div>
   );
 };
 
-export default Faq;
+export default FaqItem;
