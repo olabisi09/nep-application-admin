@@ -99,7 +99,10 @@ const AddCountry = ({ handleClose, data }: Props) => {
                 onClick={handleSubmit as any}
                 disabled={CreateCountryMutation?.isPending}
                 text={
-                  CreateCountryMutation?.isPending ? "Creating..." : "Create"
+                  data
+                  ? (CreateCountryMutation?.isPending ? 'Updating...' : 'Update')
+                  : (CreateCountryMutation?.isPending ? 'Creating...' : 'Create')
+                
                 }
               />
             </div>

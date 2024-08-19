@@ -2,10 +2,8 @@ import { Field, FieldProps } from "formik";
 import { ReactComponent as File } from "../../assets/cloud.svg";
 import styles from "./upload.module.scss";
 import classNames from "classnames";
-interface UploadProps
-  extends React.DetailedHTMLProps<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
+
+interface UploadProps extends React.DetailedHTMLProps <React.InputHTMLAttributes<HTMLInputElement>,HTMLInputElement
   > {
   label?: string;
   description?: JSX.Element | string;

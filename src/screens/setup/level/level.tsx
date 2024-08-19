@@ -1,25 +1,30 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin } from "antd";
-import { Form, Formik } from "formik";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddLevel from "./addLevel";
+import AddLevel, { EditLevel } from "./addLevel";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useQuery } from "@tanstack/react-query";
-import { getAllLevel } from "../../../requests";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { deleteLevel, getAllLevel } from "../../../requests";
+import { ColumnsType } from "antd/es/table";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const Level = () => {
+  const { notification } = App.useApp();
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [level, setLevel] = useState<Level>({} as Level);
+  const [openDelete, setOpenDelete] = useState(false);
 
-  const {data, isLoading, isError, error } = useQuery({
+
+  const {data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["getAll-level"],
     queryFn: getAllLevel
   })
@@ -28,17 +33,35 @@ const Level = () => {
     setSearchTerm(e.target.value);
   };
 
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
-          Edit
-        </button>
-      ),
-    },
-  ];
-  const columns = [
+  const handleDelete = (data: Level) => {
+    setLevel(data);
+    setOpenDelete(true);
+  }
+
+  const deleteLevelMutation = useMutation({ mutationFn: deleteLevel});
+
+  const DeleteLevelHandler = async () => {
+    try {
+      await deleteLevelMutation.mutateAsync(level?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete(false);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+
+  }
+    
+  const columns: ColumnsType<Level> = [
     {
       key: "id",
       title: "ID",
@@ -58,11 +81,30 @@ const Level = () => {
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setLevel(record);
+              setOpenEdit(true);
+            }
+          },
+          {
+            key: "2",
+            label: "Delete",
+            onClick: async () => {
+             handleDelete(record);
+            }
+          }
+        ];
+        return(
+          <Dropdown menu={{ items }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
-      ),
+        );
+      },
     },
   ];
 
@@ -74,14 +116,14 @@ const Level = () => {
   return <div>{error?.message}</div>
  }
 
-  const level = data?.data as Level[];
+  const levelData = data?.data as Level[];
 
   return (
     <main>
       <section className="space-between">
         <h3>Level Setup</h3>
         <Button
-          onClick={() => setShowAddModal(true)}
+          onClick={() => setOpen(true)}
           iconBefore={<Add />}
           text="Setup"
         />
@@ -111,57 +153,47 @@ const Level = () => {
           </div>
         </div>
         <Table
-          dataSource={level}
+          dataSource={levelData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          rowKey={(record) => record?.id}
+          scroll={{ x: true}}
         />
       </section>
 
       <Modal
-        open={showAddModal}
-        onCancel={() => setShowAddModal(false)}
+        open={open}
+        onCancel={() => setOpen(false)}
         centered
         title="Level Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddLevel />
-          </Form>
-        </Formik>
+        <AddLevel handleClose={() => setOpen(false)}/>
       </Modal>
 
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Level Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpenEdit(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Update" />
-          </div>
-        )}
+        title="Edit Level Setup"
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddLevel />
-          </Form>
-        </Formik>
+        <EditLevel item={level} handleClose={() => setOpenEdit(false)}/>
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Level Setup"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteLevelMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={DeleteLevelHandler}
+          title={level?.levelName}
+        />
       </Modal>
     </main>
   );

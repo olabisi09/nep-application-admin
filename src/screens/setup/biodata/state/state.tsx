@@ -78,6 +78,12 @@ const StateSetup = () => {
       title: "ID",
       dataIndex: "id",
     },
+    
+    {
+      key: "countryId",
+      title: "Country Name",
+      dataIndex: "countryId",
+    },
     {
       key: "stateName",
       title: "State Name",
@@ -136,7 +142,7 @@ const StateSetup = () => {
   return (
     <main>
         <section className="space-between">
-        <h3>State Setup</h3>
+        <h3>State/Province/District Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
@@ -179,7 +185,7 @@ const StateSetup = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="State Setup"
+        title="State/Province/District Setup"
         footer={null}
       >
         <Formik initialValues={{}} onSubmit={() => {}}>
@@ -193,7 +199,7 @@ const StateSetup = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit State Setup"
+        title="Edit State/Province/District Setup"
         footer={null}
       >
         <AddState handleClose={() => setOpenEdit(false)} data={indexData} />
@@ -202,7 +208,7 @@ const StateSetup = () => {
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete State Setup"
+        title="Delete State/Province/District Setup"
         footer={null}
       >
         <DeleteModalContent

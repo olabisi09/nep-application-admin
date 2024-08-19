@@ -1,13 +1,17 @@
-import { useState } from "react";
 import Input from "../../../custom/input/input";
 import Upload from "../../../custom/upload/upload";
 import { ReactComponent as Image } from "../../../assets/image.svg";
 import Button from "../../../custom/button/button";
 import { Form, Formik, FormikValues } from "formik";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUpdateGeneralTemplate, getGeneralTemplateById, StatusOptions } from "../../../requests";
+import {
+  createUpdateGeneralTemplate,
+  getGeneralTemplateById,
+  StatusOptions,
+} from "../../../requests";
 import Select from "../../../custom/select/select";
 import { App } from "antd";
+import { validateTemplate } from "../../../utils/validations";
 
 interface Init {
   schoolName: string;
@@ -15,17 +19,16 @@ interface Init {
   homePage: any;
   aboutUs: any;
   loginBackground: any;
-  contactUs: any;
   email: string;
   address: string;
-  logoImage: any
-  phoneNumber: string
+  logoImage: any;
+  phoneNumber: string;
   status: any;
 }
 
 const fileValues: { label: string; name: keyof Init }[] = [
   {
-    label: 'Logo Image',
+    label: "Logo Image",
     name: "logoImage",
   },
   {
@@ -40,13 +43,13 @@ const fileValues: { label: string; name: keyof Init }[] = [
     label: "Login Background Image",
     name: "loginBackground",
   },
-  {
-    label: "Contact Us Page Image",
-    name: "contactUs",
-  },
 ];
 
-const SetupSchoolInfoTemplate = ({ handleClose }: { handleClose: () => void }) => {
+const SetupSchoolInfoTemplate = ({
+  handleClose,
+}: {
+  handleClose: () => void;
+}) => {
   const queryClient = useQueryClient();
   const { notification } = App.useApp();
 
@@ -55,10 +58,13 @@ const SetupSchoolInfoTemplate = ({ handleClose }: { handleClose: () => void }) =
     mutationKey: ["create-update-general-template"],
   });
 
-  const CreateUpdateGeneralTemplateHandler = async (values: FormikValues, resetForm:() => void) => {
+  const CreateUpdateGeneralTemplateHandler = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     try {
       const formData = new FormData();
-      formData.append("SchoolName", values?.schoolName?.trim() );
+      formData.append("SchoolName", values?.schoolName?.trim());
       formData.append("SchoolAddress", values?.address?.trim());
       formData.append("SchoolPhoneNumber", values?.phoneNumber?.trim());
       formData.append("SchoolEmailAddress", values?.email?.trim());
@@ -77,7 +83,6 @@ const SetupSchoolInfoTemplate = ({ handleClose }: { handleClose: () => void }) =
           queryClient.refetchQueries({ queryKey: ["get-general-template"] });
           resetForm();
           handleClose();
-         
         },
       });
     } catch (error: any) {
@@ -88,7 +93,6 @@ const SetupSchoolInfoTemplate = ({ handleClose }: { handleClose: () => void }) =
     }
   };
 
-
   return (
     <Formik
       initialValues={
@@ -98,21 +102,25 @@ const SetupSchoolInfoTemplate = ({ handleClose }: { handleClose: () => void }) =
           homePage: "",
           aboutUs: "",
           loginBackground: "",
-          contactUs: "",
+          phoneNumber: "",
           email: "",
           address: "",
-          phoneNumber: "",
-          status:''
+          status: "",
         } as Init
       }
-      onSubmit={(values, {resetForm}) => {
+      onSubmit={(values, { resetForm }) => {
         CreateUpdateGeneralTemplateHandler(values, resetForm);
         console.log(values);
       }}
+      validationSchema={validateTemplate}
     >
       {({ values, setFieldValue }) => (
         <Form className="fields">
-          <Input name="schoolName" label="School Name" placeholder="Input title" />
+          <Input
+            name="schoolName"
+            label="School Name"
+            placeholder="Input title"
+          />
           <Input name="logoUrl" label="Logo Url" placeholder="Input url" />
           {fileValues.map((value) => (
             <>
@@ -120,7 +128,11 @@ const SetupSchoolInfoTemplate = ({ handleClose }: { handleClose: () => void }) =
                 <div className="small-gap">
                   <Image />
                   <span>{`${values[value.name]?.name}`}</span>
-                  <Button onClick={() => setFieldValue(value.name, "")} variant="text" text="x" />
+                  <Button
+                    onClick={() => setFieldValue(value.name, "")}
+                    variant="text"
+                    text="x"
+                  />
                 </div>
               ) : (
                 <Upload
@@ -136,35 +148,38 @@ const SetupSchoolInfoTemplate = ({ handleClose }: { handleClose: () => void }) =
               )}
             </>
           ))}
-          {/* {upload ? (
-          <div className="small-gap">
-            <Image />
-            <span>{upload.name}</span>
-            <Button onClick={() => clearFile()} variant="text" text="x" />
-          </div>
-        ) : (
-          <Upload name="image" label="Image" onChange={handleFileChange} />
-        )} */}
           <Input name="email" label="Email" placeholder="Input Email" />
-          <Input name="phoneNumber" label="Phone Number" placeholder="Input Phone Number" />
-          <Input name="address" label="Contact Address" placeholder="Input Address" />
+          <Input
+            name="phoneNumber"
+            label="Phone Number"
+            placeholder="Input Phone Number"
+          />
+          <Input
+            name="address"
+            label="Contact Address"
+            placeholder="Input Address"
+          />
           <Select
-        name="status"
-        placeholder="Select Status"
-        label="Status"
-        options={
-          <>
-          {StatusOptions.map((option: any) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-          </>
-        }
-      />
+            name="status"
+            placeholder="Select Status"
+            label="Status"
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
+          />
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
-            <Button text="Create" disabled={CreateUpdateGeneralTemplateMutation?.isPending} isLoading={CreateUpdateGeneralTemplateMutation.isPending}/>
+            <Button
+              text="Create"
+              disabled={CreateUpdateGeneralTemplateMutation?.isPending}
+              isLoading={CreateUpdateGeneralTemplateMutation.isPending}
+            />
           </div>
         </Form>
       )}
@@ -177,27 +192,39 @@ interface EditTemplateProps {
   data: GeneralTemplate;
 }
 
-const EditTemplate: React.FC<EditTemplateProps> = ({ handleClose, data })  => {
+const EditTemplate: React.FC<EditTemplateProps> = ({ handleClose, data }) => {
   const queryClient = useQueryClient();
-const {notification} = App.useApp()
+  const { notification } = App.useApp();
 
   const CreateUpdateGeneralTemplateMutation = useMutation({
     mutationFn: createUpdateGeneralTemplate,
     mutationKey: ["create-update-general-template"],
   });
 
-  const CreateUpdateGeneralTemplateHandler = async (values: FormikValues, resetForm:() => void) => {
+  const CreateUpdateGeneralTemplateHandler = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     try {
       const formData = new FormData();
       formData.append("Id", data?.id?.toString());
-      formData.append("SchoolName", values?.schoolName?.trim() );
+      formData.append("SchoolName", values?.schoolName?.trim());
       formData.append("SchoolAddress", values?.address?.trim());
       formData.append("SchoolPhoneNumber", values?.phoneNumber?.trim());
       formData.append("SchoolEmailAddress", values?.email?.trim());
-      formData.append("AboutUsImage", values?.aboutUs === "" ? data?.aboutUsImageUrl : values?.aboutUs);
+      formData.append(
+        "AboutUsImage",
+        values?.aboutUs === "" ? data?.aboutUsImageUrl : values?.aboutUs
+      );
       formData.append("LoginBackgroundImage", values?.loginBackground);
-      formData.append("Logo", values?.logoImage === "" ? data?.logoUrl : values?.logo);
-      formData.append("HomePageImage", values?.homePage === "" ? data?.homePageImageUrl : values?.homePage);
+      formData.append(
+        "Logo",
+        values?.logoImage === "" ? data?.logoUrl : values?.logo
+      );
+      formData.append(
+        "HomePageImage",
+        values?.homePage === "" ? data?.homePageImageUrl : values?.homePage
+      );
       formData.append("ActiveStatus", values?.status);
 
       await CreateUpdateGeneralTemplateMutation.mutateAsync(formData, {
@@ -209,7 +236,6 @@ const {notification} = App.useApp()
           queryClient.refetchQueries({ queryKey: ["get-general-template"] });
           resetForm();
           handleClose();
-         
         },
       });
     } catch (error: any) {
@@ -222,76 +248,94 @@ const {notification} = App.useApp()
 
   return (
     <Formik
-    initialValues={
-      {
-        schoolName: data?.schoolName,
-        logoUrl: "",
-        homePage: "",
-        aboutUs: "",
-        loginBackground: "",
-        contactUs: "",
-        email: data?.schoolEmailAddress,
-        address: data?.schoolAddress,
-        status: data?.activeStatus,
-        phoneNumber: data?.schoolPhoneNumber,
-      } as Init
-    }
-    onSubmit={(values, {resetForm}) => {
-      CreateUpdateGeneralTemplateHandler(values, resetForm);
-    }}
-  >
-    {({ values, setFieldValue }) => (
-      <Form className="fields">
-        <Input name="schoolName" label="School Name" placeholder="Input title" />
-        <Input name="logoUrl" label="Logo Url" placeholder="Input url" />
-        {fileValues.map((value) => (
-          <>
-            {!!values[value.name] ? (
-              <div className="small-gap">
-                <Image />
-                <span>{`${values[value.name]?.name}`}</span>
-                <Button onClick={() => setFieldValue(value.name, "")} variant="text" text="x" />
-              </div>
-            ) : (
-              <Upload
-                name={value.name}
-                label={value.label}
-                onChange={(e) => {
-                  const file = e.target.files;
-                  if (file) {
-                    setFieldValue(value.name, file[0]);
-                  }
-                }}
-              />
-            )}
-          </>
-        ))}
-        <Input name="email" label="Email" placeholder="Input Email" />
-        <Input name="phoneNumber" label="Phone Number" placeholder="Input Phone Number" />
-        <Input name="address" label="Contact Address" placeholder="Input Address" />
-        <Select
-      name="status"
-      placeholder="Select Status"
-      label="Status"
-      options={
-        <>
-        {StatusOptions.map((option: any) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-        </>
+      initialValues={
+        {
+          schoolName: data?.schoolName,
+          logoUrl: "",
+          homePage: "",
+          aboutUs: "",
+          loginBackground: "",
+          email: data?.schoolEmailAddress,
+          address: data?.schoolAddress,
+          status: data?.activeStatus,
+          phoneNumber: data?.schoolPhoneNumber,
+        } as Init
       }
-    />
-        <div className="btn-group">
-          <Button onClick={handleClose} variant="text" text="Cancel" />
-          <Button text="Update" disabled={CreateUpdateGeneralTemplateMutation?.isPending} isLoading={CreateUpdateGeneralTemplateMutation.isPending}/>
-        </div>
-      </Form>
-    )}
-  </Formik>
-  )
+      onSubmit={(values, { resetForm }) => {
+        CreateUpdateGeneralTemplateHandler(values, resetForm);
+      }}
+    >
+      {({ values, setFieldValue }) => (
+        <Form className="fields">
+          <Input
+            name="schoolName"
+            label="School Name"
+            placeholder="Input title"
+          />
+          <Input name="logoUrl" label="Logo Url" placeholder="Input url" />
+          {fileValues.map((value) => (
+            <>
+              {!!values[value.name] ? (
+                <div className="small-gap">
+                  <Image />
+                  <span>{`${values[value.name]?.name}`}</span>
+                  <Button
+                    onClick={() => setFieldValue(value.name, "")}
+                    variant="text"
+                    text="x"
+                  />
+                </div>
+              ) : (
+                <Upload
+                  name={value.name}
+                  label={value.label}
+                  onChange={(e) => {
+                    const file = e.target.files;
+                    if (file) {
+                      setFieldValue(value.name, file[0]);
+                    }
+                  }}
+                />
+              )}
+            </>
+          ))}
+          <Input name="email" label="Email" placeholder="Input Email" />
+          <Input
+            name="phoneNumber"
+            label="Phone Number"
+            placeholder="Input Phone Number"
+          />
+          <Input
+            name="address"
+            label="Contact Address"
+            placeholder="Input Address"
+          />
+          <Select
+            name="status"
+            placeholder="Select Status"
+            label="Status"
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
+          />
+          <div className="btn-group">
+            <Button onClick={handleClose} variant="text" text="Cancel" />
+            <Button
+              text="Update"
+              disabled={CreateUpdateGeneralTemplateMutation?.isPending}
+              isLoading={CreateUpdateGeneralTemplateMutation.isPending}
+            />
+          </div>
+        </Form>
+      )}
+    </Formik>
+  );
+};
 
-}
-
-export  {SetupSchoolInfoTemplate, EditTemplate};
+export { SetupSchoolInfoTemplate, EditTemplate };

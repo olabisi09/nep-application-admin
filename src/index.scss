@@ -123,6 +123,10 @@ button {
   align-items: flex-start;
 }
 
+.align-end {
+	margin-inline-start: auto;
+}
+
 .fields {
   display: flex;
   flex-direction: column;

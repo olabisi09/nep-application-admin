@@ -3,9 +3,8 @@ import Button from "../../../custom/button/button";
 import Select from "../../../custom/select/select";
 import { Form, Formik, FormikProvider, FormikValues, useFormik } from "formik";
 import * as Yup from "yup";
-import { createFaq } from "../../../requests";
+import { StatusOptions, createFaq } from "../../../requests";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { notify } from "../../../utils/notify";
 import { App } from "antd";
 
 interface Props {
@@ -13,11 +12,11 @@ interface Props {
   handleClose: () => void;
 }
 
-const SetupFaq = ({handleClose, data}:Props) => {
+const SetupFaq = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const FaqsetupMutation = useMutation({
+  const FaqSetupMutation = useMutation({
     mutationKey: ["faq-setup"],
     mutationFn: createFaq,
   });
@@ -27,20 +26,20 @@ const SetupFaq = ({handleClose, data}:Props) => {
     resetForm: () => void
   ) => {
     const payload: FAQ = {
-      id:0,
+      id: data?.id || 0,
       name: values?.name,
       description: values?.description,
       activeStatus: values?.activeStatus === "true",
     };
     try {
-      await FaqsetupMutation.mutateAsync(payload, {
+      await FaqSetupMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
           queryClient.refetchQueries({
-            queryKey: ["get-Faq"],
+            queryKey: ["get-AllFAQ"],
           });
           handleClose();
         },
@@ -55,48 +54,59 @@ const SetupFaq = ({handleClose, data}:Props) => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Title is required"),
-    activeStatus: Yup.string().required("Active status is required"),
+    status: Yup.string().required("Active status is required"),
   });
-
-  const formik = useFormik<FormikValues>({
-    initialValues: {
-      name: data?.name,
-      
-      description: "null description",
-    },
-    onSubmit: (values, { resetForm }) => {
-      setupFaqHandler(values, resetForm);
-    },
-    validationSchema: validationSchema,
-  });
-
-  const statusOptions = (
-    <>
-      <option value="true">Active</option>
-      <option value="false">Inactive</option>
-    </>
-  );
   return (
-    <FormikProvider value={formik}>
-      <Form className="fields">
-        <Input name="name" label="Title" placeholder="Input title" />
-        <Select
-          name="activeStatus"
-          label="Status"
-          placeholder="Select Status"
-          options={statusOptions}
-        />
-        <div className="btn-group">
-          <Button onClick={handleClose} variant="text" text="Cancel" />
-          <Button
-            text="Create"
-            type="submit"
-            isLoading={FaqsetupMutation?.isPending}
-            disabled={FaqsetupMutation?.isPending}
-          />
-        </div>
-      </Form>
-    </FormikProvider>
+    <Formik
+      initialValues={{
+        name: data?.name || "",
+        status:
+          data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
+      }}
+      onSubmit={(values, { resetForm }) => {
+        setupFaqHandler(values, resetForm);
+      }}
+      enableReinitialize={true}
+      validationSchema={validationSchema}
+    >
+      {({ handleSubmit }) => {
+        return (
+          <Form className="fields">
+            <Input name="name" placeholder="Title  Name" label="Title Name" />
+            <Select
+              name="status"
+              placeholder="Select Status"
+              label="Status"
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              }
+            />
+            <div className="btn-group">
+              <Button onClick={handleClose} variant="text" text="Cancel" />
+              <Button
+                onClick={handleSubmit as any}
+                disabled={FaqSetupMutation?.isPending}
+                text={
+                  data
+                    ? FaqSetupMutation?.isPending
+                      ? "Updating..."
+                      : "Update"
+                    : FaqSetupMutation?.isPending
+                    ? "Creating..."
+                    : "Create"
+                }
+              />
+            </div>
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
 

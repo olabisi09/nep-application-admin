@@ -1,13 +1,10 @@
 import { Form, Formik, FormikValues } from "formik";
 import { Button, Editor, Input, Select } from "../../../../custom";
 import { createOrUpdateSupportGuidance } from "../../../../requests";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import StudentLife from "../studentLife";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
-import { validator } from "../../../../utils/validator";
 
 const SupportAndGuidanceForm = ({
   handleClose,
@@ -60,15 +57,16 @@ const SupportAndGuidanceForm = ({
 
   const statusOptions = (
     <>
+      <option value={""}>-- select an option --</option>
       <option value="Active"> Active</option>
       <option value="Inactive">Inactive</option>
     </>
   );
 
-  const validationSchema = Yup.object().shape({
-    title: validator.title,
-    status: validator.status,
-    description: validator.description,
+  const validateSetup = Yup.object().shape({
+    title: Yup.string().required("Title is required"),
+    description: Yup.string().required("Description is required"),
+    status: Yup.string().required("Status is required"),
   });
 
   const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
@@ -84,7 +82,7 @@ const SupportAndGuidanceForm = ({
       onSubmit={(values, { resetForm }) =>
         handleAddSupportGuidance(values, resetForm)
       }
-      validationSchema={validationSchema}>
+      validationSchema={validateSetup}>
       {({ setFieldValue }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />

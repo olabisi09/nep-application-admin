@@ -50,8 +50,9 @@ const SchoolSummary = ({
 
   const statusOptions = (
     <>
+      <option>-- select an option --</option>
       <option>Active</option>
-      <option>Inative</option>
+      <option>Inactive</option>
     </>
   );
 
@@ -64,8 +65,7 @@ const SchoolSummary = ({
       }}
       onSubmit={(values, { resetForm }) =>
         handleAddSchoolSummary(values, resetForm)
-      }
-    >
+      }>
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />
         <Input name="figure" label="Figure" placeholder="Input figure" />

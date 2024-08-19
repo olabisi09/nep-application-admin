@@ -2,7 +2,10 @@ import Input from "../../../../custom/input/input";
 import { Form, Formik, FormikValues } from "formik";
 import Button from "../../../../custom/button/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { StatusOptions, createOrUpdateMaritalStatus } from "../../../../requests";
+import {
+  StatusOptions,
+  createOrUpdateMaritalStatus,
+} from "../../../../requests";
 import * as Yup from "yup";
 import { App } from "antd";
 import Select from "../../../../custom/select/select";
@@ -12,7 +15,7 @@ interface Props {
   handleClose: () => void;
 }
 
-const AddMarital = ({ handleClose,data }:Props)  => {
+const AddMarital = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -25,8 +28,7 @@ const AddMarital = ({ handleClose,data }:Props)  => {
     const payload: Partial<MaritalStatus> = {
       id: data?.id || 0,
       statusName: values.MaritalName,
-      activeStatus: values?.status === "true",  // Convert "true" to true, "false" to false
-   
+      activeStatus: values?.status === "true", // Convert "true" to true, "false" to false
     };
 
     try {
@@ -39,7 +41,7 @@ const AddMarital = ({ handleClose,data }:Props)  => {
           queryClient.refetchQueries({
             queryKey: ["get-marital-status"],
           });
-          handleClose()
+          handleClose();
         },
       });
     } catch (error: any) {
@@ -52,16 +54,15 @@ const AddMarital = ({ handleClose,data }:Props)  => {
 
   const validationSchema = Yup.object().shape({
     MaritalName: Yup.string().required("Marital Name is required"),
-    status:Yup.string().required("Active Status is required"),
-
+    status: Yup.string().required("Active Status is required"),
   });
 
- return (
+  return (
     <Formik
       initialValues={{
         MaritalName: data?.statusName,
-        status: data?.activeStatus !== undefined ? String(data?.activeStatus) : "",  // Initialize with string
-
+        status:
+          data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
       }}
       onSubmit={(values) => {
         CreateMaritalStatusHandler(values);
@@ -76,27 +77,33 @@ const AddMarital = ({ handleClose,data }:Props)  => {
             placeholder="Input Marital Name"
             label="Marital Name"
           />
-           <Select
-        name="status"
-        placeholder="Select Status"
-        label="Status"
-        options={
-          <>
-          {StatusOptions.map((option: any) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-          </>
-        }
-      />
+          <Select
+            name="status"
+            placeholder="Select Status"
+            label="Status"
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
+          />
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button
               onClick={handleSubmit as any} // type casting as any to avoid TypeScript errors
               disabled={CreateMaritalStatusMutation?.isPending}
               text={
-                CreateMaritalStatusMutation?.isPending ? "Creating..." : "Create"
+                data
+                  ? CreateMaritalStatusMutation?.isPending
+                    ? "Updating"
+                    : "Update"
+                  : CreateMaritalStatusMutation?.isPending
+                  ? "Creating"
+                  : "Create"
               }
             />
           </div>

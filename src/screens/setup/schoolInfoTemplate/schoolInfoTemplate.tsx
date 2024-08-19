@@ -1,6 +1,6 @@
 import { App, Card, Image, Modal, Spin } from "antd";
 import { ReactComponent as Plus } from "../../../assets/add.svg";
-import pic from "../../../assets/placeholder-img.png";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import { EditTemplate, SetupSchoolInfoTemplate } from "./setup";
@@ -13,7 +13,7 @@ const SchoolInfoTemplate = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [id, setId] = useState(0);
   const [openDelete, setOpenDelete] = useState(false);
-  const {notification} = App.useApp()
+  const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
   const handleOpenEditModal = (template: GeneralTemplate) => {
@@ -31,12 +31,10 @@ const SchoolInfoTemplate = () => {
     queryFn: getGeneralTemplates,
   });
 
- 
   const DeleteTemplateMutation = useMutation({
-    mutationFn: ()=>deleteGeneralTemplate(id),
+    mutationFn: () => deleteGeneralTemplate(id),
     mutationKey: ["delete-template"],
   });
-
 
   const DeleteTemplateHandler = async () => {
     try {
@@ -59,7 +57,6 @@ const SchoolInfoTemplate = () => {
       });
     }
   };
-  
 
   const generalTemplateData = data?.data;
   if (isLoading) {
@@ -72,7 +69,11 @@ const SchoolInfoTemplate = () => {
     <div>
       <section className="space-between">
         <h3>Template</h3>
-        <Button onClick={() => setOpen(true)} iconBefore={<Plus />} text="Setup" />
+        <Button
+          onClick={() => setOpen(true)}
+          iconBefore={<Plus />}
+          text="Setup"
+        />
       </section>
       <br />
 
@@ -80,7 +81,11 @@ const SchoolInfoTemplate = () => {
         {data &&
           generalTemplateData &&
           generalTemplateData.map((template) => (
-            <Card bordered={false} style={{ maxWidth: "34.286rem" }} key={template?.id}>
+            <Card
+              bordered={false}
+              style={{ maxWidth: "34.286rem" }}
+              key={template?.id}
+            >
               <div className="fields">
                 <div className="space-between-grid">
                   <b>School Name</b>
@@ -92,15 +97,27 @@ const SchoolInfoTemplate = () => {
             </div> */}
                 <div className="space-between-grid">
                   <b>Home Page</b>
-                  <Image src={template?.homePageImageUrl} alt="" className="table-img"/>
+                  <Image
+                    src={template?.homePageImageUrl}
+                    alt=""
+                    className="table-img"
+                  />
                 </div>
                 <div className="space-between-grid">
                   <b>About Us</b>
-                  <Image src={template?.aboutUsImageUrl} alt="" className="table-img"/>
+                  <Image
+                    src={template?.aboutUsImageUrl}
+                    alt=""
+                    className="table-img"
+                  />
                 </div>
                 <div className="space-between-grid">
                   <b>Login</b>
-                  <Image src={template?.loginBackgroundImageUrl} alt="" className="table-img"/>
+                  <Image
+                    src={template?.loginBackgroundImageUrl}
+                    alt=""
+                    className="table-img"
+                  />
                 </div>
                 {/* <div className="space-between-grid">
               <b>Contact Us</b>
@@ -119,20 +136,35 @@ const SchoolInfoTemplate = () => {
                   <p>{template?.schoolAddress}</p>
                 </div>
                 <div className="edit-button">
-                  <Button onClick={() => handleOpenEditModal(template)}  text="Edit" />
-                  <Button onClick={() => handleDelete(template)}  text="Delete" bgColor="red"/>
+                  <Button
+                    onClick={() => handleOpenEditModal(template)}
+                    text="Edit"
+                  />
+                  <Button
+                    onClick={() => handleDelete(template)}
+                    text="Delete"
+                    bgColor="red"
+                  />
                 </div>
               </div>
 
               {id === template?.id && openEdit && (
-                <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Edit Template Setup" footer={null}>
-                <EditTemplate handleClose={() => setOpenEdit(false)} data={template} />
-              </Modal>
+                <Modal
+                  open={openEdit}
+                  onCancel={() => setOpenEdit(false)}
+                  centered
+                  title="Edit Template Setup"
+                  footer={null}
+                >
+                  <EditTemplate
+                    handleClose={() => setOpenEdit(false)}
+                    data={template}
+                  />
+                </Modal>
               )}
 
-              {
-                id === template?.id && openDelete && (
-                  <Modal
+              {id === template?.id && openDelete && (
+                <Modal
                   open={openDelete}
                   onCancel={() => setOpenDelete(false)}
                   centered
@@ -144,17 +176,20 @@ const SchoolInfoTemplate = () => {
                     handleCloseModal={() => setOpenDelete(false)}
                     handleSubmit={DeleteTemplateHandler}
                     title={"this template"}
-                   
                   />
                 </Modal>
-                )
-              }
-              
+              )}
             </Card>
           ))}
       </div>
 
-      <Modal open={open} onCancel={() => setOpen(false)} centered title="Template Setup" footer={null}>
+      <Modal
+        open={open}
+        onCancel={() => setOpen(false)}
+        centered
+        title="Template Setup"
+        footer={null}
+      >
         <SetupSchoolInfoTemplate handleClose={() => setOpen(false)} />
       </Modal>
     </div>

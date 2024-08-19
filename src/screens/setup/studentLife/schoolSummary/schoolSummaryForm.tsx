@@ -4,6 +4,8 @@ import { createOrUpdateSchoolSummary } from "../../../../requests";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
 import { useParams } from "react-router-dom";
+import { validator } from "../../../../utils/validator";
+import * as Yup from "yup";
 
 const SchoolSummaryForm = ({
   handleClose,
@@ -82,10 +84,17 @@ const SchoolSummaryForm = ({
 
   const statusOptions = (
     <>
+      <option value="">---select an option---</option>
       <option>Active</option>
       <option>Inactive</option>
     </>
   );
+
+  const validationSchema = Yup.object().shape({
+    title: validator.title,
+    status: validator.status,
+    figure: validator.description,
+  });
 
   const initialStatus = item?.activeStatus ? "Active" : "Inactive";
   const hasRecords = Object.keys(item).length > 0;
@@ -104,7 +113,7 @@ const SchoolSummaryForm = ({
           handleAddSchoolSummary(values, resetForm);
         }
       }}
-    >
+      validationSchema={validationSchema}>
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />
         <Input name="figure" label="Figure" placeholder="Input figure" />

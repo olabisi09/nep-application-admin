@@ -36,6 +36,7 @@ export const routes = {
     aboutUs: "/about-us",
     whyUs: "/why-us",
     faq: "/faq",
+    faqItem: "/faq/:id/faq-items",
     newsAndEvents: "/news-and-events",
     history: "/history",
     schoolMgt: "/school-management",

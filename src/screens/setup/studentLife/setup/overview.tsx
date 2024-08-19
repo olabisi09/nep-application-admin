@@ -23,11 +23,13 @@ const Overview = ({ handleClose }: { handleClose: () => void }) => {
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: Partial<Setup> = {
-      title: values.title,
-      figure: values.figure,
-      activeStatus: values.status === "Active",
-      isDeleted: false,
+    const payload = {
+      Title: values.title,
+      Description: values.description,
+      StudentLifeId: 3,
+      Image: values.image,
+      ActiveStatus: values.status === "Active",
+      IsDeleted: false,
     };
 
     try {
@@ -52,8 +54,9 @@ const Overview = ({ handleClose }: { handleClose: () => void }) => {
 
   const statusOptions = (
     <>
+      <option>-- select an option --</option>
       <option>Active</option>
-      <option>Inative</option>
+      <option>Inactive</option>
     </>
   );
 
@@ -67,8 +70,9 @@ const Overview = ({ handleClose }: { handleClose: () => void }) => {
           image: null,
         } as SetupInit
       }
-      onSubmit={(values, { resetForm }) => handleAddOverview(values, resetForm)}
-    >
+      onSubmit={(values, { resetForm }) =>
+        handleAddOverview(values, resetForm)
+      }>
       {({ values, setFieldValue }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />

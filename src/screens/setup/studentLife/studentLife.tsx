@@ -15,8 +15,16 @@ import { useQuery } from "@tanstack/react-query";
 import { getStudentLife } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import { CampusExperience, CreateStudentLife, EditStudentLife, FitnessAthletics, Overview, SchoolSummary, StudentActivities, SupportGuidance } from "./setup";
-
+import {
+  CampusExperience,
+  CreateStudentLife,
+  EditStudentLife,
+  FitnessAthletics,
+  Overview,
+  SchoolSummary,
+  StudentActivities,
+  SupportGuidance,
+} from "./setup";
 import { useNavigate } from "react-router-dom";
 
 const forms = [

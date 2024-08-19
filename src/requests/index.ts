@@ -27,25 +27,59 @@ export const getAllAcademicSession = async () => {
     ?.data as SessionResponse;
 };
 
+export const createUpdateSession = async (payload: Partial<Session>) => {
+  return (await api.post('/ReadMore/createUpdateAcademicSession', payload))?.data as Response;
+}
+
+export const deleteSession = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteAcademicSessionById?Id=${id}`))?.data as Response;
+}
+
 export const getAllCategory = async () => {
-  return (await api.get("/Academics/GetAllCategoryAsync"))
-    ?.data as CategoryResponse;
-};
+  return (await api.get('/Academics/GetAllCategoryAsync'))?.data as CategoryResponse;
+}
+
+
 // export const getAllCareerProspect = async () => {
 //   return (await api.get('/ReadMore/GetAllCareerProspects'))?.data as CareerProspectResponse;
 // }
+
+
+export const createUpdateLevel = async (payload: Partial<Level>) => {
+  return (await api.post('/ReadMore/CreateUpdateLevel', payload))?.data as Response;
+}
 
 export const getAllLevel = async () => {
   return (await api.get("/ReadMore/GetAllLevel"))?.data as LevelResponse;
 };
 
+
+export const deleteLevel = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteLevelById?Id=${id}`))?.data as Response;
+}
+
+export const createUpdateTuition = async (payload: Partial<Tuition>) => {
+  return (await api.post('/ReadMore/CreateUpdateTuition', payload))?.data as Response;
+}
+
 export const getAllTuitionFee = async () => {
   return (await api.get("/ReadMore/GetAllTuition"))?.data as TuitionResponse;
 };
 
+export const deleteTuition = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteTuitionById?Id=${id}`))?.data as Response;
+}
+
+export const createUpdateTuitionYear = async (payload: Partial<TuitionYear>) => {
+  return (await api.post('/ReadMore/CreateUpdateTuitionYear', payload))?.data as Response;
+}
+
 export const getAllTuitionYear = async () => {
-  return (await api.get("/ReadMore/GetAllTuitionYear"))
-    ?.data as TuitionYearResponse;
+  return (await api.get('/ReadMore/GetAllTuitionYear'))?.data as TuitionYearResponse;
+}
+
+export const deleteTuitionYear = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteTuitionYearById?Id=${id}`))?.data as Response;
 };
 
 export const createFaq = async (payload: Partial<FAQ>) => {
@@ -60,6 +94,19 @@ export const deleteFAQ = async (id: number) => {
   return (await api.delete(`/HomePage/DeleteFaqId?Id=${id}`))?.data as Response;
 };
 
+
+export const getFAQItemsByFaqId = async (id: number | string) => {
+  return (await api.get(`/HomePage/homePage/GetFaqItemsByFaqId?Id=${id}`))
+    ?.data as FaqItemResponse;
+};
+
+export const createOrUpdateFaqItem = async (payload: Partial<FaqItem>) => {
+  return (await api.post(`/HomePage/homePage/CreateUpdateFaqItems`, payload))?.data as Response;
+};
+export const deleteFAQItem = async (id: number) => {
+  return (await api.delete(`/HomePage/DeleteFaqItemId?Id=${id}`))
+    ?.data as Response;
+};
 // export const createFaq = async (payload: Partial<FAQ>) => {
 //   return (await api.post(`/HomePage/homePage/CreateUpdateFaq`, payload))
 //     ?.data as FaqResponse;
@@ -158,6 +205,11 @@ export const createOrUpdateQualificationType = async (
 
 export const getState = async () => {
   return (await api.get("/Utilities/Utilities/GetAllStates"))
+    ?.data as StateResponse;
+};
+
+export const getStateByCountryId = async (id: number) => {
+  return (await api.get(`/Utilities/Utilities/GetStateByCountryId?id=${id}`))
     ?.data as StateResponse;
 };
 
@@ -300,16 +352,16 @@ export const createOrUpdateStudentLife = async (payload: Partial<Setup>) => {
 //   )?.data as Response;
 // };
 
-export const createOrUpdateCampusExperience = async (
-  payload: Partial<Setup>
-) => {
-  return (
-    await api.post(
-      "/StudentLife/studentlife/CreateUpdateCampusExperience",
-      payload
-    )
-  )?.data as Response;
-};
+// export const createOrUpdateCampusExperience = async (
+//   payload: Partial<Setup>
+// ) => {
+//   return (
+//     await api.post(
+//       "/StudentLife/studentlife/CreateUpdateCampusExperience",
+//       payload
+//     )
+//   )?.data as Response;
+// };
 
 export const createOrUpdateFitnessAthletics = async (
   payload: Partial<Setup>
@@ -344,9 +396,21 @@ export const createOrUpdateStudentActivity = async (
   )?.data as Response;
 };
 
+export const getCampusExperienceByStudentLifeId = async (studentLifeId: string) => {
+  return (await api.get(`/StudentLife/studentlife/GetCampusExperienceByStudentLifeId?Id=${studentLifeId}`))?.data as GetByStudentLifeResponse;
+}
+
+export const createOrUpdateCampusExperience = async (payload: Partial<ItemByStudentLifePayload>) => {
+  return (await api.post('/StudentLife/studentlife/CreateUpdateCampusExperience', payload))?.data as Response;
+}
+
+export const deleteCampusExperience = async (id: number) => {
+  return (await api.delete(`/StudentLife/studentlife/DeleteCampusExperience?Id=${id}`))?.data as Response;
+}
+
 export const getOverview = async () => {
   return (await api.get("/StudentLife/studentlife/GetAllOverview"))
-    ?.data as OverviewResponse;
+    ?.data as GetByStudentLifeResponse;
 };
 
 export const getOverviewByStudentLifeId = async (id: string | number) => {
@@ -354,14 +418,34 @@ export const getOverviewByStudentLifeId = async (id: string | number) => {
     await api.get(
       `/StudentLife/studentlife/GetOverviewByStudentLifeId?Id=${id}`
     )
-  )?.data as OverviewResponse;
+  )?.data as GetByStudentLifeResponse;
 };
 
-export const createOrUpdateOverview = async (payload: Partial<Setup>) => {
-  return (
-    await api.post("/StudentLife/studentlife/createUpdateOverView", payload)
-  )?.data as Response;
-};
+export const createOrUpdateOverview= async (payload: Partial<ItemByStudentLifePayload>) => {
+  return (await api.post('/StudentLife/studentlife/createUpdateOverView', payload, { headers: { 'Content-Type': 'multipart/form-data' } }))?.data as Response;
+}
+
+export const deleteOverview = async (id: number) => {
+  return (await api.delete(`/StudentLife/studentlife/DeleteOverview?Id=${id}`))?.data as Response;
+}
+
+export const getTemplate = async () => {
+  return (await api.get(`/GeneralTemplate/GetAllTemplate`))?.data as GetTemplateResponse;
+}
+
+export const createOrUpdateTemplate = async (payload: Partial<TemplatePayload>) => {
+  return (await api.post(`/GeneralTemplate/createUpdateTemplate`, payload, { headers: { 'Content-Type': 'multipart/form-data' } }))?.data as Response
+}
+
+export const deleteTemplate = async (id: number | string) => {
+  return (await api.delete(`/GeneralTemplate/DeleteTemplateById?Id=${id}`))?.data as Response;
+}
+
+// export const createOrUpdateOverview = async (payload: Partial<Setup>) => {
+//   return (
+//     await api.post("/StudentLife/studentlife/createUpdateOverView", payload)
+//   )?.data as Response;
+// };
 
 export const createOrUpdateSubject = async (
   payload: Partial<SubjectPayload>
@@ -471,11 +555,6 @@ export const createOrUpdateAccreditation = async (
 
 export const deleteAccreditationById = async (id: number) => {
   return (await api.delete(`/ReadMore/DeleteAccreditationById?Id=${id}`))
-    ?.data as Response;
-};
-
-export const deleteOverview = async (id: number) => {
-  return (await api.delete(`/StudentLife/studentlife/DeleteOverview?Id=${id}`))
     ?.data as Response;
 };
 

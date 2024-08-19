@@ -1,13 +1,15 @@
+import React, { useState, useEffect } from 'react';
 import Input from "../../../../custom/input/input";
 import { Form, Formik, FormikValues } from "formik";
 import Button from "../../../../custom/button/button";
-import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import {
   StatusOptions,
   createOrUpdateLGA,
   createOrUpdateState,
   getCountry,
   getState,
+  getStateByCountryId,
 } from "../../../../requests";
 import * as Yup from "yup";
 import { App } from "antd";
@@ -22,6 +24,9 @@ const AddLga = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
+  const [selectedCountry, setSelectedCountry] = useState<number>(0);
+  const [stateOptions, setStateOptions] = useState<any[]>([]);
+
   const CreateLgaMutation = useMutation({
     mutationFn: createOrUpdateLGA,
     mutationKey: ["create-Lga"],
@@ -33,10 +38,10 @@ const AddLga = ({ handleClose, data }: Props) => {
   ) => {
     const payload: Partial<LGA> = {
       id: data?.id || 0,
-      stateId: values.stateName,
+      stateId: 5,
       activeStatus: values?.status === "true",
-      countryId:values?.countryName,
-      lgaName:values?.lgaName,
+      countryId: values?.countryName,
+      lgaName: values?.lgaName,
     };
 
     try {
@@ -71,13 +76,21 @@ const AddLga = ({ handleClose, data }: Props) => {
         enabled: true,
       },
       {
-        queryKey: ["get-state"],
-        queryFn: getState,
+        queryKey: ["get-state-by-country-id"],
+        queryFn: () => getStateByCountryId(selectedCountry),
         refetchOnWindowFocus: false,
         retry: 0,
+        enabled: selectedCountry !== 0,
       },
     ],
   });
+
+  useEffect(() => {
+    if (selectedCountry) {
+      // Fetch states when a country is selected
+      getStateQuery.refetch();
+    }
+  }, [selectedCountry]);
 
   const CountryData = getCountryQuery?.data?.data as Country[];
 
@@ -90,32 +103,38 @@ const AddLga = ({ handleClose, data }: Props) => {
       </option>
     ));
 
-  
-    const StateData = getStateQuery?.data?.data as State[];
-  
-    const StateOptions: any =
-    StateData &&
-    StateData?.length > 0 &&
-    StateData?.map((item: any, index: number) => (
-        <option value={item?.id} key={index}>
-          {item?.stateName}
-        </option>
-      ));
+  const StateData = getStateQuery?.data?.data as State[];
+
+  useEffect(() => {
+    if (StateData) {
+      setStateOptions(StateData);
+    }
+  }, [StateData]);
+
+  const StateOptions: any =
+    stateOptions &&
+    stateOptions?.length > 0 &&
+    stateOptions?.map((item: any, index: number) => (
+      <option value={item?.id} key={index}>
+        {item?.stateName}
+      </option>
+    ));
+
   const validationSchema = Yup.object().shape({
     countryName: Yup.string().required("Country is required"),
-    stateName: Yup.string().required("State is required"),
+    // stateName: Yup.string().required("State is required"),
     lgaName: Yup.string().required("Lga is required"),
     status: Yup.string().required("Active Status is required"),
   });
+  console.log(selectedCountry, 'sed')
 
   return (
     <Formik
       initialValues={{
-        lgaName:data?.lgaName || "",
-        countryName:data?.countryId || "",
+        lgaName: data?.lgaName || "",
+        countryName: data?.countryId || "",
         stateName: data?.stateId || "",
-        status:
-          data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
+        status: data?.activeStatus !== undefined ? String(data?.activeStatus) : "",
       }}
       onSubmit={(values, { resetForm }) => {
         CreateLgaHandler(values, resetForm);
@@ -123,7 +142,7 @@ const AddLga = ({ handleClose, data }: Props) => {
       enableReinitialize={true}
       validationSchema={validationSchema}
     >
-      {({ handleSubmit }) => {
+      {({ handleSubmit, setFieldValue }) => {
         return (
           <Form className="fields">
             <Select
@@ -131,14 +150,21 @@ const AddLga = ({ handleClose, data }: Props) => {
               placeholder="Input Country Name"
               label="Country Name"
               options={CountryOptions}
+              onChange={(e) => {
+                const countryId = e.target.value;
+                setSelectedCountry(parseInt(countryId));
+                setFieldValue('countryName', countryId);
+                setFieldValue('stateName', ''); // Reset state on country change
+              }}
             />
-             <Select
+            <Select
               name="stateName"
-              placeholder="Input State Name"
-              label="State Name"
+              placeholder="Input State/Province/District Name"
+              label="State/Province/District Name"
               options={StateOptions}
+              onChange={(e) => setFieldValue('stateName', e.target.value)}
             />
-              <Input
+            <Input
               name="lgaName"
               placeholder="Input LGA Name"
               label="LGA Name"
@@ -156,13 +182,18 @@ const AddLga = ({ handleClose, data }: Props) => {
                   ))}
                 </>
               }
+              onChange={(e) => setFieldValue('status', e.target.value)}
             />
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button
                 onClick={handleSubmit as any}
                 disabled={CreateLgaMutation?.isPending}
-                text={CreateLgaMutation?.isPending ? "Creating..." : "Create"}
+                text={
+                  data
+                    ? (CreateLgaMutation?.isPending ? 'Updating' : 'Update')
+                    : (CreateLgaMutation?.isPending ? 'Creating' : 'Create')
+                }
               />
             </div>
           </Form>

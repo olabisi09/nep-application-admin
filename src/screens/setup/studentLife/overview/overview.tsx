@@ -27,7 +27,9 @@ const Overview = () => {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [overview, setOverview] = useState<Overview>({} as Overview);
+  const [overview, setOverview] = useState<ItemByStudentLife>(
+    {} as ItemByStudentLife
+  );
 
   const deleteOverviewMutation = useMutation({ mutationFn: deleteOverview });
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -36,7 +38,7 @@ const Overview = () => {
     enabled: !!id,
   });
 
-  const columns: ColumnsType<Overview> = [
+  const columns: ColumnsType<ItemByStudentLife> = [
     {
       key: "id",
       title: "ID",
@@ -115,7 +117,7 @@ const Overview = () => {
     },
   ];
 
-  const overviewData = data?.data as Overview[];
+  const overviewData = data?.data as ItemByStudentLife[];
 
   if (isLoading) {
     return <Spin />;
@@ -150,7 +152,10 @@ const Overview = () => {
         title="Create Overview"
         footer={null}
       >
-        <CreateOverview handleClose={() => setOpen(false)} />
+        <CreateOverview
+          studentLifeId={id!}
+          handleClose={() => setOpen(false)}
+        />
       </Modal>
       <Modal
         open={openEdit}
@@ -159,7 +164,7 @@ const Overview = () => {
         title="Edit Overview"
         footer={null}
       >
-        <EditOverview item={overview} handleClose={() => setOpen(false)} />
+        <EditOverview item={overview} handleClose={() => setOpenEdit(false)} />
       </Modal>
     </div>
   );

@@ -58,16 +58,17 @@ const FitnessAndAthleticsForm = ({
 
   const statusOptions = (
     <>
+      <option value={''}>-- select an option --</option>
       <option value="Active">Active</option>
       <option value="Inactive">Inactive</option>
     </>
   );
 
-  const validationSchema = Yup.object().shape({
-    title: validator.title,
-    status: validator.status,
-    description: validator.description,
-  });
+   const validationSchema = Yup.object().shape({
+     title: validator.title,
+     status: validator.status,
+     description: validator.description,
+   });
 
   const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
   const hasRecords = Object.keys(item).length > 0;
@@ -89,7 +90,7 @@ const FitnessAndAthleticsForm = ({
             <Input name="title" label="Title" placeholder="Input title" />
             <Editor
               name="description"
-                          label="Description"
+              label="Description"
               onChange={(_, editor) => {
                 const data = editor.getData();
                 setFieldValue("description", data);

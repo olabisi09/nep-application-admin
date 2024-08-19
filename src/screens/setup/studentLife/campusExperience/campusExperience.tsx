@@ -14,33 +14,33 @@ import { Button } from "../../../../custom";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  deleteFitnessAthletics,
-  getFitnessAndAthleticsByStudentLifeId,
+  deleteCampusExperience,
+  getCampusExperienceByStudentLifeId,
 } from "../../../../requests";
 import { ColumnsType } from "antd/es/table";
-import { useParams } from "react-router-dom";
-import FitnessAndAthleticsForm from "./fitnessAndAthleticsForm";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
+import { CreateCampusExperience, EditCampusExperience } from "./setup";
+import { useParams } from "react-router-dom";
 
-const FitnessAndAthletics = () => {
+const CampusExperience = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [fitnessAthleticsItems, setFitnessAthleticsItems] =
-    useState<FitnessAthletics>({} as FitnessAthletics);
+  const [campus, setCampus] = useState<ItemByStudentLife>(
+    {} as ItemByStudentLife
+  );
 
-  const deleteFitnessAthleticsMutation = useMutation({
-    mutationFn: deleteFitnessAthletics,
+  const deleteCampusExperienceMutation = useMutation({
+    mutationFn: deleteCampusExperience,
   });
-
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-fitness-athletics"],
-    queryFn: () => getFitnessAndAthleticsByStudentLifeId(id!),
+    queryKey: ["get-campus-experience"],
+    queryFn: () => getCampusExperienceByStudentLifeId(id!),
     enabled: !!id,
   });
 
-  const columns: ColumnsType<FitnessAthletics> = [
+  const columns: ColumnsType<ItemByStudentLife> = [
     {
       key: "id",
       title: "ID",
@@ -55,10 +55,18 @@ const FitnessAndAthletics = () => {
       key: "description",
       title: "Description",
       dataIndex: "description",
-      render: (_: any, { description }: any) => {
+      render: (_, { description }) => {
         const limitedCleanHtml = sanitizeAndLimitString(description);
         return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
+    },
+    {
+      key: "pictureUrl",
+      title: "Picture",
+      dataIndex: "imageUrl",
+      render: (_, { imageUrl }) => (
+        <img className="table-img" src={imageUrl} alt="" />
+      ),
     },
     {
       key: "status",
@@ -75,7 +83,7 @@ const FitnessAndAthletics = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setFitnessAthleticsItems(record);
+              setCampus(record);
               setOpenEdit(true);
             },
           },
@@ -84,7 +92,7 @@ const FitnessAndAthletics = () => {
             label: "Delete",
             onClick: async () => {
               try {
-                await deleteFitnessAthleticsMutation.mutateAsync(record.id, {
+                await deleteCampusExperienceMutation.mutateAsync(record.id, {
                   onSuccess: (data) => {
                     notification.success({
                       message: "Success",
@@ -102,7 +110,6 @@ const FitnessAndAthletics = () => {
             },
           },
         ];
-
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />
@@ -112,20 +119,18 @@ const FitnessAndAthletics = () => {
     },
   ];
 
-  const fitnessAthleticsData = data?.data as FitnessAthletics[];
+  const campusData = data?.data as ItemByStudentLife[];
 
   if (isLoading) {
     return <Spin />;
   }
-
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
-
   return (
     <div>
       <section className="space-between">
-        <h3>Student Life: Fitness and Athletics Setup</h3>
+        <h3>Student Life: Campus Experience Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -135,34 +140,34 @@ const FitnessAndAthletics = () => {
       <br />
       <Card bordered={false}>
         <Table
-          dataSource={fitnessAthleticsData}
+          dataSource={campusData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
           scroll={{ x: true }}
         />
       </Card>
-
       <Modal
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create Fitness and Athletics"
-        footer={null}>
-        <FitnessAndAthleticsForm
-          item={fitnessAthleticsItems}
+        title="Create Campus Experience"
+        footer={null}
+      >
+        <CreateCampusExperience
+          studentLifeId={id!}
           handleClose={() => setOpen(false)}
         />
       </Modal>
-
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit Fitness and Athletics"
-        footer={null}>
-        <FitnessAndAthleticsForm
-          item={fitnessAthleticsItems}
+        title="Edit Campus Experience"
+        footer={null}
+      >
+        <EditCampusExperience
+          item={campus}
           handleClose={() => setOpenEdit(false)}
         />
       </Modal>
@@ -170,4 +175,4 @@ const FitnessAndAthletics = () => {
   );
 };
 
-export default FitnessAndAthletics;
+export default CampusExperience;

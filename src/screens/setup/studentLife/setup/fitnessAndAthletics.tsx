@@ -83,8 +83,9 @@ const FitnessAndAthletics = ({
 
   const statusOptions = (
     <>
+      <option>-- select an option --</option>
       <option>Active</option>
-      <option>Inative</option>
+      <option>Inactive</option>
     </>
   );
 
