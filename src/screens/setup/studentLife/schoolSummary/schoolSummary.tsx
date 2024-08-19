@@ -143,7 +143,7 @@ const SchoolSummary = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create Overview"
+        title="Create School Summary"
         footer={null}
       >
         <SchoolSummaryForm
@@ -156,7 +156,7 @@ const SchoolSummary = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit Overview"
+        title="Edit School Summary"
         footer={null}
       >
         <SchoolSummaryForm

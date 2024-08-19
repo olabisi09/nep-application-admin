@@ -24,6 +24,7 @@ export const routes = {
     accreditation: "/accreditation-setup",
     qualification: "/qualification-type-setup",
     subject: "/subject-setup",
+    careerProspectItems: "/career-prospect-items/:id",
 
     country: "/country-setup",
     state: "/state-setup",
@@ -46,6 +47,7 @@ export const routes = {
     schoolSummary: "/student-life/:id/school-summary",
     fitnessAndAthletics: "/student-life/:id/fitness-and-athletics",
     supportAndGuidance: "/student-life/:id/support-and-guidance",
+    studentActivities: "/student-life/:id/student-activities",
   },
   userMgt: {
     addUsers: "/admin-users",

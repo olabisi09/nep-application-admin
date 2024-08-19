@@ -89,7 +89,7 @@ const FitnessAndAthleticsForm = ({
             <Input name="title" label="Title" placeholder="Input title" />
             <Editor
               name="description"
-              label="Description"
+                          label="Description"
               onChange={(_, editor) => {
                 const data = editor.getData();
                 setFieldValue("description", data);

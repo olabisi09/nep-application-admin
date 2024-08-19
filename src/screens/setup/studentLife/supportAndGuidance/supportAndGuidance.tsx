@@ -148,7 +148,7 @@ const SupportAndGuidance = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create Overview"
+        title="Create Support and Guidance"
         footer={null}>
         <SupportAndGuidanceForm
           item={supportAndGuidanceItems}
@@ -160,7 +160,7 @@ const SupportAndGuidance = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit Overview"
+        title="Edit Support and Guidance"
         footer={null}>
         <SupportAndGuidanceForm
           item={supportAndGuidanceItems}

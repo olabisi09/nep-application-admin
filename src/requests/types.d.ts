@@ -351,3 +351,41 @@ interface ScholarshipResponse extends Response {
 
 interface SupportAndGuidanceResponse extends FitnessAthleticsResponse {}
 interface SupportAndGuidance extends FitnessAthletics {}
+
+interface CommonPayload {
+  id: number;
+  readMoreId: number;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface StudentActivityResponse extends Response {
+  data: StudentActivity[];
+}
+
+interface StudentActivity {
+  id: number;
+  imageUrl: string;
+  title: string;
+  activityTitle: string;
+  activityDescription: string;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+  studentLifeId: number;
+}
+
+interface CareerProspectResponse extends Response {
+  data: CareerProspect[];
+}
+
+interface CareerProspect {
+  id: number;
+  readMoreId: number;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+  programName: string;
+};
+

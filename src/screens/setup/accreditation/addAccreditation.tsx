@@ -1,21 +1,18 @@
 import {
-  Mutation,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
 import {
   createOrUpdateAccreditation,
-  getAccreditationById,
   getAllPrograms,
   StatusOptions,
 } from "../../../requests";
 import { Form, Formik, FormikValues } from "formik";
-import { FC, PropsWithChildren } from "react";
+import { FC } from "react";
 import { Button, Editor } from "../../../custom";
-import { App } from "antd";
+import { App, Spin } from "antd";
 import * as Yup from "yup";
 import { validator } from "../../../utils/validator";
 
@@ -32,19 +29,6 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
     mutationFn: createOrUpdateAccreditation,
     mutationKey: ["create-update-accreditation"],
   });
-
-  const {
-    data: getAccreditationByIdData,
-    isLoading,
-    error: getAccreditationByIdError,
-  } = useQuery({
-    queryKey: ["get-accreditation-id"],
-    queryFn: () => getAccreditationById(record?.id),
-    // retry: 1,
-    enabled: !!record?.id,
-  });
-
-  const accreditationData = getAccreditationByIdData?.data;
 
   const updateAccreditationHandler = async (values: FormikValues) => {
     const payload: Partial<AccreditationType> = {
@@ -75,7 +59,7 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
     }
   };
 
-  const { data, error, isError } = useQuery({
+  const { data, isLoading, error, isError } = useQuery({
     queryKey: ["get-programs"],
     queryFn: getAllPrograms,
     retry: 1,
@@ -94,6 +78,14 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
     status: validator.status,
     description: validator.title,
   });
+
+  if (isLoading) {
+    return <Spin />;
+  }
+
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
 
   return (
     <Formik

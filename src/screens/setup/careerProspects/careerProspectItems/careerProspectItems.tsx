@@ -1,48 +1,32 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
+import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Search } from "../../../../assets/search.svg";
+import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
+import { Form, Formik } from "formik";
+import styles from "../../styles.module.scss";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import AddCareerProspects from "./addCareerProspects";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteCareerProspect, getCareerProspects } from "../../../requests";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import { useQuery } from "@tanstack/react-query";
+import { getCareerProspects } from "../../../../requests";
 import { ColumnsType } from "antd/es/table";
-import { useNavigate } from "react-router-dom";
+import AddItem from "./addItem";
+import { Button, SearchInput } from "../../../../custom";
 
-const CareerProspects = () => {
+const CareerProspectItems = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [careerProspectItems, setCareerProspectItems] =
     useState<CareerProspect>({} as CareerProspect);
-
-  const { notification } = App.useApp();
-
-  const navigate = useNavigate();
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
 
-  const deleteCareerProspectMutation = useMutation({
-    mutationFn: deleteCareerProspect,
-  });
-
-  const { data, isLoading, isError, error, refetch } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["get-career-prospect"],
     queryFn: getCareerProspects,
   });
@@ -79,7 +63,9 @@ const CareerProspects = () => {
           {
             key: "1",
             label: "Add Items",
-            onClick: () => navigate(`/career-prospect-items/${record.id}`),
+            onClick: () => {
+              setCareerProspectItems(record);
+            },
           },
           {
             key: "2",
@@ -92,25 +78,7 @@ const CareerProspects = () => {
           {
             key: "3",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteCareerProspectMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
-            },
+            onClick: () => {},
           },
         ];
         return (
@@ -122,20 +90,10 @@ const CareerProspects = () => {
     },
   ];
 
-  const handleModal = (status: boolean) => setShowAddModal(status);
-
-  if (isLoading) {
-    return <Spin />;
-  }
-
-  if (isError) {
-    return <div>Error: {error?.message}</div>;
-  }
-
   return (
     <main>
       <section className="space-between">
-        <h3>Career Prospects Setup</h3>
+        <h3>Career Prospect Items Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
@@ -181,12 +139,22 @@ const CareerProspects = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Career Prospects Setup"
-        footer={null}
+        footer={() => (
+          <div className="btn-group">
+            <Button
+              onClick={() => setShowAddModal(false)}
+              variant="text"
+              text="Cancel"
+            />
+            <Button text="Create" />
+          </div>
+        )}
       >
-        <AddCareerProspects
-          item={careerProspectItems}
-          handleClose={() => handleModal(false)}
-        />
+        <Formik initialValues={{}} onSubmit={() => {}}>
+          <Form>
+            {/* <AddCareerProspects /> */}
+          </Form>
+        </Formik>
       </Modal>
 
       <Modal
@@ -194,15 +162,48 @@ const CareerProspects = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Career Prospects Setup"
-        footer={null}
+        footer={() => (
+          <div className="btn-group">
+            <Button
+              onClick={() => setOpenEdit(false)}
+              variant="text"
+              text="Cancel"
+            />
+            <Button text="Update" />
+          </div>
+        )}
       >
-        <AddCareerProspects
-          item={careerProspectItems}
-          handleClose={() => setOpenEdit(false)}
-        />
+        <Formik initialValues={{}} onSubmit={() => {}}>
+          <Form>
+            {/* <AddCareerProspects /> */}
+          </Form>
+        </Formik>
+      </Modal>
+
+      <Modal
+        open={showAddItemModal}
+        onCancel={() => setShowAddItemModal(false)}
+        centered
+        title="Career Prospect Item"
+        footer={() => (
+          <div className="btn-group">
+            <Button
+              onClick={() => setShowAddItemModal(false)}
+              variant="text"
+              text="Cancel"
+            />
+            <Button text="Add Details" />
+          </div>
+        )}
+      >
+        <Formik initialValues={{}} onSubmit={() => {}}>
+          <Form>
+            <AddItem />
+          </Form>
+        </Formik>
       </Modal>
     </main>
   );
 };
 
-export default CareerProspects;
+export default CareerProspectItems;

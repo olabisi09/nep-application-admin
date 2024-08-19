@@ -1,5 +1,5 @@
-import Input from "../../../custom/input/input";
-import Select from "../../../custom/select/select";
+import { Input, Select } from "../../../../custom";
+
 
 const AddItem = () => {
   return (

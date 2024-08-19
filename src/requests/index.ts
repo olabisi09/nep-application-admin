@@ -522,3 +522,31 @@ export const createOrUpdateStudentActivities = async (payload: FormData) => {
     await api.post("/StudentLife/studentlife/CreateUpdateStudentActivityItem", payload)
   )?.data as Response;
 };
+
+export const getStudentActivitiesByStudentLifeId = async (id: string | number) => {
+  return (
+    await api.get(
+      `/StudentLife/studentlife/GetStudentActivityItemByStudentLifeId?Id=${id}`
+    )
+  )?.data as StudentActivityResponse;
+};
+
+export const getCareerProspects = async () => {
+  return (
+    await api.get(
+      "/ReadMore/GetAllCareerProspects"
+    )
+  )?.data as CareerProspectResponse;
+};
+
+export const createOrUpdateCareerProspect = async (payload: Partial<CommonPayload>) => {
+  return (
+    await api.post("/ReadMore/createUpdateCareerProspect", payload) 
+  )?.data as Response;
+};
+
+export const deleteCareerProspect = async (id: number) => {
+  return (
+    await api.delete(`/ReadMore/DeleteCareerProspectById?Id=${id}`)
+  )?.data as Response;
+};
