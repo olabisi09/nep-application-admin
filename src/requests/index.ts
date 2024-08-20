@@ -452,4 +452,16 @@ export const createOrUpdateModeOfStudy = async (
     ?.data as Response;
 };
 
+export const createOrUpdateTitle = async(  payload: Partial<ModeOfStudy>) => {
+  return (await api.post(`/Utilities/Utilities/CreateUpdateTitle`, payload))?.data as Response;
+}
+
+export const getAllTitles = async() => {
+  return (await api.get('/Utilities/Utilities/GetAllTitle'))?.data as TitleResponse
+}
+
+export const deleteTitle = async(id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteTitle?Id=${id}`))?.data as Response
+}
+
 

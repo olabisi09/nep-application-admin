@@ -343,3 +343,12 @@ interface ModeOfStudy{
 interface ModeOfStudyResponse extends Response {
   data: ModeOfStudy[];
 }
+interface Title{
+  id: number,
+  titleName: string,
+  activeStatus: boolean,
+  isDeleted: boolean
+}
+interface TitleResponse extends Response {
+  data: Title[];
+}
