@@ -153,7 +153,7 @@ const AboutUs = () => {
         title="Edit About Us Setup"
         footer={null}
       >
-        <EditAboutUs item={about} handleClose={() => setOpen(false)} />
+        <EditAboutUs item={about} handleClose={() => setOpenEdit(false)} />
       </Modal>
     </div>
   );

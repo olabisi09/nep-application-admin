@@ -471,3 +471,19 @@ export const getAllAccreditation = async () => {
 export const getAccreditationById = async (id: number) => {
   return (await api.get(`/ReadMore/GetAccreditationById?Id=${id}`))?.data as Accreditation;
 };
+
+export const getDepartments = async () => {
+  return (await api.get('/Academics/GetAllDepartmentAsync'))?.data as GetDepartmentsResponse;
+}
+
+export const createDepartment = async (payload: Partial<Department>) => {
+  return (await api.post('/Academics/CreateDepartmentAsync', payload))?.data as Response;
+}
+
+export const updateDepartment = async (payload: Partial<Department>) => {
+  return (await api.put('/Academics/UpdateDepartmentAsync', payload))?.data as Response;
+}
+
+export const deleteDepartment = async (id: number) => {
+  return (await api.delete(`/Academics/DeleteDepartmentAsync?Id=${id}`))?.data as Response;
+}

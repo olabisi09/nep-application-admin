@@ -1,171 +1,194 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
-import { Form, Formik } from "formik";
-import styles from "../styles.module.scss";
+import {
+  Card,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Table,
+  Button as AntButton,
+  Spin,
+  App,
+} from "antd";
+import { ReactComponent as Plus } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import AddDepartment from "./addDepartment";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  deleteDepartment,
+  getAllCategory,
+  getDepartments,
+} from "../../../requests";
+import { ColumnsType } from "antd/es/table";
+import { CreateDepartment, EditDepartment } from "./setup";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
-const DepartmentSetup = () => {
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
+const Department = () => {
+  const { notification } = App.useApp();
+  const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [department, setDepartment] = useState<Department>({} as Department);
 
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
-  const data = Array.from({ length: 5 }, () => ({
-    id: 1234,
-    firstName: "Timi",
-    lastName: "John",
-    email: "john@gmail.com",
-    role: "Admin User",
-    status: "Active",
-  }));
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: <button style={{border:'0rem'}} onClick={() => setOpenEdit(true)}>Edit</button>,
-    },
-  ];
-  const columns = [
+  const deleteDepartmentMutation = useMutation({
+    mutationFn: deleteDepartment,
+  });
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["get-department"],
+    queryFn: getDepartments,
+  });
+  const facultyQuery = useQuery({
+    queryKey: ["get-faculty"],
+    queryFn: getAllCategory,
+  });
+
+  const columns: ColumnsType<Department> = [
     {
       key: "id",
       title: "ID",
       dataIndex: "id",
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
+      key: "name",
+      title: "Department name",
+      dataIndex: "name",
     },
     {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
+      key: "categoryName",
+      title: "Faculty",
+      dataIndex: "categoryName",
     },
     {
-      key: "email",
-      title: "Email Address",
-      dataIndex: "email",
-    },
-    {
-      key: "role",
-      title: "Role",
-      dataIndex: "role",
+      key: "description",
+      title: "Description",
+      dataIndex: "description",
     },
     {
       key: "status",
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
       title: "",
-      render: () => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
-          <AntButton type="text" icon={<Ellipsis />} />
-        </Dropdown>
-      ),
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setDepartment(record);
+              setOpenEdit(true);
+            },
+          },
+          {
+            key: "2",
+            label: "Delete",
+            onClick: () => {
+              setDepartment(record);
+              setOpenDelete(true);
+            },
+          },
+        ];
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
+        );
+      },
     },
   ];
 
+  const handleDeleteDepartment = async (department: Department) => {
+    try {
+      await deleteDepartmentMutation.mutateAsync(department.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete(false);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
+
+  const departments = data?.data as Department[];
+  const faculties = facultyQuery.data?.data as Category[];
+
+  if (isLoading) {
+    return <Spin />;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
   return (
-    <main>
-            <section className="space-between">
+    <div>
+      <section className="space-between">
         <h3>Department Setup</h3>
         <Button
-          onClick={() => setShowAddModal(true)}
-          iconBefore={<Add />}
+          onClick={() => setOpen(true)}
+          iconBefore={<Plus />}
           text="Setup"
         />
       </section>
-      <section className={styles.card}>
-        <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
-          <div>
-            {!showSearch && (
-              <span>
-                <Search
-                  onClick={() => setShowSearch((showSearch) => !showSearch)}
-                />
-              </span>
-            )}
-            {showSearch && (
-              <SearchInput value={searchTerm} onChange={handleSearch} />
-            )}
-
-            {!showAllFilter && (
-              <Filter
-                onClick={() =>
-                  setShowAllFilter((showAllFilter) => !showAllFilter)
-                }
-              />
-            )}
-          </div>
-        </div>
+      <br />
+      <Card bordered={false}>
         <Table
-          dataSource={data}
+          dataSource={departments}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          rowKey={(record) => record.id}
+          scroll={{ x: true }}
         />
-      </section>
-     
+      </Card>
       <Modal
-        open={showAddModal}
-        onCancel={() => setShowAddModal(false)}
+        open={open}
+        onCancel={() => setOpen(false)}
         centered
-        title="Department Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text" 
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
+        title="Create Department"
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddDepartment />
-          </Form>
-        </Formik>
+        <CreateDepartment
+          handleClose={() => setOpen(false)}
+          faculties={faculties}
+        />
       </Modal>
-
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Department Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpenEdit(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Update" />
-          </div>
-        )}
+        title="Edit Department"
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddDepartment />
-          </Form>
-        </Formik>
+        <EditDepartment
+          item={department}
+          handleClose={() => setOpenEdit(false)}
+          faculties={faculties}
+        />
       </Modal>
-
-    </main>
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Department"
+        footer={null}
+      >
+        <DeleteModalContent
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={() => handleDeleteDepartment(department)}
+          isLoading={deleteDepartmentMutation.isPending}
+          title={department.name}
+        />
+      </Modal>
+    </div>
   );
 };
 
-export default DepartmentSetup;
+export default Department;
