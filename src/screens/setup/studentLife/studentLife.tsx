@@ -128,7 +128,7 @@ const StudentLife = () => {
           {
             key: "4",
             label: "Campus Experience",
-            onClick: () => onFormClick("Campus Experience"),
+            onClick: () => navigate(`/student-life/${record.id}/campus-experience`),
           },
           {
             key: "5",

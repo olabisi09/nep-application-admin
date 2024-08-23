@@ -71,7 +71,7 @@ const SchoolSummary = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setSchoolSummaryItems(record);
+              setSchoolSummaryItems({...schoolSummaryItems, ...record});
               setOpenEdit(true);
             },
           },

@@ -451,3 +451,15 @@ interface CareerProspect {
   programName: string;
 };
 
+interface CampusExperienceItemResponse extends Response{
+  data: CampusExperienceItem[];
+}
+
+interface CampusExperienceItem {
+  id: number;
+  campusExperienceId: number;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+

@@ -1,50 +1,49 @@
 import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Input, Select } from "../../../../custom";
-import { createOrUpdateFitnessAthletics } from "../../../../requests";
+import { Button, Editor, Select } from "../../../../../custom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
 import { useParams } from "react-router-dom";
-import { validator } from "../../../../utils/validator";
+import { validator } from "../../../../../utils/validator";
 import * as Yup from "yup";
+import { createOrUpdateCampusExperienceItem } from "../../../../../requests";
 
-const FitnessAndAthleticsForm = ({
+const CampusExperienceItemForm = ({
   handleClose,
   item,
 }: {
   handleClose: () => void;
-  item: FitnessAthletics;
+  item: CampusExperienceItem;
 }) => {
   const { id } = useParams();
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  
-  const addFitnessAthleticsMutation = useMutation({
-    mutationFn: createOrUpdateFitnessAthletics,
+
+  const addCampusExperienceItemMutation = useMutation({
+    mutationFn: createOrUpdateCampusExperienceItem,
   });
 
-  const studentLifeId = id ?? "";
+  const campusExperienceId = parseInt(id ?? '') ?? 0;
 
-  const handleAddUpdateFitnessAthletics = async (
+  const handleCampusExperienceItem = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: Partial<Setup> = {
+    const payload: Partial<CampusExperienceItem> = {
       id: item?.id ?? 0,
-      studentLifeId: studentLifeId,
-      title: values.title,
+      campusExperienceId, 
       description: values.description,
       activeStatus: values.status === "Active" ? true : false,
       isDeleted: false,
     };
 
     try {
-      await addFitnessAthleticsMutation.mutateAsync(payload, {
+      await addCampusExperienceItemMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-fitness-athletics"] });
+          queryClient.refetchQueries({ queryKey: ["get-campus-experience-by-id"] });
           handleClose();
           resetForm();
         },
@@ -59,14 +58,13 @@ const FitnessAndAthleticsForm = ({
 
   const statusOptions = (
     <>
-      <option value={''}>-- select an option --</option>
+      <option value=''>-- select an option --</option>
       <option value="Active">Active</option>
       <option value="Inactive">Inactive</option>
     </>
   );
 
    const validationSchema = Yup.object().shape({
-     title: validator.title,
      status: validator.status,
      description: validator.description,
    });
@@ -77,18 +75,16 @@ const FitnessAndAthleticsForm = ({
   return (
     <Formik
       initialValues={{
-        title: item.title ?? "",
         description: item.description ?? "",
         status: initialStatus,
       }}
       onSubmit={(values, { resetForm }) =>
-        handleAddUpdateFitnessAthletics(values, resetForm)
+        handleCampusExperienceItem(values, resetForm)
       }
       validationSchema={validationSchema}>
       {({ setFieldValue }) => {
         return (
           <Form className="fields">
-            <Input name="title" label="Title" placeholder="Input title" />
             <Editor
               name="description"
               label="Description"
@@ -113,8 +109,8 @@ const FitnessAndAthleticsForm = ({
               />
               <Button
                 type="submit"
-                isLoading={addFitnessAthleticsMutation.isPending}
-                disabled={addFitnessAthleticsMutation.isPending}
+                isLoading={addCampusExperienceItemMutation.isPending}
+                disabled={addCampusExperienceItemMutation.isPending}
                 text={hasRecords ? "Update" : "Create"}
               />
             </div>
@@ -125,4 +121,4 @@ const FitnessAndAthleticsForm = ({
   );
 };
 
-export default FitnessAndAthleticsForm;
+export default CampusExperienceItemForm;

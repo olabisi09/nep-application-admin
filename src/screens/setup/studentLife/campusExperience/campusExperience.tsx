@@ -20,7 +20,7 @@ import {
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
 import { CreateCampusExperience, EditCampusExperience } from "./setup";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CampusExperience = () => {
   const { notification } = App.useApp();
@@ -31,9 +31,12 @@ const CampusExperience = () => {
     {} as ItemByStudentLife
   );
 
+  const navigate = useNavigate();
+
   const deleteCampusExperienceMutation = useMutation({
     mutationFn: deleteCampusExperience,
   });
+
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-campus-experience"],
     queryFn: () => getCampusExperienceByStudentLifeId(id!),
@@ -61,14 +64,6 @@ const CampusExperience = () => {
       },
     },
     {
-      key: "pictureUrl",
-      title: "Picture",
-      dataIndex: "imageUrl",
-      render: (_, { imageUrl }) => (
-        <img className="table-img" src={imageUrl} alt="" />
-      ),
-    },
-    {
       key: "status",
       title: "Status",
       dataIndex: "activeStatus",
@@ -81,6 +76,12 @@ const CampusExperience = () => {
         const items: MenuProps["items"] = [
           {
             key: "1",
+            label: "Add Item",
+            onClick: () =>
+              navigate(`/student-life/${record.id}/campus-experience-item`),
+          },
+          {
+            key: "2",
             label: "Edit",
             onClick: () => {
               setCampus(record);
@@ -155,7 +156,7 @@ const CampusExperience = () => {
         footer={null}
       >
         <CreateCampusExperience
-          studentLifeId={id!}
+          studentLifeId={parseInt(id ?? '') ?? 0}
           handleClose={() => setOpen(false)}
         />
       </Modal>

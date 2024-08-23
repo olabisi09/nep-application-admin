@@ -52,6 +52,8 @@ import SupportAndGuidance from "./screens/setup/studentLife/supportAndGuidance/s
 import StudentActivities from "./screens/setup/studentLife/studentActivities/studentActivities";
 import CareerProspectItems from "./screens/setup/careerProspects/careerProspectItems/careerProspectItems";
 import FaqItem from "./screens/setup/faq/faqItem/faqItem";
+import CampusExperience from "./screens/setup/studentLife/campusExperience/campusExperience";
+import CampusExperienceItem from "./screens/setup/studentLife/campusExperience/items/campusExperienceItem";
 
 function App() {
   const authRoute = [
@@ -243,6 +245,14 @@ function App() {
     {
       path: routes.setup.faqItem,
       element: <FaqItem />,
+    },
+    {
+      path: routes.setup.campusExperience,
+      element: <CampusExperience />,
+    },
+    {
+      path: routes.setup.campusExperienceItem,
+      element: <CampusExperienceItem />,
     },
   ];
 
