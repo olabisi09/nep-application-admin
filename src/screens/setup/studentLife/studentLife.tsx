@@ -22,7 +22,6 @@ import {
   FitnessAthletics,
   Overview,
   SchoolSummary,
-  StudentActivities,
   SupportGuidance,
 } from "./setup";
 import { useNavigate } from "react-router-dom";
@@ -74,8 +73,6 @@ const StudentLife = () => {
         return <FitnessAthletics item={item} handleClose={() => setOpen(false)} />;
       case "Support & Guidance":
         return <SupportGuidance item={item} handleClose={() => setOpen(false)} />;
-      case "Student Activities":
-        return <StudentActivities handleClose={() => setOpen(false)} />;
       default:
         return <CreateStudentLife handleClose={() => setOpen(false)} />;
     }

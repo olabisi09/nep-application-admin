@@ -8,42 +8,40 @@ import {
   Spin,
   App,
 } from "antd";
-import { ReactComponent as Plus } from "../../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { Button } from "../../../../custom";
+import { ReactComponent as Plus } from "../../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../../assets/ellipsis.svg";
+import { Button } from "../../../../../custom";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  deleteCampusExperience,
-  getCampusExperienceByStudentLifeId,
-} from "../../../../requests";
+  deleteSupportGuidanceItem,
+  getSupportGuidanceItemBySupportGuidanceId,
+} from "../../../../../requests";
 import { ColumnsType } from "antd/es/table";
-import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
-import { CreateCampusExperience, EditCampusExperience } from "./setup";
-import { useNavigate, useParams } from "react-router-dom";
+import { sanitizeAndLimitString } from "../../../../../utils/sanitizeAndLimitString";
+import { useParams } from "react-router-dom";
+import CampusExperienceItemForm from "./form";
 
-const CampusExperience = () => {
+const SupportGuidanceItem = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [campus, setCampus] = useState<ItemByStudentLife>(
-    {} as ItemByStudentLife
+  const [support, setSupport] = useState<SupportGuidanceItem>(
+    {} as SupportGuidanceItem
   );
 
-  const navigate = useNavigate();
-
-  const deleteCampusExperienceMutation = useMutation({
-    mutationFn: deleteCampusExperience,
+  const deleteSupportGuidanceItemMutation = useMutation({
+    mutationFn: deleteSupportGuidanceItem,
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-campus-experience"],
-    queryFn: () => getCampusExperienceByStudentLifeId(id!),
+    queryKey: ["get-support-guidance-by-id"],
+    queryFn: () => getSupportGuidanceItemBySupportGuidanceId(id!),
     enabled: !!id,
   });
 
-  const columns: ColumnsType<ItemByStudentLife> = [
+  const columns: ColumnsType<SupportGuidanceItem> = [
     {
       key: "id",
       title: "ID",
@@ -76,30 +74,18 @@ const CampusExperience = () => {
         const items: MenuProps["items"] = [
           {
             key: "1",
-            label: "Add Item",
-            onClick: () =>
-              navigate(`/student-life/${record.id}/campus-experience-item`),
-          },
-          {
-            key: "2",
-            label: "Add Images",
-            onClick: () =>
-              navigate(`/student-life/${record.id}/campus-experience-image`),
-          },
-          {
-            key: "3",
             label: "Edit",
             onClick: () => {
-              setCampus(record);
+              setSupport(record);
               setOpenEdit(true);
             },
           },
           {
-            key: "4",
+            key: "2",
             label: "Delete",
             onClick: async () => {
               try {
-                await deleteCampusExperienceMutation.mutateAsync(record.id, {
+                await deleteSupportGuidanceItemMutation.mutateAsync(record.id, {
                   onSuccess: (data) => {
                     notification.success({
                       message: "Success",
@@ -117,7 +103,6 @@ const CampusExperience = () => {
             },
           },
         ];
-
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />
@@ -127,7 +112,7 @@ const CampusExperience = () => {
     },
   ];
 
-  const campusData = data?.data as ItemByStudentLife[];
+  const campusData = data?.data as SupportGuidanceItem[];
 
   if (isLoading) {
     return <Spin />;
@@ -140,7 +125,7 @@ const CampusExperience = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Student Life: Campus Experience Setup</h3>
+        <h3>Student Life: Campus Experience Item Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -164,24 +149,24 @@ const CampusExperience = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create Campus Experience"
+        title="Create Campus Experience Item"
         footer={null}
       >
-        <CreateCampusExperience
-          studentLifeId={parseInt(id ?? '') ?? 0}
+        <CampusExperienceItemForm
+          item={support}
           handleClose={() => setOpen(false)}
         />
       </Modal>
-      
+
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit Campus Experience"
+        title="Edit Campus Experience Item"
         footer={null}
       >
-        <EditCampusExperience
-          item={campus}
+        <CampusExperienceItemForm
+          item={support}
           handleClose={() => setOpenEdit(false)}
         />
       </Modal>
@@ -189,4 +174,4 @@ const CampusExperience = () => {
   );
 };
 
-export default CampusExperience;
+export default SupportGuidanceItem;

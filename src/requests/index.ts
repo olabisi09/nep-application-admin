@@ -350,28 +350,6 @@ export const createOrUpdateStudentLife = async (payload: Partial<Setup>) => {
   )?.data as Response;
 };
 
-// export const createOrUpdateCampusExperience = async (
-//   payload: Partial<Setup>
-// ) => {
-//   return (
-//     await api.post(
-//       "/StudentLife/studentlife/CreateUpdateCampusExperience",
-//       payload
-//     )
-//   )?.data as Response;
-// };
-
-// export const createOrUpdateCampusExperience = async (
-//   payload: Partial<Setup>
-// ) => {
-//   return (
-//     await api.post(
-//       "/StudentLife/studentlife/CreateUpdateCampusExperience",
-//       payload
-//     )
-//   )?.data as Response;
-// };
-
 export const createOrUpdateFitnessAthletics = async (
   payload: Partial<Setup>
 ) => {
@@ -402,6 +380,22 @@ export const createOrUpdateStudentActivity = async (
       "/StudentLife/studentlife/CreateUpdateStudentActivity",
       payload
     )
+  )?.data as Response;
+};
+
+export const getStudentActivityByStudentLifeId = async (
+  id: string | number
+) => {
+  return (
+    await api.get(
+      `/StudentLife/studentlife/GetStudentActivityByStudentLifeId?Id=${id}`
+    )
+  )?.data as StudentActivitiesResponse;
+};
+
+export const deleteStudentActivity = async (id: number) => {
+  return (
+    await api.delete(`/StudentLife/studentlife/DeleteStudentActivity?Id=${id}`)
   )?.data as Response;
 };
 
@@ -627,6 +621,63 @@ export const deleteFitnessAthletics = async (id: number) => {
   )?.data as Response;
 };
 
+export const getFitnessAndAthleticsItemByFitnessId = async (
+  id: string | number
+) => {
+  return (
+    await api.get(
+      `/StudentLife/studentlife/GetFitnessAthleticsItemByFitnessId?Id=${id}`
+    )
+  )?.data as FitnessAthleticsItemResponse;
+};
+
+export const getFitnessAndAthleticsImagesByFitnessId = async (
+  id: string | number
+) => {
+  return (
+    await api.get(
+      `/StudentLife/studentlife/GetFitnessImageByFitnessAthleticsId?Id=${id}`
+    )
+  )?.data as FitnessImageResponse;
+};
+
+export const createOrUpdateFitnessAthleticsItem = async (
+  payload: Partial<CommonPayload>
+) => {
+  return (
+    await api.post(
+      "/StudentLife/studentlife/CreateUpdateFitnessAthleticsItem",
+      payload
+    )
+  )?.data as Response;
+};
+
+export const createOrUpdateFitnessImage = async (payload: FormData) => {
+  return (
+    await api.post(
+      "/StudentLife/studentlife/CreateUpdateFitnessImage",
+      payload,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    )
+  )?.data as Response;
+};
+
+export const deleteFitnessAthleticsItem = async (id: number) => {
+  return (
+    await api.delete(`/StudentLife/studentlife/DeleteFitnessImage?Id=${id}`)
+  )?.data as Response;
+};
+
+export const deleteFitnessAthleticsImage = async (id: number) => {
+  return (
+    await api.delete(
+      `/StudentLife/studentlife/DeleteFitnessAthleticsItem?Id=${id}`
+    )
+  )?.data as Response;
+};
+
 export const getSupportAndGuidanceByStudentLifeId = async (
   id: string | number
 ) => {
@@ -637,21 +688,24 @@ export const getSupportAndGuidanceByStudentLifeId = async (
   )?.data as SupportAndGuidanceResponse;
 };
 
-export const createOrUpdateStudentActivities = async (payload: FormData) => {
+export const createOrUpdateStudentActivityItem = async (payload: FormData) => {
   return (
     await api.post(
       "/StudentLife/studentlife/CreateUpdateStudentActivityItem",
-      payload
+      payload,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
     )
   )?.data as Response;
 };
 
-export const getStudentActivitiesByStudentLifeId = async (
+export const getStudentActivitiesByStudentActivityId = async (
   id: string | number
 ) => {
   return (
     await api.get(
-      `/StudentLife/studentlife/GetStudentActivityItemByStudentLifeId?Id=${id}`
+      `/StudentLife/studentlife/GetStudentActivityItemByStudentActivityId?Id=${id}`
     )
   )?.data as StudentActivityResponse;
 };
@@ -673,7 +727,9 @@ export const deleteCareerProspect = async (id: number) => {
     ?.data as Response;
 };
 
-export const getCampusExperienceItemByCampusExperienceId = async (id: string | number) => {
+export const getCampusExperienceItemByCampusExperienceId = async (
+  id: string | number
+) => {
   return (
     await api.get(
       `/StudentLife/studentlife/GetCampusExperienceItemByCampusExperienceId?Id=${id}`
@@ -684,6 +740,68 @@ export const getCampusExperienceItemByCampusExperienceId = async (id: string | n
 export const createOrUpdateCampusExperienceItem = async (
   payload: Partial<CommonPayload>
 ) => {
-  return (await api.post("/StudentLife/studentlife/CreateUpdateCampusExperienceItem", payload))
-    ?.data as Response;
+  return (
+    await api.post(
+      "/StudentLife/studentlife/CreateUpdateCampusExperienceItem",
+      payload
+    )
+  )?.data as Response;
+};
+
+export const getSupportGuidanceItemBySupportGuidanceId = async (
+  id: string | number
+) => {
+  return (
+    await api.get(
+      `/StudentLife/studentlife/GetSupportItemBySupportGuidanceId?Id=${id}`
+    )
+  )?.data as SupportGuidanceItemResponse;
+};
+
+export const createOrUpdateSupportGuidanceItem = async (
+  payload: Partial<CommonPayload>
+) => {
+  return (
+    await api.post("/StudentLife/studentlife/CreateUpdateSupportItem", payload)
+  )?.data as Response;
+};
+
+export const deleteSupportGuidance = async (id: number) => {
+  return (
+    await api.delete(`/StudentLife/studentlife/DeleteSupportGuidance?Id=${id}`)
+  )?.data as Response;
+};
+
+export const deleteSupportGuidanceItem = async (id: number) => {
+  return (
+    await api.delete(`/StudentLife/studentlife/DeleteSupportItem?Id=${id}`)
+  )?.data as Response;
+};
+
+export const createOrUpdateCampusExperienceImage = async (payload: FormData) => {
+  return (
+    await api.post(
+      "/StudentLife/studentlife/CreateUpdateCampusExperienceImage",
+      payload,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    )
+  )?.data as Response;
+};
+
+export const getCampusExperienceImagesByCampusExperienceId = async (
+  id: string | number
+) => {
+  return (
+    await api.get(
+      `/StudentLife/studentlife/GetCampusExperienceImageByCampusExperienceId?Id=${id}`
+    )
+  )?.data as CampusExperienceImageResponse;
+};
+
+export const deleteCampusExperienceImage = async (id: number) => {
+  return (
+    await api.delete(`/StudentLife/studentlife/DeleteCampusExperienceImage?Id=${id}`)
+  )?.data as Response;
 };

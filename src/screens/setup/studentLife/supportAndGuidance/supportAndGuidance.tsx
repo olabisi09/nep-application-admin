@@ -14,12 +14,11 @@ import { Button } from "../../../../custom";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  deleteFitnessAthletics,
-  getFitnessAndAthleticsByStudentLifeId,
+  deleteSupportGuidance,
   getSupportAndGuidanceByStudentLifeId,
 } from "../../../../requests";
 import { ColumnsType } from "antd/es/table";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SupportAndGuidanceForm from "./supportAndGuidanceForm";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
 
@@ -31,8 +30,10 @@ const SupportAndGuidance = () => {
   const [supportAndGuidanceItems, setSupportAndGuidanceItems] =
     useState<SupportAndGuidance>({} as SupportAndGuidance);
 
+  const navigate = useNavigate();
+
   const deleteSupportAndStudentMutation = useMutation({
-    mutationFn: deleteFitnessAthletics,
+    mutationFn: deleteSupportGuidance,
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -74,6 +75,13 @@ const SupportAndGuidance = () => {
         const items: MenuProps["items"] = [
           {
             key: "1",
+            label: "Add Items",
+            onClick: () => {
+              navigate(`/student-life/${record.id}/support-and-guidance-item`)
+            },
+          },
+          {
+            key: "2",
             label: "Edit",
             onClick: () => {
               setSupportAndGuidanceItems(record);

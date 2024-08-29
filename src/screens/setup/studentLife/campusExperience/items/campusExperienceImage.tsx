@@ -8,53 +8,51 @@ import {
   Spin,
   App,
 } from "antd";
-import { ReactComponent as Plus } from "../../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { Button } from "../../../../custom";
+import { ReactComponent as Plus } from "../../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../../assets/ellipsis.svg";
+import { Button } from "../../../../../custom";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  deleteSchoolSummary,
-  getStudentActivitiesByStudentLifeId,
-} from "../../../../requests";
+  deleteCampusExperienceImage,
+  getCampusExperienceImagesByCampusExperienceId,
+} from "../../../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { useParams } from "react-router-dom";
-import StudentActivitiesForm from "./studentActivitiesForm";
+import CampusExperienceImageForm from "./campusExperienceImageForm";
 
-const StudentActivities = () => {
+const CampusExperienceImages = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [schoolSummaryItems, setSchoolSummaryItems] = useState<StudentActivity>(
-    {} as StudentActivity
+  const [campusExperience, setCampusExperience] = useState<CampusExperienceImage>(
+    {} as CampusExperienceImage
   );
 
-  const deleteSchoolSummaryMutation = useMutation({
-    mutationFn: deleteSchoolSummary,
+  const deleteCampusExperienceImageMutation = useMutation({
+    mutationFn: deleteCampusExperienceImage,
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-student-activities", id],
-    queryFn: () => getStudentActivitiesByStudentLifeId(id!),
+    queryKey: ["get-fitness-image", id],
+    queryFn: () => getCampusExperienceImagesByCampusExperienceId(id!),
     enabled: !!id,
   });
 
-  const columns: ColumnsType<StudentActivity> = [
+  const columns: ColumnsType<CampusExperienceImage> = [
     {
       key: "id",
       title: "ID",
       dataIndex: "id",
     },
     {
-      key: "title",
-      title: "Title",
-      dataIndex: "title",
-    },
-    {
-      key: "description",
-      title: "Description",
-      dataIndex: "description",
+      key: "pictureUrl",
+      title: "Picture",
+      dataIndex: "imageUrl",
+      render: (_, { imageUrl }) => (
+        <img className="table-img" src={imageUrl} alt="" />
+      ),
     },
     {
       key: "status",
@@ -71,7 +69,7 @@ const StudentActivities = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setSchoolSummaryItems(record);
+              setCampusExperience(record);
               setOpenEdit(true);
             },
           },
@@ -80,7 +78,7 @@ const StudentActivities = () => {
             label: "Delete",
             onClick: async () => {
               try {
-                await deleteSchoolSummaryMutation.mutateAsync(record.id, {
+                await deleteCampusExperienceImageMutation.mutateAsync(record.id, {
                   onSuccess: (data) => {
                     notification.success({
                       message: "Success",
@@ -108,7 +106,7 @@ const StudentActivities = () => {
     },
   ];
 
-  const schoolSummaryData = data?.data as StudentActivity[];
+  const campusExperienceImageData = data?.data as CampusExperienceImage[];
 
   if (isLoading) {
     return <Spin />;
@@ -121,17 +119,19 @@ const StudentActivities = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Student Life: Student Activities Setup</h3>
+        <h3>Student Life: Campus Experience Images Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
           text="Setup"
         />
       </section>
+
       <br />
+
       <Card bordered={false}>
         <Table
-          dataSource={schoolSummaryData}
+          dataSource={campusExperienceImageData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -146,8 +146,8 @@ const StudentActivities = () => {
         title="Create School Activities"
         footer={null}
       >
-        <StudentActivitiesForm
-          item={schoolSummaryItems}
+        <CampusExperienceImageForm
+          item={campusExperience}
           handleClose={() => setOpen(false)}
         />
       </Modal>
@@ -159,8 +159,8 @@ const StudentActivities = () => {
         title="Edit School Activities"
         footer={null}
       >
-        <StudentActivitiesForm
-          item={schoolSummaryItems}
+        <CampusExperienceImageForm
+          item={campusExperience}
           handleClose={() => setOpenEdit(false)}
         />
       </Modal>
@@ -168,4 +168,4 @@ const StudentActivities = () => {
   );
 };
 
-export default StudentActivities;
+export default CampusExperienceImages;

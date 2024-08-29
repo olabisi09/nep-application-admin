@@ -178,7 +178,6 @@ interface Country {
   activeStatus?: boolean;
 }
 
-
 interface GetByStudentLifeResponse extends GetResponse {
   data: ItemByStudentLife[];
   studentLifeId: number;
@@ -449,9 +448,9 @@ interface CareerProspect {
   activeStatus: boolean;
   isDeleted: boolean;
   programName: string;
-};
+}
 
-interface CampusExperienceItemResponse extends Response{
+interface CampusExperienceItemResponse extends Response {
   data: CampusExperienceItem[];
 }
 
@@ -463,3 +462,60 @@ interface CampusExperienceItem {
   isDeleted: boolean;
 }
 
+interface SupportGuidanceItemResponse extends Response {
+  data: SupportGuidanceItem[];
+}
+
+interface SupportGuidanceItem {
+  id: number;
+  supportGuidanceId: number;
+  title: string;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface StudentActivitiesResponse extends Response {
+  data: StudentActivities[];
+}
+
+interface StudentActivities extends FitnessAthletics {}
+
+interface FitnessAthleticsItemResponse extends Response {
+  data: FitnessAthleticsItem[];
+}
+
+interface FitnessAthleticsItem {
+  id: number;
+  fitnessId: number;
+  title: string;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface FitnessImageResponse extends Response {
+  data: FitnessImage[];
+}
+
+interface FitnessImage {
+  id: number;
+  imagePath: string;
+  image: null;
+  fitnessId: number;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface CampusExperienceImageResponse extends Response {
+  data: CampusExperienceImage[];
+}
+
+interface CampusExperienceImage {
+  id: number;
+  campusExperienceId: number;
+  imageUrl: string;
+  image: null;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}

@@ -14,36 +14,36 @@ import { Button } from "../../../../custom";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  deleteCampusExperience,
-  getCampusExperienceByStudentLifeId,
+  deleteStudentActivity,
+  getStudentActivityByStudentLifeId,
 } from "../../../../requests";
 import { ColumnsType } from "antd/es/table";
-import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
-import { CreateCampusExperience, EditCampusExperience } from "./setup";
 import { useNavigate, useParams } from "react-router-dom";
+import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
+import StudentActivityForm from "./studentActivityForm";
 
-const CampusExperience = () => {
+const StudentActivity = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [campus, setCampus] = useState<ItemByStudentLife>(
-    {} as ItemByStudentLife
+  const [studentActivity, setStudentActivity] = useState<StudentActivities>(
+    {} as StudentActivities
   );
 
   const navigate = useNavigate();
 
-  const deleteCampusExperienceMutation = useMutation({
-    mutationFn: deleteCampusExperience,
+  const deleteStudentActivityMutation = useMutation({
+    mutationFn: deleteStudentActivity,
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-campus-experience"],
-    queryFn: () => getCampusExperienceByStudentLifeId(id!),
+    queryKey: ["get-support-guidance"],
+    queryFn: () => getStudentActivityByStudentLifeId(id!),
     enabled: !!id,
   });
 
-  const columns: ColumnsType<ItemByStudentLife> = [
+  const columns: ColumnsType<StudentActivities> = [
     {
       key: "id",
       title: "ID",
@@ -58,7 +58,7 @@ const CampusExperience = () => {
       key: "description",
       title: "Description",
       dataIndex: "description",
-      render: (_, { description }) => {
+      render: (_: any, { description }: any) => {
         const limitedCleanHtml = sanitizeAndLimitString(description);
         return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
@@ -76,30 +76,25 @@ const CampusExperience = () => {
         const items: MenuProps["items"] = [
           {
             key: "1",
-            label: "Add Item",
-            onClick: () =>
-              navigate(`/student-life/${record.id}/campus-experience-item`),
+            label: "Add Items",
+            onClick: () => {
+              navigate(`/student-life/${record.id}/student-activities-item`);
+            },
           },
           {
             key: "2",
-            label: "Add Images",
-            onClick: () =>
-              navigate(`/student-life/${record.id}/campus-experience-image`),
-          },
-          {
-            key: "3",
             label: "Edit",
             onClick: () => {
-              setCampus(record);
+              setStudentActivity(record);
               setOpenEdit(true);
             },
           },
           {
-            key: "4",
+            key: "3",
             label: "Delete",
             onClick: async () => {
               try {
-                await deleteCampusExperienceMutation.mutateAsync(record.id, {
+                await deleteStudentActivityMutation.mutateAsync(record.id, {
                   onSuccess: (data) => {
                     notification.success({
                       message: "Success",
@@ -127,7 +122,7 @@ const CampusExperience = () => {
     },
   ];
 
-  const campusData = data?.data as ItemByStudentLife[];
+  const studentActivityData = data?.data as StudentActivities[];
 
   if (isLoading) {
     return <Spin />;
@@ -140,7 +135,7 @@ const CampusExperience = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Student Life: Campus Experience Setup</h3>
+        <h3>Student Life: Student Activities Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -152,7 +147,7 @@ const CampusExperience = () => {
 
       <Card bordered={false}>
         <Table
-          dataSource={campusData}
+          dataSource={studentActivityData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -164,24 +159,24 @@ const CampusExperience = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create Campus Experience"
+        title="Create Student Activity"
         footer={null}
       >
-        <CreateCampusExperience
-          studentLifeId={parseInt(id ?? '') ?? 0}
+        <StudentActivityForm
+          item={studentActivity}
           handleClose={() => setOpen(false)}
         />
       </Modal>
-      
+
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit Campus Experience"
+        title="Edit Student Activity"
         footer={null}
       >
-        <EditCampusExperience
-          item={campus}
+        <StudentActivityForm
+          item={studentActivity}
           handleClose={() => setOpenEdit(false)}
         />
       </Modal>
@@ -189,4 +184,4 @@ const CampusExperience = () => {
   );
 };
 
-export default CampusExperience;
+export default StudentActivity;

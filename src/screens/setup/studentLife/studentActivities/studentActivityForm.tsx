@@ -1,28 +1,29 @@
 import { Form, Formik, FormikValues } from "formik";
 import { Button, Editor, Input, Select } from "../../../../custom";
-import { createOrUpdateSupportGuidance } from "../../../../requests";
+import { createOrUpdateStudentActivity } from "../../../../requests";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
-const SupportAndGuidanceForm = ({
+const StudentActivityForm = ({
   handleClose,
   item,
 }: {
   handleClose: () => void;
-  item: SupportAndGuidance;
+  item: StudentActivities;
 }) => {
   const { id } = useParams();
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const addSupportGuidanceMutation = useMutation({
-    mutationFn: createOrUpdateSupportGuidance,
+
+  const addStudentActivityMutation = useMutation({
+    mutationFn: createOrUpdateStudentActivity,
   });
 
   const studentLifeId = id ?? "" ?? 0;
 
-  const handleAddSupportGuidance = async (
+  const handleAddStudentActivity = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
@@ -36,7 +37,7 @@ const SupportAndGuidanceForm = ({
     };
 
     try {
-      await addSupportGuidanceMutation.mutateAsync(payload, {
+      await addStudentActivityMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -80,7 +81,7 @@ const SupportAndGuidanceForm = ({
         status: initialStatus,
       }}
       onSubmit={(values, { resetForm }) =>
-        handleAddSupportGuidance(values, resetForm)
+        handleAddStudentActivity(values, resetForm)
       }
       validationSchema={validateSetup}>
       {({ setFieldValue }) => (
@@ -110,8 +111,8 @@ const SupportAndGuidanceForm = ({
             />
             <Button
               type="submit"
-              isLoading={addSupportGuidanceMutation.isPending}
-              disabled={addSupportGuidanceMutation.isPending}
+              isLoading={addStudentActivityMutation.isPending}
+              disabled={addStudentActivityMutation.isPending}
               text={hasRecords ? "Update" : "Create"}
             />
           </div>
@@ -121,4 +122,4 @@ const SupportAndGuidanceForm = ({
   );
 };
 
-export default SupportAndGuidanceForm;
+export default StudentActivityForm;
