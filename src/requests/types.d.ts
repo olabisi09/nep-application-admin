@@ -178,7 +178,6 @@ interface Country {
   activeStatus?: boolean;
 }
 
-
 interface GetByStudentLifeResponse extends GetResponse {
   data: ItemByStudentLife[];
   studentLifeId: number;
@@ -449,5 +448,18 @@ interface CareerProspect {
   activeStatus: boolean;
   isDeleted: boolean;
   programName: string;
-};
+}
 
+interface ApplicationFeeResponse extends Response {
+  data: ApplicationFeeType[];
+}
+
+interface ApplicationFeeType {
+  id: number;
+  modeOfStudyId: number;
+  programId: number;
+  amount: number;
+  cost: number;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
