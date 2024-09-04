@@ -1,12 +1,22 @@
-import { Form } from "react-router-dom";
 import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { App } from "antd";
-import { createOrUpdateApplicationFee } from "../../../requests";
-import { Formik, FormikValues } from "formik";
+import {
+  createOrUpdateApplicationFee,
+  getAllModeOfStudy,
+  getAllProgramsApplicationFee,
+} from "../../../requests";
+import { Formik, FormikValues, Form } from "formik";
 import { FC } from "react";
 import { Button } from "../../../custom";
+import * as Yup from "yup";
+import { validator } from "../../../utils/validator";
 
 interface ComponentProps {
   record: ApplicationFee;
@@ -36,39 +46,84 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
           notification.success({
             message: "Success",
           });
+
+          queryClient.refetchQueries({
+            queryKey: ["get-all-application"],
+          });
+          handleClose();
         },
       });
     } catch (error: any) {
       notification.error({
         message: "Error",
+        description:
+          error?.response.data?.message || error?.response?.data?.title,
       });
     }
   };
 
+  const queries = useQueries({
+    queries: [
+      {
+        queryKey: ["get-AllPrograms-ApplicationFee"],
+        queryFn: getAllProgramsApplicationFee,
+      },
+      { queryKey: ["get-AllModeOfStudy"], queryFn: getAllModeOfStudy },
+    ],
+  });
+
+  const programQuery = queries[0];
+  const modeQuery = queries[1];
+
+  const programData = programQuery?.data?.data ?? [];
+  const modeOfStudyData = modeQuery?.data?.data ?? [];
+
+  const programOptions = programData?.map((item) => (
+    <option key={item?.id} value={item?.id}>
+      {item?.name}
+    </option>
+  ));
+
+  const modeOfStudyOptions = modeOfStudyData?.map((item) => (
+    <option key={item?.id} value={item?.id}>
+      {item?.name}
+    </option>
+  ));
+
+  const validationSchema = Yup.object().shape({
+    ProgramName: validator.programName,
+    ModeOfStudy: validator.ModeOfStudy,
+    amount: validator.amount,
+  });
+
   return (
     <Formik
       initialValues={{
-        id: 0,
-        ProgramName: "",
+        // id: 0,
+        programName: "",
         ModeOfStudy: "",
         amount: "",
       }}
       onSubmit={(values) => {
         createUpdateApplicationFeeHandler(values);
-      }}>
+      }}
+    
+    >
       {(props) => {
         return (
           <Form>
             <section className="fields">
               <Select
-                name=" ProgramName "
+                name="programName"
                 placeholder="Select Program"
                 label="Program Name"
+                options={programOptions}
               />
               <Select
                 name="ModeOfStudy"
                 label="Mode of Study"
                 placeholder="Select Mode of Study"
+                options={modeOfStudyOptions}
               />
 
               <Input name="amount" placeholder="#0.00" label="Amount" />
@@ -85,6 +140,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
                   disabled={createUpdateApplicationFeeMutation.isPending}
                   isLoading={createUpdateApplicationFeeMutation.isPending}
                   text={Object.keys(record).length > 0 ? "Update" : "Create"}
+                  // text='Create'
                 />
               </div>
             </section>

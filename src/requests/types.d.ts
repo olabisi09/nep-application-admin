@@ -450,9 +450,7 @@ interface CareerProspect {
   programName: string;
 }
 
-interface ApplicationFeeResponse {
-  statusCode: number;
-  message: string;
+interface ApplicationFeeResponse extends Response {
   data: ApplicationFeePayload[];
 }
 
@@ -462,6 +460,43 @@ interface ApplicationFee {
   programId: number;
   amount: number;
   cost: number;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface GetAllProgramApplicationFeeResponse extends Response {
+  data: GetAllProgramApplicationFee[];
+}
+
+interface GetAllProgramApplicationFee {
+  categoryCode: string;
+  programTypeCode: string;
+  programCategoryCode: null;
+  code: string;
+  name: string;
+  description: string;
+  requirements: string;
+  duration: string;
+  qualification: string;
+  careerProspect: string;
+  tuition: string;
+  curriculum: string;
+  scholarship: string;
+  userStory: string;
+  accreditation: string;
+  id: number;
+  created: string;
+  createdBy: null;
+  activeStatus: boolean;
+}
+
+interface modeOfStudyResponse extends Response {
+  data: ModeOfStudyPayload[];
+}
+
+interface ModeOfStudyPayload {
+  id: number;
+  name: string;
   activeStatus: boolean;
   isDeleted: boolean;
 }

@@ -676,6 +676,16 @@ export const deleteCareerProspect = async (id: number) => {
 export const createOrUpdateApplicationFee = async (
   payload: Partial<ApplicationFee>
 ) => {
-  return (await api.post("/ReadMore/CreateUpdateFeeSetup"))
+  return (await api.post("/ReadMore/CreateUpdateFeeSetup", payload))
     ?.data as ApplicationFeeResponse;
+};
+
+export const getAllProgramsApplicationFee = async () => {
+  return (await api.get("/Academics/GetAllProgramAsync"))
+    ?.data as GetAllProgramApplicationFeeResponse;
+};
+
+export const getAllModeOfStudy = async () => {
+  return (await api.get("/Utilities/Utilities/GetAllModeOfStudy"))
+    ?.data as modeOfStudyResponse;
 };

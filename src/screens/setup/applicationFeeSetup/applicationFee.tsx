@@ -26,9 +26,9 @@ const ApplicationFee = () => {
   };
   const data = Array.from({ length: 2 }, () => ({
     id: 1234,
-    programName: "Timi",
-    ModeOfStudy: "hhee",
-    amount: 33,
+    programId: "Timi",
+    modeOfStudyId: "hhee",
+    amount: 33000,
   }));
   const items: MenuProps["items"] = [
     {
@@ -36,6 +36,19 @@ const ApplicationFee = () => {
       label: (
         <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
           Edit
+        </button>
+      ),
+    },
+
+    {
+      key: "1",
+      label: (
+        <button
+          style={{ border: "0rem" }}
+          onClick={() => {
+            // handleDelete(record.id);
+          }}>
+          Delete
         </button>
       ),
     },
@@ -47,14 +60,14 @@ const ApplicationFee = () => {
       dataIndex: "id",
     },
     {
-      key: "programName",
+      key: "programId",
       title: "Program",
-      dataIndex: "programName",
+      dataIndex: "programId",
     },
     {
-      key: "ModeOfStudy",
+      key: "modeOfStudyId",
       title: "Mode Of Study",
-      dataIndex: "ModeOfStudy",
+      dataIndex: "modeOfStudyId",
     },
     {
       key: "amount",
@@ -74,7 +87,7 @@ const ApplicationFee = () => {
     {
       key: "action",
       title: "",
-      render: (record:ApplicationFee) => (
+      render: (record: ApplicationFee) => (
         <Dropdown menu={{ items }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
@@ -120,6 +133,7 @@ const ApplicationFee = () => {
           dataSource={data}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
+          scroll={{ x: 400 }}
           //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
@@ -129,16 +143,7 @@ const ApplicationFee = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Application Fee Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}>
+        footer={null}>
         <AddApplicationFee
           record={item}
           handleClose={() => setShowAddModal(false)}
