@@ -74,7 +74,7 @@ const ApplicationFee = () => {
     {
       key: "action",
       title: "",
-      render: (record:Appl) => (
+      render: (record:ApplicationFee) => (
         <Dropdown menu={{ items }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
