@@ -1,15 +1,15 @@
 import { Form } from "react-router-dom";
 import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
-import { Formik, FormikValues } from "formik";
-import { Button } from "../../../custom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FC } from "react";
 import { App } from "antd";
 import { createOrUpdateApplicationFee } from "../../../requests";
+import { Formik, FormikValues } from "formik";
+import { FC } from "react";
+import { Button } from "../../../custom";
 
 interface ComponentProps {
-  record: ApplicationFeeType;
+  record: ApplicationFee;
   handleClose: () => void;
 }
 
@@ -19,14 +19,14 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
 
   const createUpdateApplicationFeeMutation = useMutation({
     mutationFn: createOrUpdateApplicationFee,
-    mutationKey: ["create-application-fee"],
+    mutationKey: ["create-update-applicationFee"],
   });
 
-  const createApplicationFeeHandler = async (values: FormikValues) => {
-    const payload: Partial<ApplicationFeeType> = {
-      id: 0,
-      programId: values.programName,
+  const createUpdateApplicationFeeHandler = async (values: FormikValues) => {
+    const payload: Partial<ApplicationFee> = {
+      id: record?.id || 0,
       modeOfStudyId: values.ModeOfStudy,
+      programId: values.programName,
       amount: values.amount,
     };
 
@@ -48,14 +48,14 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
   return (
     <Formik
       initialValues={{
-        programName: "",
+        id: 0,
+        ProgramName: "",
         ModeOfStudy: "",
         amount: "",
       }}
       onSubmit={(values) => {
-        createApplicationFeeHandler(values);
-      }}
-      validationSchema>
+        createUpdateApplicationFeeHandler(values);
+      }}>
       {(props) => {
         return (
           <Form>
@@ -72,6 +72,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
               />
 
               <Input name="amount" placeholder="#0.00" label="Amount" />
+
               <div className="btn-group">
                 <Button
                   type="button"
@@ -81,9 +82,9 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
                 />
                 <Button
                   type="submit"
-                  // disabled={createUpdateAccreditationMutation.isPending}
-                  // isLoading={createUpdateAccreditationMutation.isPending}
-                  // text={Object.keys(record).length > 0 ? "Cancel" : "Create"}
+                  disabled={createUpdateApplicationFeeMutation.isPending}
+                  isLoading={createUpdateApplicationFeeMutation.isPending}
+                  text={Object.keys(record).length > 0 ? "Update" : "Create"}
                 />
               </div>
             </section>

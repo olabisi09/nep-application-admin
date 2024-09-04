@@ -673,7 +673,9 @@ export const deleteCareerProspect = async (id: number) => {
     ?.data as Response;
 };
 
-export const createOrUpdateApplicationFee = async () => {
-  return (await api.post(`/ReadMore/CreateUpdateFeeSetup`))
+export const createOrUpdateApplicationFee = async (
+  payload: Partial<ApplicationFee>
+) => {
+  return (await api.post("/ReadMore/CreateUpdateFeeSetup"))
     ?.data as ApplicationFeeResponse;
 };

@@ -450,11 +450,13 @@ interface CareerProspect {
   programName: string;
 }
 
-interface ApplicationFeeResponse extends Response {
-  data: ApplicationFeeType[];
+interface ApplicationFeeResponse {
+  statusCode: number;
+  message: string;
+  data: ApplicationFeePayload[];
 }
 
-interface ApplicationFeeType {
+interface ApplicationFee {
   id: number;
   modeOfStudyId: number;
   programId: number;
