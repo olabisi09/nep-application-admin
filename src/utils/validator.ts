@@ -10,4 +10,14 @@ export const validator = {
   file: Yup.mixed().required("A File is required"),
   amount: Yup.number().required("An Amount is required"),
   ModeOfStudy: string().required("Mode of study is required"),
+  email: string()
+    .email("Invalid email Address")
+    .required("Email Address  is required"),
+  password: string()
+    .required("Password is required")
+    .max(20, "Password must have a maximum length of 20 characters")
+    .matches(
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}/,
+      "Password must have Upper case, Lower case and number "
+    ),
 };

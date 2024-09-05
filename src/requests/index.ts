@@ -689,3 +689,8 @@ export const getAllModeOfStudy = async () => {
   return (await api.get("/Utilities/Utilities/GetAllModeOfStudy"))
     ?.data as modeOfStudyResponse;
 };
+
+export const SignInUser = async (payload: SignInPayload) => {
+  return (await api.post(`/Authorization/Adminlogin`, payload))
+    ?.data as SignInResponse;
+};

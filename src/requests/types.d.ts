@@ -500,3 +500,23 @@ interface ModeOfStudyPayload {
   activeStatus: boolean;
   isDeleted: boolean;
 }
+
+interface SignInResponse extends Response {
+  data: SignInData;
+}
+
+interface SignInData {
+  token: string;
+  expiration: string;
+  role: string[];
+  isNewApplicant: null;
+  isNewUser: boolean;
+  email: null;
+  applicantId: string;
+  isAdmin: boolean;
+}
+
+interface SignInPayload {
+  email: string;
+  password: string;
+}
