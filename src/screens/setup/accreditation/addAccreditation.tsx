@@ -150,7 +150,6 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
                   type="submit"
                   disabled={createUpdateAccreditationMutation.isPending}
                   isLoading={createUpdateAccreditationMutation.isPending}
-                
                 />
               </div>
             </section>

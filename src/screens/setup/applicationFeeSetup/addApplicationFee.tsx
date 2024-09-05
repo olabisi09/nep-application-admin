@@ -48,7 +48,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
           });
 
           queryClient.refetchQueries({
-            queryKey: ["get-all-application"],
+            queryKey: ["get-AllPrograms-ApplicationFee"],
           });
           handleClose();
         },
@@ -91,7 +91,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
   ));
 
   const validationSchema = Yup.object().shape({
-    ProgramName: validator.programName,
+    programName: validator.programName,
     ModeOfStudy: validator.ModeOfStudy,
     amount: validator.amount,
   });
@@ -107,7 +107,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
       onSubmit={(values) => {
         createUpdateApplicationFeeHandler(values);
       }}
-    
+    validationSchema={validationSchema}
     >
       {(props) => {
         return (
