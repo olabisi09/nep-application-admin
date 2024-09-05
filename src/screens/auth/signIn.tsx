@@ -20,7 +20,7 @@ const SignIn = () => {
   const navigate = useNavigate();
 
   const SignInMutation = useMutation({
-    mutationKey: ["signin"],
+    mutationKey: ["Signn"],
     mutationFn: SignInUser,
   });
 
@@ -30,7 +30,7 @@ const SignIn = () => {
     }
   }, [user]);
 
-  console.log(user?.isAdmin);
+  // console.log(user?.isAdmin);
 
   const handleSignIn = async (values: FormikValues) => {
     const payload: SignInPayload = {

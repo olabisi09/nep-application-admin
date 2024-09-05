@@ -694,3 +694,13 @@ export const SignInUser = async (payload: SignInPayload) => {
   return (await api.post(`/Authorization/Adminlogin`, payload))
     ?.data as SignInResponse;
 };
+
+export const ForgotPasswordAdmin = async (payload: ForgotPayload) => {
+  return (await api.post(`/Authorization/AdminForgotPassword`, payload))
+    ?.data as ForgotResponse;
+};
+
+export const ResetPasswordAdmin = async (payload: ResetPayload) => {
+  return (await api.post(`/Authorization/AdminResetPassword`, payload))
+    ?.data as ResetResponse;
+};

@@ -20,4 +20,16 @@ export const validator = {
       /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}/,
       "Password must have Upper case, Lower case and number "
     ),
+
+  newPassword: string()
+    .required("Password is required")
+    .max(20, "Password must have a maximum length of 20 characters")
+    .matches(
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}/,
+      "Password must have Upper case, Lower case and number "
+    ),
+
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("newPassword")], "Passwords must match")
+    .required("Enter Confirm Password"),
 };

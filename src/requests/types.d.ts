@@ -520,3 +520,22 @@ interface SignInPayload {
   email: string;
   password: string;
 }
+
+interface ForgotResponse extends Response {
+  data: ForgotPayload;
+}
+
+interface ForgotPayload {
+  email: string;
+}
+
+interface ResetResponse extends Response {
+  data: ResetPayload;
+}
+
+interface ResetPayload {
+  password: string;
+  confirmPassword: string;
+  email: string;
+  token: string;
+}
