@@ -9,6 +9,7 @@ const AddApplicationFee = () => {
       placeholder="Select Program"
       label="Program Name"
     />
+    
     <Input
       name="description"
       label="Description"
