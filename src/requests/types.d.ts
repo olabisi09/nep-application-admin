@@ -494,6 +494,57 @@ interface FitnessAthleticsItem {
   isDeleted: boolean;
 }
 
+interface ApplicationFeeResponse extends Response {
+  data: ApplicationFeePayload[];
+}
+
+interface ApplicationFee {
+  id: number;
+  modeOfStudyId: number;
+  programId: number;
+  amount: number;
+  cost: number;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface GetAllProgramApplicationFeeResponse extends Response {
+  data: GetAllProgramApplicationFee[];
+}
+
+interface GetAllProgramApplicationFee {
+  categoryCode: string;
+  programTypeCode: string;
+  programCategoryCode: null;
+  code: string;
+  name: string;
+  description: string;
+  requirements: string;
+  duration: string;
+  qualification: string;
+  careerProspect: string;
+  tuition: string;
+  curriculum: string;
+  scholarship: string;
+  userStory: string;
+  accreditation: string;
+  id: number;
+  created: string;
+  createdBy: null;
+  activeStatus: boolean;
+}
+
+interface modeOfStudyResponse extends Response {
+  data: ModeOfStudyPayload[];
+}
+
+interface ModeOfStudyPayload {
+  id: number;
+  name: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
 interface FitnessImageResponse extends Response {
   data: FitnessImage[];
 }
@@ -518,4 +569,43 @@ interface CampusExperienceImage {
   image: null;
   activeStatus: boolean;
   isDeleted: boolean;
+}
+
+interface SignInResponse extends Response {
+  data: SignInData;
+}
+
+interface SignInData {
+  token: string;
+  expiration: string;
+  role: string[];
+  isNewApplicant: null;
+  isNewUser: boolean;
+  email: null;
+  applicantId: string;
+  isAdmin: boolean;
+}
+
+interface SignInPayload {
+  email: string;
+  password: string;
+}
+
+interface ForgotResponse extends Response {
+  data: ForgotPayload;
+}
+
+interface ForgotPayload {
+  email: string;
+}
+
+interface ResetResponse extends Response {
+  data: ResetPayload;
+}
+
+interface ResetPayload {
+  password: string;
+  confirmPassword: string;
+  email: string;
+  token: string;
 }

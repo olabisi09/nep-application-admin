@@ -514,18 +514,22 @@ export const deleteMaritalStatus = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteMaritalStatus?Id=${id}`))
     ?.data as Response;
 };
+
 export const deleteState = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteState?Id=${id}`))
     ?.data as Response;
 };
+
 export const deleteLGA = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteLga?Id=${id}`))
     ?.data as Response;
 };
+
 export const deleteSubject = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteSubject?Id=${id}`))
     ?.data as Response;
 };
+
 export const getAdmissionRequirements = async () => {
   return (await api.get("/ReadMore/GetAllAdmissionRequirements"))
     ?.data as AdmissionRequirementResponse;
@@ -558,12 +562,14 @@ export const getAllAccreditation = async () => {
   return (await api.get("/ReadMore/GetAllAccreditations"))
     ?.data as AccreditationResponse;
 };
+
 export const createOrUpdateScholarship = async (
   payload: Partial<CommonPayload>
 ) => {
   return (await api.post(`/ReadMore/CreateUpdateScholarship`, payload))
     ?.data as Response;
 };
+
 export const getAllScholarships = async () => {
   return (await api.get("/ReadMore/GetAllScholarship"))
     ?.data as ScholarshipResponse;
@@ -804,4 +810,35 @@ export const deleteCampusExperienceImage = async (id: number) => {
   return (
     await api.delete(`/StudentLife/studentlife/DeleteCampusExperienceImage?Id=${id}`)
   )?.data as Response;
+}
+export const createOrUpdateApplicationFee = async (
+  payload: Partial<ApplicationFee>
+) => {
+  return (await api.post("/ReadMore/CreateUpdateFeeSetup", payload))
+    ?.data as ApplicationFeeResponse;
+};
+
+export const getAllProgramsApplicationFee = async () => {
+  return (await api.get("/Academics/GetAllProgramAsync"))
+    ?.data as GetAllProgramApplicationFeeResponse;
+};
+
+export const getAllModeOfStudy = async () => {
+  return (await api.get("/Utilities/Utilities/GetAllModeOfStudy"))
+    ?.data as modeOfStudyResponse;
+};
+
+export const SignInUser = async (payload: SignInPayload) => {
+  return (await api.post(`/Authorization/Adminlogin`, payload))
+    ?.data as SignInResponse;
+};
+
+export const ForgotPasswordAdmin = async (payload: ForgotPayload) => {
+  return (await api.post(`/Authorization/AdminForgotPassword`, payload))
+    ?.data as ForgotResponse;
+};
+
+export const ResetPasswordAdmin = async (payload: ResetPayload) => {
+  return (await api.post(`/Authorization/AdminResetPassword`, payload))
+    ?.data as ResetResponse;
 };

@@ -9,6 +9,7 @@ import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import AddApplicationFee from "./addApplicationFee";
+import ModeOfStudy from "../modeOfStudy/modeOfStudy";
 
 const ApplicationFee = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -16,18 +17,18 @@ const ApplicationFee = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [item, setItem] = useState<ApplicationFee>({} as ApplicationFee);
+
   const [showAddItemModal, setShowAddItemModal] = useState(false);
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  const data = Array.from({ length: 5 }, () => ({
+  const data = Array.from({ length: 2 }, () => ({
     id: 1234,
-    firstName: "Timi",
-    lastName: "John",
-    email: "john@gmail.com",
-    role: "Admin User",
-    status: "Active",
+    programId: "Timi",
+    modeOfStudyId: "hhee",
+    amount: 33000,
   }));
   const items: MenuProps["items"] = [
     {
@@ -35,6 +36,19 @@ const ApplicationFee = () => {
       label: (
         <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
           Edit
+        </button>
+      ),
+    },
+
+    {
+      key: "1",
+      label: (
+        <button
+          style={{ border: "0rem" }}
+          onClick={() => {
+            // handleDelete(record.id);
+          }}>
+          Delete
         </button>
       ),
     },
@@ -46,34 +60,34 @@ const ApplicationFee = () => {
       dataIndex: "id",
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
+      key: "programId",
+      title: "Program",
+      dataIndex: "programId",
     },
     {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
+      key: "modeOfStudyId",
+      title: "Mode Of Study",
+      dataIndex: "modeOfStudyId",
     },
     {
-      key: "email",
-      title: "Email Address",
-      dataIndex: "email",
+      key: "amount",
+      title: "Amount",
+      dataIndex: "amount",
     },
-    {
-      key: "role",
-      title: "Role",
-      dataIndex: "role",
-    },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "status",
-    },
+    // {
+    //   key: "role",
+    //   title: "Role",
+    //   dataIndex: "role",
+    // },
+    // {
+    //   key: "status",
+    //   title: "Status",
+    //   dataIndex: "status",
+    // },
     {
       key: "action",
       title: "",
-      render: () => (
+      render: (record: ApplicationFee) => (
         <Dropdown menu={{ items }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
@@ -119,6 +133,7 @@ const ApplicationFee = () => {
           dataSource={data}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
+          scroll={{ x: 400 }}
           //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
@@ -128,22 +143,11 @@ const ApplicationFee = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Application Fee Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
-      >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddApplicationFee />
-          </Form>
-        </Formik>
+        footer={null}>
+        <AddApplicationFee
+          record={item}
+          handleClose={() => setShowAddModal(false)}
+        />
       </Modal>
 
       <Modal
@@ -151,22 +155,21 @@ const ApplicationFee = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Application Fee Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpenEdit(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Update" />
-          </div>
-        )}
+        footer={null}
+        //   <div className="btn-group">
+        //     <Button
+        //       onClick={() => setOpenEdit(false)}
+        //       variant="text"
+        //       text="Cancel"
+        //     />
+        //     <Button text="Update" />
+        //   </div>
+        // )}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddApplicationFee />
-          </Form>
-        </Formik>
+        <AddApplicationFee
+          record={item}
+          handleClose={() => setShowAddModal(false)}
+        />
       </Modal>
     </main>
   );
