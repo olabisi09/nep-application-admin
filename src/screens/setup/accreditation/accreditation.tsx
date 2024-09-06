@@ -197,18 +197,7 @@ const AccreditationSetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Accreditation Setup"
-        footer={null}
-        // footer={() => (
-        //   <div className="btn-group">
-        //     <Button
-        //       onClick={() => setShowAddModal(false)}
-        //       variant="text"
-        //       text="Cancel"
-        //     />
-        //     <Button text="Create" />
-        //   </div>
-        // )}
-      >
+        footer={null}>
         <AddAccreditation
           record={item}
           handleClose={() => setShowAddModal(false)}

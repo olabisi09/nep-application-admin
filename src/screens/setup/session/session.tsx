@@ -40,7 +40,7 @@ const Session = () => {
 
   const deleteSessionMutation = useMutation({ mutationFn: deleteSession});
 
-  const DeleteSessionHandler = async () => {
+  const  DeleteSessionHandler = async () => {
     try {
       await deleteSessionMutation.mutateAsync(session?.id, {
         onSuccess: (data) => {
