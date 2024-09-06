@@ -8,7 +8,7 @@ import { validator } from "../../utils/validator";
 import * as Yup from "yup";
 import { useAtom, useSetAtom } from "jotai";
 import { useMutation } from "@tanstack/react-query";
-import { SignInUser } from "../../requests";
+import { signInUser } from "../../requests";
 import { userAtom } from "../../utils/store";
 import { useEffect } from "react";
 
@@ -21,7 +21,7 @@ const SignIn = () => {
 
   const SignInMutation = useMutation({
     mutationKey: ["SignIn"],
-    mutationFn: SignInUser,
+    mutationFn: signInUser,
   });
 
   useEffect(() => {

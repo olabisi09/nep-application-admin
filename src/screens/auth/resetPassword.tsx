@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
 import { App } from "antd";
 import { useMutation } from "@tanstack/react-query";
-import { ResetPasswordAdmin } from "../../requests";
+import { resetPasswordAdmin } from "../../requests";
 import { validator } from "../../utils/validator";
 import * as Yup from "yup";
 
@@ -17,7 +17,7 @@ const ResetPassword = () => {
 
   const ResetPasswordMutation = useMutation({
     mutationKey: ["reset-password"],
-    mutationFn: ResetPasswordAdmin,
+    mutationFn: resetPasswordAdmin,
   });
 
   const handleResetPassword = async (values: FormikValues) => {

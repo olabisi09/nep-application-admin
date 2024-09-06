@@ -9,7 +9,7 @@ export const validator = {
   title: string().required("Title is required"),
   file: Yup.mixed().required("A File is required"),
   amount: Yup.number().required("An Amount is required"),
-  ModeOfStudy: string().required("Mode of study is required"),
+  modeOfStudy: string().required("Mode of study is required"),
   email: string()
     .email("Invalid email Address")
     .required("Email Address  is required"),
