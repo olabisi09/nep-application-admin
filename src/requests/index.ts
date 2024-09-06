@@ -838,7 +838,12 @@ export const ForgotPasswordAdmin = async (payload: ForgotPayload) => {
     ?.data as ForgotResponse;
 };
 
-export const ResetPasswordAdmin = async (payload: ResetPayload) => {
+export const ResetPasswordAdmin = async (payload: Partial<ResetPayload>) => {
   return (await api.post(`/Authorization/AdminResetPassword`, payload))
     ?.data as ResetResponse;
+};
+
+export const getAllFeeSetup = async () => {
+  return (await api.get("/ReadMore/GetAllFeeSetup"))
+    ?.data as getAllFeeSetupResponse;
 };

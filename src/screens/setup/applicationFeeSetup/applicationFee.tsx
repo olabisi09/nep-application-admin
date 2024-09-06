@@ -10,6 +10,7 @@ import SearchInput from "../../../custom/searchInput/searchInput";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import AddApplicationFee from "./addApplicationFee";
 import ModeOfStudy from "../modeOfStudy/modeOfStudy";
+import { getAllFeeSetup } from "../../../requests";
 
 const ApplicationFee = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -30,6 +31,8 @@ const ApplicationFee = () => {
     modeOfStudyId: "hhee",
     amount: 33000,
   }));
+
+   
   const items: MenuProps["items"] = [
     {
       key: "1",

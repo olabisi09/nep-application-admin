@@ -43,6 +43,8 @@ const AddSession = ({handleClose}: {handleClose: () => void}) => {
     }
   }
 
+  
+
   return (
     <Formik
     initialValues={{

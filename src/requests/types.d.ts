@@ -609,3 +609,20 @@ interface ResetPayload {
   email: string;
   token: string;
 }
+
+interface getAllFeeSetupResponse extends Response {
+  data: getAllFeeSetup[];
+}
+
+interface getAllFeeSetup {
+  id: number;
+  modeOfStudyId: number;
+  modeOfStudy: null | string;
+  program: null | string;
+  programId: number;
+  amount: number;
+  applicationBatchId: number;
+  applicationBatchName: null;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}

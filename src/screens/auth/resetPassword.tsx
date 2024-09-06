@@ -21,11 +21,9 @@ const ResetPassword = () => {
   });
 
   const handleResetPassword = async (values: FormikValues) => {
-    const payload: ResetPayload = {
+    const payload: Partial<ResetPayload> = {
       password: values.newPassword,
       confirmPassword: values.confirmPassword,
-      email: "",
-      token: "",
     };
 
     try {

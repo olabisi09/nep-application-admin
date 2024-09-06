@@ -9,6 +9,7 @@ import {
 import { App } from "antd";
 import {
   createOrUpdateApplicationFee,
+  getAllFeeSetup,
   getAllModeOfStudy,
   getAllProgramsApplicationFee,
 } from "../../../requests";
@@ -26,6 +27,11 @@ interface ComponentProps {
 const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
+
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["getAll-Fee-Setup"],
+    queryFn: getAllFeeSetup,
+  });
 
   const createUpdateApplicationFeeMutation = useMutation({
     mutationFn: createOrUpdateApplicationFee,
@@ -48,7 +54,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
           });
 
           queryClient.refetchQueries({
-            queryKey: ["get-AllPrograms-ApplicationFee"],
+            queryKey: ["getAll-Fee-Setup"],
           });
           handleClose();
         },
@@ -107,8 +113,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
       onSubmit={(values) => {
         createUpdateApplicationFeeHandler(values);
       }}
-    validationSchema={validationSchema}
-    >
+      validationSchema={validationSchema}>
       {(props) => {
         return (
           <Form>
@@ -139,8 +144,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
                   type="submit"
                   disabled={createUpdateApplicationFeeMutation.isPending}
                   isLoading={createUpdateApplicationFeeMutation.isPending}
-                  text={Object.keys(record).length > 0 ? "Update" : "Create"}
-                  // text='Create'
+                  text="Create"
                 />
               </div>
             </section>
@@ -152,3 +156,121 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
 };
 
 export default AddApplicationFee;
+
+export const EditApplicationFee = ({
+  item,
+  handleClose,
+}: {
+  item: ApplicationFee;
+  handleClose: () => void;
+}) => {
+  const queryClient = useQueryClient();
+  const { notification } = App.useApp();
+  const editApplicationFeeMutation = useMutation({
+    mutationFn: createOrUpdateApplicationFee,
+  });
+
+  const handleEditApplication = async (values: FormikValues) => {
+    const payload: Partial<ApplicationFee> = {
+      programId: item?.programId,
+      modeOfStudyId: item?.modeOfStudyId,
+      amount: item?.amount,
+    };
+
+    try {
+      await editApplicationFeeMutation.mutateAsync(payload, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          queryClient.refetchQueries({ queryKey: ["getAll-Fee-Setup"] });
+          handleClose();
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
+  const queries = useQueries({
+    queries: [
+      {
+        queryKey: ["get-AllPrograms-ApplicationFee"],
+        queryFn: getAllProgramsApplicationFee,
+      },
+      { queryKey: ["get-AllModeOfStudy"], queryFn: getAllModeOfStudy },
+    ],
+  });
+
+  const programQuery = queries[0];
+  const modeQuery = queries[1];
+
+  const programData = programQuery?.data?.data ?? [];
+  const modeOfStudyData = modeQuery?.data?.data ?? [];
+
+  const programOptions = programData?.map((item) => (
+    <option key={item?.id} value={item?.id}>
+      {item?.name}
+    </option>
+  ));
+
+  const modeOfStudyOptions = modeOfStudyData?.map((item) => (
+    <option key={item?.id} value={item?.id}>
+      {item?.name}
+    </option>
+  ));
+  const validationSchema = Yup.object().shape({
+    programName: validator.programName,
+    ModeOfStudy: validator.ModeOfStudy,
+    amount: validator.amount,
+  });
+
+  return (
+    <Formik
+      initialValues={{
+        programName: item?.programId,
+        ModeOfStudy: item?.modeOfStudyId,
+        amount: item?.amount,
+      }}
+      validationSchema={validationSchema}
+      onSubmit={(values) => handleEditApplication(values)}
+      enableReinitialize>
+      <Form>
+        <section className="fields">
+          <Select
+            name="programName"
+            placeholder="Select Program"
+            label="Program Name"
+            options={programOptions}
+          />
+          <Select
+            name="ModeOfStudy"
+            label="Mode of Study"
+            placeholder="Select Mode of Study"
+            options={modeOfStudyOptions}
+          />
+
+          <Input name="amount" placeholder="#0.00" label="Amount" />
+
+          <div className="btn-group">
+            <Button
+              type="button"
+              variant="text"
+              text="Cancel"
+              onClick={handleClose}
+            />
+            <Button
+              type="submit"
+              text="Update"
+              disabled={editApplicationFeeMutation?.isPending}
+              isLoading={editApplicationFeeMutation?.isPending}
+            />
+          </div>
+        </section>
+      </Form>
+    </Formik>
+  );
+};
