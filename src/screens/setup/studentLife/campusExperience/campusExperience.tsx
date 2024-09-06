@@ -20,7 +20,7 @@ import {
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
 import { CreateCampusExperience, EditCampusExperience } from "./setup";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CampusExperience = () => {
   const { notification } = App.useApp();
@@ -31,9 +31,12 @@ const CampusExperience = () => {
     {} as ItemByStudentLife
   );
 
+  const navigate = useNavigate();
+
   const deleteCampusExperienceMutation = useMutation({
     mutationFn: deleteCampusExperience,
   });
+
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-campus-experience"],
     queryFn: () => getCampusExperienceByStudentLifeId(id!),
@@ -61,14 +64,6 @@ const CampusExperience = () => {
       },
     },
     {
-      key: "pictureUrl",
-      title: "Picture",
-      dataIndex: "imageUrl",
-      render: (_, { imageUrl }) => (
-        <img className="table-img" src={imageUrl} alt="" />
-      ),
-    },
-    {
       key: "status",
       title: "Status",
       dataIndex: "activeStatus",
@@ -81,6 +76,18 @@ const CampusExperience = () => {
         const items: MenuProps["items"] = [
           {
             key: "1",
+            label: "Add Item",
+            onClick: () =>
+              navigate(`/student-life/${record.id}/campus-experience-item`),
+          },
+          {
+            key: "2",
+            label: "Add Images",
+            onClick: () =>
+              navigate(`/student-life/${record.id}/campus-experience-image`),
+          },
+          {
+            key: "3",
             label: "Edit",
             onClick: () => {
               setCampus(record);
@@ -88,7 +95,7 @@ const CampusExperience = () => {
             },
           },
           {
-            key: "2",
+            key: "4",
             label: "Delete",
             onClick: async () => {
               try {
@@ -110,6 +117,7 @@ const CampusExperience = () => {
             },
           },
         ];
+
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />
@@ -124,9 +132,11 @@ const CampusExperience = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
   return (
     <div>
       <section className="space-between">
@@ -137,7 +147,9 @@ const CampusExperience = () => {
           text="Setup"
         />
       </section>
+
       <br />
+
       <Card bordered={false}>
         <Table
           dataSource={campusData}
@@ -147,6 +159,7 @@ const CampusExperience = () => {
           scroll={{ x: true }}
         />
       </Card>
+
       <Modal
         open={open}
         onCancel={() => setOpen(false)}
@@ -155,10 +168,11 @@ const CampusExperience = () => {
         footer={null}
       >
         <CreateCampusExperience
-          studentLifeId={id!}
+          studentLifeId={parseInt(id ?? '') ?? 0}
           handleClose={() => setOpen(false)}
         />
       </Modal>
+      
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}

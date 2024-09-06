@@ -450,6 +450,50 @@ interface CareerProspect {
   programName: string;
 }
 
+interface CampusExperienceItemResponse extends Response {
+  data: CampusExperienceItem[];
+}
+
+interface CampusExperienceItem {
+  id: number;
+  campusExperienceId: number;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface SupportGuidanceItemResponse extends Response {
+  data: SupportGuidanceItem[];
+}
+
+interface SupportGuidanceItem {
+  id: number;
+  supportGuidanceId: number;
+  title: string;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface StudentActivitiesResponse extends Response {
+  data: StudentActivities[];
+}
+
+interface StudentActivities extends FitnessAthletics {}
+
+interface FitnessAthleticsItemResponse extends Response {
+  data: FitnessAthleticsItem[];
+}
+
+interface FitnessAthleticsItem {
+  id: number;
+  fitnessId: number;
+  title: string;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
 interface ApplicationFeeResponse extends Response {
   data: ApplicationFeePayload[];
 }
@@ -497,6 +541,32 @@ interface modeOfStudyResponse extends Response {
 interface ModeOfStudyPayload {
   id: number;
   name: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface FitnessImageResponse extends Response {
+  data: FitnessImage[];
+}
+
+interface FitnessImage {
+  id: number;
+  imagePath: string;
+  image: null;
+  fitnessId: number;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface CampusExperienceImageResponse extends Response {
+  data: CampusExperienceImage[];
+}
+
+interface CampusExperienceImage {
+  id: number;
+  campusExperienceId: number;
+  imageUrl: string;
+  image: null;
   activeStatus: boolean;
   isDeleted: boolean;
 }

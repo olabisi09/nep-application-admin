@@ -213,8 +213,8 @@ export const EditOverview = ({
     <Formik
       initialValues={
         {
-          title: item?.title,
-          description: item?.description,
+          title: item?.title ?? '',
+          description: item?.description ?? '',
           image: null,
           status: item?.activeStatus ? "Active" : "Inactive",
         } as SetupInit
@@ -234,8 +234,9 @@ export const EditOverview = ({
               const data = editor.getData();
               setFieldValue("description", data);
             }}
-            initialData={item?.description}
+            initialData={item?.description ?? ''}
           />
+          
           {values.image ? (
             <div className="small-gap">
               <Image />
@@ -258,12 +259,14 @@ export const EditOverview = ({
               }}
             />
           )}
+
           <Select
             name="status"
             label="Status"
             placeholder="Select status"
             options={statusOptions}
           />
+
           <div className="btn-group">
             <Button
               type="button"
@@ -271,11 +274,12 @@ export const EditOverview = ({
               variant="text"
               text="Cancel"
             />
+            
             <Button
               type="submit"
               isLoading={editOverviewMutation.isPending}
               disabled={editOverviewMutation.isPending}
-              text="Create"
+              text="Edit"
             />
           </div>
         </Form>

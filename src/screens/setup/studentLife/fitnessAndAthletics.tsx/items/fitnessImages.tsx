@@ -8,53 +8,51 @@ import {
   Spin,
   App,
 } from "antd";
-import { ReactComponent as Plus } from "../../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { Button } from "../../../../custom";
+import { ReactComponent as Plus } from "../../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../../assets/ellipsis.svg";
+import { Button } from "../../../../../custom";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  deleteSchoolSummary,
-  getSchoolSummaryByStudentLifeId,
-} from "../../../../requests";
+  deleteFitnessAthleticsImage,
+  getFitnessAndAthleticsImagesByFitnessId,
+} from "../../../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { useParams } from "react-router-dom";
-import SchoolSummaryForm from "./schoolSummaryForm";
+import FitnessImageForm from "./fitnessImageForm";
 
-const SchoolSummary = () => {
+const FitnessAthleticsImages = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [schoolSummaryItems, setSchoolSummaryItems] = useState<SchoolSummary>(
-    {} as SchoolSummary
+  const [fitness, setFitness] = useState<FitnessImage>(
+    {} as FitnessImage
   );
 
-  const deleteSchoolSummaryMutation = useMutation({
-    mutationFn: deleteSchoolSummary,
+  const deleteFitnessImageMutation = useMutation({
+    mutationFn: deleteFitnessAthleticsImage,
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-school-summary"],
-    queryFn: () => getSchoolSummaryByStudentLifeId(id!),
+    queryKey: ["get-fitness-image", id],
+    queryFn: () => getFitnessAndAthleticsImagesByFitnessId(id!),
     enabled: !!id,
   });
 
-  const columns: ColumnsType<SchoolSummary> = [
+  const columns: ColumnsType<FitnessImage> = [
     {
       key: "id",
       title: "ID",
       dataIndex: "id",
     },
     {
-      key: "title",
-      title: "Title",
-      dataIndex: "title",
-    },
-    {
-      key: "figure",
-      title: "Figure",
-      dataIndex: "figure",
+      key: "pictureUrl",
+      title: "Picture",
+      dataIndex: "imageUrl",
+      render: (_, { imagePath }) => (
+        <img className="table-img" src={imagePath} alt="" />
+      ),
     },
     {
       key: "status",
@@ -71,7 +69,7 @@ const SchoolSummary = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setSchoolSummaryItems({...schoolSummaryItems, ...record});
+              setFitness(record);
               setOpenEdit(true);
             },
           },
@@ -80,7 +78,7 @@ const SchoolSummary = () => {
             label: "Delete",
             onClick: async () => {
               try {
-                await deleteSchoolSummaryMutation.mutateAsync(record.id, {
+                await deleteFitnessImageMutation.mutateAsync(record.id, {
                   onSuccess: (data) => {
                     notification.success({
                       message: "Success",
@@ -108,7 +106,7 @@ const SchoolSummary = () => {
     },
   ];
 
-  const schoolSummaryData = data?.data as SchoolSummary[];
+  const schoolSummaryData = data?.data as FitnessImage[];
 
   if (isLoading) {
     return <Spin />;
@@ -121,14 +119,16 @@ const SchoolSummary = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Student Life: School Summary Setup</h3>
+        <h3>Student Life: Fitness Images Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
           text="Setup"
         />
       </section>
+
       <br />
+
       <Card bordered={false}>
         <Table
           dataSource={schoolSummaryData}
@@ -143,24 +143,24 @@ const SchoolSummary = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create School Summary"
+        title="Create School Activities"
         footer={null}
       >
-        <SchoolSummaryForm
-          item={schoolSummaryItems}
+        <FitnessImageForm
+          item={fitness}
           handleClose={() => setOpen(false)}
         />
       </Modal>
-      
+
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit School Summary"
+        title="Edit School Activities"
         footer={null}
       >
-        <SchoolSummaryForm
-          item={schoolSummaryItems}
+        <FitnessImageForm
+          item={fitness}
           handleClose={() => setOpenEdit(false)}
         />
       </Modal>
@@ -168,4 +168,4 @@ const SchoolSummary = () => {
   );
 };
 
-export default SchoolSummary;
+export default FitnessAthleticsImages;

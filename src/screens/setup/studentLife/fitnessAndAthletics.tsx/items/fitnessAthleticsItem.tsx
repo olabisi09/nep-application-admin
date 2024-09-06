@@ -8,39 +8,40 @@ import {
   Spin,
   App,
 } from "antd";
-import { ReactComponent as Plus } from "../../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { Button } from "../../../../custom";
+import { ReactComponent as Plus } from "../../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../../assets/ellipsis.svg";
+import { Button } from "../../../../../custom";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  deleteSchoolSummary,
-  getSchoolSummaryByStudentLifeId,
-} from "../../../../requests";
+  deleteFitnessAthleticsItem,
+  getFitnessAndAthleticsItemByFitnessId,
+} from "../../../../../requests";
 import { ColumnsType } from "antd/es/table";
+import { sanitizeAndLimitString } from "../../../../../utils/sanitizeAndLimitString";
 import { useParams } from "react-router-dom";
-import SchoolSummaryForm from "./schoolSummaryForm";
+import FitnessAthleticsItemForm from "./form";
 
-const SchoolSummary = () => {
+const FitnessAthleticsItem = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [schoolSummaryItems, setSchoolSummaryItems] = useState<SchoolSummary>(
-    {} as SchoolSummary
+  const [fitness, setFitness] = useState<FitnessAthleticsItem>(
+    {} as FitnessAthleticsItem
   );
 
-  const deleteSchoolSummaryMutation = useMutation({
-    mutationFn: deleteSchoolSummary,
+  const deleteFitnessAthleticsItemMutation = useMutation({
+    mutationFn: deleteFitnessAthleticsItem,
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-school-summary"],
-    queryFn: () => getSchoolSummaryByStudentLifeId(id!),
+    queryKey: ["get-fitness-athletics-item-by-id"],
+    queryFn: () => getFitnessAndAthleticsItemByFitnessId(id!),
     enabled: !!id,
   });
 
-  const columns: ColumnsType<SchoolSummary> = [
+  const columns: ColumnsType<FitnessAthleticsItem> = [
     {
       key: "id",
       title: "ID",
@@ -52,9 +53,13 @@ const SchoolSummary = () => {
       dataIndex: "title",
     },
     {
-      key: "figure",
-      title: "Figure",
-      dataIndex: "figure",
+      key: "description",
+      title: "Description",
+      dataIndex: "description",
+      render: (_, { description }) => {
+        const limitedCleanHtml = sanitizeAndLimitString(description);
+        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
+      },
     },
     {
       key: "status",
@@ -71,7 +76,7 @@ const SchoolSummary = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setSchoolSummaryItems({...schoolSummaryItems, ...record});
+              setFitness(record);
               setOpenEdit(true);
             },
           },
@@ -80,7 +85,7 @@ const SchoolSummary = () => {
             label: "Delete",
             onClick: async () => {
               try {
-                await deleteSchoolSummaryMutation.mutateAsync(record.id, {
+                await deleteFitnessAthleticsItemMutation.mutateAsync(record.id, {
                   onSuccess: (data) => {
                     notification.success({
                       message: "Success",
@@ -108,7 +113,7 @@ const SchoolSummary = () => {
     },
   ];
 
-  const schoolSummaryData = data?.data as SchoolSummary[];
+  const fitnessAthleticsData = data?.data as FitnessAthleticsItem[];
 
   if (isLoading) {
     return <Spin />;
@@ -121,17 +126,19 @@ const SchoolSummary = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Student Life: School Summary Setup</h3>
+        <h3>Student Life: Fitness and Athletics Item Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
           text="Setup"
         />
       </section>
+
       <br />
+
       <Card bordered={false}>
         <Table
-          dataSource={schoolSummaryData}
+          dataSource={fitnessAthleticsData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -143,24 +150,24 @@ const SchoolSummary = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create School Summary"
+        title="Create Campus Experience Item"
         footer={null}
       >
-        <SchoolSummaryForm
-          item={schoolSummaryItems}
+        <FitnessAthleticsItemForm
+          item={fitness}
           handleClose={() => setOpen(false)}
         />
       </Modal>
-      
+
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit School Summary"
+        title="Edit Campus Experience Item"
         footer={null}
       >
-        <SchoolSummaryForm
-          item={schoolSummaryItems}
+        <FitnessAthleticsItemForm
+          item={fitness}
           handleClose={() => setOpenEdit(false)}
         />
       </Modal>
@@ -168,4 +175,4 @@ const SchoolSummary = () => {
   );
 };
 
-export default SchoolSummary;
+export default FitnessAthleticsItem;

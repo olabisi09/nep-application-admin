@@ -49,9 +49,16 @@ import Overview from "./screens/setup/studentLife/overview/overview";
 import SchoolSummary from "./screens/setup/studentLife/schoolSummary/schoolSummary";
 import FitnessAndAthletics from "./screens/setup/studentLife/fitnessAndAthletics.tsx/fitnessAndAthletics";
 import SupportAndGuidance from "./screens/setup/studentLife/supportAndGuidance/supportAndGuidance";
-import StudentActivities from "./screens/setup/studentLife/studentActivities/studentActivities";
 import CareerProspectItems from "./screens/setup/careerProspects/careerProspectItems/careerProspectItems";
 import FaqItem from "./screens/setup/faq/faqItem/faqItem";
+import CampusExperience from "./screens/setup/studentLife/campusExperience/campusExperience";
+import CampusExperienceItem from "./screens/setup/studentLife/campusExperience/items/campusExperienceItem";
+import SupportGuidanceItem from "./screens/setup/studentLife/supportAndGuidance/items/supportGuidanceItem";
+import StudentActivity from "./screens/setup/studentLife/studentActivities/studentActivity";
+import StudentActivityItem from "./screens/setup/studentLife/studentActivities/item/studentActivities";
+import FitnessAthleticsItem from "./screens/setup/studentLife/fitnessAndAthletics.tsx/items/fitnessAthleticsItem";
+import FitnessAthleticsImages from "./screens/setup/studentLife/fitnessAndAthletics.tsx/items/fitnessImages";
+import CampusExperienceImages from "./screens/setup/studentLife/campusExperience/items/campusExperienceImage";
 
 function App() {
   const authRoute = [
@@ -229,12 +236,24 @@ function App() {
       element: <FitnessAndAthletics />,
     },
     {
+      path: routes.setup.fitnessAndAthleticsItem,
+      element: <FitnessAthleticsItem />,
+    },
+    {
+      path: routes.setup.fitnessAndAthleticsImage,
+      element: <FitnessAthleticsImages />,
+    },
+    {
       path: routes.setup.supportAndGuidance,
       element: <SupportAndGuidance />,
     },
     {
       path: routes.setup.studentActivities,
-      element: <StudentActivities />,
+      element: <StudentActivity />,
+    },
+    {
+      path: routes.setup.studentActivitiesItem,
+      element: <StudentActivityItem />,
     },
     {
       path: routes.setup.careerProspectItems,
@@ -243,6 +262,22 @@ function App() {
     {
       path: routes.setup.faqItem,
       element: <FaqItem />,
+    },
+    {
+      path: routes.setup.campusExperience,
+      element: <CampusExperience />,
+    },
+    {
+      path: routes.setup.campusExperienceItem,
+      element: <CampusExperienceItem />,
+    },
+    {
+      path: routes.setup.campusExperienceImage,
+      element: <CampusExperienceImages />,
+    },
+    {
+      path: routes.setup.supportAndGuidanceItem,
+      element: <SupportGuidanceItem />,
     },
   ];
 

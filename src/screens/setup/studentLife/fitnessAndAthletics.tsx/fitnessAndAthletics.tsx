@@ -18,7 +18,7 @@ import {
   getFitnessAndAthleticsByStudentLifeId,
 } from "../../../../requests";
 import { ColumnsType } from "antd/es/table";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import FitnessAndAthleticsForm from "./fitnessAndAthleticsForm";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
 
@@ -29,6 +29,8 @@ const FitnessAndAthletics = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [fitnessAthleticsItems, setFitnessAthleticsItems] =
     useState<FitnessAthletics>({} as FitnessAthletics);
+
+  const navigate = useNavigate();
 
   const deleteFitnessAthleticsMutation = useMutation({
     mutationFn: deleteFitnessAthletics,
@@ -73,6 +75,20 @@ const FitnessAndAthletics = () => {
         const items: MenuProps["items"] = [
           {
             key: "1",
+            label: "Add items",
+            onClick: () => {
+              navigate(`/student-life/${record.id}/fitness-athletics-item`)
+            },
+          },
+          {
+            key: "2",
+            label: "Add Images",
+            onClick: () => {
+              navigate(`/student-life/${record.id}/fitness-athletics-image`)
+            },
+          },
+          {
+            key: "3",
             label: "Edit",
             onClick: () => {
               setFitnessAthleticsItems(record);
@@ -80,7 +96,7 @@ const FitnessAndAthletics = () => {
             },
           },
           {
-            key: "2",
+            key: "4",
             label: "Delete",
             onClick: async () => {
               try {

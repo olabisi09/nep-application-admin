@@ -1,6 +1,5 @@
 import { Form, Formik, FormikValues } from "formik";
 import { Button, Editor, Input, Select, Upload } from "../../../../custom";
-import { ReactComponent as Image } from "../../../../assets/image.svg";
 import { App } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createOrUpdateCampusExperience } from "../../../../requests";
@@ -17,11 +16,12 @@ export const CreateCampusExperience = ({
   studentLifeId,
   handleClose,
 }: {
-  studentLifeId: string | number;
+  studentLifeId: number;
   handleClose: () => void;
 }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
+  
   const addCampusExperienceMutation = useMutation({
     mutationFn: createOrUpdateCampusExperience,
   });
@@ -31,12 +31,11 @@ export const CreateCampusExperience = ({
     resetForm: () => void
   ) => {
     const payload = {
-      Title: values.title,
-      Description: values.description,
-      StudentLifeId: studentLifeId,
-      Image: values.image,
-      ActiveStatus: values.status === "Active",
-      IsDeleted: false,
+      title: values.title,
+      description: values.description,
+      studentLifeId: studentLifeId,
+      activeStatus: values.status === "Active",
+      isDeleted: false,
     };
 
     try {
@@ -92,28 +91,6 @@ export const CreateCampusExperience = ({
               setFieldValue("description", data);
             }}
           />
-          {values.image ? (
-            <div className="small-gap">
-              <Image />
-              <span>{values.image.name}</span>
-              <Button
-                onClick={() => setFieldValue("image", null)}
-                variant="text"
-                text="x"
-              />
-            </div>
-          ) : (
-            <Upload
-              name="image"
-              label="Image"
-              onChange={(e) => {
-                const file = e.target.files;
-                if (file) {
-                  setFieldValue("image", file[0]);
-                }
-              }}
-            />
-          )}
           <Select
             name="status"
             label="Status"
@@ -158,13 +135,12 @@ export const EditCampusExperience = ({
     resetForm: () => void
   ) => {
     const payload = {
-      Id: item?.id,
-      Title: values.title,
-      Description: values.description,
-      StudentLifeId: item?.studentLifeId,
-      Image: values.image,
-      ActiveStatus: values.status === "Active",
-      IsDeleted: false,
+      id: item?.id,
+      title: values.title,
+      description: values.description,
+      studentLifeId: item?.studentLifeId,
+      activeStatus: values.status === "Active",
+      isDeleted: false,
     };
 
     try {
@@ -221,7 +197,7 @@ export const EditCampusExperience = ({
             }}
             initialData={item?.description}
           />
-          {values.image ? (
+          {/* {values.image ? (
             <div className="small-gap">
               <Image />
               <span>{values.image.name}</span>
@@ -242,7 +218,7 @@ export const EditCampusExperience = ({
                 }
               }}
             />
-          )}
+          )} */}
           <Select
             name="status"
             label="Status"
@@ -260,7 +236,7 @@ export const EditCampusExperience = ({
               type="submit"
               isLoading={editCampusExperienceMutation.isPending}
               disabled={editCampusExperienceMutation.isPending}
-              text="Create"
+              text="Edit"
             />
           </div>
         </Form>

@@ -1,36 +1,36 @@
 import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Input, Select } from "../../../../custom";
-import { createOrUpdateFitnessAthletics } from "../../../../requests";
+import { Button, Editor, Input, Select } from "../../../../../custom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
 import { useParams } from "react-router-dom";
-import { validator } from "../../../../utils/validator";
+import { validator } from "../../../../../utils/validator";
 import * as Yup from "yup";
+import { createOrUpdateFitnessAthleticsItem } from "../../../../../requests";
 
-const FitnessAndAthleticsForm = ({
+const FitnessAthleticsItemForm = ({
   handleClose,
   item,
 }: {
   handleClose: () => void;
-  item: FitnessAthletics;
+  item: FitnessAthleticsItem;
 }) => {
   const { id } = useParams();
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  
-  const addFitnessAthleticsMutation = useMutation({
-    mutationFn: createOrUpdateFitnessAthletics,
+
+  const addFitnessAthleticsItemMutation = useMutation({
+    mutationFn: createOrUpdateFitnessAthleticsItem,
   });
 
-  const studentLifeId = id ?? "";
+  const fitnessId = parseInt(id ?? "") ?? 0;
 
-  const handleAddUpdateFitnessAthletics = async (
+  const handleFitnessAthleticsItem = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: Partial<Setup> = {
+    const payload: Partial<FitnessAthleticsItem> = {
       id: item?.id ?? 0,
-      studentLifeId: studentLifeId,
+      fitnessId,
       title: values.title,
       description: values.description,
       activeStatus: values.status === "Active" ? true : false,
@@ -38,13 +38,15 @@ const FitnessAndAthleticsForm = ({
     };
 
     try {
-      await addFitnessAthleticsMutation.mutateAsync(payload, {
+      await addFitnessAthleticsItemMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-fitness-athletics"] });
+          queryClient.refetchQueries({
+            queryKey: ["get-fitness-athletics-item-by-id"],
+          });
           handleClose();
           resetForm();
         },
@@ -59,17 +61,17 @@ const FitnessAndAthleticsForm = ({
 
   const statusOptions = (
     <>
-      <option value={''}>-- select an option --</option>
+      <option value="">-- select an option --</option>
       <option value="Active">Active</option>
       <option value="Inactive">Inactive</option>
     </>
   );
 
-   const validationSchema = Yup.object().shape({
-     title: validator.title,
-     status: validator.status,
-     description: validator.description,
-   });
+  const validationSchema = Yup.object().shape({
+    title: validator.title,
+    status: validator.status,
+    description: validator.description,
+  });
 
   const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
   const hasRecords = Object.keys(item).length > 0;
@@ -77,18 +79,20 @@ const FitnessAndAthleticsForm = ({
   return (
     <Formik
       initialValues={{
-        title: item.title ?? "",
+        title: item?.title ?? "",
         description: item.description ?? "",
         status: initialStatus,
       }}
       onSubmit={(values, { resetForm }) =>
-        handleAddUpdateFitnessAthletics(values, resetForm)
+        handleFitnessAthleticsItem(values, resetForm)
       }
-      validationSchema={validationSchema}>
+      validationSchema={validationSchema}
+    >
       {({ setFieldValue }) => {
         return (
           <Form className="fields">
             <Input name="title" label="Title" placeholder="Input title" />
+
             <Editor
               name="description"
               label="Description"
@@ -98,12 +102,14 @@ const FitnessAndAthleticsForm = ({
               }}
               initialData={item?.description ?? ""}
             />
+
             <Select
               name="status"
               label="Status"
               placeholder="Select status"
               options={statusOptions}
             />
+
             <div className="btn-group">
               <Button
                 type="button"
@@ -113,8 +119,8 @@ const FitnessAndAthleticsForm = ({
               />
               <Button
                 type="submit"
-                isLoading={addFitnessAthleticsMutation.isPending}
-                disabled={addFitnessAthleticsMutation.isPending}
+                isLoading={addFitnessAthleticsItemMutation.isPending}
+                disabled={addFitnessAthleticsItemMutation.isPending}
                 text={hasRecords ? "Update" : "Create"}
               />
             </div>
@@ -125,4 +131,4 @@ const FitnessAndAthleticsForm = ({
   );
 };
 
-export default FitnessAndAthleticsForm;
+export default FitnessAthleticsItemForm;
