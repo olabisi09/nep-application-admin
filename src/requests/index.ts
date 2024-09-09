@@ -869,4 +869,9 @@ export const createOrUpdateModeOfStudy = async (
 export const deleteModeOfStudy = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteModeOfStudy?Id=${id}`))
     ?.data as Response;
+}
+
+export const getAllApplicationBatch = async () => {
+  return (await api.get(`/Utilities/Utilities/GetAllApplicationBatch`))
+    ?.data as applicationBatchResponse;
 };

@@ -59,6 +59,7 @@ import StudentActivityItem from "./screens/setup/studentLife/studentActivities/i
 import FitnessAthleticsItem from "./screens/setup/studentLife/fitnessAndAthletics.tsx/items/fitnessAthleticsItem";
 import FitnessAthleticsImages from "./screens/setup/studentLife/fitnessAndAthletics.tsx/items/fitnessImages";
 import CampusExperienceImages from "./screens/setup/studentLife/campusExperience/items/campusExperienceImage";
+import ProtectedRoute from "./hooks/protectedRoutes";
 
 function App() {
   const authRoute = [
@@ -300,11 +301,28 @@ function App() {
           <Route key={item.path} path={item.path} element={item.element} />
         ))}
       </Route>
+
       <Route element={<DashboardLayout />}>
-        {userMgtRoutes.concat(setupRoute).map((item) => (
-          <Route key={item.path} path={item.path} element={item.element} />
+        {setupRoute.map((item) => (
+          <Route
+            key={item.path}
+            path={item.path}
+            element={<ProtectedRoute>{item.element}</ProtectedRoute>}
+          />
         ))}
       </Route>
+
+      {/* <Routes>
+        <Route element={<AuthLayout />}>
+          {authRoute.map((item) => (
+            <Route
+              key={item.path}
+              path={item.path}
+              element={<ProtectedRoute>{item.element}</ProtectedRoute>}
+            />
+          ))}
+        </Route>
+      </Routes> */}
     </Routes>
   );
 }

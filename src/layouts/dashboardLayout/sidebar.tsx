@@ -6,6 +6,7 @@ import { ReactComponent as Logout } from "../../assets/logout.svg";
 import { ReactComponent as Arrow } from "../../assets/menu-arrow.svg";
 import styles from "./dashboardLayout.module.scss";
 import { Menu } from "antd";
+import { logout } from "../../utils/logout";
 
 const Sidebar = () => {
   const items = [
@@ -207,7 +208,7 @@ const Sidebar = () => {
           />
         </div>
       </section>
-      <button className={styles.logout}>
+      <button className={styles.logout} onClick={logout}>
         <Logout />
         <p className={styles.end}>Logout</p>
       </button>

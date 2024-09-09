@@ -15,6 +15,10 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const { notification } = App.useApp();
 
+  const queryParams = new URLSearchParams(window.location.search);
+  const token = queryParams.get("token") ?? "";
+  const email = queryParams.get("email") ?? "";
+
   const ResetPasswordMutation = useMutation({
     mutationKey: ["reset-password"],
     mutationFn: resetPasswordAdmin,
@@ -24,6 +28,7 @@ const ResetPassword = () => {
     const payload: Partial<ResetPayload> = {
       password: values.newPassword,
       confirmPassword: values.confirmPassword,
+      token: token,
     };
 
     try {
@@ -33,6 +38,7 @@ const ResetPassword = () => {
             message: "Success",
             description: data?.message,
           });
+          navigate(routes.auth.login);
         },
       });
     } catch (error: any) {
