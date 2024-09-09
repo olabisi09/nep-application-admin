@@ -25,6 +25,7 @@ export const routes = {
     qualification: "/qualification-type-setup",
     subject: "/subject-setup",
     careerProspectItems: "/career-prospect-items/:id",
+    admissionRequirementDetail: "/admission-requirement/:id/details",
 
     country: "/country-setup",
     state: "/state-setup",

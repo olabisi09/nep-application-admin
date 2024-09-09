@@ -2,7 +2,6 @@ import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
@@ -77,9 +76,9 @@ const ScholarShip = () => {
       render: (text: any, record: any, index: number) => <span>{(currentPage - 1) * pageSize + index + 1}</span>,
     },
     {
-      key: "readmoreId",
+      key: "programName",
       title: "Program Name",
-      dataIndex: "readmoreId",
+      dataIndex: "programName",
     },
     {
       key: "description",
@@ -169,11 +168,10 @@ const ScholarShip = () => {
       </Modal>
 
       {scholarship?.id && openEdit && (
-  <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Scholarship Setup" footer={null}>
-  <EditScholarship scholarship={scholarship} handleClose={() => setOpenEdit(false)} />
-</Modal>
+        <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Scholarship Setup" footer={null}>
+          <EditScholarship scholarship={scholarship} handleClose={() => setOpenEdit(false)} />
+        </Modal>
       )}
-    
 
       {scholarship?.id && openDelete && (
         <Modal open={openDelete} onCancel={() => setOpenDelete(false)} centered title="Delete Scholarship Setup" footer={null}>
