@@ -4,8 +4,10 @@ import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
 import {
   createOrUpdateApplicationFee,
+  getAllApplicationBatch,
   getAllModeOfStudy,
   getAllProgramsApplicationFee,
+  StatusOptions,
 } from "../../../requests";
 import { Formik, FormikValues, Form } from "formik";
 import { FC } from "react";
@@ -33,6 +35,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
       modeOfStudyId: values.modeOfStudy,
       programId: values.programName,
       amount: values.amount,
+      activeStatus: values.activeStatus,
     };
 
     try {
@@ -64,14 +67,17 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
         queryFn: getAllProgramsApplicationFee,
       },
       { queryKey: ["get-AllModeOfStudy"], queryFn: getAllModeOfStudy },
+      { queryKey: ["get-ApplicationBatch"], queryFn: getAllApplicationBatch },
     ],
   });
 
   const programQuery = queries[0];
   const modeQuery = queries[1];
+  const applicationBatchQuery = queries[2];
 
   const programData = programQuery?.data?.data ?? [];
   const modeOfStudyData = modeQuery?.data?.data ?? [];
+  const applicationBatchData = applicationBatchQuery?.data?.data ?? [];
 
   const programOptions = programData?.map((item) => (
     <option key={item?.id} value={item?.id}>
@@ -85,10 +91,17 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
     </option>
   ));
 
+  const applicationBatchOptions = applicationBatchData?.map((item) => (
+    <option key={item?.id} value={item?.id}>
+      {item?.batchName}
+    </option>
+  ));
+
   const validationSchema = Yup.object().shape({
     programName: validator.programName,
     modeOfStudy: validator.modeOfStudy,
     amount: validator.amount,
+    applicationBatch: validator.applicationBatch,
   });
 
   const hasRecord = Object.keys(record)?.length > 0;
@@ -98,14 +111,14 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
       initialValues={{
         programName: record?.programId ?? "",
         modeOfStudy: record?.modeOfStudyId ?? "",
+        applicationBatch: record?.id ?? "",
         amount: record?.amount ?? "",
       }}
       onSubmit={(values) => {
         createUpdateApplicationFeeHandler(values);
       }}
-      validationSchema={validationSchema}
-    >
-      {(props) => {        
+      validationSchema={validationSchema}>
+      {(props) => {
         return (
           <Form>
             <section className="fields">
@@ -122,7 +135,29 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
                 options={modeOfStudyOptions}
               />
 
+              <Select
+                label="Application Batch"
+                placeholder="Select Batch"
+                name="applicationBatch"
+                options={applicationBatchOptions}
+              />
+
               <Input name="amount" placeholder="0.00" label="Amount" />
+
+              <Select
+                name="status"
+                placeholder="Select Status"
+                label="Status"
+                options={
+                  <>
+                    {StatusOptions.map((option: any) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </>
+                }
+              />
 
               <div className="btn-group">
                 <Button

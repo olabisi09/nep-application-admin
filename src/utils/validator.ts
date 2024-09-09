@@ -32,4 +32,5 @@ export const validator = {
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("newPassword")], "Passwords must match")
     .required("Enter Confirm Password"),
+  applicationBatch: string().required("Application Batch is required"),
 };

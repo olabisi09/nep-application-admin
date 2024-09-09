@@ -59,7 +59,7 @@ import StudentActivityItem from "./screens/setup/studentLife/studentActivities/i
 import FitnessAthleticsItem from "./screens/setup/studentLife/fitnessAndAthletics.tsx/items/fitnessAthleticsItem";
 import FitnessAthleticsImages from "./screens/setup/studentLife/fitnessAndAthletics.tsx/items/fitnessImages";
 import CampusExperienceImages from "./screens/setup/studentLife/campusExperience/items/campusExperienceImage";
-import ProtectedRoute from "./screens/setup/applicationFeeSetup/hooks/protectedRoutes";
+import ProtectedRoute from "./hooks/protectedRoutes";
 
 function App() {
   const authRoute = [

@@ -1,7 +1,7 @@
 import { useAtomValue } from "jotai";
 
 import { Navigate, useLocation } from "react-router-dom";
-import { userAtom } from "../../../../utils/store";
+import { userAtom } from "../utils/store";
 
 interface ComponentProp {
   children: JSX.Element;

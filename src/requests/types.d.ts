@@ -626,3 +626,19 @@ interface getAllFeeSetup {
   activeStatus: boolean;
   isDeleted: boolean;
 }
+
+interface applicationBatchResponse extends Response {
+  data: getAllApplicationBatch[];
+}
+
+interface getAllApplicationBatch {
+  id: number;
+  batchName: string;
+  sessionId: number;
+  programId: number;
+  lateStartDate: string;
+  lateEndDate: string;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+}

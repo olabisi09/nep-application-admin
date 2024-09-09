@@ -33,6 +33,17 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
     mutationKey: ["create-update-accreditation"],
   });
 
+  const StatusOptions = [
+    {
+      value: true,
+      label: "Active",
+    },
+    {
+      value: false,
+      label: "Inactive",
+    },
+  ];
+
   const updateAccreditationHandler = async (values: FormikValues) => {
     const payload: Partial<AccreditationType> = {
       id: record?.id || 0,

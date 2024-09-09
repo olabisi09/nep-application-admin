@@ -784,7 +784,9 @@ export const deleteSupportGuidanceItem = async (id: number) => {
   )?.data as Response;
 };
 
-export const createOrUpdateCampusExperienceImage = async (payload: FormData) => {
+export const createOrUpdateCampusExperienceImage = async (
+  payload: FormData
+) => {
   return (
     await api.post(
       "/StudentLife/studentlife/CreateUpdateCampusExperienceImage",
@@ -808,9 +810,11 @@ export const getCampusExperienceImagesByCampusExperienceId = async (
 
 export const deleteCampusExperienceImage = async (id: number) => {
   return (
-    await api.delete(`/StudentLife/studentlife/DeleteCampusExperienceImage?Id=${id}`)
+    await api.delete(
+      `/StudentLife/studentlife/DeleteCampusExperienceImage?Id=${id}`
+    )
   )?.data as Response;
-}
+};
 
 export const createOrUpdateApplicationFee = async (
   payload: Partial<ApplicationFee>
@@ -850,7 +854,11 @@ export const getAllFeeSetup = async () => {
 };
 
 export const deleteFeeSetup = async (id: number) => {
-  return (
-    await api.delete(`/ReadMore/DeleteFeeSetupById?Id=${id}`)
-  )?.data as Response;
-}
+  return (await api.delete(`/ReadMore/DeleteFeeSetupById?Id=${id}`))
+    ?.data as Response;
+};
+
+export const getAllApplicationBatch = async () => {
+  return (await api.get(`/Utilities/Utilities/GetAllApplicationBatch`))
+    ?.data as applicationBatchResponse;
+};
