@@ -1,15 +1,9 @@
 import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
-import {
-  useMutation,
-  useQueries,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
 import {
   createOrUpdateApplicationFee,
-  getAllFeeSetup,
   getAllModeOfStudy,
   getAllProgramsApplicationFee,
 } from "../../../requests";
@@ -20,18 +14,13 @@ import * as Yup from "yup";
 import { validator } from "../../../utils/validator";
 
 interface ComponentProps {
-  record: ApplicationFee;
+  record: getAllFeeSetup;
   handleClose: () => void;
 }
 
 const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-
-  const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["getAll-Fee-Setup"],
-    queryFn: getAllFeeSetup,
-  });
 
   const createUpdateApplicationFeeMutation = useMutation({
     mutationFn: createOrUpdateApplicationFee,
@@ -41,7 +30,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
   const createUpdateApplicationFeeHandler = async (values: FormikValues) => {
     const payload: Partial<ApplicationFee> = {
       id: record?.id || 0,
-      modeOfStudyId: values.ModeOfStudy,
+      modeOfStudyId: values.modeOfStudy,
       programId: values.programName,
       amount: values.amount,
     };
@@ -54,7 +43,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
           });
 
           queryClient.refetchQueries({
-            queryKey: ["getAll-Fee-Setup"],
+            queryKey: ["get-all-fee-setup"],
           });
           handleClose();
         },
@@ -71,7 +60,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
   const queries = useQueries({
     queries: [
       {
-        queryKey: ["get-AllPrograms-ApplicationFee"],
+        queryKey: ["get-all-program"],
         queryFn: getAllProgramsApplicationFee,
       },
       { queryKey: ["get-AllModeOfStudy"], queryFn: getAllModeOfStudy },
@@ -98,23 +87,25 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
 
   const validationSchema = Yup.object().shape({
     programName: validator.programName,
-    ModeOfStudy: validator.ModeOfStudy,
+    modeOfStudy: validator.modeOfStudy,
     amount: validator.amount,
   });
+
+  const hasRecord = Object.keys(record)?.length > 0;
 
   return (
     <Formik
       initialValues={{
-        // id: 0,
-        programName: "",
-        ModeOfStudy: "",
-        amount: "",
+        programName: record?.programId ?? "",
+        modeOfStudy: record?.modeOfStudyId ?? "",
+        amount: record?.amount ?? "",
       }}
       onSubmit={(values) => {
         createUpdateApplicationFeeHandler(values);
       }}
-      validationSchema={validationSchema}>
-      {(props) => {
+      validationSchema={validationSchema}
+    >
+      {(props) => {        
         return (
           <Form>
             <section className="fields">
@@ -125,13 +116,13 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
                 options={programOptions}
               />
               <Select
-                name="ModeOfStudy"
+                name="modeOfStudy"
                 label="Mode of Study"
                 placeholder="Select Mode of Study"
                 options={modeOfStudyOptions}
               />
 
-              <Input name="amount" placeholder="#0.00" label="Amount" />
+              <Input name="amount" placeholder="0.00" label="Amount" />
 
               <div className="btn-group">
                 <Button
@@ -144,7 +135,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
                   type="submit"
                   disabled={createUpdateApplicationFeeMutation.isPending}
                   isLoading={createUpdateApplicationFeeMutation.isPending}
-                  text="Create"
+                  text={hasRecord ? "Update" : "Create"}
                 />
               </div>
             </section>
@@ -156,121 +147,3 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
 };
 
 export default AddApplicationFee;
-
-export const EditApplicationFee = ({
-  item,
-  handleClose,
-}: {
-  item: ApplicationFee;
-  handleClose: () => void;
-}) => {
-  const queryClient = useQueryClient();
-  const { notification } = App.useApp();
-  const editApplicationFeeMutation = useMutation({
-    mutationFn: createOrUpdateApplicationFee,
-  });
-
-  const handleEditApplication = async (values: FormikValues) => {
-    const payload: Partial<ApplicationFee> = {
-      programId: item?.programId,
-      modeOfStudyId: item?.modeOfStudyId,
-      amount: item?.amount,
-    };
-
-    try {
-      await editApplicationFeeMutation.mutateAsync(payload, {
-        onSuccess: (data) => {
-          notification.success({
-            message: "Success",
-            description: data?.message,
-          });
-          queryClient.refetchQueries({ queryKey: ["getAll-Fee-Setup"] });
-          handleClose();
-        },
-      });
-    } catch (error: any) {
-      notification.error({
-        message: "Error",
-        description: error?.response?.data?.message,
-      });
-    }
-  };
-  const queries = useQueries({
-    queries: [
-      {
-        queryKey: ["get-AllPrograms-ApplicationFee"],
-        queryFn: getAllProgramsApplicationFee,
-      },
-      { queryKey: ["get-AllModeOfStudy"], queryFn: getAllModeOfStudy },
-    ],
-  });
-
-  const programQuery = queries[0];
-  const modeQuery = queries[1];
-
-  const programData = programQuery?.data?.data ?? [];
-  const modeOfStudyData = modeQuery?.data?.data ?? [];
-
-  const programOptions = programData?.map((item) => (
-    <option key={item?.id} value={item?.id}>
-      {item?.name}
-    </option>
-  ));
-
-  const modeOfStudyOptions = modeOfStudyData?.map((item) => (
-    <option key={item?.id} value={item?.id}>
-      {item?.name}
-    </option>
-  ));
-  const validationSchema = Yup.object().shape({
-    programName: validator.programName,
-    ModeOfStudy: validator.ModeOfStudy,
-    amount: validator.amount,
-  });
-
-  return (
-    <Formik
-      initialValues={{
-        programName: item?.programId,
-        ModeOfStudy: item?.modeOfStudyId,
-        amount: item?.amount,
-      }}
-      validationSchema={validationSchema}
-      onSubmit={(values) => handleEditApplication(values)}
-      enableReinitialize>
-      <Form>
-        <section className="fields">
-          <Select
-            name="programName"
-            placeholder="Select Program"
-            label="Program Name"
-            options={programOptions}
-          />
-          <Select
-            name="ModeOfStudy"
-            label="Mode of Study"
-            placeholder="Select Mode of Study"
-            options={modeOfStudyOptions}
-          />
-
-          <Input name="amount" placeholder="#0.00" label="Amount" />
-
-          <div className="btn-group">
-            <Button
-              type="button"
-              variant="text"
-              text="Cancel"
-              onClick={handleClose}
-            />
-            <Button
-              type="submit"
-              text="Update"
-              disabled={editApplicationFeeMutation?.isPending}
-              isLoading={editApplicationFeeMutation?.isPending}
-            />
-          </div>
-        </section>
-      </Form>
-    </Formik>
-  );
-};

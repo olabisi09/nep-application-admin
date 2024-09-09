@@ -617,8 +617,8 @@ interface getAllFeeSetupResponse extends Response {
 interface getAllFeeSetup {
   id: number;
   modeOfStudyId: number;
-  modeOfStudy: null | string;
-  program: null | string;
+  modeOfStudy: string;
+  program: string;
   programId: number;
   amount: number;
   applicationBatchId: number;

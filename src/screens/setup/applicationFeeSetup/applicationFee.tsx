@@ -1,16 +1,24 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
-import { Form, Formik } from "formik";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  App,
+  Spin,
+} from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import AddApplicationFee from "./addApplicationFee";
-import ModeOfStudy from "../modeOfStudy/modeOfStudy";
-import { getAllFeeSetup } from "../../../requests";
+import { deleteFeeSetup, getAllFeeSetup } from "../../../requests";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { ColumnsType } from "antd/es/table";
 
 const ApplicationFee = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -18,85 +26,98 @@ const ApplicationFee = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [item, setItem] = useState<ApplicationFee>({} as ApplicationFee);
+  const [item, setItem] = useState<getAllFeeSetup>({} as getAllFeeSetup);
 
-  const [showAddItemModal, setShowAddItemModal] = useState(false);
+  const { notification } = App.useApp();
+
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["get-all-fee-setup"],
+    queryFn: getAllFeeSetup,
+  });
+
+  const applicationFeeData = data?.data ?? [];
+
+  const deleteApplicationFeeMutation = useMutation({
+    mutationFn: deleteFeeSetup,
+  });
+
+  const handleDeleteApplicationFee = async (id: number) => {
+    try {
+      await deleteApplicationFeeMutation.mutateAsync(id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
-  const data = Array.from({ length: 2 }, () => ({
-    id: 1234,
-    programId: "Timi",
-    modeOfStudyId: "hhee",
-    amount: 33000,
-  }));
 
-   
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
-          Edit
-        </button>
-      ),
-    },
-
-    {
-      key: "1",
-      label: (
-        <button
-          style={{ border: "0rem" }}
-          onClick={() => {
-            // handleDelete(record.id);
-          }}>
-          Delete
-        </button>
-      ),
-    },
-  ];
-  const columns = [
+  const columns: ColumnsType<getAllFeeSetup> = [
     {
       key: "id",
       title: "ID",
       dataIndex: "id",
     },
     {
-      key: "programId",
+      key: "program",
       title: "Program",
-      dataIndex: "programId",
+      dataIndex: "program",
     },
     {
-      key: "modeOfStudyId",
-      title: "Mode Of Study",
-      dataIndex: "modeOfStudyId",
+      key: "modeOfStudy",
+      title: "Mode of Study",
+      dataIndex: "modeOfStudy",
     },
     {
       key: "amount",
       title: "Amount",
       dataIndex: "amount",
     },
-    // {
-    //   key: "role",
-    //   title: "Role",
-    //   dataIndex: "role",
-    // },
-    // {
-    //   key: "status",
-    //   title: "Status",
-    //   dataIndex: "status",
-    // },
     {
       key: "action",
       title: "",
-      render: (record: ApplicationFee) => (
-        <Dropdown menu={{ items }} trigger={["click"]}>
-          <AntButton type="text" icon={<Ellipsis />} />
-        </Dropdown>
-      ),
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setOpenEdit(true);
+              setShowAddModal(true)
+              setItem(record);
+            },
+          },
+          {
+            key: "2",
+            label: "Delete",
+            onClick: () => handleDeleteApplicationFee(record?.id),
+          },
+        ];
+
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
+        );
+      },
     },
   ];
+
+  if (isLoading) {
+    return <Spin size="large" />;
+  }
 
   return (
     <main>
@@ -133,7 +154,7 @@ const ApplicationFee = () => {
           </div>
         </div>
         <Table
-          dataSource={data}
+          dataSource={applicationFeeData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           scroll={{ x: 400 }}
@@ -146,14 +167,18 @@ const ApplicationFee = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Application Fee Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddApplicationFee
           record={item}
-          handleClose={() => setShowAddModal(false)}
+          handleClose={() => {
+            setShowAddModal(false);
+            setOpenEdit(false);
+          }}
         />
       </Modal>
 
-      <Modal
+      {/* <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
@@ -173,7 +198,7 @@ const ApplicationFee = () => {
           record={item}
           handleClose={() => setShowAddModal(false)}
         />
-      </Modal>
+      </Modal> */}
     </main>
   );
 };

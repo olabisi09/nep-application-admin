@@ -811,6 +811,7 @@ export const deleteCampusExperienceImage = async (id: number) => {
     await api.delete(`/StudentLife/studentlife/DeleteCampusExperienceImage?Id=${id}`)
   )?.data as Response;
 }
+
 export const createOrUpdateApplicationFee = async (
   payload: Partial<ApplicationFee>
 ) => {
@@ -828,17 +829,17 @@ export const getAllModeOfStudy = async () => {
     ?.data as modeOfStudyResponse;
 };
 
-export const SignInUser = async (payload: SignInPayload) => {
+export const signInUser = async (payload: SignInPayload) => {
   return (await api.post(`/Authorization/Adminlogin`, payload))
     ?.data as SignInResponse;
 };
 
-export const ForgotPasswordAdmin = async (payload: ForgotPayload) => {
+export const forgotPasswordAdmin = async (payload: ForgotPayload) => {
   return (await api.post(`/Authorization/AdminForgotPassword`, payload))
     ?.data as ForgotResponse;
 };
 
-export const ResetPasswordAdmin = async (payload: Partial<ResetPayload>) => {
+export const resetPasswordAdmin = async (payload: Partial<ResetPayload>) => {
   return (await api.post(`/Authorization/AdminResetPassword`, payload))
     ?.data as ResetResponse;
 };
@@ -847,3 +848,9 @@ export const getAllFeeSetup = async () => {
   return (await api.get("/ReadMore/GetAllFeeSetup"))
     ?.data as getAllFeeSetupResponse;
 };
+
+export const deleteFeeSetup = async (id: number) => {
+  return (
+    await api.delete(`/ReadMore/DeleteFeeSetupById?Id=${id}`)
+  )?.data as Response;
+}

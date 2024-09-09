@@ -5,7 +5,7 @@ import { ReactComponent as Arrow } from "../../assets/arrow.svg";
 import { useNavigate } from "react-router-dom";
 import { App } from "antd";
 import { useMutation } from "@tanstack/react-query";
-import { ForgotPasswordAdmin } from "../../requests";
+import { forgotPasswordAdmin } from "../../requests";
 import { validator } from "../../utils/validator";
 import * as Yup from "yup";
 
@@ -16,7 +16,7 @@ const ForgotPassword = () => {
 
   const ForgotPasswordMutation = useMutation({
     mutationKey: ["forgot-password"],
-    mutationFn: ForgotPasswordAdmin,
+    mutationFn: forgotPasswordAdmin,
   });
 
   const handleForgotPassword = async (values: FormikValues) => {
