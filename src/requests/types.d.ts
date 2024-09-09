@@ -642,3 +642,18 @@ interface getAllApplicationBatch {
   endDate: string;
   isActive: boolean;
 }
+
+interface GetDepartmentsResponse extends Response {
+  data: Department[];
+}
+
+interface Department {
+  id: number;
+  name: string;
+  description: string;
+  categoryId: number;
+  categoryName: string;
+  categoryCode: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
