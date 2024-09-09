@@ -95,7 +95,7 @@ const ApplicationFee = () => {
             label: "Edit",
             onClick: () => {
               setOpenEdit(true);
-              setShowAddModal(true)
+              setShowAddModal(true);
               setItem(record);
             },
           },
@@ -177,28 +177,6 @@ const ApplicationFee = () => {
           }}
         />
       </Modal>
-
-      {/* <Modal
-        open={openEdit}
-        onCancel={() => setOpenEdit(false)}
-        centered
-        title="Application Fee Setup"
-        footer={null}
-        //   <div className="btn-group">
-        //     <Button
-        //       onClick={() => setOpenEdit(false)}
-        //       variant="text"
-        //       text="Cancel"
-        //     />
-        //     <Button text="Update" />
-        //   </div>
-        // )}
-      >
-        <AddApplicationFee
-          record={item}
-          handleClose={() => setShowAddModal(false)}
-        />
-      </Modal> */}
     </main>
   );
 };

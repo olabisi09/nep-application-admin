@@ -534,11 +534,11 @@ interface GetAllProgramApplicationFee {
   activeStatus: boolean;
 }
 
-interface modeOfStudyResponse extends Response {
+interface ModeOfStudyResponse extends Response {
   data: ModeOfStudyPayload[];
 }
 
-interface ModeOfStudyPayload {
+interface ModeOfStudy {
   id: number;
   name: string;
   activeStatus: boolean;

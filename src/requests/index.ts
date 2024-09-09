@@ -784,7 +784,9 @@ export const deleteSupportGuidanceItem = async (id: number) => {
   )?.data as Response;
 };
 
-export const createOrUpdateCampusExperienceImage = async (payload: FormData) => {
+export const createOrUpdateCampusExperienceImage = async (
+  payload: FormData
+) => {
   return (
     await api.post(
       "/StudentLife/studentlife/CreateUpdateCampusExperienceImage",
@@ -808,9 +810,11 @@ export const getCampusExperienceImagesByCampusExperienceId = async (
 
 export const deleteCampusExperienceImage = async (id: number) => {
   return (
-    await api.delete(`/StudentLife/studentlife/DeleteCampusExperienceImage?Id=${id}`)
+    await api.delete(
+      `/StudentLife/studentlife/DeleteCampusExperienceImage?Id=${id}`
+    )
   )?.data as Response;
-}
+};
 
 export const createOrUpdateApplicationFee = async (
   payload: Partial<ApplicationFee>
@@ -826,7 +830,7 @@ export const getAllProgramsApplicationFee = async () => {
 
 export const getAllModeOfStudy = async () => {
   return (await api.get("/Utilities/Utilities/GetAllModeOfStudy"))
-    ?.data as modeOfStudyResponse;
+    ?.data as ModeOfStudyResponse;
 };
 
 export const signInUser = async (payload: SignInPayload) => {
@@ -850,7 +854,19 @@ export const getAllFeeSetup = async () => {
 };
 
 export const deleteFeeSetup = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteFeeSetupById?Id=${id}`))
+    ?.data as Response;
+};
+
+export const createOrUpdateModeOfStudy = async (
+  payload: Partial<CommonPayload>
+) => {
   return (
-    await api.delete(`/ReadMore/DeleteFeeSetupById?Id=${id}`)
+    await api.post("/Utilities/Utilities/CreateUpdateModeOfStudy", payload)
   )?.data as Response;
-}
+};
+
+export const deleteModeOfStudy = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteModeOfStudy?Id=${id}`))
+    ?.data as Response;
+};
