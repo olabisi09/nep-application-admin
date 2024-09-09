@@ -1,8 +1,8 @@
-import {
-  GetSubject,
-  SubjectPayload,
-  SubjectResponse,
-} from "../screens/setup/subject/types";
+// import {
+//   GetSubject,
+//   SubjectPayload,
+//   SubjectResponse,
+// } from "../screens/setup/subject/types";
 import api from "../utils/api";
 
 export const getAboutUs = async () => {

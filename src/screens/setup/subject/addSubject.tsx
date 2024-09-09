@@ -1,9 +1,8 @@
 import { App } from "antd";
 import Input from "../../../custom/input/input";
-import { SubjectPayload } from "./types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createOrUpdateSubject } from "../../../requests";
-import { Formik, FormikValues, Form, FormikProvider, useFormik } from "formik";
+import { FormikValues, Form, FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 import Select from "../../../custom/select/select";
 import Button from "../../../custom/button/button";
