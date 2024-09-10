@@ -58,6 +58,7 @@ const Editor = ({
           initialData: initialData,
         }}
         onChange={onChange}
+        data={initialData}
       />
       {name && (
         <ErrorMessage name={name}>

@@ -97,7 +97,8 @@ const AddSubject = ({ handleClose, data }: Props) => {
           <Button
             type="submit"
             disabled={CreateSubjectMutation.isPending}
-            text={CreateSubjectMutation.isPending ? "Creating..." : "Create"}
+            isLoading={CreateSubjectMutation.isPending}
+            text={CreateSubjectMutation.isPending ? "Submiting..." : "Submit"}
           />
         </div>
       </Form>
