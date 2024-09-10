@@ -318,11 +318,11 @@ interface ProgramResponse extends Response {
 }
 
 interface CommonPayload {
-  id: number
-  readmoreId: number
-  description: string
-  activeStatus: boolean
-  isDeleted: boolean
+  id: number;
+  readmoreId: number;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
 }
 
 interface ScholarshipResponse extends Response {
@@ -330,13 +330,13 @@ interface ScholarshipResponse extends Response {
 }
 
 interface Testimonial {
-  id: number
-  readMoreId: number
-  image: any
-  imageUrl: string
-  description: string
-  activeStatus: boolean
-  isDeleted: boolean
+  id: number;
+  readMoreId: number;
+  image: any;
+  imageUrl: string;
+  description: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
 }
 
 interface TestimonialResponse extends Response {
@@ -684,22 +684,80 @@ interface Department {
   isDeleted: boolean;
 }
 
-interface ModeOfStudy{
-  id: number,
-  name: string,
-  activeStatus: boolean,
-  isDeleted: boolean
+interface ModeOfStudy {
+  id: number;
+  name: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
 }
 
 interface ModeOfStudyResponse extends Response {
   data: ModeOfStudy[];
 }
-interface Title{
-  id: number,
-  titleName: string,
-  activeStatus: boolean,
-  isDeleted: boolean
+interface Title {
+  id: number;
+  titleName: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
 }
 interface TitleResponse extends Response {
   data: Title[];
+}
+
+interface FacultyResponse {
+  code: number;
+  message: string;
+  data: createOrUpdateFacultyPayload;
+}
+
+interface createOrUpdateFacultyPayload {
+  id?: any;
+  categoryCode: string;
+  name: string;
+  description: string;
+}
+
+interface DeleteFacultyPayload {
+  Id: number;
+}
+interface GetFacultyResponse {
+  code: number;
+  message: string;
+  data: FacultyResponse[];
+}
+
+interface FacultyResponse {
+  categoryCode: string;
+  name: string;
+  description: string;
+  id: number;
+  created: string;
+  createdBy: null;
+  activeStatus: boolean;
+}
+
+interface DeleteFacultyResponse {
+  code: number;
+  message: string;
+  data: null;
+}
+
+interface updateFacultyResponse {
+  code: number;
+  message: string;
+  data: null;
+}
+
+
+interface UpdateFacultyPayload {
+  id?: any;
+  categoryCode: string;
+  name: string;
+  description: string;
+}
+
+interface CategoryPayload {
+  categoryCode: string;
+  name: string;
+  description: string;  
 }

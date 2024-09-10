@@ -950,3 +950,28 @@ export const deleteTitle = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteTitle?Id=${id}`))
     ?.data as Response;
 };
+
+export const createFaculty = async (
+  payload: Partial<createOrUpdateFacultyPayload>
+) => {
+  return (await api.post(`/Academics/CreatCategory`, payload))
+    ?.data as FacultyResponse;
+};
+
+export const getfaculty = async () => {
+  return (await api.get("/Academics/GetAllCategoryAsync"))
+    ?.data as GetFacultyResponse;
+};
+
+export const deleteFaculty = async (id: number) => {
+  return (await api.delete(`/Academics/DeleteCategoryAsync?Id=${id}`))
+    ?.data as DeleteFacultyResponse;
+};
+
+export const updateFaculty = async ({ categoryCode, name, description}: CategoryPayload) => {
+  return (
+    await api.put(
+      `/Academics/UpdateCategoryAsync?CategoryCode=${categoryCode}&Name=${name}&Description=${description}`
+    )
+  )?.data as updateFacultyResponse;
+};
