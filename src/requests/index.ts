@@ -848,11 +848,6 @@ export const getAllProgramsApplicationFee = async () => {
     ?.data as GetAllProgramApplicationFeeResponse;
 };
 
-// export const getAllModeOfStudy = async () => {
-//   return (await api.get("/Utilities/Utilities/GetAllModeOfStudy"))
-//     ?.data as ModeOfStudyResponse;
-// };
-
 export const signInUser = async (payload: SignInPayload) => {
   return (await api.post(`/Authorization/Adminlogin`, payload))
     ?.data as SignInResponse;
