@@ -101,6 +101,8 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
     return <div>Error: {error?.message}</div>;
   }
 
+  const hasRecord = Object.keys(record)?.length > 0;
+
   return (
     <Formik
       initialValues={{
@@ -161,6 +163,7 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
                   type="submit"
                   disabled={createUpdateAccreditationMutation.isPending}
                   isLoading={createUpdateAccreditationMutation.isPending}
+                  text={hasRecord ? "Update" : "Create"}
                 />
               </div>
             </section>
