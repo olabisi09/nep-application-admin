@@ -317,6 +317,32 @@ interface ProgramResponse extends Response {
   data: Program[];
 }
 
+interface CommonPayload {
+  id: number
+  readmoreId: number
+  description: string
+  activeStatus: boolean
+  isDeleted: boolean
+}
+
+interface ScholarshipResponse extends Response {
+  data: CommonPayload[];
+}
+
+interface Testimonial {
+  id: number
+  readMoreId: number
+  image: any
+  imageUrl: string
+  description: string
+  activeStatus: boolean
+  isDeleted: boolean
+}
+
+interface TestimonialResponse extends Response {
+  data: Testimonial[];
+}
+
 interface OverviewResponse extends GetResponse {
   data: Overview[];
   studentLifeId: number;
@@ -641,4 +667,39 @@ interface getAllApplicationBatch {
   startDate: string;
   endDate: string;
   isActive: boolean;
+}
+
+interface GetDepartmentsResponse extends Response {
+  data: Department[];
+}
+
+interface Department {
+  id: number;
+  name: string;
+  description: string;
+  categoryId: number;
+  categoryName: string;
+  categoryCode: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface ModeOfStudy{
+  id: number,
+  name: string,
+  activeStatus: boolean,
+  isDeleted: boolean
+}
+
+interface ModeOfStudyResponse extends Response {
+  data: ModeOfStudy[];
+}
+interface Title{
+  id: number,
+  titleName: string,
+  activeStatus: boolean,
+  isDeleted: boolean
+}
+interface TitleResponse extends Response {
+  data: Title[];
 }

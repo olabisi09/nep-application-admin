@@ -10,7 +10,6 @@ import {
   Spin,
   App,
 } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
@@ -19,7 +18,6 @@ import AddSubject from "./addSubject";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteSubject, getSubject } from "../../../requests";
-import { Subject } from "./types";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const SubjectSetUp = () => {

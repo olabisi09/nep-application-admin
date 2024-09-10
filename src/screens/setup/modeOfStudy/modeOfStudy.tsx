@@ -1,24 +1,17 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, App, Spin } from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useCallback, useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddModeOfStudy from "./addModeOfStudy";
+import { AddModeOfStudy, EditModeOfStudy } from "./addModeOfStudy";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteModeOfStudy, getAllModeOfStudy } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const ModeOfStudy = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -26,34 +19,36 @@ const ModeOfStudy = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [item, setItem] = useState<ModeOfStudy>({} as ModeOfStudy);
-
+  const [modeOfStudy, setModeOfStudy] = useState<ModeOfStudy>({} as ModeOfStudy);
+  const [openDelete, setOpenDelete] = useState(false);
   const { notification } = App.useApp();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-mode-of-study"],
     queryFn: getAllModeOfStudy,
   });
-
-  const modeOfStudyData = data?.data ?? [];
 
   const deleteModeOfStudyMutation = useMutation({
     mutationFn: deleteModeOfStudy,
   });
 
-  const handleDeleteModeOfStudy = async (id: number) => {
+  const handleDelete = (data: ModeOfStudy) => {
+    setModeOfStudy(data);
+    setOpenDelete(true);
+  };
+
+  const DeleteAdmissionReqHandler = async () => {
     try {
-      await deleteModeOfStudyMutation.mutateAsync(id, {
+      await deleteModeOfStudyMutation.mutateAsync(modeOfStudy?.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
           refetch();
+          setOpenDelete(false);
         },
       });
     } catch (error: any) {
@@ -64,16 +59,38 @@ const ModeOfStudy = () => {
     }
   };
 
+  const handleSearch = (e: any) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
+          Edit
+        </button>
+      ),
+    },
+  ];
   const columns: ColumnsType<ModeOfStudy> = [
     {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
+      title: "S/N",
+      dataIndex: "index",
+      key: "index",
+      render: (text: any, record: any, index: number) => <span>{(currentPage - 1) * pageSize + index + 1}</span>,
     },
     {
       key: "name",
-      title: "Mode of Study",
+      title: "Name",
       dataIndex: "name",
+    },
+
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
@@ -84,17 +101,19 @@ const ModeOfStudy = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setItem(record);
+              setModeOfStudy(record);
               setOpenEdit(true);
             },
           },
           {
             key: "2",
-            label: "Delete",
-            onClick: () => handleDeleteModeOfStudy(record?.id),
+            label: (
+              <button style={{ border: "0rem", background: "none" }} onClick={() => handleDelete(record)}>
+                Delete
+              </button>
+            ),
           },
         ];
-
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />
@@ -104,29 +123,19 @@ const ModeOfStudy = () => {
     },
   ];
 
-  const handleCloseModal = useCallback(() => {
-    setOpenEdit(false);
-    setShowAddModal(false);
-  }, []);
-
-  const handleOpenModal = () => {
-    setItem({ ...item });
-    setShowAddModal(true);
-  };
+  const modeOfStudyData = data?.data;
 
   if (isLoading) {
-    return <Spin size="large" />;
+    return <Spin />;
   }
-
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
   return (
     <main>
       <section className="space-between">
         <h3>Mode of Study Setup</h3>
-        <Button
-          onClick={() => setShowAddModal(true)}
-          iconBefore={<Add />}
-          text="Setup"
-        />
+        <Button onClick={() => setShowAddModal(true)} iconBefore={<Add />} text="Setup" />
       </section>
 
       <section className={styles.card}>
@@ -135,51 +144,38 @@ const ModeOfStudy = () => {
           <div>
             {!showSearch && (
               <span>
-                <Search
-                  onClick={() => setShowSearch((showSearch) => !showSearch)}
-                />
+                <Search onClick={() => setShowSearch((showSearch) => !showSearch)} />
               </span>
             )}
-            {showSearch && (
-              <SearchInput value={searchTerm} onChange={handleSearch} />
-            )}
+            {showSearch && <SearchInput value={searchTerm} onChange={handleSearch} />}
 
-            {!showAllFilter && (
-              <Filter
-                onClick={() =>
-                  setShowAllFilter((showAllFilter) => !showAllFilter)
-                }
-              />
-            )}
+            {!showAllFilter && <Filter onClick={() => setShowAllFilter((showAllFilter) => !showAllFilter)} />}
           </div>
         </div>
-        <Table
-          dataSource={modeOfStudyData}
-          columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
-        />
+        <Table dataSource={modeOfStudyData} columns={columns} pagination={{ position: ["bottomCenter"] }} rowKey={(record, index) => `${record.id}${index}`} />
       </section>
 
-      <Modal
-        open={showAddModal}
-        onCancel={() => setShowAddModal(false)}
-        centered
-        title="Mode of Study Setup"
-        footer={null}
-      >
-        <AddModeOfStudy handleClose={handleCloseModal} />
+      <Modal open={showAddModal} onCancel={() => setShowAddModal(false)} centered title="Mode of Study Setup" footer={null}>
+        <AddModeOfStudy handleClose={() => setShowAddModal(false)} />
       </Modal>
 
-      <Modal
-        open={openEdit}
-        onCancel={() => setOpenEdit(false)}
-        centered
-        title="Mode of Study Setup"
-        footer={null}
-      >
-        <AddModeOfStudy handleClose={handleCloseModal} record={item} />
-      </Modal>
+      {modeOfStudy?.id && openEdit && (
+        <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Mode of Study Setup" footer={null}>
+          <EditModeOfStudy modeOfStudy={modeOfStudy} handleClose={() => setOpenEdit(false)} />
+        </Modal>
+      )}
+
+      {modeOfStudy?.id && openDelete && (
+        <Modal open={openDelete} onCancel={() => setOpenDelete(false)} centered title="Delete Mode of Study Setup" footer={null}>
+          <DeleteModalContent
+            isLoading={deleteModeOfStudyMutation?.isPending}
+            handleCloseModal={() => setOpenDelete(false)}
+            handleSubmit={DeleteAdmissionReqHandler}
+            title={"this item"}
+            isActive={false}
+          />
+        </Modal>
+      )}
     </main>
   );
 };
