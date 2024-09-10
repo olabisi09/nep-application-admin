@@ -33,7 +33,8 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
 
   const handleAddAboutUs = async (
     values: FormikValues,
-    resetForm: () => void
+    resetForm: () => void,
+    handleClose: () => void
   ) => {
     const payload: Partial<SetupPayload> = {
       Title: values.title,
@@ -70,10 +71,9 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
         description: "",
       }}
       onSubmit={(values, { resetForm }) => {
-        handleAddAboutUs(values, resetForm);
+        handleAddAboutUs(values, resetForm, handleClose);
       }}
-      validationSchema={validate}
-    >
+      validationSchema={validate}>
       {({ setFieldValue }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />
@@ -184,8 +184,7 @@ const EditAboutUs = ({
       onSubmit={(values, { resetForm }) => {
         handleEditAboutUs(values, resetForm);
       }}
-      enableReinitialize={true}
-    >
+      enableReinitialize={true}>
       {({ setFieldValue }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />

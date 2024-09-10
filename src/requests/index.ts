@@ -18,7 +18,7 @@ export const createOrUpdateAboutUs = async (payload: Partial<SetupPayload>) => {
 };
 
 export const deleteAboutUs = async (id: number) => {
-  return (await api.delete(`/AboutUsPage/DeleteAboutUsById/${id}`))
+  return (await api.delete(`/AboutUsPage/DeleteAboutUsById?Id=${id}`))
     ?.data as Response;
 };
 
