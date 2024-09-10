@@ -17,13 +17,11 @@ import { deleteFAQItem, getFAQItemsByFaqId } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
 import { useParams } from "react-router-dom";
 import { ColumnsType } from "antd/es/table";
-import { CreateFaqItem } from "./setup";
+import { CreateFaqItem, EditFaqItem } from "./setup";
 
 const FaqItem = () => {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
-  const [openQAndA, setOpenQAndA] = useState(false);
-  const [openEditQAndA, setOpenEditQAndA] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [indexData, setIndexData] = useState({} as FaqItem);
@@ -32,6 +30,7 @@ const FaqItem = () => {
   const deleteFaqItemMutation = useMutation({ mutationFn: deleteFAQItem });
 
   const handleEdit = (data: FaqItem) => {
+    setIndexData(data);
     setOpenEdit(true);
   };
 
@@ -76,16 +75,6 @@ const FaqItem = () => {
           },
           {
             key: "2",
-            label: "Add Questions & Answers",
-            onClick: () => setOpenQAndA(true),
-          },
-          {
-            key: "3",
-            label: "Edit Questions & Answers",
-            onClick: () => setOpenEditQAndA(true),
-          },
-          {
-            key: "4",
             label: "Delete",
             onClick: () => handleDelete(record),
           },
@@ -160,33 +149,19 @@ const FaqItem = () => {
           faqId={id!}
         />
       </Modal>
-      {/* <Modal
+      <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
-        centered
-        title="Edit FAQ Setup"
-        footer={null}
-      >
-        <SetupFaq handleClose={() => setOpenEdit(false)} data={indexData} />
-      </Modal>
-      <Modal
-        open={openQAndA}
-        onCancel={() => setOpenQAndA(false)}
-        centered
-        title="FAQ Items Setup"
-        footer={null}
-      >
-        <QAndA handleClose={() => setOpenQAndA(false)} />
-      </Modal>
-      <Modal
-        open={openEditQAndA}
-        onCancel={() => setOpenEditQAndA(false)}
         centered
         title="Edit FAQ Items Setup"
         footer={null}
       >
-        <QAndA handleClose={() => setOpenEditQAndA(false)} />
-      </Modal> */}
+        <EditFaqItem
+          handleClose={() => setOpenEdit(false)}
+          item={indexData}
+          refetch={refetch}
+        />
+      </Modal>
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}

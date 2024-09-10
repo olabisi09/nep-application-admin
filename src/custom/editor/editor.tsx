@@ -10,9 +10,9 @@ import {
   Link,
   List,
   Heading,
+  Underline,
 } from "ckeditor5";
 import { ErrorMessage } from "formik";
-
 const Editor = ({
   name,
   label,
@@ -38,6 +38,7 @@ const Editor = ({
               "|",
               "bold",
               "italic",
+              "underline",
               "link",
               "|",
               "numberedList",
@@ -54,10 +55,12 @@ const Editor = ({
             Link,
             List,
             Heading,
+            Underline,
           ],
           initialData: initialData,
         }}
         onChange={onChange}
+        data={initialData}
       />
       {name && (
         <ErrorMessage name={name}>

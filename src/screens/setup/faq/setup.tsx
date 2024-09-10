@@ -1,11 +1,12 @@
 import Input from "../../../custom/input/input";
 import Button from "../../../custom/button/button";
 import Select from "../../../custom/select/select";
-import { Form, Formik, FormikProvider, FormikValues, useFormik } from "formik";
+import { Form, Formik, FormikValues } from "formik";
 import * as Yup from "yup";
 import { StatusOptions, createFaq } from "../../../requests";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
+import { Editor } from "../../../custom";
 
 interface Props {
   data?: FAQ;
@@ -60,6 +61,7 @@ const SetupFaq = ({ handleClose, data }: Props) => {
     <Formik
       initialValues={{
         name: data?.name || "",
+        description: data?.description || "",
         status:
           data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
       }}
@@ -69,10 +71,19 @@ const SetupFaq = ({ handleClose, data }: Props) => {
       enableReinitialize={true}
       validationSchema={validationSchema}
     >
-      {({ handleSubmit }) => {
+      {({ setFieldValue }) => {
         return (
           <Form className="fields">
             <Input name="name" placeholder="Title  Name" label="Title Name" />
+            <Editor
+              name="description"
+              label="Description"
+              onChange={(_, editor) => {
+                const data = editor.getData();
+                setFieldValue("description", data);
+              }}
+              initialData={data?.description}
+            />
             <Select
               name="status"
               placeholder="Select Status"
@@ -90,7 +101,7 @@ const SetupFaq = ({ handleClose, data }: Props) => {
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button
-                onClick={handleSubmit as any}
+                type="submit"
                 disabled={FaqSetupMutation?.isPending}
                 text={
                   data
