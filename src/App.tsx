@@ -62,6 +62,7 @@ import CampusExperienceImages from "./screens/setup/studentLife/campusExperience
 import ProtectedRoute from "./hooks/protectedRoutes";
 import AdmissionRequirementDetail from "./screens/setup/readMoreAdmissionRequirement/admissionReqDetails";
 import AdmissionReqDetail from "./screens/setup/readMoreAdmissionRequirement/admissionRequirementDetail/admissionReqDetail";
+import WhyItem from "./screens/setup/whySchool/whyItem/whyItem";
 
 function App() {
   const authRoute = [
@@ -285,6 +286,10 @@ function App() {
     {
       path: routes.setup.admissionRequirementDetail,
       element: <AdmissionReqDetail />,
+    },
+    {
+      path: routes.setup.whyItems,
+      element: <WhyItem />,
     },
   ];
 

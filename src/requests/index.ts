@@ -950,3 +950,27 @@ export const deleteTitle = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteTitle?Id=${id}`))
     ?.data as Response;
 };
+
+export const getAllWhy = async () => {
+  return (await api.get(`HomePage/HomePage/GetAllWhy`))?.data as WhyResponse;
+}
+
+export const createUpdateWhy = async (payload: Partial<Why>) => {
+  return (await api.post(`HomePage/HomePage/CreateUpdateWhy`, payload))?.data as Response;
+}
+
+export const deleteWhy = async (id: number) => {
+  return (await api.delete(`HomePage/HomePage/DeleteWhyId?Id=${id}`))?.data as Response;
+}
+
+export const getAllWhyItemsByWhyId = async (whyId: number | string) => {
+  return (await api.get(`HomePage/HomePage/GetAllWhySchoolItemByWhyId?Id=${whyId}`))?.data as WhyItemResponse
+}
+
+export const createUpdateWhyItem = async (payload: FormData) => {
+  return (await api.post(`HomePage/HomePage/createUpdateWhySchoolItem`, payload))?.data as Response;
+}
+
+export const deleteWhyItem = async (id: number) => {
+  return (await api.delete(`HomePage/HomePage/DeleteWhyschoolitemId?Id=${id}`))?.data as Response;
+}

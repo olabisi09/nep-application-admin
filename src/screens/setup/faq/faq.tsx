@@ -13,7 +13,7 @@ import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SetupFaq from "./setup";
 import QAndA from "./qAndA";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteFAQ, getAllFAQ } from "../../../requests";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ const Faq = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const { notification } = App.useApp();
-  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
 
   const handleEdit = () => setOpenEdit(true);
@@ -36,7 +36,7 @@ const Faq = () => {
   };
 
   const deleteFAQMutation = useMutation({ mutationFn: deleteFAQ });
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-AllFAQ"],
     queryFn: getAllFAQ,
   });
@@ -70,9 +70,7 @@ const Faq = () => {
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({
-            queryKey: ["get-AllFAQ"],
-          });
+          refetch();
           setOpenDelete(false);
         },
       });
