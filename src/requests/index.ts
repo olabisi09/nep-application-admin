@@ -516,6 +516,7 @@ export const deleteCountry = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/Deletecountry?Id=${id}`))
     ?.data as Response;
 };
+
 export const deleteGender = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteGender?Id=${id}`))
     ?.data as Response;
@@ -958,7 +959,7 @@ export const createFaculty = async (
     ?.data as FacultyResponse;
 };
 
-export const getfaculty = async () => {
+export const getFaculty = async () => {
   return (await api.get("/Academics/GetAllCategoryAsync"))
     ?.data as GetFacultyResponse;
 };

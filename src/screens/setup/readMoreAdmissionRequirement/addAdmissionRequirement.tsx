@@ -119,6 +119,7 @@ const AddAdmissionRequirement = ({ handleClose }: { handleClose: () => void }) =
     </Formik>
   );
 };
+
 const EditAdmissionRequirement = ({admissionRequirement, handleClose}:{ admissionRequirement: AdmissionRequirement; handleClose:()=> void}) => {
   const queryClient = useQueryClient();
   const { notification } = App.useApp();

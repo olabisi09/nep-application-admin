@@ -10,7 +10,6 @@ import {
   App,
   Spin,
 } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
@@ -22,8 +21,8 @@ import DeleteModalContent from "../../deleteModal/deleteModal";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import AddFaculty from "./addFaculty";
-import { deleteFaculty, getfaculty } from "../../../requests";
-import { number } from "yup";
+import { deleteFaculty, getFaculty } from "../../../requests";
+import EditFaculty from "./editFaculty";
 
 const FacultySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -34,8 +33,8 @@ const FacultySetup = () => {
   const [indexData, setIndexData] = useState(
     {} as createOrUpdateFacultyPayload
   );
-
   const [openDelete, setOpenDelete] = useState(false);
+
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -64,7 +63,7 @@ const FacultySetup = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-faculty"],
-    queryFn: getfaculty,
+    queryFn: getFaculty,
   });
 
   const facultyData = data?.data as createOrUpdateFacultyPayload[];
@@ -121,7 +120,7 @@ const FacultySetup = () => {
 
   const deleteFacultyMutation = useMutation({ mutationFn: deleteFaculty });
 
-  const DeleteFacultyHandler = async () => {
+  const deleteFacultyHandler = async () => {
     // Ensure Id exists before proceeding with deletion
     if (indexData.id) {
       try {
@@ -192,6 +191,7 @@ const FacultySetup = () => {
             )}
           </div>
         </div>
+
         <Table
           dataSource={facultyData}
           columns={columns}
@@ -215,9 +215,9 @@ const FacultySetup = () => {
         centered
         title="Faculty Setup"
         footer={null}>
-        <AddFaculty
+        <EditFaculty
           handleClose={() => setOpenEdit(false)}
-          details={indexData}
+          record={indexData}
         />
       </Modal>
 
@@ -230,7 +230,7 @@ const FacultySetup = () => {
         <DeleteModalContent
           isLoading={deleteFacultyMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteFacultyHandler}
+          handleSubmit={deleteFacultyHandler}
           title={indexData?.name}
         />
       </Modal>
