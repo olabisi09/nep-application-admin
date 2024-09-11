@@ -391,7 +391,7 @@ interface FAQ {
 }
 
 interface FaqResponse extends Response {
-  data: FAQ[];
+  data: FAQ;
 }
 interface FaqItemResponse extends Response {
   data: FaqItem[];
