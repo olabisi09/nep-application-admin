@@ -81,11 +81,13 @@ const WhySchool = () => {
     <div>
       <section className="space-between">
         <h3>Why School Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+        {!whyData && (
+          <Button
+            onClick={() => setOpen(true)}
+            iconBefore={<Plus />}
+            text="Setup"
+          />
+        )}
       </section>
       <br />
       <Card bordered={false} style={{ maxWidth: "34.286rem" }}>
