@@ -60,7 +60,6 @@ import FitnessAthleticsItem from "./screens/setup/studentLife/fitnessAndAthletic
 import FitnessAthleticsImages from "./screens/setup/studentLife/fitnessAndAthletics.tsx/items/fitnessImages";
 import CampusExperienceImages from "./screens/setup/studentLife/campusExperience/items/campusExperienceImage";
 import ProtectedRoute from "./hooks/protectedRoutes";
-// import AdmissionRequirementDetail from "./screens/setup/readMoreAdmissionRequirement/admissionReqDetails";
 import AdmissionReqDetail from "./screens/setup/readMoreAdmissionRequirement/admissionRequirementDetail/admissionReqDetail";
 
 function App() {
@@ -103,10 +102,6 @@ function App() {
     {
       path: routes.setup.readMoreAdmissionRequirement,
       element: <ReadMoreAdmissionRequirementSetup />,
-    },
-    {
-      path: routes.setup.careerProspects,
-      element: <CareerProspectsSetup />,
     },
     {
       path: routes.setup.careerProspects,

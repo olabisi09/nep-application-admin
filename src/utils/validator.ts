@@ -1,6 +1,5 @@
 import { string } from "yup";
 import * as Yup from "yup";
-import ModeOfStudy from "../screens/setup/modeOfStudy/modeOfStudy";
 
 export const validator = {
   programName: string().required("Program Name is required"),

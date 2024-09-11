@@ -168,7 +168,7 @@ const EditAdmissionRequirement = ({admissionRequirement, handleClose}:{ admissio
     initialValues={{
       programName: admissionRequirement.readMoreId,
       description: admissionRequirement.description,
-      status:admissionRequirement.activeStatus === true ? "Active" : "Inactive",
+      status: admissionRequirement.activeStatus === true ? "Active" : "Inactive",
     }}
     onSubmit={(values, { resetForm }) => {
       handleEditAdmissionRequirement(values, resetForm);

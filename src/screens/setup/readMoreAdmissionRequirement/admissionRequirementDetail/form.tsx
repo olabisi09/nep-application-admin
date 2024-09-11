@@ -2,8 +2,8 @@ import { Form, Formik, FormikValues } from "formik";
 import { Button, Editor, Input, Select } from "../../../../custom";
 import { App } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createOrUpdateAdmissionRequirementDetail } from "../request";
 import { useParams } from "react-router-dom";
-import { createOrUpdateCareerProspectItem } from "../request";
 
 interface SetupInit {
   name: string;
@@ -11,7 +11,7 @@ interface SetupInit {
   status: string;
 }
 
-export const CreateCareerProspectItem = ({
+export const CreateAdmissionReqDetail = ({
   handleClose,
 }: {
   handleClose: () => void;
@@ -20,25 +20,26 @@ export const CreateCareerProspectItem = ({
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const addCareerProspectItemMutation = useMutation({
-    mutationFn: createOrUpdateCareerProspectItem,
+  const addAdmissionRequirementDetailMutation = useMutation({
+    mutationFn: createOrUpdateAdmissionRequirementDetail,
   });
 
-  const handleAddCareerProspectItem = async (
+  const handleAddAdmissionRequirementDetail = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: Partial<CareerProspectItemPayload> = {
+    const payload: Partial<AdmissionReqDetailsPayload> = {
       id: 0,
-      careerProspectId: Number(id),
-      title: values.name,
+      name: values.name,
+      admissionRequirementId: Number(id),
       description: values.description,
+      noOfSittings: 0,
       activeStatus: values.status === "Active",
       isDeleted: false,
     };
 
     try {
-      await addCareerProspectItemMutation.mutateAsync(payload, {
+      await addAdmissionRequirementDetailMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -46,7 +47,7 @@ export const CreateCareerProspectItem = ({
           });
 
           queryClient.refetchQueries({
-            queryKey: ["get-career-prospect-id"],
+            queryKey: ["get-admission-requirement-details-by-Id"],
           });
           handleClose();
           resetForm();
@@ -77,7 +78,7 @@ export const CreateCareerProspectItem = ({
         } as SetupInit
       }
       onSubmit={(values, { resetForm }) => {
-        handleAddCareerProspectItem(values, resetForm);
+        handleAddAdmissionRequirementDetail(values, resetForm);
       }}
     >
       {({ setFieldValue }) => (
@@ -108,8 +109,8 @@ export const CreateCareerProspectItem = ({
             />
             <Button
               type="submit"
-              isLoading={addCareerProspectItemMutation.isPending}
-              disabled={addCareerProspectItemMutation.isPending}
+              isLoading={addAdmissionRequirementDetailMutation.isPending}
+              disabled={addAdmissionRequirementDetailMutation.isPending}
               text="Create"
             />
           </div>
@@ -119,36 +120,37 @@ export const CreateCareerProspectItem = ({
   );
 };
 
-export const EditCareerProspectItem = ({
+export const EditAdmissionReqDetail = ({
   item,
   handleClose,
 }: {
-  item: CareerProspectItem;
+  item: AdmissionRequirementDetails;
   handleClose: () => void;
 }) => {
   const { id } = useParams();
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const editCareerProspectItemMutation = useMutation({
-    mutationFn: createOrUpdateCareerProspectItem,
+  const editAdmissionRequirementDetailMutation = useMutation({
+    mutationFn: createOrUpdateAdmissionRequirementDetail,
   });
 
-  const handleEditCareerProspectItem = async (
+  const handleAddAdmissionRequirementDetail = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: Partial<CareerProspectItemPayload> = {
+    const payload: Partial<AdmissionReqDetailsPayload> = {
       id: item?.id,
-      careerProspectId: Number(id),
-      title: values.name,
+      name: values.name,
+      admissionRequirementId: Number(id),
       description: values.description,
-      activeStatus: values.status === "Active",
+      noOfSittings: 0,
+      activeStatus: values.status === "Active" ? true : false,
       isDeleted: false,
     };
 
     try {
-      await editCareerProspectItemMutation.mutateAsync(payload, {
+      await editAdmissionRequirementDetailMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -156,7 +158,7 @@ export const EditCareerProspectItem = ({
           });
 
           queryClient.refetchQueries({
-            queryKey: ["get-career-prospect-id"],
+            queryKey: ["get-admission-requirement-details-by-Id"],
           });
           handleClose();
           resetForm();
@@ -183,14 +185,14 @@ export const EditCareerProspectItem = ({
     <Formik
       initialValues={
         {
-          name: item?.title ?? "",
+          name: item?.name ?? "",
           description: "",
           status: initialStatus,
         } as SetupInit
       }
       enableReinitialize
       onSubmit={(values, { resetForm }) => {
-        handleEditCareerProspectItem(values, resetForm);
+        handleAddAdmissionRequirementDetail(values, resetForm);
       }}
     >
       {({ setFieldValue }) => (
@@ -223,8 +225,8 @@ export const EditCareerProspectItem = ({
 
             <Button
               type="submit"
-              isLoading={editCareerProspectItemMutation.isPending}
-              disabled={editCareerProspectItemMutation.isPending}
+              isLoading={editAdmissionRequirementDetailMutation.isPending}
+              disabled={editAdmissionRequirementDetailMutation.isPending}
               text="Update"
             />
           </div>

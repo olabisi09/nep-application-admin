@@ -1,16 +1,24 @@
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps } from "antd";
-import { Form, Formik } from "formik";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+} from "antd";
 import styles from "../../styles.module.scss";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { useQuery } from "@tanstack/react-query";
-import { getCareerProspects } from "../../../../requests";
 import { ColumnsType } from "antd/es/table";
-import AddItem from "./addItem";
+import { CreateCareerProspectItem, EditCareerProspectItem } from "./addItem";
 import { Button, SearchInput } from "../../../../custom";
+import { useParams } from "react-router-dom";
+import { getCareerProspectItemByCareerProspectId } from "../request";
+import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
 
 const CareerProspectItems = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -18,36 +26,43 @@ const CareerProspectItems = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [careerProspectItems, setCareerProspectItems] =
-    useState<CareerProspect>({} as CareerProspect);
+    useState<CareerProspectItem>({} as CareerProspectItem);
+
+  const { id } = useParams();
+  const careerProspectId = id ?? "";
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["get-career-prospect"],
-    queryFn: getCareerProspects,
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get-career-prospect-id"],
+    queryFn: () => getCareerProspectItemByCareerProspectId(careerProspectId),
+    enabled: !!careerProspectId,
   });
 
-  const careerProspectData = data?.data as CareerProspect[];
+  const careerProspectItemData = data?.data as CareerProspectItem[];
 
-  const columns: ColumnsType<CareerProspect> = [
+  const columns: ColumnsType<CareerProspectItem> = [
     {
       key: "id",
       title: "ID",
       dataIndex: "id",
     },
     {
-      key: "programName",
-      title: "Program Name",
-      dataIndex: "programName",
+      key: "title",
+      title: "Title",
+      dataIndex: "title",
     },
     {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      render: (_, { description }) => {
+        const limitedCleanHtml = sanitizeAndLimitString(description);
+        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
+      },
     },
     {
       key: "status",
@@ -62,13 +77,6 @@ const CareerProspectItems = () => {
         const items: MenuProps["items"] = [
           {
             key: "1",
-            label: "Add Items",
-            onClick: () => {
-              setCareerProspectItems(record);
-            },
-          },
-          {
-            key: "2",
             label: "Edit",
             onClick: () => {
               setCareerProspectItems(record);
@@ -76,7 +84,7 @@ const CareerProspectItems = () => {
             },
           },
           {
-            key: "3",
+            key: "2",
             label: "Delete",
             onClick: () => {},
           },
@@ -89,6 +97,22 @@ const CareerProspectItems = () => {
       },
     },
   ];
+
+  const handleCloseEditModal = useCallback(() => {
+    setOpenEdit(false);
+  }, []);
+
+  const handleCloseCreateModal = useCallback(() => {
+    setShowAddModal(false);
+  }, []);
+
+  if (isLoading) {
+    return <Spin size="large" />;
+  }
+
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
 
   return (
     <main>
@@ -127,7 +151,7 @@ const CareerProspectItems = () => {
         </div>
 
         <Table
-          dataSource={careerProspectData}
+          dataSource={careerProspectItemData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}
@@ -135,72 +159,26 @@ const CareerProspectItems = () => {
       </section>
 
       <Modal
-        open={showAddModal}
-        onCancel={() => setShowAddModal(false)}
-        centered
-        title="Career Prospects Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddModal(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Create" />
-          </div>
-        )}
-      >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            {/* <AddCareerProspects /> */}
-          </Form>
-        </Formik>
-      </Modal>
-
-      <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Career Prospects Setup"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setOpenEdit(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Update" />
-          </div>
-        )}
+        title="Career Prospects Item Setup"
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            {/* <AddCareerProspects /> */}
-          </Form>
-        </Formik>
+        <EditCareerProspectItem
+          handleClose={handleCloseEditModal}
+          item={careerProspectItems}
+        />
       </Modal>
 
       <Modal
-        open={showAddItemModal}
-        onCancel={() => setShowAddItemModal(false)}
+        open={showAddModal}
+        onCancel={() => setShowAddModal(false)}
         centered
         title="Career Prospect Item"
-        footer={() => (
-          <div className="btn-group">
-            <Button
-              onClick={() => setShowAddItemModal(false)}
-              variant="text"
-              text="Cancel"
-            />
-            <Button text="Add Details" />
-          </div>
-        )}
+        footer={null}
       >
-        <Formik initialValues={{}} onSubmit={() => {}}>
-          <Form>
-            <AddItem />
-          </Form>
-        </Formik>
+        <CreateCareerProspectItem handleClose={handleCloseCreateModal} />
       </Modal>
     </main>
   );

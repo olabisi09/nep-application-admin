@@ -29,25 +29,18 @@ import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { useNavigate } from "react-router-dom";
 
-const forms = ["Create", "Edit", "Admission Requirement Details"] as const;
-
 const AdmissionRequirement = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [showAddDetailsModal, setShowAddDetailsModal] = useState(false);
   const { notification } = App.useApp();
   const [admissionReq, setAdmissionReq] = useState<AdmissionRequirement>(
     {} as AdmissionRequirement
   );
   const [openDelete, setOpenDelete] = useState(false);
-  const [openDetails, setOpenDetails] = useState(false);
-  const [currentForm, setCurrentForm] = useState<(typeof forms)[number] | "">(
-    ""
-  );
-  const [open, setOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const deleteAdmissionReqMutation = useMutation({
@@ -92,15 +85,6 @@ const AdmissionRequirement = () => {
       dataIndex: "activeStatus",
       render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
-    // {
-    //   key: "action",
-    //   title: "",
-    //   render: () => (
-    //     <Dropdown menu={{ items }} trigger={["click"]}>
-    //       <AntButton type="text" icon={<Ellipsis />} />
-    //     </Dropdown>
-    //   ),
-    // },
     {
       key: "action",
       title: "",
@@ -121,7 +105,7 @@ const AdmissionRequirement = () => {
               navigate(`/admission-requirement/${record.id}/details`),
           },
           {
-            key: "2",
+            key: "3",
             label: (
               <button
                 style={{ border: "0rem", background: "none" }}
