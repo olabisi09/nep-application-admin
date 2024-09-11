@@ -1,8 +1,3 @@
-// import {
-//   GetSubject,
-//   SubjectPayload,
-//   SubjectResponse,
-// } from "../screens/setup/subject/types";
 import api from "../utils/api";
 
 export const getAboutUs = async () => {
@@ -41,7 +36,6 @@ export const getAllCategory = async () => {
   return (await api.get("/Academics/GetAllCategoryAsync"))
     ?.data as CategoryResponse;
 };
-
 // export const getAllCareerProspect = async () => {
 //   return (await api.get('/ReadMore/GetAllCareerProspects'))?.data as CareerProspectResponse;
 // }
@@ -385,9 +379,7 @@ export const createOrUpdateSupportGuidance = async (
   payload: Partial<Setup>
 ) => {
   return (
-    await api.post(
-      "/StudentLife/studentlife/CreateUpdateSupportGuidance",
-      payload
+    await api.post("/StudentLife/studentlife/CreateUpdateSupportGuidance", payload
     )
   )?.data as Response;
 };
@@ -975,4 +967,21 @@ export const updateFaculty = async ({ categoryCode, name, description}: Category
       `/Academics/UpdateCategoryAsync?CategoryCode=${categoryCode}&Name=${name}&Description=${description}`
     )
   )?.data as updateFacultyResponse;
+};
+
+export const getAllCurriculum = async () => {
+  return (await api.get("/ReadMore/GetAllCurriculum"))
+    ?.data as CurriculumResponse;
+};
+
+export const createOrUpdateCurriculum = async (
+  payload: Partial<CurriculumPayload>
+) => {
+  return (await api.post("/ReadMore/CreateUpdateCuriculum", payload))
+    ?.data as Response;
+};
+
+export const deleteCurriculum = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteCurriculumById?Id=${id}`))
+    ?.data as Response;
 };
