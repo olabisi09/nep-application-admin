@@ -15,14 +15,13 @@ import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import AddFaculty from "./addFaculty";
 import { deleteFaculty, getFaculty } from "../../../requests";
-import EditFaculty from "./editFaculty";
+
 
 const FacultySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -214,10 +213,7 @@ const FacultySetup = () => {
         centered
         title="Faculty Setup"
         footer={null}>
-        <EditFaculty
-          handleClose={() => setOpenEdit(false)}
-          record={indexData}
-        />
+        <AddFaculty handleClose={() => setOpenEdit(false)} record={indexData} />
       </Modal>
 
       <Modal
