@@ -36,6 +36,7 @@ export const routes = {
 
     aboutUs: "/about-us",
     whyUs: "/why-us",
+    whyItems: "/why-us/:id/why-items",
     faq: "/faq",
     faqItem: "/faq/:id/faq-items",
     newsAndEvents: "/news-and-events",

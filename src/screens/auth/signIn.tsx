@@ -82,7 +82,8 @@ const SignIn = () => {
         onSubmit={(values) => {
           handleSignIn(values);
         }}
-        validationSchema={validationSchema}>
+        validationSchema={validationSchema}
+      >
         {(props) => {
           return (
             <Form className="fields">
@@ -93,6 +94,7 @@ const SignIn = () => {
               />
               <Input
                 name="password"
+                type="password"
                 label="Password"
                 placeholder="Input password"
               />

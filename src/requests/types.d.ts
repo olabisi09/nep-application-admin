@@ -761,3 +761,27 @@ interface CategoryPayload {
   name: string;
   description: string;  
 }
+interface WhyResponse extends Response {
+  data: Why;
+}
+
+interface Why {
+  id: number;
+  schoolName: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface WhyItemResponse extends Response {
+  data: WhyItem[];
+}
+
+interface WhyItem {
+  id: number;
+  whyId: number;
+  name: string;
+  description: string;
+  iconUrl: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
