@@ -49,7 +49,7 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
       id: record?.id || 0,
       description: values.description,
       readMoreId: values.programName,
-      activeStatus: values?.status === "true", // Convert "true" to true, "false" to false
+      activeStatus: values?.status === "true", 
     };
 
     try {
@@ -106,7 +106,7 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
   return (
     <Formik
       initialValues={{
-        programName: record?.programName?.toString() ?? "",
+        programName: record?.readMoreId?.toString() ?? "",
         description: record?.description || "",
         status:
           record?.activeStatus !== undefined
@@ -135,7 +135,7 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
                   const data = record.getData();
                   props.setFieldValue("description", data);
                 }}
-                // initialData={""} //}
+                initialData={record?.description ?? ""} 
               />
               <Select
                 name="status"
