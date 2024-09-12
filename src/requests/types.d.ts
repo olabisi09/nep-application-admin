@@ -404,7 +404,9 @@ interface FaqItem {
   activeStatus: boolean;
   isDeleted: boolean;
 }
-interface AccreditationResponse extends AdmissionRequirementResponse {}
+interface AccreditationResponse extends Response {
+  data: AccreditationData[];
+}
 
 interface Accreditation extends Response {
   data: AdmissionRequirement;
@@ -418,6 +420,15 @@ interface AccreditationType {
   program: number;
   activeStatus: boolean;
   readMoreId: number;
+}
+
+interface AccreditationData {
+  id: number;
+  readMoreId: number;
+  description: string;
+  isDeleted: boolean;
+  activeStatus: boolean;
+  programName: string;
 }
 
 interface AccreditationSetup {
@@ -758,7 +769,7 @@ interface UpdateFacultyPayload {
 interface CategoryPayload {
   categoryCode: string;
   name: string;
-  description: string;  
+  description: string;
 }
 interface WhyResponse extends Response {
   data: Why;

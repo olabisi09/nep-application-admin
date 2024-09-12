@@ -10,21 +10,19 @@ import {
   Spin,
   notification,
 } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import AddAccreditation from "./addAccreditation";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   deleteAccreditationById,
-  getAccreditationById,
   getAllAccreditation,
 } from "../../../requests";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import { ColumnGroupType, ColumnsType } from "antd/es/table";
+import { ColumnsType } from "antd/es/table";
 
 const AccreditationSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -32,7 +30,7 @@ const AccreditationSetup = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [item, setItem] = useState<AccreditationType>({} as AccreditationType);
+  const [item, setItem] = useState<AccreditationData>({} as AccreditationData);
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -69,17 +67,7 @@ const AccreditationSetup = () => {
 
   const accreditationData = data?.data ?? [];
 
-  const dataSource = accreditationData?.map((item) => {
-    return {
-      id: item?.id,
-      program: item?.readMoreId,
-      description: item?.description,
-      status: item?.activeStatus ? "Active" : "Inactive",
-    };
-  });
-
-  //const dataSource = data
-  const columns = [
+  const columns: ColumnsType<AccreditationData> = [
     {
       key: "id",
       title: "ID",
@@ -88,7 +76,7 @@ const AccreditationSetup = () => {
     {
       key: "program",
       title: "Program",
-      dataIndex: "program",
+      dataIndex: "programName",
     },
     {
       key: "description",
@@ -102,12 +90,13 @@ const AccreditationSetup = () => {
     {
       key: "status",
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
       title: "",
-      render: (record: AccreditationType) => {
+      render: (_, record) => {
         const items: MenuProps["items"] = [
           {
             key: "1",
@@ -117,7 +106,8 @@ const AccreditationSetup = () => {
                 onClick={() => {
                   setOpenEdit(true);
                   setItem(record);
-                }}>
+                }}
+              >
                 Edit
               </button>
             ),
@@ -129,7 +119,8 @@ const AccreditationSetup = () => {
                 style={{ border: "0rem" }}
                 onClick={() => {
                   handleDelete(record.id);
-                }}>
+                }}
+              >
                 Delete
               </button>
             ),
@@ -147,6 +138,10 @@ const AccreditationSetup = () => {
 
   if (isLoading) {
     return <Spin />;
+  }
+
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
   }
 
   return (
@@ -185,10 +180,9 @@ const AccreditationSetup = () => {
         </div>
 
         <Table
-          dataSource={dataSource}
+          dataSource={accreditationData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 
@@ -197,7 +191,8 @@ const AccreditationSetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Accreditation Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddAccreditation
           record={item}
           handleClose={() => setShowAddModal(false)}
@@ -210,16 +205,6 @@ const AccreditationSetup = () => {
         centered
         title="Accreditation Setup"
         footer={null}
-        // footer={() => (
-        //   <div className="btn-group">
-        //     <Button
-        //       onClick={() => setOpenEdit(false)}
-        //       variant="text"
-        //       text="Cancel"
-        //     />
-        //     <Button text="Update" />
-        //   </div>
-        // )}
       >
         <AddAccreditation
           record={item}

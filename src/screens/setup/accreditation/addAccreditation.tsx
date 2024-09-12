@@ -20,7 +20,7 @@ import * as Yup from "yup";
 import { validator } from "../../../utils/validator";
 
 interface ComponentProps {
-  record: AccreditationType;
+  record: AccreditationData;
   handleClose: () => void;
 }
 
@@ -106,7 +106,7 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
   return (
     <Formik
       initialValues={{
-        programName: record?.program?.toString() ?? "",
+        programName: record?.programName?.toString() ?? "",
         description: record?.description || "",
         status:
           record?.activeStatus !== undefined
