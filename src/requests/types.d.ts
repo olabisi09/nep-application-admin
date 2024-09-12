@@ -748,7 +748,6 @@ interface updateFacultyResponse {
   data: null;
 }
 
-
 interface UpdateFacultyPayload {
   id?: any;
   categoryCode: string;
@@ -759,5 +758,18 @@ interface UpdateFacultyPayload {
 interface CategoryPayload {
   categoryCode: string;
   name: string;
-  description: string;  
+  description: string;
+}
+
+interface editFacultyResponse {
+  code: number;
+  message: string;
+  data: editFacultyPayload;
+}
+
+interface editFacultyPayload {
+  id: number;
+  categoryCode: string;
+  name: string;
+  description: string;
 }

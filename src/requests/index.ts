@@ -968,10 +968,19 @@ export const deleteFaculty = async (id: number) => {
     ?.data as DeleteFacultyResponse;
 };
 
-export const updateFaculty = async ({ categoryCode, name, description}: CategoryPayload) => {
+export const updateFaculty = async ({
+  categoryCode,
+  name,
+  description,
+}: CategoryPayload) => {
   return (
     await api.put(
       `/Academics/UpdateCategoryAsync?CategoryCode=${categoryCode}&Name=${name}&Description=${description}`
     )
   )?.data as updateFacultyResponse;
+};
+
+export const editFaculty = async (payload: Partial<editFacultyPayload>) => {
+  return (await api.put("/Academics/UpdateCategoryAsync", payload))
+    ?.data as editFacultyResponse;
 };
