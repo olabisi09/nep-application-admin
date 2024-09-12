@@ -748,7 +748,6 @@ interface updateFacultyResponse {
   data: null;
 }
 
-
 interface UpdateFacultyPayload {
   id?: any;
   categoryCode: string;
@@ -784,4 +783,18 @@ interface WhyItem {
   iconUrl: string;
   activeStatus: boolean;
   isDeleted: boolean;
+  description: string;
+}
+
+interface editFacultyResponse {
+  code: number;
+  message: string;
+  data: editFacultyPayload;
+}
+
+interface editFacultyPayload {
+  id: number;
+  categoryCode: string;
+  name: string;
+  description: string;
 }

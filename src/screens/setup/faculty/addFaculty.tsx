@@ -14,6 +14,7 @@ const AddFaculty = ({ handleClose }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
+
   const validate = Yup.object().shape({
     name: Yup.string().required("Faculty name is required"),
     description: Yup.string().required("Description is required"),
@@ -29,9 +30,10 @@ const AddFaculty = ({ handleClose }: Props) => {
     resetForm: () => void
   ) => {
     const payload: Partial<createOrUpdateFacultyPayload> = {
-      categoryCode: values?.categoryCode,
-      name: values.name,
+      id: 0,
       description: values.description,
+      categoryCode: values.categoryCode,
+      name: values.name,
     };
 
     try {

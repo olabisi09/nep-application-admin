@@ -159,7 +159,7 @@ const FacultySetup = () => {
   return (
     <main>
       <section className="space-between">
-        <h3>Curriculum Setup</h3>
+        <h3>Faculty Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
