@@ -958,7 +958,7 @@ export const createFaculty = async (
     ?.data as FacultyResponse;
 };
 
-export const getfaculty = async () => {
+export const getFaculty = async () => {
   return (await api.get("/Academics/GetAllCategoryAsync"))
     ?.data as GetFacultyResponse;
 };

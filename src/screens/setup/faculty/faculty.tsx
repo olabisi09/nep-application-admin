@@ -22,7 +22,7 @@ import DeleteModalContent from "../../deleteModal/deleteModal";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import AddFaculty from "./addFaculty";
-import { deleteFaculty, getfaculty } from "../../../requests";
+import { deleteFaculty, getFaculty } from "../../../requests";
 import { number } from "yup";
 
 const FacultySetup = () => {
@@ -50,7 +50,6 @@ const FacultySetup = () => {
 
   // Ensure that the correct record is passed to delete
   const handleDelete = (data: createOrUpdateFacultyPayload) => {
-    console.log(data);
     if (data && data?.id) {
       setIndexData(data); // Set the entire record, including Id
       setOpenDelete(true);
@@ -64,7 +63,7 @@ const FacultySetup = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-faculty"],
-    queryFn: getfaculty,
+    queryFn: getFaculty,
   });
 
   const facultyData = data?.data as createOrUpdateFacultyPayload[];

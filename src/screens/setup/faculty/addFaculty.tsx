@@ -1,12 +1,10 @@
 import { App, Spin } from "antd";
 import Input from "../../../custom/input/input";
-import Select from "../../../custom/select/select";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import { Form, FormikProvider, FormikValues, useFormik } from "formik";
 import { Button } from "../../../custom";
-import { useEffect, useState } from "react";
-import { createFaculty, updateFaculty } from "../../../requests";
+
 
 interface Props {
   details?: createOrUpdateFacultyPayload;
@@ -37,11 +35,7 @@ const AddFaculty = ({ handleClose, details }: Props) => {
     enableReinitialize: true,
   });
 
-  const updateFacultyMutation = useMutation({
-    mutationFn: updateFaculty,
-    mutationKey: ["updateFaculty"],
-  });
-
+ 
   const FacultyHandler = async (
     values: FormikValues,
     resetForm: () => void
@@ -53,8 +47,8 @@ const AddFaculty = ({ handleClose, details }: Props) => {
     };
 
     try {
-      await addFacultyMutation.mutateAsync(payload, {
-        onSuccess: (data) => {
+      await {
+        onSuccess: () => {
           notification.success({
             message: "Success",
             description: data?.message,
@@ -63,7 +57,7 @@ const AddFaculty = ({ handleClose, details }: Props) => {
           handleClose();
           resetForm();
         },
-      });
+      };
     } catch (error: any) {
       notification.error({
         message: "Error",
@@ -97,12 +91,7 @@ const AddFaculty = ({ handleClose, details }: Props) => {
 
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
-          <Button
-            text={addFacultyMutation.isPending ? "Submitting..." : "Submit"}
-            type="submit"
-            isLoading={addFacultyMutation?.isPending}
-            disabled={addFacultyMutation?.isPending}
-          />
+          <Button text="Submit" type="submit" />
         </div>
       </Form>
     </FormikProvider>
