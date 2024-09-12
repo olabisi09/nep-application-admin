@@ -16,7 +16,7 @@ import { getAllCourseOverview } from "./request";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 
-const ReadMoreProgram = () => {
+const ReadMoreCourse = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
@@ -108,7 +108,7 @@ const ReadMoreProgram = () => {
   return (
     <main>
       <section className="space-between">
-        <h3>Read More - Program Setup</h3>
+        <h3>Read More - Course Overview Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
@@ -175,4 +175,4 @@ const ReadMoreProgram = () => {
   );
 };
 
-export default ReadMoreProgram;
+export default ReadMoreCourse;
