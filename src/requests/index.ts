@@ -1014,6 +1014,6 @@ export const deleteWhyItem = async (id: number) => {
 }
 
 export const editFaculty = async (payload: Partial<editFacultyPayload>) => {
-  return (await api.put("/Academics/UpdateCategoryAsync", payload))
+  return (await api.put(`/Academics/UpdateCategoryAsync`, payload))
     ?.data as editFacultyResponse;
 };

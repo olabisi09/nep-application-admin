@@ -800,7 +800,7 @@ interface WhyItem {
 interface editFacultyResponse {
   code: number;
   message: string;
-  data: editFacultyPayload;
+  data: null;
 }
 
 interface editFacultyPayload {
