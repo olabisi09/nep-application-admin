@@ -35,7 +35,7 @@ const AddFaculty = ({ handleClose }: Props) => {
     };
 
     try {
-      await addFacultyMutation.mutateAsync(payload, {
+      await addFacultyMutation.mutateAsync(payload,  {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -46,7 +46,7 @@ const AddFaculty = ({ handleClose }: Props) => {
           handleClose();
           resetForm();
         },
-      });
+      })
     } catch (error: any) {
       notification.error({
         message: "Error",
