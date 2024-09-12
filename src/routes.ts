@@ -20,7 +20,7 @@ export const routes = {
     tuitionYears: "/tuition-years-setup",
     curriculum: "/curriculum-setup",
     scholarship: "/scholarship-setup",
-    testimony: "/testimony-setup",
+    testimony: "/testimonial-setup",
     accreditation: "/accreditation-setup",
     qualification: "/qualification-type-setup",
     subject: "/subject-setup",
@@ -36,6 +36,7 @@ export const routes = {
 
     aboutUs: "/about-us",
     whyUs: "/why-us",
+    whyItems: "/why-us/:id/why-items",
     faq: "/faq",
     faqItem: "/faq/:id/faq-items",
     newsAndEvents: "/news-and-events",

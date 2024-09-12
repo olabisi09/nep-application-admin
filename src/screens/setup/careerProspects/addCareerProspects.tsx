@@ -7,7 +7,7 @@ import {
   getAllPrograms,
 } from "../../../requests";
 import { App, Spin } from "antd";
-import { Button } from "../../../custom";
+import { Button, Editor } from "../../../custom";
 
 const AddCareerProspects = ({
   handleClose,
@@ -101,7 +101,7 @@ const AddCareerProspects = ({
         handleCreateUpdateCareerProspect(values, resetForm);
       }}
     >
-      {({ values }) => {
+      {({ values, setFieldValue }) => {
         return (
           <Form>
             <section className="fields">
@@ -111,11 +111,14 @@ const AddCareerProspects = ({
                 label="Program Name"
                 options={programmeOptions}
               />
-              <Input
+              <Editor
                 name="description"
                 label="Description"
-                placeholder="Input Description"
-                type="textarea"
+                onChange={(_, editor) => {
+                  const data = editor.getData();
+                  setFieldValue("description", data);
+                }}
+                initialData={item?.description ?? ''}
               />
               <Select
                 name="status"

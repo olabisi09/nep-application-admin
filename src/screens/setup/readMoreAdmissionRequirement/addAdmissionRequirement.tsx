@@ -119,6 +119,7 @@ const AddAdmissionRequirement = ({ handleClose }: { handleClose: () => void }) =
     </Formik>
   );
 };
+
 const EditAdmissionRequirement = ({admissionRequirement, handleClose}:{ admissionRequirement: AdmissionRequirement; handleClose:()=> void}) => {
   const queryClient = useQueryClient();
   const { notification } = App.useApp();
@@ -167,7 +168,7 @@ const EditAdmissionRequirement = ({admissionRequirement, handleClose}:{ admissio
     initialValues={{
       programName: admissionRequirement.readMoreId,
       description: admissionRequirement.description,
-      status:admissionRequirement.activeStatus === true ? "Active" : "Inactive",
+      status: admissionRequirement.activeStatus === true ? "Active" : "Inactive",
     }}
     onSubmit={(values, { resetForm }) => {
       handleEditAdmissionRequirement(values, resetForm);

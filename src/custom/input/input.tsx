@@ -38,7 +38,7 @@ const Input: React.FC<ComponentProps> = (props) => {
       inputClassName = styles.input;
       break;
     case type === inputType[0]:
-      inputClassName = styles.password;
+      inputClassName = styles.inputTwo;
       break;
     // case type === inputType[1]:
     //   inputClassName = styles.textarea;

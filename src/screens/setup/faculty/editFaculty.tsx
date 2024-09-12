@@ -4,16 +4,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import { Form, Formik, FormikValues } from "formik";
 import { Button } from "../../../custom";
-import { createFaculty } from "../../../requests";
+import { updateFaculty } from "../../../requests";
 
 interface Props {
+  record?: createOrUpdateFacultyPayload;
   handleClose: () => void;
 }
 
-const AddFaculty = ({ handleClose }: Props) => {
+const EditFaculty = ({ handleClose, record }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-
 
   const validate = Yup.object().shape({
     name: Yup.string().required("Faculty name is required"),
@@ -21,34 +21,28 @@ const AddFaculty = ({ handleClose }: Props) => {
     categoryCode: Yup.string().required(" Faculty Code is required"),
   });
 
-  const addFacultyMutation = useMutation({
-    mutationFn: createFaculty,
+  const editFacultyMutation = useMutation({
+    mutationFn: updateFaculty,
   });
 
-  const facultyHandler = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
-    const payload: Partial<createOrUpdateFacultyPayload> = {
-      id: 0,
-      description: values.description,
-      categoryCode: values.categoryCode,
+  const facultyHandler = async (values: FormikValues) => {
+    const payload: CategoryPayload = {
+      categoryCode: values?.categoryCode,
       name: values.name,
+      description: values.description,
     };
 
     try {
-      await addFacultyMutation.mutateAsync(payload,  {
+      await editFacultyMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
-
           queryClient.refetchQueries({ queryKey: ["get-faculty"] });
           handleClose();
-          resetForm();
         },
-      })
+      });
     } catch (error: any) {
       notification.error({
         message: "Error",
@@ -59,9 +53,13 @@ const AddFaculty = ({ handleClose }: Props) => {
 
   return (
     <Formik
-      initialValues={{ name: "", description: "", categoryCode: "" }}
-      onSubmit={(values, { resetForm }) => {
-        facultyHandler(values, resetForm);
+      initialValues={{
+        name: record?.name ?? "",
+        description: record?.description ?? "",
+        categoryCode: record?.categoryCode ?? "",
+      }}
+      onSubmit={(values) => {
+        facultyHandler(values);
       }}
       validationSchema={validate}
       enableReinitialize={true}
@@ -90,10 +88,12 @@ const AddFaculty = ({ handleClose }: Props) => {
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button
-                text={addFacultyMutation.isPending ? "Submitting..." : "Submit"}
+                text={
+                  editFacultyMutation.isPending ? "Submitting..." : "Submit"
+                }
                 type="submit"
-                isLoading={addFacultyMutation?.isPending}
-                disabled={addFacultyMutation?.isPending}
+                isLoading={editFacultyMutation?.isPending}
+                disabled={editFacultyMutation?.isPending}
               />
             </div>
           </Form>
@@ -103,4 +103,4 @@ const AddFaculty = ({ handleClose }: Props) => {
   );
 };
 
-export default AddFaculty;
+export default EditFaculty;

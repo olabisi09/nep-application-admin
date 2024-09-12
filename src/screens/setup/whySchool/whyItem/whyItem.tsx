@@ -13,55 +13,65 @@ import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { Button } from "../../../../custom";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteFAQItem, getFAQItemsByFaqId } from "../../../../requests";
+import { deleteWhyItem, getAllWhyItemsByWhyId } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
 import { useParams } from "react-router-dom";
 import { ColumnsType } from "antd/es/table";
-import { CreateFaqItem, EditFaqItem } from "./setup";
+import { SetupWhyItem } from "./setup";
+import { limitString } from "../../../../utils/sanitizeAndLimitString";
 
-const FaqItem = () => {
+const WhyItem = () => {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [indexData, setIndexData] = useState({} as FaqItem);
+  const [indexData, setIndexData] = useState({} as WhyItem);
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const deleteFaqItemMutation = useMutation({ mutationFn: deleteFAQItem });
+  const deleteWhyItemMutation = useMutation({ mutationFn: deleteWhyItem });
 
-  const handleEdit = (data: FaqItem) => {
+  const handleEdit = (data: WhyItem) => {
     setIndexData(data);
     setOpenEdit(true);
   };
 
-  const handleDelete = (data: FaqItem) => {
+  const handleDelete = (data: WhyItem) => {
     setIndexData(data);
     setOpenDelete(true);
   };
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-faq-items-by-faq-id"],
-    queryFn: () => getFAQItemsByFaqId(id!),
+    queryKey: ["get-why-items-by-why-id"],
+    queryFn: () => getAllWhyItemsByWhyId(id!),
     enabled: !!id,
   });
 
-  const faqItems = data?.data as FaqItem[];
+  const whyItems = data?.data as WhyItem[];
 
-  const columns: ColumnsType<FaqItem> = [
+  const columns: ColumnsType<WhyItem> = [
     {
       key: "id",
       title: "ID",
       dataIndex: "id",
     },
     {
-      key: "question",
-      title: "Question",
-      dataIndex: "question",
+      key: "name",
+      title: "Name",
+      dataIndex: "name",
     },
     {
-      key: "answer",
-      title: "Answer",
-      dataIndex: "answer",
+      key: "description",
+      title: "Description",
+      dataIndex: "description",
+      render: (_, { description }) => limitString(description, 50),
+    },
+    {
+      key: "iconUrl",
+      title: "Icon",
+      dataIndex: "iconUrl",
+      render: (_, { iconUrl }) => (
+        <img className="table-img" src={iconUrl} alt="" />
+      ),
     },
     {
       key: "action",
@@ -88,16 +98,16 @@ const FaqItem = () => {
     },
   ];
 
-  const DeleteFAQHandler = async () => {
+  const deleteWhyHandler = async () => {
     try {
-      await deleteFaqItemMutation.mutateAsync(indexData.id, {
+      await deleteWhyItemMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
           queryClient.refetchQueries({
-            queryKey: ["get-AllFAQ"],
+            queryKey: ["get-AllWhy"],
           });
           setOpenDelete(false);
         },
@@ -119,7 +129,7 @@ const FaqItem = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>FAQ Item Setup</h3>
+        <h3>Why Item Setup</h3>
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -129,7 +139,7 @@ const FaqItem = () => {
       <br />
       <Card bordered={false}>
         <Table
-          dataSource={faqItems}
+          dataSource={whyItems}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -140,44 +150,45 @@ const FaqItem = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create FAQ Item"
+        title="Create Why Item"
         footer={null}
       >
-        <CreateFaqItem
-          handleClose={() => setOpen(false)}
+        <SetupWhyItem
+          whyId={id!}
           refetch={refetch}
-          faqId={id!}
+          handleClose={() => setOpen(false)}
         />
       </Modal>
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit FAQ Items Setup"
+        title="Edit Why Items Setup"
         footer={null}
       >
-        <EditFaqItem
-          handleClose={() => setOpenEdit(false)}
-          item={indexData}
+        <SetupWhyItem
+          whyId={id!}
+          whyItem={indexData}
           refetch={refetch}
+          handleClose={() => setOpen(false)}
         />
       </Modal>
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete FAQ Setup"
+        title="Delete Why Setup"
         footer={null}
       >
         <DeleteModalContent
-          isLoading={deleteFaqItemMutation.isPending}
+          isLoading={deleteWhyItemMutation.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteFAQHandler}
-          title={indexData.question}
+          handleSubmit={deleteWhyHandler}
+          title={indexData.name}
         />
       </Modal>
     </div>
   );
 };
 
-export default FaqItem;
+export default WhyItem;

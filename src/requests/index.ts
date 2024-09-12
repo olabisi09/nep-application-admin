@@ -1,8 +1,3 @@
-// import {
-//   GetSubject,
-//   SubjectPayload,
-//   SubjectResponse,
-// } from "../screens/setup/subject/types";
 import api from "../utils/api";
 
 export const getAboutUs = async () => {
@@ -41,7 +36,6 @@ export const getAllCategory = async () => {
   return (await api.get("/Academics/GetAllCategoryAsync"))
     ?.data as CategoryResponse;
 };
-
 // export const getAllCareerProspect = async () => {
 //   return (await api.get('/ReadMore/GetAllCareerProspects'))?.data as CareerProspectResponse;
 // }
@@ -385,9 +379,7 @@ export const createOrUpdateSupportGuidance = async (
   payload: Partial<Setup>
 ) => {
   return (
-    await api.post(
-      "/StudentLife/studentlife/CreateUpdateSupportGuidance",
-      payload
+    await api.post("/StudentLife/studentlife/CreateUpdateSupportGuidance", payload
     )
   )?.data as Response;
 };
@@ -516,6 +508,7 @@ export const deleteCountry = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/Deletecountry?Id=${id}`))
     ?.data as Response;
 };
+
 export const deleteGender = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteGender?Id=${id}`))
     ?.data as Response;
@@ -979,6 +972,46 @@ export const updateFaculty = async ({
     )
   )?.data as updateFacultyResponse;
 };
+
+export const getAllCurriculum = async () => {
+  return (await api.get("/ReadMore/GetAllCurriculum"))
+    ?.data as CurriculumResponse;
+};
+
+export const createOrUpdateCurriculum = async (
+  payload: Partial<CurriculumPayload>
+) => {
+  return (await api.post("/ReadMore/CreateUpdateCuriculum", payload))
+    ?.data as Response;
+};
+
+export const deleteCurriculum = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteCurriculumById?Id=${id}`))
+    ?.data as Response;
+};
+export const getAllWhy = async () => {
+  return (await api.get(`HomePage/HomePage/GetAllWhy`))?.data as WhyResponse;
+}
+
+export const createUpdateWhy = async (payload: Partial<Why>) => {
+  return (await api.post(`HomePage/HomePage/CreateUpdateWhy`, payload))?.data as Response;
+}
+
+export const deleteWhy = async (id: number) => {
+  return (await api.delete(`HomePage/HomePage/DeleteWhyId?Id=${id}`))?.data as Response;
+}
+
+export const getAllWhyItemsByWhyId = async (whyId: number | string) => {
+  return (await api.get(`HomePage/HomePage/GetAllWhySchoolItemByWhyId?Id=${whyId}`))?.data as WhyItemResponse
+}
+
+export const createUpdateWhyItem = async (payload: FormData) => {
+  return (await api.post(`HomePage/HomePage/createUpdateWhySchoolItem`, payload))?.data as Response;
+}
+
+export const deleteWhyItem = async (id: number) => {
+  return (await api.delete(`HomePage/HomePage/DeleteWhyschoolitemId?Id=${id}`))?.data as Response;
+}
 
 export const editFaculty = async (payload: Partial<editFacultyPayload>) => {
   return (await api.put("/Academics/UpdateCategoryAsync", payload))

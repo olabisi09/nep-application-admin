@@ -10,7 +10,6 @@ import {
   App,
   Spin,
 } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
@@ -21,9 +20,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import { deleteFaculty, getFaculty } from "../../../requests";
-import { number } from "yup";
 import AddFaculty from "./addFaculty";
+import { deleteFaculty, getFaculty } from "../../../requests";
+import EditFaculty from "./editFaculty";
 
 const FacultySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -34,8 +33,8 @@ const FacultySetup = () => {
   const [indexData, setIndexData] = useState(
     {} as createOrUpdateFacultyPayload
   );
-
   const [openDelete, setOpenDelete] = useState(false);
+
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -120,7 +119,7 @@ const FacultySetup = () => {
 
   const deleteFacultyMutation = useMutation({ mutationFn: deleteFaculty });
 
-  const DeleteFacultyHandler = async () => {
+  const deleteFacultyHandler = async () => {
     // Ensure Id exists before proceeding with deletion
     if (indexData.id) {
       try {
@@ -191,6 +190,7 @@ const FacultySetup = () => {
             )}
           </div>
         </div>
+
         <Table
           dataSource={facultyData}
           columns={columns}
@@ -214,10 +214,7 @@ const FacultySetup = () => {
         centered
         title="Faculty Setup"
         footer={null}>
-        <AddFaculty
-          handleClose={() => setOpenEdit(false)}
-          details={indexData}
-        />
+        <AddFaculty handleClose={() => setOpenEdit(false)} record={indexData} />
       </Modal>
 
       <Modal
@@ -229,7 +226,7 @@ const FacultySetup = () => {
         <DeleteModalContent
           isLoading={deleteFacultyMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteFacultyHandler}
+          handleSubmit={deleteFacultyHandler}
           title={indexData?.name}
         />
       </Modal>

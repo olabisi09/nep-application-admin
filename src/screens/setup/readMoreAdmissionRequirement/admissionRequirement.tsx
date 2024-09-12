@@ -1,22 +1,33 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+  App,
+} from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import { AddAdmissionRequirement, EditAdmissionRequirement } from "./addAdmissionRequirement";
+import {
+  AddAdmissionRequirement,
+  EditAdmissionRequirement,
+} from "./addAdmissionRequirement";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { deleteAdmissionRequirement, getAdmissionRequirements } from "../../../requests";
+import {
+  deleteAdmissionRequirement,
+  getAdmissionRequirements,
+} from "../../../requests";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { useNavigate } from "react-router-dom";
-import AdmissionRequirementDetail from "./admissionReqDetails";
-
-const forms = ["Create", "Edit", "Admission Requirement Details"] as const;
 
 const AdmissionRequirement = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -24,13 +35,12 @@ const AdmissionRequirement = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [showAddDetailsModal, setShowAddDetailsModal] = useState(false);
   const { notification } = App.useApp();
-  const [admissionReq, setAdmissionReq] = useState<AdmissionRequirement>({} as AdmissionRequirement);
+  const [admissionReq, setAdmissionReq] = useState<AdmissionRequirement>(
+    {} as AdmissionRequirement
+  );
   const [openDelete, setOpenDelete] = useState(false);
-  const[openDetails, setOpenDetails] = useState(false);
-  const [currentForm, setCurrentForm] = useState<(typeof forms)[number] | "">("");
-  const [open, setOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const deleteAdmissionReqMutation = useMutation({
@@ -47,24 +57,6 @@ const AdmissionRequirement = () => {
   };
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
-  };
-  const onFormClick = (form: (typeof forms)[number]) => {
-    setCurrentForm(form);
-    setOpen(true);
-  };
-
-  const renderForms = () => {
-    switch (currentForm) {
-      case "Create":
-        return <AddAdmissionRequirement handleClose={() => setOpen(false)} />;
-      case "Edit":
-        return <EditAdmissionRequirement admissionRequirement={admissionReq} handleClose={() => setOpen(false)} />;
-      case "Admission Requirement Details":
-        return <AdmissionRequirementDetail handleClose={() => setOpen(false)} />;
-
-      default:
-        return <AddAdmissionRequirement handleClose={() => setOpen(false)} />;
-    }
   };
 
   const columns: ColumnsType<AdmissionRequirement> = [
@@ -93,15 +85,6 @@ const AdmissionRequirement = () => {
       dataIndex: "activeStatus",
       render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
-    // {
-    //   key: "action",
-    //   title: "",
-    //   render: () => (
-    //     <Dropdown menu={{ items }} trigger={["click"]}>
-    //       <AntButton type="text" icon={<Ellipsis />} />
-    //     </Dropdown>
-    //   ),
-    // },
     {
       key: "action",
       title: "",
@@ -110,10 +93,6 @@ const AdmissionRequirement = () => {
           {
             key: "1",
             label: "Edit",
-            // onClick: () => {
-            //   setAdmissionReq(record);
-            //   onFormClick("Edit");
-            // },
             onClick: () => {
               setAdmissionReq(record);
               setOpenEdit(true);
@@ -122,41 +101,16 @@ const AdmissionRequirement = () => {
           {
             key: "2",
             label: "Admission Requirement Details",
-            onClick: () => navigate(`/admission-requirement/${record.id}/details`),
+            onClick: () =>
+              navigate(`/admission-requirement/${record.id}/details`),
           },
           {
-            key: "2",
+            key: "3",
             label: (
-              <button style={{ border: "0rem", background: "none" }} onClick={() => handleDelete(record)}>
-                Delete
-              </button>
-            ),
-          },
-        ];
-        return (
-          <Dropdown menu={{ items }} trigger={["click"]}>
-            <AntButton type="text" icon={<Ellipsis />} />
-          </Dropdown>
-        );
-      },
-    },
-    {
-      key: "action",
-      title: "",
-      render: (_, record) => {
-        const items: MenuProps["items"] = [
-          {
-            key: "1",
-            label: "Edit",
-            onClick: () => {
-              setAdmissionReq(record);
-              setOpenEdit(true);
-            },
-          },
-          {
-            key: "2",
-            label: (
-              <button style={{ border: "0rem", background: "none" }} onClick={() => handleDelete(record)}>
+              <button
+                style={{ border: "0rem", background: "none" }}
+                onClick={() => handleDelete(record)}
+              >
                 Delete
               </button>
             ),
@@ -205,22 +159,38 @@ const AdmissionRequirement = () => {
     <main>
       <section className="space-between">
         <h3>Read More - Admission Requirements Setup</h3>
-        <Button onClick={() => setShowAddModal(true)} iconBefore={<Add />} text="Setup" />
+        <Button
+          onClick={() => setShowAddModal(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
           <div>
             {!showSearch && (
               <span>
-                <Search onClick={() => setShowSearch((showSearch) => !showSearch)} />
+                <Search
+                  onClick={() => setShowSearch((showSearch) => !showSearch)}
+                />
               </span>
             )}
-            {showSearch && <SearchInput value={searchTerm} onChange={handleSearch} />}
+            {showSearch && (
+              <SearchInput value={searchTerm} onChange={handleSearch} />
+            )}
 
-            {!showAllFilter && <Filter onClick={() => setShowAllFilter((showAllFilter) => !showAllFilter)} />}
+            {!showAllFilter && (
+              <Filter
+                onClick={() =>
+                  setShowAllFilter((showAllFilter) => !showAllFilter)
+                }
+              />
+            )}
           </div>
         </div>
+
         <Table
           dataSource={admissionRequirements}
           columns={columns}
@@ -229,18 +199,39 @@ const AdmissionRequirement = () => {
         />
       </section>
 
-      <Modal open={showAddModal} onCancel={() => setShowAddModal(false)} centered title="Read More - Admission Req." footer={null}>
+      <Modal
+        open={showAddModal}
+        onCancel={() => setShowAddModal(false)}
+        centered
+        title="Read More - Admission Req."
+        footer={null}
+      >
         <AddAdmissionRequirement handleClose={() => setShowAddModal(false)} />
       </Modal>
-      
+
       {admissionReq?.id && openEdit && (
-        <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Read More - Admission Req." footer={null}>
-          <EditAdmissionRequirement handleClose={() => setOpenEdit(false)} admissionRequirement={admissionReq} />
+        <Modal
+          open={openEdit}
+          onCancel={() => setOpenEdit(false)}
+          centered
+          title="Read More - Admission Req."
+          footer={null}
+        >
+          <EditAdmissionRequirement
+            handleClose={() => setOpenEdit(false)}
+            admissionRequirement={admissionReq}
+          />
         </Modal>
       )}
 
       {admissionReq?.id && openDelete && (
-        <Modal open={openDelete} onCancel={() => setOpenDelete(false)} centered title="Delete Admission Requirement Setup" footer={null}>
+        <Modal
+          open={openDelete}
+          onCancel={() => setOpenDelete(false)}
+          centered
+          title="Delete Admission Requirement Setup"
+          footer={null}
+        >
           <DeleteModalContent
             isLoading={deleteAdmissionReqMutation?.isPending}
             // data={Data}
@@ -252,25 +243,6 @@ const AdmissionRequirement = () => {
           />
         </Modal>
       )}
-
-{admissionReq?.id && openDetails && (
-  <AdmissionRequirementDetail handleClose={() => setOpen(false)} />
-        // <Modal open={openDetails} onCancel={() => setOpenDetails(false)} centered title="Delete Admission Requirement Setup" footer={null}>
-        //   <DeleteModalContent
-        //     isLoading={deleteAdmissionReqMutation?.isPending}
-        //     // data={Data}
-        //     handleCloseModal={() => setOpenDelete(false)}
-        //     handleSubmit={DeleteAdmissionReqHandler}
-        //     title={"this item"}
-        //     isActive={false}
-        //     // btnText={"Disable"}
-        //   />
-        // </Modal>
-      )}
-{/* 
-      <Modal open={open} onCancel={() => setOpen(false)} centered title={currentForm || "Student Life Setup"} footer={null} width={500}>
-        {renderForms()}
-      </Modal> */}
     </main>
   );
 };

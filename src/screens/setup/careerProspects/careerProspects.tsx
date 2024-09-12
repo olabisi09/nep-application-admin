@@ -20,6 +20,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteCareerProspect, getCareerProspects } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 
 const CareerProspects = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -64,6 +65,10 @@ const CareerProspects = () => {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      render: (_: any, { description }: any) => {
+        const limitedCleanHtml = sanitizeAndLimitString(description);
+        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
+      },
     },
     {
       key: "status",

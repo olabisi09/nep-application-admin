@@ -51,7 +51,7 @@ const NewsAndEvents = () => {
       key: "picture",
       title: "Picture",
       dataIndex: "imageUrl",
-      render: (_, { imageUrl }) => <img src={imageUrl} alt="" />,
+      render: (_, { imageUrl }) => <img src={imageUrl} alt="" width="50" height="50" />,
     },
     {
       key: "status",
@@ -127,7 +127,7 @@ const NewsAndEvents = () => {
         title="Edit News and Events Setup"
         footer={null}
       >
-        <EditEvent item={event} handleClose={() => setOpen(false)} />
+        <EditEvent item={event} handleClose={() => setOpenEdit(false)} />
       </Modal>
     </div>
   );

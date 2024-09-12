@@ -60,8 +60,8 @@ import FitnessAthleticsItem from "./screens/setup/studentLife/fitnessAndAthletic
 import FitnessAthleticsImages from "./screens/setup/studentLife/fitnessAndAthletics.tsx/items/fitnessImages";
 import CampusExperienceImages from "./screens/setup/studentLife/campusExperience/items/campusExperienceImage";
 import ProtectedRoute from "./hooks/protectedRoutes";
-import AdmissionRequirementDetail from "./screens/setup/readMoreAdmissionRequirement/admissionReqDetails";
 import AdmissionReqDetail from "./screens/setup/readMoreAdmissionRequirement/admissionRequirementDetail/admissionReqDetail";
+import WhyItem from "./screens/setup/whySchool/whyItem/whyItem";
 
 function App() {
   const authRoute = [
@@ -103,10 +103,6 @@ function App() {
     {
       path: routes.setup.readMoreAdmissionRequirement,
       element: <ReadMoreAdmissionRequirementSetup />,
-    },
-    {
-      path: routes.setup.careerProspects,
-      element: <CareerProspectsSetup />,
     },
     {
       path: routes.setup.careerProspects,
@@ -285,6 +281,10 @@ function App() {
     {
       path: routes.setup.admissionRequirementDetail,
       element: <AdmissionReqDetail />,
+    },
+    {
+      path: routes.setup.whyItems,
+      element: <WhyItem />,
     },
   ];
 

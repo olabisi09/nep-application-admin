@@ -1,173 +1,172 @@
 import {
-    Card,
-    Dropdown,
-    MenuProps,
-    Modal,
-    Table,
-    Button as AntButton,
-    Spin,
-    App,
-  } from "antd";
-  import { ReactComponent as Plus } from "../../../../assets/add.svg";
-  import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-  import { Button } from "../../../../custom";
-  import { useState } from "react";
-  import { useMutation, useQuery } from "@tanstack/react-query";
+  Card,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Table,
+  Button as AntButton,
+  Spin,
+  App,
+} from "antd";
+import { ReactComponent as Plus } from "../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import { Button } from "../../../../custom";
+import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-  import { ColumnsType } from "antd/es/table";
-  import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
-  import { CreateAdmissionReqDetail, EditAdmissionReqDetail } from "./setup";
-  import { useParams } from "react-router-dom";
-import { deleteOverview, getOverviewByStudentLifeId } from "../../../../requests";
-  
-  const AdmissionReqDetail = () => {
-    const { notification } = App.useApp();
-    const { id } = useParams();
-    const [open, setOpen] = useState(false);
-    const [openEdit, setOpenEdit] = useState(false);
-    const [overview, setOverview] = useState<Overview>({} as Overview);
-  
-    const deleteOverviewMutation = useMutation({ mutationFn: deleteOverview });
-    const { data, isLoading, isError, error, refetch } = useQuery({
-      queryKey: ["get-overview-by-Id"],
-      queryFn: () => getOverviewByStudentLifeId(id!),
-      enabled: !!id,
-    });
-  
-    const columns: ColumnsType<Overview> = [
-      {
-        key: "id",
-        title: "ID",
-        dataIndex: "id",
+import { ColumnsType } from "antd/es/table";
+import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
+import { CreateAdmissionReqDetail, EditAdmissionReqDetail } from "./form";
+import { useParams } from "react-router-dom";
+import { deleteAdmissionRequirementDetailsById, getAdmissionRequirementDetailsByAdmissionReqId } from "../request";
+
+const AdmissionReqDetail = () => {
+  const { notification } = App.useApp();
+  const { id } = useParams();
+  const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [reqDetails, setReqDetails] = useState<AdmissionRequirementDetails>(
+    {} as AdmissionRequirementDetails
+  );
+
+  const deleteAdmissionRequirementDetailsMutation = useMutation({
+    mutationFn: deleteAdmissionRequirementDetailsById,
+  });
+
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["get-admission-requirement-details-by-Id"],
+    queryFn: () => getAdmissionRequirementDetailsByAdmissionReqId(Number(id)),
+    enabled: !!id,
+  });
+
+  const columns: ColumnsType<AdmissionRequirementDetails> = [
+    {
+      key: "id",
+      title: "ID",
+      dataIndex: "id",
+    },
+    {
+      key: "name",
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      key: "description",
+      title: "Description",
+      dataIndex: "description",
+      render: (_, { description }) => {
+        const limitedCleanHtml = sanitizeAndLimitString(description);
+        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
-      {
-        key: "title",
-        title: "Title",
-        dataIndex: "title",
-      },
-      {
-        key: "description",
-        title: "Description",
-        dataIndex: "description",
-        render: (_, { description }) => {
-          const limitedCleanHtml = sanitizeAndLimitString(description);
-          return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
-        },
-      },
-      {
-        key: "pictureUrl",
-        title: "Picture",
-        dataIndex: "imageUrl",
-        render: (_, { imageUrl }) => (
-          <img className="table-img" src={imageUrl} alt="" />
-        ),
-      },
-      {
-        key: "status",
-        title: "Status",
-        dataIndex: "activeStatus",
-        render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-      },
-      {
-        key: "action",
-        title: "",
-        render: (_, record) => {
-          const items: MenuProps["items"] = [
-            {
-              key: "1",
-              label: "Edit",
-              onClick: () => {
-                setOverview(record);
-                setOpenEdit(true);
-              },
+    },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    },
+    {
+      key: "action",
+      title: "",
+      render: (_, record) => {
+        const items: MenuProps["items"] = [
+          {
+            key: "1",
+            label: "Edit",
+            onClick: () => {
+              setReqDetails(record);
+              setOpenEdit(true);
             },
-            {
-              key: "2",
-              label: "Delete",
-              onClick: async () => {
-                try {
-                  await deleteOverviewMutation.mutateAsync(record.id, {
-                    onSuccess: (data) => {
-                      notification.success({
-                        message: "Success",
-                        description: data?.message,
-                      });
-                      refetch();
-                    },
-                  });
-                } catch (error: any) {
-                  notification.error({
-                    message: "Error",
-                    description: error?.response?.data?.message,
-                  });
-                }
-              },
+          },
+          {
+            key: "2",
+            label: "Delete",
+            onClick: async () => {
+              try {
+                await deleteAdmissionRequirementDetailsMutation.mutateAsync(record.id, {
+                  onSuccess: (data) => {
+                    notification.success({
+                      message: "Success",
+                      description: data?.message,
+                    });
+                    refetch();
+                  },
+                });
+              } catch (error: any) {
+                notification.error({
+                  message: "Error",
+                  description: error?.response?.data?.message,
+                });
+              }
             },
-          ];
-          return (
-            <Dropdown menu={{ items }} trigger={["click"]}>
-              <AntButton type="text" icon={<Ellipsis />} />
-            </Dropdown>
-          );
-        },
+          },
+        ];
+        return (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
+        );
       },
-    ];
-  
-    const overviewData = data?.data as Overview[];
-  
-    if (isLoading) {
-      return <Spin />;
-    }
+    },
+  ];
 
-    if (isError) {
-      return <div>Error: {error?.message}</div>;
-    }
+  const overviewData = data?.data as AdmissionRequirementDetails[];
 
-    return (
-      <div>
-        <section className="space-between">
-          <h3>Admission Requirements Details: Read-More Setup</h3>
-          <Button
-            onClick={() => setOpen(true)}
-            iconBefore={<Plus />}
-            text="Setup"
-          />
-        </section>
-        
-        <br />
+  if (isLoading) {
+    return <Spin />;
+  }
 
-        <Card bordered={false}>
-          <Table
-            dataSource={overviewData}
-            columns={columns}
-            pagination={{ position: ["bottomCenter"] }}
-            rowKey={(record) => record.id}
-            scroll={{ x: true }}
-          />
-        </Card>
-        
-        <Modal
-          open={open}
-          onCancel={() => setOpen(false)}
-          centered
-          title="Create Overview"
-          footer={null}
-        >
-          <CreateAdmissionReqDetail handleClose={() => setOpen(false)} />
-        </Modal>
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
 
-        <Modal
-          open={openEdit}
-          onCancel={() => setOpenEdit(false)}
-          centered
-          title="Edit Overview"
-          footer={null}
-        >
-          <EditAdmissionReqDetail item={overview} handleClose={() => setOpen(false)} />
-        </Modal>
-      </div>
-    );
-  };
-  
-  export default AdmissionReqDetail;
-  
+  return (
+    <div>
+      <section className="space-between">
+        <h3>Admission Requirements Details: Read-More Setup</h3>
+        <Button
+          onClick={() => setOpen(true)}
+          iconBefore={<Plus />}
+          text="Setup"
+        />
+      </section>
+
+      <br />
+
+      <Card bordered={false}>
+        <Table
+          dataSource={overviewData}
+          columns={columns}
+          pagination={{ position: ["bottomCenter"] }}
+          rowKey={(record) => record.id}
+          scroll={{ x: true }}
+        />
+      </Card>
+
+      <Modal
+        open={open}
+        onCancel={() => setOpen(false)}
+        centered
+        title="Create Overview"
+        footer={null}
+      >
+        <CreateAdmissionReqDetail handleClose={() => setOpen(false)} />
+      </Modal>
+
+      <Modal
+        open={openEdit}
+        onCancel={() => setOpenEdit(false)}
+        centered
+        title="Edit Overview"
+        footer={null}
+      >
+        <EditAdmissionReqDetail
+          item={reqDetails}
+          handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+    </div>
+  );
+};
+
+export default AdmissionReqDetail;
