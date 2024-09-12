@@ -21,6 +21,7 @@ import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import AddFaculty from "./addFaculty";
 import { deleteFaculty, getFaculty } from "../../../requests";
+import EditFaculty from "./editFaculty";
 
 
 const FacultySetup = () => {
@@ -213,7 +214,7 @@ const FacultySetup = () => {
         centered
         title="Faculty Setup"
         footer={null}>
-        <AddFaculty handleClose={() => setOpenEdit(false)} record={indexData} />
+        <EditFaculty handleClose={() => setOpenEdit(false)} record={indexData} />
       </Modal>
 
       <Modal
