@@ -24,7 +24,6 @@ import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import { deleteFaculty, getFaculty } from "../../../requests";
 import { number } from "yup";
 import AddFaculty from "./addFaculty";
-import EditFaculty from "./editFaculty";
 
 const FacultySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -215,7 +214,7 @@ const FacultySetup = () => {
         centered
         title="Faculty Setup"
         footer={null}>
-        <EditFaculty
+        <AddFaculty
           handleClose={() => setOpenEdit(false)}
           details={indexData}
         />
