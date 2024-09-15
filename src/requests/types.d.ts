@@ -539,6 +539,7 @@ interface ApplicationFee {
   id: number;
   modeOfStudyId: number;
   programId: number;
+  programTypeId: number;
   amount: number;
   cost: number;
   activeStatus: boolean;
@@ -660,6 +661,8 @@ interface getAllFeeSetup {
   amount: number;
   applicationBatchId: number;
   applicationBatchName: null;
+  programTypeId: number;
+  programTypeName: string;
   activeStatus: boolean;
   isDeleted: boolean;
 }

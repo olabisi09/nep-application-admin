@@ -76,6 +76,11 @@ const ApplicationFee = () => {
       dataIndex: "program",
     },
     {
+      key: "programType",
+      title: "Program Type",
+      dataIndex: "programTypeName",
+    },
+    {
       key: "modeOfStudy",
       title: "Mode of Study",
       dataIndex: "modeOfStudy",

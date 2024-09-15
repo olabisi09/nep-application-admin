@@ -14,6 +14,7 @@ import { FC } from "react";
 import { Button } from "../../../custom";
 import * as Yup from "yup";
 import { validator } from "../../../utils/validator";
+import { getProgramTypes } from "./request";
 
 interface ComponentProps {
   record: getAllFeeSetup;
@@ -34,6 +35,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
       id: record?.id || 0,
       modeOfStudyId: values.modeOfStudy,
       programId: values.programName,
+      programTypeId: values.programType,
       amount: values.amount,
       activeStatus: values.activeStatus,
     };
@@ -68,18 +70,27 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
       },
       { queryKey: ["get-AllModeOfStudy"], queryFn: getAllModeOfStudy },
       { queryKey: ["get-ApplicationBatch"], queryFn: getAllApplicationBatch },
+      { queryKey: ["get-program-types"], queryFn: getProgramTypes },
     ],
   });
 
   const programQuery = queries[0];
   const modeQuery = queries[1];
   const applicationBatchQuery = queries[2];
+  const programTypesQuery = queries[3];
 
   const programData = programQuery?.data?.data ?? [];
   const modeOfStudyData = modeQuery?.data?.data ?? [];
   const applicationBatchData = applicationBatchQuery?.data?.data ?? [];
+  const programTypesData = programTypesQuery?.data?.data ?? [];
 
   const programOptions = programData?.map((item) => (
+    <option key={item?.id} value={item?.id}>
+      {item?.name}
+    </option>
+  ));
+
+  const programTypesOptions = programTypesData?.map((item) => (
     <option key={item?.id} value={item?.id}>
       {item?.name}
     </option>
@@ -99,6 +110,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
 
   const validationSchema = Yup.object().shape({
     programName: validator.programName,
+    programType: validator.programType,
     modeOfStudy: validator.modeOfStudy,
     amount: validator.amount,
     applicationBatch: validator.applicationBatch,
@@ -110,6 +122,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
     <Formik
       initialValues={{
         programName: record?.programId ?? "",
+        programType: record?.programTypeId ?? "",
         modeOfStudy: record?.modeOfStudyId ?? "",
         applicationBatch: record?.id ?? "",
         amount: record?.amount ?? "",
@@ -127,6 +140,12 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
                 placeholder="Select Program"
                 label="Program Name"
                 options={programOptions}
+              />
+              <Select
+                name="programType"
+                placeholder="Select Program Type"
+                label="Program Type"
+                options={programTypesOptions}
               />
               <Select
                 name="modeOfStudy"
