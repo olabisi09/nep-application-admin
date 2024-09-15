@@ -1,8 +1,11 @@
 import { Form, Formik, FormikValues } from "formik";
 import { Button, Editor, Input, Select } from "../../../../custom";
 import { App } from "antd";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateAdmissionRequirementDetail } from "../request";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createOrUpdateAdmissionRequirementDetail,
+  getProgramTypes,
+} from "../request";
 import { useParams } from "react-router-dom";
 
 interface SetupInit {
@@ -20,6 +23,13 @@ export const CreateAdmissionReqDetail = ({
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
+  const { data, isLoading } = useQuery({
+    queryKey: ["get-program-type"],
+    queryFn: getProgramTypes,
+  });
+
+  const programTypeData = data?.data ?? [];
+
   const addAdmissionRequirementDetailMutation = useMutation({
     mutationFn: createOrUpdateAdmissionRequirementDetail,
   });
@@ -34,6 +44,7 @@ export const CreateAdmissionReqDetail = ({
       admissionRequirementId: Number(id),
       description: values.description,
       noOfSittings: 0,
+      programTypeId: values.programType,
       activeStatus: values.status === "Active",
       isDeleted: false,
     };
@@ -68,6 +79,12 @@ export const CreateAdmissionReqDetail = ({
     </>
   );
 
+  const programTypeOptions = programTypeData?.map((item) => (
+    <option key={item?.id} value={item?.id}>
+      {item?.name}
+    </option>
+  ));
+
   return (
     <Formik
       initialValues={
@@ -91,6 +108,13 @@ export const CreateAdmissionReqDetail = ({
               const data = editor.getData();
               setFieldValue("description", data);
             }}
+          />
+
+          <Select
+            name="programType"
+            label="Program type"
+            placeholder="Select program type"
+            options={programTypeOptions}
           />
 
           <Select
@@ -130,6 +154,13 @@ export const EditAdmissionReqDetail = ({
   const { id } = useParams();
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["get-program-type"],
+    queryFn: getProgramTypes,
+  });
+
+  const programTypeData = data?.data ?? [];
 
   const editAdmissionRequirementDetailMutation = useMutation({
     mutationFn: createOrUpdateAdmissionRequirementDetail,
@@ -181,6 +212,12 @@ export const EditAdmissionReqDetail = ({
 
   const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
 
+  const programTypeOptions = programTypeData?.map((item) => (
+    <option key={item?.id} value={item?.id}>
+      {item?.name}
+    </option>
+  ));
+
   return (
     <Formik
       initialValues={
@@ -206,6 +243,13 @@ export const EditAdmissionReqDetail = ({
               setFieldValue("description", data);
             }}
             initialData={item?.description}
+          />
+
+          <Select
+            name="programType"
+            label="Program type"
+            placeholder="Select program type"
+            options={programTypeOptions}
           />
 
           <Select

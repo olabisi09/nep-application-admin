@@ -12,6 +12,7 @@ import { useMutation, useQueries } from "@tanstack/react-query";
 import { deleteTuition, getAllPrograms, getAllTuitionFee } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 
 const Tuition = () => {
   const { notification } = App.useApp();
@@ -50,7 +51,6 @@ const Tuition = () => {
     isLoading: isProgramsLoading,
     isError: isProgramsError,
     error: programsError,
-    refetch: refetchPrograms,
   } = queryResults[1];
 
   const handleSearch = (e: any) => {
@@ -64,7 +64,7 @@ const Tuition = () => {
 
   const deleteTuitionMutation = useMutation({ mutationFn: deleteTuition });
 
-  const DeleteTuitionHandler = async () => {
+  const deleteTuitionHandler = async () => {
     try {
       await deleteTuitionMutation.mutateAsync(tuition?.id, {
         onSuccess: (data) => {
@@ -91,14 +91,13 @@ const Tuition = () => {
       dataIndex: "id",
     },
     {
-      key: "readmoreId",
-      title: "Read More Id",
-      dataIndex: "readmoreId",
-    },
-    {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      render: (_, { description }) => {
+        const limitedCleanHtml = sanitizeAndLimitString(description);
+        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
+      },
     },
     {
       key: "programName",
@@ -228,7 +227,7 @@ const Tuition = () => {
         <DeleteModalContent
           isLoading={deleteTuitionMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteTuitionHandler}
+          handleSubmit={deleteTuitionHandler}
           title={tuition?.description}
         />
       </Modal>

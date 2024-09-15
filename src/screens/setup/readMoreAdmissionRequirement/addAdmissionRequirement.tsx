@@ -206,7 +206,7 @@ const EditAdmissionRequirement = ({admissionRequirement, handleClose}:{ admissio
             const data = editor.getData();
             setFieldValue("description", data);
           }}
-          initialData={admissionRequirement.description} //}
+          initialData={admissionRequirement.description} 
         />
 
         <Select
