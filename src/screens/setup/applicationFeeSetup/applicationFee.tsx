@@ -124,6 +124,10 @@ const ApplicationFee = () => {
     return <Spin size="large" />;
   }
 
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
+
   return (
     <main>
       <section className="space-between">
