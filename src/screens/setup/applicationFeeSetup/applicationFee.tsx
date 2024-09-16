@@ -16,7 +16,11 @@ import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import AddApplicationFee from "./addApplicationFee";
-import { deleteFeeSetup, getAllFeeSetup } from "../../../requests";
+import {
+  deleteFeeSetup,
+  getAllFeeSetup,
+  getAllProgramType,
+} from "../../../requests";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
 
@@ -84,6 +88,11 @@ const ApplicationFee = () => {
       key: "amount",
       title: "Amount",
       dataIndex: "amount",
+    },
+    {
+      key: " programTypeName",
+      title: "Program Type",
+      dataIndex: "programTypeName",
     },
     {
       key: "action",
@@ -167,8 +176,7 @@ const ApplicationFee = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Application Fee Setup"
-        footer={null}
-      >
+        footer={null}>
         <AddApplicationFee
           record={item}
           handleClose={() => {

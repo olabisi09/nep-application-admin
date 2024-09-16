@@ -37,6 +37,10 @@ const ProgramSetUp = () => {
         </button>
       ),
     },
+    {
+      key: "2",
+      label: <button style={{ border: "0rem" }}>Delete</button>
+    },
   ];
   const columns = [
     {
@@ -136,8 +140,7 @@ const ProgramSetUp = () => {
             />
             <Button text="Create" />
           </div>
-        )}
-      >
+        )}>
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
             <AddProgram />
@@ -159,8 +162,7 @@ const ProgramSetUp = () => {
             />
             <Button text="Update" />
           </div>
-        )}
-      >
+        )}>
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
             <AddProgram />

@@ -20,8 +20,10 @@ import DeleteModalContent from "../../deleteModal/deleteModal";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import AddFaculty from "./addFaculty";
-import { deleteFaculty, getFaculty } from "../../../requests";
-
+import { deleteFaculty, getFaculty, editFaculty } from "../../../requests";
+import * as Yup from "yup";
+import { Form, Formik, FormikValues } from "formik";
+import Input from "../../../custom/input/input";
 
 const FacultySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -85,7 +87,6 @@ const FacultySetup = () => {
       title: "ID",
       dataIndex: "id",
     },
-
     {
       key: "name",
       title: "Faculty Name",
@@ -119,7 +120,6 @@ const FacultySetup = () => {
   const deleteFacultyMutation = useMutation({ mutationFn: deleteFaculty });
 
   const deleteFacultyHandler = async () => {
-    // Ensure Id exists before proceeding with deletion
     if (indexData.id) {
       try {
         await deleteFacultyMutation.mutateAsync(indexData.id, {
@@ -128,9 +128,7 @@ const FacultySetup = () => {
               message: "Success",
               description: data?.message,
             });
-            queryClient.refetchQueries({
-              queryKey: ["get-faculty"],
-            });
+            queryClient.refetchQueries({ queryKey: ["get-faculty"] });
             setOpenDelete(false);
           },
         });
@@ -148,9 +146,47 @@ const FacultySetup = () => {
     }
   };
 
+  // Mutation to handle editing the faculty
+  const editFacultyMutation = useMutation({
+    mutationFn: editFaculty,
+    onSuccess: (data) => {
+      notification.success({
+        message: "Success",
+        description: data?.message || "Faculty updated successfully",
+      });
+      queryClient.refetchQueries({ queryKey: ["get-faculty"] });
+      setOpenEdit(false);
+    },
+    onError: (error: any) => {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message || "An error occurred",
+      });
+    },
+  });
+
+  // Handler function for form submission
+  const facultyHandler = async (values: FormikValues) => {
+    const payload: Partial<editFacultyPayload> = {
+      id: indexData?.id,
+      categoryCode: values.categoryCode,
+      name: values.name,
+      description: values.description,
+    };
+
+    await editFacultyMutation.mutateAsync(payload);
+  };
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Faculty name is required"),
+    description: Yup.string().required("Description is required"),
+    categoryCode: Yup.string().required("Faculty Code is required"),
+  });
+
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -194,7 +230,6 @@ const FacultySetup = () => {
           dataSource={facultyData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => ${record.id}${index}}
         />
       </section>
 
@@ -211,9 +246,56 @@ const FacultySetup = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Faculty Setup"
+        title="Edit Faculty"
         footer={null}>
-        <AddFaculty handleClose={() => setOpenEdit(false)} record={indexData} />
+        <Formik
+          initialValues={{
+            id: indexData?.id ?? "",
+            name: indexData?.name ?? "",
+            description: indexData?.description ?? "",
+            categoryCode: indexData?.categoryCode ?? "",
+          }}
+          onSubmit={(values) => {
+            facultyHandler(values);
+          }}
+          validationSchema={validationSchema}
+          enableReinitialize>
+          {({ isSubmitting }) => (
+            <Form className="fields">
+              <Input
+                label="Faculty Name"
+                placeholder="Input Faculty Name"
+                name="name"
+              />
+              <Input
+                label="Faculty Code"
+                placeholder="Input Faculty Code"
+                name="categoryCode"
+              />
+              <Input
+                label="Description"
+                placeholder="Description"
+                name="description"
+              />
+
+              <div className="btn-group">
+                <Button
+                  onClick={() => setOpenEdit(false)}
+                  variant="text"
+                  text="Cancel"
+                />
+                <Button
+                  text={
+                    editFacultyMutation.isPending ? "Submitting..." : "Submit"
+                  }
+                  type="submit"
+                  isLoading={editFacultyMutation?.isPending}
+                  disabled={editFacultyMutation?.isPending}
+                />
+              </div>
+            </Form>
+          )}
+        </Formik>
       </Modal>
 
       <Modal
