@@ -93,6 +93,11 @@ const FacultySetup = () => {
       dataIndex: "name",
     },
     {
+      key: "categoryCode",
+      title: "Faculty Code ",
+      dataIndex: "categoryCode",
+    },
+    {
       key: "description",
       title: "Description",
       dataIndex: "description",
@@ -101,11 +106,7 @@ const FacultySetup = () => {
         return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
     },
-    {
-      key: "categoryCode",
-      title: "Faculty Code ",
-      dataIndex: "categoryCode",
-    },
+
     {
       key: "action",
       title: "",
