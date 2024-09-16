@@ -16,7 +16,10 @@ import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import AddApplicationFee from "./addApplicationFee";
-import { deleteFeeSetup, getAllFeeSetup } from "../../../requests";
+import {
+  deleteFeeSetup,
+  getAllFeeSetup,
+} from "../../../requests";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
 
@@ -25,7 +28,6 @@ const ApplicationFee = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
   const [item, setItem] = useState<getAllFeeSetup>({} as getAllFeeSetup);
 
   const { notification } = App.useApp();
@@ -91,6 +93,11 @@ const ApplicationFee = () => {
       dataIndex: "amount",
     },
     {
+      key: " programTypeName",
+      title: "Program Type",
+      dataIndex: "programTypeName",
+    },
+    {
       key: "action",
       title: "",
       render: (_, record) => {
@@ -99,7 +106,6 @@ const ApplicationFee = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setOpenEdit(true);
               setShowAddModal(true);
               setItem(record);
             },
@@ -176,13 +182,11 @@ const ApplicationFee = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Application Fee Setup"
-        footer={null}
-      >
+        footer={null}>
         <AddApplicationFee
           record={item}
           handleClose={() => {
             setShowAddModal(false);
-            setOpenEdit(false);
           }}
         />
       </Modal>

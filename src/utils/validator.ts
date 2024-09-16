@@ -3,6 +3,7 @@ import * as Yup from "yup";
 
 export const validator = {
   programName: string().required("Program Name is required"),
+  programType: string().required("Program Type is required"),
   status: string().required("Status is required"),
   description: string().required("Description is required"),
   title: string().required("Title is required"),
@@ -32,5 +33,4 @@ export const validator = {
     .oneOf([Yup.ref("newPassword")], "Passwords must match")
     .required("Enter Confirm Password"),
   applicationBatch: string().required("Application Batch is required"),
-  programType: string().required("Program Type is required"),
 };

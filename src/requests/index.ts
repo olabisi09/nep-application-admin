@@ -379,7 +379,9 @@ export const createOrUpdateSupportGuidance = async (
   payload: Partial<Setup>
 ) => {
   return (
-    await api.post("/StudentLife/studentlife/CreateUpdateSupportGuidance", payload
+    await api.post(
+      "/StudentLife/studentlife/CreateUpdateSupportGuidance",
+      payload
     )
   )?.data as Response;
 };
@@ -991,29 +993,41 @@ export const deleteCurriculum = async (id: number) => {
 };
 export const getAllWhy = async () => {
   return (await api.get(`HomePage/HomePage/GetAllWhy`))?.data as WhyResponse;
-}
+};
 
 export const createUpdateWhy = async (payload: Partial<Why>) => {
-  return (await api.post(`HomePage/HomePage/CreateUpdateWhy`, payload))?.data as Response;
-}
+  return (await api.post(`HomePage/HomePage/CreateUpdateWhy`, payload))
+    ?.data as Response;
+};
 
 export const deleteWhy = async (id: number) => {
-  return (await api.delete(`HomePage/HomePage/DeleteWhyId?Id=${id}`))?.data as Response;
-}
+  return (await api.delete(`HomePage/HomePage/DeleteWhyId?Id=${id}`))
+    ?.data as Response;
+};
 
 export const getAllWhyItemsByWhyId = async (whyId: number | string) => {
-  return (await api.get(`HomePage/HomePage/GetAllWhySchoolItemByWhyId?Id=${whyId}`))?.data as WhyItemResponse
-}
+  return (
+    await api.get(`HomePage/HomePage/GetAllWhySchoolItemByWhyId?Id=${whyId}`)
+  )?.data as WhyItemResponse;
+};
 
 export const createUpdateWhyItem = async (payload: FormData) => {
-  return (await api.post(`HomePage/HomePage/createUpdateWhySchoolItem`, payload))?.data as Response;
-}
+  return (
+    await api.post(`HomePage/HomePage/createUpdateWhySchoolItem`, payload)
+  )?.data as Response;
+};
 
 export const deleteWhyItem = async (id: number) => {
-  return (await api.delete(`HomePage/HomePage/DeleteWhyschoolitemId?Id=${id}`))?.data as Response;
-}
+  return (await api.delete(`HomePage/HomePage/DeleteWhyschoolitemId?Id=${id}`))
+    ?.data as Response;
+};
 
 export const editFaculty = async (payload: Partial<editFacultyPayload>) => {
-  return (await api.put("/Academics/UpdateCategoryAsync", payload))
+  return (await api.put(`/Academics/UpdateCategoryAsync`, payload))
     ?.data as editFacultyResponse;
+};
+
+export const getAllProgramType = async () => {
+  return (await api.get(`/Academics/GetAllProgramTypesAsync`))
+    ?.data as getAllProgramTypeResponse;
 };

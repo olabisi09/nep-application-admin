@@ -1,14 +1,14 @@
-import { App, Spin } from "antd";
+import { App } from "antd";
 import Input from "../../../custom/input/input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import { Form, Formik, FormikValues } from "formik";
 import { Button } from "../../../custom";
-import { updateFaculty } from "../../../requests";
+import { editFaculty } from "../../../requests";
 
 interface Props {
-  record?: createOrUpdateFacultyPayload;
   handleClose: () => void;
+  record: FacultyResponse;
 }
 
 const EditFaculty = ({ handleClose, record }: Props) => {
@@ -22,14 +22,18 @@ const EditFaculty = ({ handleClose, record }: Props) => {
   });
 
   const editFacultyMutation = useMutation({
-    mutationFn: updateFaculty,
+    mutationFn: editFaculty,
   });
 
-  const facultyHandler = async (values: FormikValues) => {
-    const payload: CategoryPayload = {
-      categoryCode: values?.categoryCode,
-      name: values.name,
+  const facultyHandler = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
+    const payload: Partial<createOrUpdateFacultyPayload> = {
+      id: record?.id,
       description: values.description,
+      categoryCode: values.categoryCode,
+      name: values.name,
     };
 
     try {
@@ -39,8 +43,10 @@ const EditFaculty = ({ handleClose, record }: Props) => {
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({ queryKey: ["get-faculty"] });
           handleClose();
+          resetForm();
         },
       });
     } catch (error: any) {
@@ -58,8 +64,8 @@ const EditFaculty = ({ handleClose, record }: Props) => {
         description: record?.description ?? "",
         categoryCode: record?.categoryCode ?? "",
       }}
-      onSubmit={(values) => {
-        facultyHandler(values);
+      onSubmit={(values, { resetForm }) => {
+        facultyHandler(values, resetForm);
       }}
       validationSchema={validate}
       enableReinitialize={true}
@@ -88,9 +94,7 @@ const EditFaculty = ({ handleClose, record }: Props) => {
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button
-                text={
-                  editFacultyMutation.isPending ? "Submitting..." : "Submit"
-                }
+                text={editFacultyMutation.isPending ? "Submitting..." : "Submit"}
                 type="submit"
                 isLoading={editFacultyMutation?.isPending}
                 disabled={editFacultyMutation?.isPending}

@@ -1,4 +1,4 @@
-import { App, Spin } from "antd";
+import { App } from "antd";
 import Input from "../../../custom/input/input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
@@ -13,7 +13,6 @@ interface Props {
 const AddFaculty = ({ handleClose }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-
 
   const validate = Yup.object().shape({
     name: Yup.string().required("Faculty name is required"),

@@ -23,16 +23,13 @@ import AddFaculty from "./addFaculty";
 import { deleteFaculty, getFaculty } from "../../../requests";
 import EditFaculty from "./editFaculty";
 
-
 const FacultySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [indexData, setIndexData] = useState(
-    {} as createOrUpdateFacultyPayload
-  );
+  const [indexData, setIndexData] = useState({} as FacultyResponse);
   const [openDelete, setOpenDelete] = useState(false);
 
   const { notification } = App.useApp();
@@ -42,15 +39,14 @@ const FacultySetup = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleEdit = (data: createOrUpdateFacultyPayload) => {
+  const handleEdit = (data: FacultyResponse) => {
     setIndexData(data);
     setOpenEdit(true);
   };
 
-  // Ensure that the correct record is passed to delete
-  const handleDelete = (data: createOrUpdateFacultyPayload) => {
+  const handleDelete = (data: FacultyResponse) => {
     if (data && data?.id) {
-      setIndexData(data); // Set the entire record, including Id
+      setIndexData(data); 
       setOpenDelete(true);
     } else {
       notification.error({
@@ -65,9 +61,9 @@ const FacultySetup = () => {
     queryFn: getFaculty,
   });
 
-  const facultyData = data?.data as createOrUpdateFacultyPayload[];
+  const facultyData = data?.data ?? [];
 
-  const items = (record: createOrUpdateFacultyPayload): MenuProps["items"] => [
+  const items = (record: FacultyResponse): MenuProps["items"] => [
     {
       key: "1",
       label: "Edit",
@@ -80,17 +76,21 @@ const FacultySetup = () => {
     },
   ];
 
-  const columns: ColumnsType<createOrUpdateFacultyPayload> = [
+  const columns: ColumnsType<FacultyResponse> = [
     {
       key: "id",
       title: "ID",
       dataIndex: "id",
     },
-
     {
       key: "name",
       title: "Faculty Name",
       dataIndex: "name",
+    },
+    {
+      key: "categoryCode",
+      title: "Faculty Code ",
+      dataIndex: "categoryCode",
     },
     {
       key: "description",
@@ -101,15 +101,11 @@ const FacultySetup = () => {
         return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
     },
-    {
-      key: "categoryCode",
-      title: "Faculty Code ",
-      dataIndex: "categoryCode",
-    },
+
     {
       key: "action",
       title: "",
-      render: (record: createOrUpdateFacultyPayload) => (
+      render: (record: FacultyResponse) => (
         <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
@@ -120,7 +116,6 @@ const FacultySetup = () => {
   const deleteFacultyMutation = useMutation({ mutationFn: deleteFaculty });
 
   const deleteFacultyHandler = async () => {
-    // Ensure Id exists before proceeding with deletion
     if (indexData.id) {
       try {
         await deleteFacultyMutation.mutateAsync(indexData.id, {
@@ -129,9 +124,7 @@ const FacultySetup = () => {
               message: "Success",
               description: data?.message,
             });
-            queryClient.refetchQueries({
-              queryKey: ["get-faculty"],
-            });
+            queryClient.refetchQueries({ queryKey: ["get-faculty"] });
             setOpenDelete(false);
           },
         });
@@ -152,6 +145,7 @@ const FacultySetup = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -166,6 +160,7 @@ const FacultySetup = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -195,7 +190,6 @@ const FacultySetup = () => {
           dataSource={facultyData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => ${record.id}${index}}
         />
       </section>
 
@@ -204,7 +198,8 @@ const FacultySetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Faculty Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddFaculty handleClose={() => setShowAddModal(false)} />
       </Modal>
 
@@ -212,9 +207,13 @@ const FacultySetup = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Faculty Setup"
-        footer={null}>
-        <EditFaculty handleClose={() => setOpenEdit(false)} record={indexData} />
+        title="Edit Faculty"
+        footer={null}
+      >
+        <EditFaculty
+          handleClose={() => setOpenEdit(false)}
+          record={indexData}
+        />
       </Modal>
 
       <Modal
@@ -222,7 +221,8 @@ const FacultySetup = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Faculty Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteFacultyMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
