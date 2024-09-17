@@ -3,13 +3,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import { Form, Formik, FormikValues } from "formik";
 import { Button, Input, Select } from "../../../custom";
-import { createProgramType, getProgramTypes } from "./request";
+import { editProgramType, getProgramTypes } from "./request";
 
 interface Props {
   handleClose: () => void;
+  record: ProgramType;
 }
 
-const AddProgramType = ({ handleClose }: Props) => {
+const EditProgramType = ({ handleClose, record }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -24,20 +25,21 @@ const AddProgramType = ({ handleClose }: Props) => {
 
   const programTypesData = data?.data ?? [];
 
-  const addProgramTypeMutation = useMutation({
-    mutationFn: createProgramType,
+  const editProgramTypeMutation = useMutation({
+    mutationFn: editProgramType,
   });
 
-  const createProgramTypeHandler = async (
+  const editProgramTypeHandler = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: CreateProgramTypePayload = {
+    const payload: EditProgramTypePayload = {
+      id: record?.id,
       name: values.name,
     };
 
     try {
-      await addProgramTypeMutation.mutateAsync(payload, {
+      await editProgramTypeMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -65,9 +67,9 @@ const AddProgramType = ({ handleClose }: Props) => {
 
   return (
     <Formik
-      initialValues={{ name: "" }}
+      initialValues={{ name: record.name ?? "" }}
       onSubmit={(values, { resetForm }) => {
-        createProgramTypeHandler(values, resetForm);
+        editProgramTypeHandler(values, resetForm);
       }}
       validationSchema={validate}
       enableReinitialize={true}
@@ -79,18 +81,18 @@ const AddProgramType = ({ handleClose }: Props) => {
               name="name"
               placeholder="Select Program Type"
               label="Program Type"
-              // options={programTypeOptions}
+            //   options={programTypeOptions}
             />
 
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button
                 text={
-                  addProgramTypeMutation.isPending ? "Submitting..." : "Submit"
+                  editProgramTypeMutation.isPending ? "Submitting..." : "Submit"
                 }
                 type="submit"
-                isLoading={addProgramTypeMutation?.isPending}
-                disabled={addProgramTypeMutation?.isPending}
+                isLoading={editProgramTypeMutation?.isPending}
+                disabled={editProgramTypeMutation?.isPending}
               />
             </div>
           </Form>
@@ -100,4 +102,4 @@ const AddProgramType = ({ handleClose }: Props) => {
   );
 };
 
-export default AddProgramType;
+export default EditProgramType;

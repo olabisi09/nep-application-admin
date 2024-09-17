@@ -25,3 +25,23 @@ interface Datum {
   createdBy: null;
   activeStatus: boolean;
 }
+
+interface ProgramTypeResponse extends GenericResponse {
+  data: ProgramType[];
+}
+
+interface ProgramType {
+  name: string;
+  id: number;
+  created: string;
+  createdBy: null;
+  activeStatus: boolean;
+}
+
+interface CreateProgramTypePayload {
+  name: string;
+}
+
+interface EditProgramTypePayload extends CreateProgramTypePayload {
+  id: number;
+}
