@@ -77,7 +77,7 @@ const SupportAndGuidance = () => {
             key: "1",
             label: "Add Items",
             onClick: () => {
-              navigate(`/student-life/${record.id}/support-and-guidance-item`)
+              navigate(`/student-life/${record.id}/support-and-guidance-item`);
             },
           },
           {
@@ -135,11 +135,14 @@ const SupportAndGuidance = () => {
     <div>
       <section className="space-between">
         <h3>Student Life: Support And Guidance Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+
+        {supportAndGuidanceData?.length === 0 && (
+          <Button
+            onClick={() => setOpen(true)}
+            iconBefore={<Plus />}
+            text="Setup"
+          />
+        )}
       </section>
       <br />
       <Card bordered={false}>
@@ -157,7 +160,8 @@ const SupportAndGuidance = () => {
         onCancel={() => setOpen(false)}
         centered
         title="Create Support and Guidance"
-        footer={null}>
+        footer={null}
+      >
         <SupportAndGuidanceForm
           item={supportAndGuidanceItems}
           handleClose={() => setOpen(false)}
@@ -169,7 +173,8 @@ const SupportAndGuidance = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Support and Guidance"
-        footer={null}>
+        footer={null}
+      >
         <SupportAndGuidanceForm
           item={supportAndGuidanceItems}
           handleClose={() => setOpenEdit(false)}

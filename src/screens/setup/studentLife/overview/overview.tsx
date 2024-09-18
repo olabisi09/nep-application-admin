@@ -129,11 +129,14 @@ const Overview = () => {
     <div>
       <section className="space-between">
         <h3>Student Life: Overview Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+
+        {overviewData?.length === 0 && (
+          <Button
+            onClick={() => setOpen(true)}
+            iconBefore={<Plus />}
+            text="Setup"
+          />
+        )}
       </section>
       <br />
       <Card bordered={false}>

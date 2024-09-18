@@ -136,11 +136,14 @@ const StudentActivity = () => {
     <div>
       <section className="space-between">
         <h3>Student Life: Student Activities Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+
+        {studentActivityData?.length === 0 && (
+          <Button
+            onClick={() => setOpen(true)}
+            iconBefore={<Plus />}
+            text="Setup"
+          />
+        )}
       </section>
 
       <br />

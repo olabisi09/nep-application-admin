@@ -77,14 +77,14 @@ const FitnessAndAthletics = () => {
             key: "1",
             label: "Add items",
             onClick: () => {
-              navigate(`/student-life/${record.id}/fitness-athletics-item`)
+              navigate(`/student-life/${record.id}/fitness-athletics-item`);
             },
           },
           {
             key: "2",
             label: "Add Images",
             onClick: () => {
-              navigate(`/student-life/${record.id}/fitness-athletics-image`)
+              navigate(`/student-life/${record.id}/fitness-athletics-image`);
             },
           },
           {
@@ -142,11 +142,14 @@ const FitnessAndAthletics = () => {
     <div>
       <section className="space-between">
         <h3>Student Life: Fitness and Athletics Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+
+        {fitnessAthleticsData?.length === 0 && (
+          <Button
+            onClick={() => setOpen(true)}
+            iconBefore={<Plus />}
+            text="Setup"
+          />
+        )}
       </section>
       <br />
       <Card bordered={false}>
@@ -164,7 +167,8 @@ const FitnessAndAthletics = () => {
         onCancel={() => setOpen(false)}
         centered
         title="Create Fitness and Athletics"
-        footer={null}>
+        footer={null}
+      >
         <FitnessAndAthleticsForm
           item={fitnessAthleticsItems}
           handleClose={() => setOpen(false)}
@@ -176,7 +180,8 @@ const FitnessAndAthletics = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Fitness and Athletics"
-        footer={null}>
+        footer={null}
+      >
         <FitnessAndAthleticsForm
           item={fitnessAthleticsItems}
           handleClose={() => setOpenEdit(false)}

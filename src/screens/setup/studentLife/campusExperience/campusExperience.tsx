@@ -141,11 +141,14 @@ const CampusExperience = () => {
     <div>
       <section className="space-between">
         <h3>Student Life: Campus Experience Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+
+        {campusData?.length === 0 && (
+          <Button
+            onClick={() => setOpen(true)}
+            iconBefore={<Plus />}
+            text="Setup"
+          />
+        )}
       </section>
 
       <br />
@@ -168,11 +171,11 @@ const CampusExperience = () => {
         footer={null}
       >
         <CreateCampusExperience
-          studentLifeId={parseInt(id ?? '') ?? 0}
+          studentLifeId={parseInt(id ?? "") ?? 0}
           handleClose={() => setOpen(false)}
         />
       </Modal>
-      
+
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}

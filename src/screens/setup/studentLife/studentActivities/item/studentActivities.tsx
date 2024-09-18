@@ -121,7 +121,7 @@ const StudentActivityItem = () => {
     },
   ];
 
-  const schoolSummaryData = data?.data as StudentActivity[];
+  const studentActivityItemData = data?.data as StudentActivity[];
 
   if (isLoading) {
     return <Spin />;
@@ -135,18 +135,21 @@ const StudentActivityItem = () => {
     <div>
       <section className="space-between">
         <h3>Student Life: Student Activity Items Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+
+        {studentActivityItemData?.length === 0 && (
+          <Button
+            onClick={() => setOpen(true)}
+            iconBefore={<Plus />}
+            text="Setup"
+          />
+        )}
       </section>
 
       <br />
 
       <Card bordered={false}>
         <Table
-          dataSource={schoolSummaryData}
+          dataSource={studentActivityItemData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}

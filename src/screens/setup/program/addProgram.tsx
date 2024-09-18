@@ -1,9 +1,9 @@
 import { App } from "antd";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import { Form, Formik, FormikValues } from "formik";
-import { Button, Input, Select } from "../../../custom";
-import { createProgramType, getProgramTypes } from "./request";
+import { Button, Input } from "../../../custom";
+import { createProgramType } from "./request";
 
 interface Props {
   handleClose: () => void;
@@ -16,13 +16,6 @@ const AddProgramType = ({ handleClose }: Props) => {
   const validate = Yup.object().shape({
     name: Yup.string().required("Program Type name is required"),
   });
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["get-program-types"],
-    queryFn: getProgramTypes,
-  });
-
-  const programTypesData = data?.data ?? [];
 
   const addProgramTypeMutation = useMutation({
     mutationFn: createProgramType,
@@ -57,12 +50,6 @@ const AddProgramType = ({ handleClose }: Props) => {
     }
   };
 
-  const programTypeOptions = programTypesData?.map((item) => (
-    <option key={item?.id} value={item?.id}>
-      {item?.name}
-    </option>
-  ));
-
   return (
     <Formik
       initialValues={{ name: "" }}
@@ -79,7 +66,6 @@ const AddProgramType = ({ handleClose }: Props) => {
               name="name"
               placeholder="Select Program Type"
               label="Program Type"
-              // options={programTypeOptions}
             />
 
             <div className="btn-group">
