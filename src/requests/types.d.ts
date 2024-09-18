@@ -539,10 +539,12 @@ interface ApplicationFee {
   id: number;
   modeOfStudyId: number;
   programId: number;
+  programTypeId: number;
   amount: number;
   cost: number;
   activeStatus: boolean;
   isDeleted: boolean;
+  programTypeId: number;
 }
 
 interface GetAllProgramApplicationFeeResponse extends Response {
@@ -660,7 +662,11 @@ interface getAllFeeSetup {
   amount: number;
   applicationBatchId: number;
   applicationBatchName: null;
+  programTypeId: number;
+  programTypeName: string;
   activeStatus: boolean;
+  programTypeId: number;
+  programTypeName: null | string;
   isDeleted: boolean;
 }
 
@@ -808,4 +814,39 @@ interface editFacultyPayload {
   categoryCode: string;
   name: string;
   description: string;
+}
+
+interface getAllProgramTypeResponse {
+  code: number;
+  message: string;
+  data: getAllProgramType[];
+}
+
+interface getAllProgramType {
+  name: string;
+  id: number;
+  created: string;
+  createdBy: null;
+  activeStatus: boolean;
+}
+
+interface RootObject {
+  statusCode: number;
+  message: string;
+  data: Datum[];
+}
+
+interface Datum {
+  id: number;
+  modeOfStudyId: number;
+  modeOfStudy: string;
+  program: string;
+  programId: number;
+  amount: number;
+  applicationBatchId: number;
+  applicationBatchName: null | string;
+  activeStatus: boolean;
+  programTypeId: number;
+  programTypeName: null | string;
+  isDeleted: boolean;
 }

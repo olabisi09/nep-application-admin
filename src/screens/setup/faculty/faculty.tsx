@@ -20,10 +20,8 @@ import DeleteModalContent from "../../deleteModal/deleteModal";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import AddFaculty from "./addFaculty";
-import { deleteFaculty, getFaculty, editFaculty } from "../../../requests";
-import * as Yup from "yup";
-import { Form, Formik, FormikValues } from "formik";
-import Input from "../../../custom/input/input";
+import { deleteFaculty, getFaculty } from "../../../requests";
+import EditFaculty from "./editFaculty";
 
 const FacultySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -31,9 +29,7 @@ const FacultySetup = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [indexData, setIndexData] = useState(
-    {} as createOrUpdateFacultyPayload
-  );
+  const [indexData, setIndexData] = useState({} as FacultyResponse);
   const [openDelete, setOpenDelete] = useState(false);
 
   const { notification } = App.useApp();
@@ -43,15 +39,14 @@ const FacultySetup = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleEdit = (data: createOrUpdateFacultyPayload) => {
+  const handleEdit = (data: FacultyResponse) => {
     setIndexData(data);
     setOpenEdit(true);
   };
 
-  // Ensure that the correct record is passed to delete
-  const handleDelete = (data: createOrUpdateFacultyPayload) => {
+  const handleDelete = (data: FacultyResponse) => {
     if (data && data?.id) {
-      setIndexData(data); // Set the entire record, including Id
+      setIndexData(data); 
       setOpenDelete(true);
     } else {
       notification.error({
@@ -66,9 +61,9 @@ const FacultySetup = () => {
     queryFn: getFaculty,
   });
 
-  const facultyData = data?.data as createOrUpdateFacultyPayload[];
+  const facultyData = data?.data ?? [];
 
-  const items = (record: createOrUpdateFacultyPayload): MenuProps["items"] => [
+  const items = (record: FacultyResponse): MenuProps["items"] => [
     {
       key: "1",
       label: "Edit",
@@ -81,7 +76,7 @@ const FacultySetup = () => {
     },
   ];
 
-  const columns: ColumnsType<createOrUpdateFacultyPayload> = [
+  const columns: ColumnsType<FacultyResponse> = [
     {
       key: "id",
       title: "ID",
@@ -110,7 +105,7 @@ const FacultySetup = () => {
     {
       key: "action",
       title: "",
-      render: (record: createOrUpdateFacultyPayload) => (
+      render: (record: FacultyResponse) => (
         <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
@@ -147,43 +142,6 @@ const FacultySetup = () => {
     }
   };
 
-  // Mutation to handle editing the faculty
-  const editFacultyMutation = useMutation({
-    mutationFn: editFaculty,
-    onSuccess: (data) => {
-      notification.success({
-        message: "Success",
-        description: data?.message || "Faculty updated successfully",
-      });
-      queryClient.refetchQueries({ queryKey: ["get-faculty"] });
-      setOpenEdit(false);
-    },
-    onError: (error: any) => {
-      notification.error({
-        message: "Error",
-        description: error?.response?.data?.message || "An error occurred",
-      });
-    },
-  });
-
-  // Handler function for form submission
-  const facultyHandler = async (values: FormikValues) => {
-    const payload: Partial<editFacultyPayload> = {
-      id: indexData?.id,
-      categoryCode: values.categoryCode,
-      name: values.name,
-      description: values.description,
-    };
-
-    await editFacultyMutation.mutateAsync(payload);
-  };
-
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Faculty name is required"),
-    description: Yup.string().required("Description is required"),
-    categoryCode: Yup.string().required("Faculty Code is required"),
-  });
-
   if (isLoading) {
     return <Spin />;
   }
@@ -202,6 +160,7 @@ const FacultySetup = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -251,37 +210,10 @@ const FacultySetup = () => {
         title="Edit Faculty"
         footer={null}
       >
-        <Formik
-          initialValues={{
-            id: indexData?.id ?? "",
-            name: indexData?.name ?? "",
-            description: indexData?.description ?? "",
-            categoryCode: indexData?.categoryCode ?? "",
-          }}
-          onSubmit={(values) => {
-            facultyHandler(values);
-          }}
-          validationSchema={validationSchema}
-          enableReinitialize
-        >
-          {({ isSubmitting }) => (
-            <Form className="fields">
-              <Input label="Faculty Name" placeholder="Input Faculty Name" name="name" />
-              <Input label="Faculty Code" placeholder="Input Faculty Code" name="categoryCode" />
-              <Input label="Description" placeholder="Description" name="description" />
-
-              <div className="btn-group">
-                <Button onClick={() => setOpenEdit(false)} variant="text" text="Cancel" />
-                <Button
-                  text={editFacultyMutation.isPending ? "Submitting..." : "Submit"}
-                  type="submit"
-                  isLoading={editFacultyMutation?.isPending}
-                  disabled={editFacultyMutation?.isPending}
-                />
-              </div>
-            </Form>
-          )}
-        </Formik>
+        <EditFaculty
+          handleClose={() => setOpenEdit(false)}
+          record={indexData}
+        />
       </Modal>
 
       <Modal

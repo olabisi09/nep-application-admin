@@ -110,18 +110,6 @@ const TuitionYears = () => {
 
   const deleteTuitionYearMutation = useMutation({ mutationFn: deleteTuitionYear });
 
-
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
-          Edit
-        </button>
-      ),
-    },
-  ];
-
   const columns: ColumnsType<TuitionYear> = [
     {
       key: "id",
@@ -129,24 +117,14 @@ const TuitionYears = () => {
       dataIndex: "id",
     },
     {
-      key: "tuitionId",
-      title: "Tuition Id",
-      dataIndex: "tuitionId",
-    },
-    {
-      key: "readmoreId",
-      title: "Read More Id",
-      dataIndex: "readmoreId",
+      key: "level",
+      title: "Level",
+      dataIndex: "levelName",
     },
     {
       key: "feeDescription",
       title: "Fee Description",
       dataIndex: "feeDescription",
-    },
-    {
-      key: "programName",
-      title: "Program Name",
-      dataIndex: "programName",
     },
     {
       key: "isActive",

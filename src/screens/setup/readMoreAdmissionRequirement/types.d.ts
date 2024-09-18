@@ -24,6 +24,19 @@ interface AdmissionReqDetailsPayload {
   admissionRequirementId: number;
   description: string;
   noOfSittings: number;
+  programTypeId: number;
   activeStatus: boolean;
   isDeleted: boolean;
+}
+
+interface ProgramTypeResponse extends GenericResponse {
+  data: ProgramType[];
+}
+
+interface ProgramType {
+  name: string;
+  id: number;
+  created: string;
+  createdBy: null;
+  activeStatus: boolean;
 }

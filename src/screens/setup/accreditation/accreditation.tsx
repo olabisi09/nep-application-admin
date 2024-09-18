@@ -113,7 +113,7 @@ const AccreditationSetup = () => {
             ),
           },
           {
-            key: "1",
+            key: "2",
             label: (
               <button
                 style={{ border: "0rem" }}

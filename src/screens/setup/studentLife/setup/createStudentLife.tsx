@@ -1,5 +1,5 @@
 import { Form, Formik, FormikValues } from "formik";
-import { Button, Input, Select } from "../../../../custom";
+import { Button, Editor, Input, Select } from "../../../../custom";
 import { createOrUpdateStudentLife } from "../../../../requests";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
@@ -7,7 +7,7 @@ import { App } from "antd";
 const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  
+
   const addStudentLifeMutation = useMutation({
     mutationFn: createOrUpdateStudentLife,
   });
@@ -60,35 +60,39 @@ const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
         handleAddStudentLife(values, resetForm)
       }
     >
-      <Form className="fields">
-        <Input name="title" label="Title" placeholder="Input title" />
-        <Input
-          name="description"
-          type="textarea"
-          label="Description"
-          placeholder="Input description"
-        />
-        <Select
-          name="status"
-          label="Status"
-          placeholder="Select status"
-          options={statusOptions}
-        />
-        <div className="btn-group">
-          <Button
-            type="button"
-            onClick={handleClose}
-            variant="text"
-            text="Cancel"
+      {({ setFieldValue }) => (
+        <Form className="fields">
+          <Input name="title" label="Title" placeholder="Input title" />
+          <Editor
+            name="description"
+            label="Description"
+            onChange={(_, editor) => {
+              const data = editor.getData();
+              setFieldValue("description", data);
+            }}
           />
-          <Button
-            type="submit"
-            isLoading={addStudentLifeMutation.isPending}
-            disabled={addStudentLifeMutation.isPending}
-            text="Create"
+          <Select
+            name="status"
+            label="Status"
+            placeholder="Select status"
+            options={statusOptions}
           />
-        </div>
-      </Form>
+          <div className="btn-group">
+            <Button
+              type="button"
+              onClick={handleClose}
+              variant="text"
+              text="Cancel"
+            />
+            <Button
+              type="submit"
+              isLoading={addStudentLifeMutation.isPending}
+              disabled={addStudentLifeMutation.isPending}
+              text="Create"
+            />
+          </div>
+        </Form>
+      )}
     </Formik>
   );
 };

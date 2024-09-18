@@ -18,13 +18,18 @@ import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
 import { CreateAdmissionReqDetail, EditAdmissionReqDetail } from "./form";
 import { useParams } from "react-router-dom";
-import { deleteAdmissionRequirementDetailsById, getAdmissionRequirementDetailsByAdmissionReqId } from "../request";
+import {
+  deleteAdmissionRequirementDetailsById,
+  getAdmissionRequirementDetailsByAdmissionReqId,
+} from "../request";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const AdmissionReqDetail = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [reqDetails, setReqDetails] = useState<AdmissionRequirementDetails>(
     {} as AdmissionRequirementDetails
   );
@@ -39,6 +44,29 @@ const AdmissionReqDetail = () => {
     enabled: !!id,
   });
 
+  const deleteAdmissionReqDetailsHandler = async () => {
+    try {
+      await deleteAdmissionRequirementDetailsMutation.mutateAsync(
+        reqDetails?.id,
+        {
+          onSuccess: (data) => {
+            notification.success({
+              message: "Success",
+              description: data?.message,
+            });
+            refetch();
+            setOpenDelete((prevState) => !prevState);
+          },
+        }
+      );
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
+
   const columns: ColumnsType<AdmissionRequirementDetails> = [
     {
       key: "id",
@@ -49,6 +77,11 @@ const AdmissionReqDetail = () => {
       key: "name",
       title: "Name",
       dataIndex: "name",
+    },
+    {
+      key: "programType",
+      title: "Program Type",
+      dataIndex: "programTypeName",
     },
     {
       key: "description",
@@ -81,23 +114,9 @@ const AdmissionReqDetail = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteAdmissionRequirementDetailsMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setReqDetails(record);
+              setOpenDelete((prevState) => !prevState);
             },
           },
         ];
@@ -163,6 +182,21 @@ const AdmissionReqDetail = () => {
         <EditAdmissionReqDetail
           item={reqDetails}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Tuition Setup"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteAdmissionRequirementDetailsMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteAdmissionReqDetailsHandler}
+          title={reqDetails?.name}
         />
       </Modal>
     </div>

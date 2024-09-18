@@ -1,6 +1,10 @@
 import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
-import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueries,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { App } from "antd";
 import {
   createOrUpdateApplicationFee,
@@ -14,6 +18,7 @@ import { FC } from "react";
 import { Button } from "../../../custom";
 import * as Yup from "yup";
 import { validator } from "../../../utils/validator";
+import { getProgramTypes } from "./request";
 
 interface ComponentProps {
   record: getAllFeeSetup;
@@ -34,6 +39,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
       id: record?.id || 0,
       modeOfStudyId: values.modeOfStudy,
       programId: values.programName,
+      programTypeId: values.programType,
       amount: values.amount,
       activeStatus: values.activeStatus,
     };
@@ -68,18 +74,27 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
       },
       { queryKey: ["get-AllModeOfStudy"], queryFn: getAllModeOfStudy },
       { queryKey: ["get-ApplicationBatch"], queryFn: getAllApplicationBatch },
+      { queryKey: ["get-program-types"], queryFn: getProgramTypes },
     ],
   });
 
   const programQuery = queries[0];
   const modeQuery = queries[1];
   const applicationBatchQuery = queries[2];
+  const programTypesQuery = queries[3];
 
   const programData = programQuery?.data?.data ?? [];
   const modeOfStudyData = modeQuery?.data?.data ?? [];
   const applicationBatchData = applicationBatchQuery?.data?.data ?? [];
+  const programTypesData = programTypesQuery?.data?.data ?? [];
 
   const programOptions = programData?.map((item) => (
+    <option key={item?.id} value={item?.id}>
+      {item?.name}
+    </option>
+  ));
+
+  const programTypesOptions = programTypesData?.map((item) => (
     <option key={item?.id} value={item?.id}>
       {item?.name}
     </option>
@@ -97,11 +112,19 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
     </option>
   ));
 
+  const programTypeOptions = programTypesData?.map((item) => (
+    <option key={item?.id} value={item?.id}>
+      {item?.name}
+    </option>
+  ));
+
   const validationSchema = Yup.object().shape({
     programName: validator.programName,
+    programType: validator.programType,
     modeOfStudy: validator.modeOfStudy,
     amount: validator.amount,
     applicationBatch: validator.applicationBatch,
+    status: validator.status,
   });
 
   const hasRecord = Object.keys(record)?.length > 0;
@@ -110,6 +133,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
     <Formik
       initialValues={{
         programName: record?.programId ?? "",
+        programType: record?.programTypeId ?? "",
         modeOfStudy: record?.modeOfStudyId ?? "",
         applicationBatch: record?.id ?? "",
         amount: record?.amount ?? "",
@@ -129,6 +153,12 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
                 options={programOptions}
               />
               <Select
+                name="programType"
+                placeholder="Select Program Type"
+                label="Program Type"
+                options={programTypesOptions}
+              />
+              <Select
                 name="modeOfStudy"
                 label="Mode of Study"
                 placeholder="Select Mode of Study"
@@ -140,6 +170,12 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
                 placeholder="Select Batch"
                 name="applicationBatch"
                 options={applicationBatchOptions}
+              />
+              <Select
+                label="Program Type"
+                placeholder="select program Type"
+                name="programType"
+                options={programTypeOptions}
               />
 
               <Input name="amount" placeholder="0.00" label="Amount" />
