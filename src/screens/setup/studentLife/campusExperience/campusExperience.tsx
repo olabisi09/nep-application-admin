@@ -21,6 +21,7 @@ import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
 import { CreateCampusExperience, EditCampusExperience } from "./setup";
 import { useNavigate, useParams } from "react-router-dom";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const CampusExperience = () => {
   const { notification } = App.useApp();
@@ -30,6 +31,7 @@ const CampusExperience = () => {
   const [campus, setCampus] = useState<ItemByStudentLife>(
     {} as ItemByStudentLife
   );
+  const [openDelete, setOpenDelete] = useState(false);
 
   const navigate = useNavigate();
 
@@ -42,6 +44,26 @@ const CampusExperience = () => {
     queryFn: () => getCampusExperienceByStudentLifeId(id!),
     enabled: !!id,
   });
+
+  const deleteCampusExperienceHandler = async () => {
+    try {
+      await deleteCampusExperienceMutation.mutateAsync(campus?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<ItemByStudentLife> = [
     {
@@ -97,23 +119,9 @@ const CampusExperience = () => {
           {
             key: "4",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteCampusExperienceMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setCampus(record);
+              setOpenDelete(true);
             },
           },
         ];
@@ -168,8 +176,7 @@ const CampusExperience = () => {
         onCancel={() => setOpen(false)}
         centered
         title="Create Campus Experience"
-        footer={null}
-      >
+        footer={null}>
         <CreateCampusExperience
           studentLifeId={parseInt(id ?? "") ?? 0}
           handleClose={() => setOpen(false)}
@@ -181,11 +188,23 @@ const CampusExperience = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Campus Experience"
-        footer={null}
-      >
+        footer={null}>
         <EditCampusExperience
           item={campus}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Campus Experience"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteCampusExperienceMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteCampusExperienceHandler}
+          title={campus?.title}
         />
       </Modal>
     </div>

@@ -653,7 +653,7 @@ interface getAllFeeSetupResponse extends Response {
   data: getAllFeeSetup[];
 }
 
-interface getAllFeeSetup {
+interface GetAllFeeSetup {
   id: number;
   modeOfStudyId: number;
   modeOfStudy: string;

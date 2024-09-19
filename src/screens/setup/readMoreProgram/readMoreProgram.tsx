@@ -8,13 +8,14 @@ import {
   Button as AntButton,
   MenuProps,
   Spin,
+  notification,
 } from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useCallback, useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getReadMoreProgrammes } from "./request";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
@@ -22,6 +23,8 @@ import {
   AddReadMoreProgramme,
   EditReadMoreProgramme,
 } from "./addReadMoreProgram";
+import { deleteReadMoreProgram } from "../../../requests";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const ReadMoreProgram = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -33,16 +36,42 @@ const ReadMoreProgram = () => {
     {} as ReadMoreProgramme
   );
 
+  const [openDelete, setOpenDelete] = useState(false);
+
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-read-more-programmes"],
     queryFn: getReadMoreProgrammes,
   });
 
   const courseOverviewData = data?.data ?? [];
+
+  const deleteReadProgramViewMutation = useMutation({
+    mutationFn: deleteReadMoreProgram,
+  });
+
+  const deleteReadMoreProgramHandler = async () => {
+    try {
+      await deleteReadProgramViewMutation.mutateAsync(programme?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<ReadMoreProgramme> = [
     {
@@ -96,7 +125,10 @@ const ReadMoreProgram = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: () => setOpenEdit(true),
+            onClick: () => {
+              setProgramme(record);
+              setOpenDelete(true);
+            },
           },
         ];
 
@@ -171,8 +203,7 @@ const ReadMoreProgram = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Read More - Program Setup"
-        footer={null}
-      >
+        footer={null}>
         <AddReadMoreProgramme handleClose={handleCloseModal} />
       </Modal>
 
@@ -181,11 +212,24 @@ const ReadMoreProgram = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Read More - Program Setup"
-        footer={null}
-      >
+        footer={null}>
         <EditReadMoreProgramme
           handleClose={handleCloseModal}
           record={programme}
+        />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Read More Program Setup"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteReadProgramViewMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteReadMoreProgramHandler}
+          title={programme?.id}
         />
       </Modal>
     </main>

@@ -207,7 +207,7 @@ const CurriculumSetup = () => {
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete Country Setup"
+        title="Delete Curriculum Setup"
         footer={null}
       >
         <DeleteModalContent

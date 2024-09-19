@@ -1031,3 +1031,13 @@ export const getAllProgramType = async () => {
   return (await api.get(`/Academics/GetAllProgramTypesAsync`))
     ?.data as getAllProgramTypeResponse;
 };
+
+export const deleteReadMoreOverView = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteCourseOverviewById?Id=${id}`))
+    ?.data as Response;
+};
+
+export const deleteReadMoreProgram = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteReadMoreProgrammeById?Id=${id}`))
+    ?.data as Response;
+};

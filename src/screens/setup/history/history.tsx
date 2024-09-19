@@ -16,12 +16,14 @@ import { CreateHistory, EditHistory } from "./setup";
 import { ColumnsType } from "antd/es/table";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteHistory, getHistory } from "../../../requests";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const History = () => {
   const { notification } = App.useApp();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [history, setHistory] = useState<Setup>({} as Setup);
+  const [openDelete, setOpenDelete] = useState(false); // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
 
   const deleteHistoryMutation = useMutation({ mutationFn: deleteHistory });
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -29,6 +31,25 @@ const History = () => {
     queryFn: getHistory,
   });
 
+  const deleteHistoryHandler = async () => {
+    try {
+      await deleteHistoryMutation.mutateAsync(history?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
   const columns: ColumnsType<Setup> = [
     {
       key: "id",
@@ -75,23 +96,9 @@ const History = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteHistoryMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setHistory(record);
+              setOpenDelete(true);
             },
           },
         ];
@@ -138,8 +145,7 @@ const History = () => {
         onCancel={() => setOpen(false)}
         centered
         title="History Setup"
-        footer={null}
-      >
+        footer={null}>
         <CreateHistory handleClose={() => setOpen(false)} />
       </Modal>
       <Modal
@@ -147,9 +153,22 @@ const History = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit History Setup"
-        footer={null}
-      >
+        footer={null}>
         <EditHistory item={history} handleClose={() => setOpenEdit(false)} />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete About Us Setup"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteHistoryMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteHistoryHandler}
+          title={history?.title}
+        />
       </Modal>
     </div>
   );

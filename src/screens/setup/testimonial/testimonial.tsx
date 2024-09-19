@@ -1,7 +1,15 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+  App,
+} from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
@@ -23,7 +31,9 @@ const TestimonySetup = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [testimonial, setTestimonial] = useState<Testimonial>({} as Testimonial);
+  const [testimonial, setTestimonial] = useState<Testimonial>(
+    {} as Testimonial
+  );
   const [openDelete, setOpenDelete] = useState(false);
   const deleteTestimonialMutation = useMutation({
     mutationFn: deleteTestimonial,
@@ -56,7 +66,9 @@ const TestimonySetup = () => {
       title: "S/N",
       dataIndex: "index",
       key: "index",
-      render: (text: any, record: any, index: number) => <span>{(currentPage - 1) * pageSize + index + 1}</span>,
+      render: (text: any, record: any, index: number) => (
+        <span>{(currentPage - 1) * pageSize + index + 1}</span>
+      ),
     },
     {
       key: "programName",
@@ -76,7 +88,9 @@ const TestimonySetup = () => {
       key: "imageUrl",
       title: "Picture",
       dataIndex: "imageUrl",
-      render: (_, { imageUrl }) => <img className="table-img" src={imageUrl} alt="" />,
+      render: (_, { imageUrl }) => (
+        <img className="table-img" src={imageUrl} alt="" />
+      ),
     },
     {
       key: "status",
@@ -99,11 +113,8 @@ const TestimonySetup = () => {
           },
           {
             key: "2",
-            label: (
-              <button style={{ border: "0rem", background: "none" }} onClick={() => handleDelete(record)}>
-                Delete
-              </button>
-            ),
+            label: "Delete",
+            onClick: () => handleDelete(record),
           },
         ];
         return (
@@ -115,7 +126,7 @@ const TestimonySetup = () => {
     },
   ];
 
-  const DeleteTestimonialHandler = async () => {
+  const deleteTestimonialHandler = async () => {
     try {
       await deleteTestimonialMutation.mutateAsync(testimonial?.id, {
         onSuccess: (data) => {
@@ -147,7 +158,11 @@ const TestimonySetup = () => {
     <main>
       <section className="space-between">
         <h3>Testimonial Setup</h3>
-        <Button onClick={() => setShowAddModal(true)} iconBefore={<Add />} text="Setup" />
+        <Button
+          onClick={() => setShowAddModal(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
       </section>
       <section className={styles.card}>
         <div className={styles.inside}>
@@ -155,12 +170,22 @@ const TestimonySetup = () => {
           <div>
             {!showSearch && (
               <span>
-                <Search onClick={() => setShowSearch((showSearch) => !showSearch)} />
+                <Search
+                  onClick={() => setShowSearch((showSearch) => !showSearch)}
+                />
               </span>
             )}
-            {showSearch && <SearchInput value={searchTerm} onChange={handleSearch} />}
+            {showSearch && (
+              <SearchInput value={searchTerm} onChange={handleSearch} />
+            )}
 
-            {!showAllFilter && <Filter onClick={() => setShowAllFilter((showAllFilter) => !showAllFilter)} />}
+            {!showAllFilter && (
+              <Filter
+                onClick={() =>
+                  setShowAllFilter((showAllFilter) => !showAllFilter)
+                }
+              />
+            )}
           </div>
         </div>
         <Table
@@ -171,35 +196,46 @@ const TestimonySetup = () => {
         />
       </section>
 
-      <Modal open={showAddModal} onCancel={() => setShowAddModal(false)} centered title="Testimonial Setup " footer={null}>
-        <AddTestimonial handleClose={() => setShowAddModal(false)} />
+      <Modal
+        open={showAddModal}
+        onCancel={() => setShowAddModal(false)}
+        centered
+        title="Testimonial Setup "
+        footer={null}>
+        <AddTestimonial
+          handleClose={() => {
+            setShowAddModal(false);
+          }}
+        />
       </Modal>
 
-      {testimonial?.id && openEdit && (
-        <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Testimonial Setup" footer={null}>
-        <EditTestimonial handleClose={() => setOpenEdit(false)} testimonial={testimonial} />
+      <Modal
+        open={openEdit}
+        onCancel={() => setOpenEdit(false)}
+        centered
+        title="Testimonial Setup"
+        footer={null}>
+        <EditTestimonial
+          handleClose={() => setOpenEdit(false)}
+          testimonial={testimonial}
+        />
       </Modal>
-      )}
 
-      {testimonial?.id && openDelete && (
-        <Modal
-          open={openDelete}
-          onCancel={() => setOpenDelete(false)}
-          centered
-          title="Delete Testimonial Setup"
-          footer={null}
-        >
-          <DeleteModalContent
-            isLoading={deleteTestimonialMutation?.isPending}
-            // data={Data}
-            handleCloseModal={() => setOpenDelete(false)}
-            handleSubmit={DeleteTestimonialHandler}
-            title={"this item"}
-            isActive={false}
-            // btnText={"Disable"}
-          />
-        </Modal>
-      )}
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Testimonial Setup"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteTestimonialMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteTestimonialHandler}
+          title={"this item"}
+          isActive={false}
+         
+        />
+      </Modal>
     </main>
   );
 };

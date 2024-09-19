@@ -23,6 +23,7 @@ import {
 } from "../../../requests";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import { ColumnsType } from "antd/es/table";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const AccreditationSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -31,6 +32,7 @@ const AccreditationSetup = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [item, setItem] = useState<AccreditationData>({} as AccreditationData);
+  const [openDelete, setOpenDelete] = useState(false); // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -46,9 +48,9 @@ const AccreditationSetup = () => {
     retry: 1,
   });
 
-  const handleDelete = async (id: number) => {
+  const handleDeleteHandler = async () => {
     try {
-      await deleteAccreditationMutation.mutateAsync(id, {
+      await deleteAccreditationMutation.mutateAsync(item?.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -106,24 +108,18 @@ const AccreditationSetup = () => {
                 onClick={() => {
                   setOpenEdit(true);
                   setItem(record);
-                }}
-              >
+                }}>
                 Edit
               </button>
             ),
           },
           {
             key: "2",
-            label: (
-              <button
-                style={{ border: "0rem" }}
-                onClick={() => {
-                  handleDelete(record.id);
-                }}
-              >
-                Delete
-              </button>
-            ),
+            label: "Delete",
+            onClick: () => {
+              setItem(record);
+              setOpenDelete(true);
+            },
           },
         ];
 
@@ -191,8 +187,7 @@ const AccreditationSetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Accreditation Setup"
-        footer={null}
-      >
+        footer={null}>
         <AddAccreditation
           record={item}
           handleClose={() => setShowAddModal(false)}
@@ -204,11 +199,23 @@ const AccreditationSetup = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Accreditation Setup"
-        footer={null}
-      >
+        footer={null}>
         <AddAccreditation
           record={item}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete About Us Setup"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteAccreditationMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={handleDeleteHandler}
+          title={item?.id}
         />
       </Modal>
     </main>

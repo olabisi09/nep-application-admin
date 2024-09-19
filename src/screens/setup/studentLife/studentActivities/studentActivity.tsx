@@ -21,6 +21,7 @@ import { ColumnsType } from "antd/es/table";
 import { useNavigate, useParams } from "react-router-dom";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
 import StudentActivityForm from "./studentActivityForm";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const StudentActivity = () => {
   const { notification } = App.useApp();
@@ -30,6 +31,7 @@ const StudentActivity = () => {
   const [studentActivity, setStudentActivity] = useState<StudentActivities>(
     {} as StudentActivities
   );
+  const [openDelete, setOpenDelete] = useState(false);
 
   const navigate = useNavigate();
 
@@ -42,6 +44,26 @@ const StudentActivity = () => {
     queryFn: () => getStudentActivityByStudentLifeId(id!),
     enabled: !!id,
   });
+
+  const deleteStudentActivityHandler = async () => {
+    try {
+      await deleteStudentActivityMutation.mutateAsync(studentActivity?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<StudentActivities> = [
     {
@@ -92,23 +114,9 @@ const StudentActivity = () => {
           {
             key: "3",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteStudentActivityMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setStudentActivity(record);
+              setOpenDelete(true);
             },
           },
         ];
@@ -163,8 +171,7 @@ const StudentActivity = () => {
         onCancel={() => setOpen(false)}
         centered
         title="Create Student Activity"
-        footer={null}
-      >
+        footer={null}>
         <StudentActivityForm
           item={studentActivity}
           handleClose={() => setOpen(false)}
@@ -176,11 +183,23 @@ const StudentActivity = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Student Activity"
-        footer={null}
-      >
+        footer={null}>
         <StudentActivityForm
           item={studentActivity}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Student Activity Setup"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteStudentActivityMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteStudentActivityHandler}
+          title={studentActivity?.title}
         />
       </Modal>
     </div>

@@ -21,6 +21,7 @@ import { ColumnsType } from "antd/es/table";
 import { useNavigate, useParams } from "react-router-dom";
 import SupportAndGuidanceForm from "./supportAndGuidanceForm";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const SupportAndGuidance = () => {
   const { notification } = App.useApp();
@@ -29,6 +30,7 @@ const SupportAndGuidance = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [supportAndGuidanceItems, setSupportAndGuidanceItems] =
     useState<SupportAndGuidance>({} as SupportAndGuidance);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const navigate = useNavigate();
 
@@ -41,6 +43,29 @@ const SupportAndGuidance = () => {
     queryFn: () => getSupportAndGuidanceByStudentLifeId(id!),
     enabled: !!id,
   });
+
+  const deleteSupportGuidanceHandler = async () => {
+    try {
+      await deleteSupportAndStudentMutation.mutateAsync(
+        supportAndGuidanceItems?.id,
+        {
+          onSuccess: (data) => {
+            notification.success({
+              message: "Success",
+              description: data?.message,
+            });
+            refetch();
+            setOpenDelete((prevState) => !prevState);
+          },
+        }
+      );
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<SupportAndGuidance> = [
     {
@@ -91,23 +116,9 @@ const SupportAndGuidance = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteSupportAndStudentMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setSupportAndGuidanceItems(record);
+              setOpenDelete(true);
             },
           },
         ];
@@ -160,8 +171,7 @@ const SupportAndGuidance = () => {
         onCancel={() => setOpen(false)}
         centered
         title="Create Support and Guidance"
-        footer={null}
-      >
+        footer={null}>
         <SupportAndGuidanceForm
           item={supportAndGuidanceItems}
           handleClose={() => setOpen(false)}
@@ -173,11 +183,23 @@ const SupportAndGuidance = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Support and Guidance"
-        footer={null}
-      >
+        footer={null}>
         <SupportAndGuidanceForm
           item={supportAndGuidanceItems}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Support And Guidance Setup"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteSupportAndStudentMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteSupportGuidanceHandler}
+          title={supportAndGuidanceItems?.title}
         />
       </Modal>
     </div>

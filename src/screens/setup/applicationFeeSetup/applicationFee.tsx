@@ -16,19 +16,18 @@ import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import AddApplicationFee from "./addApplicationFee";
-import {
-  deleteFeeSetup,
-  getAllFeeSetup,
-} from "../../../requests";
+import { deleteFeeSetup, getAllFeeSetup } from "../../../requests";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const ApplicationFee = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [item, setItem] = useState<getAllFeeSetup>({} as getAllFeeSetup);
+  const [item, setItem] = useState<GetAllFeeSetup>({} as GetAllFeeSetup);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const { notification } = App.useApp();
 
@@ -37,21 +36,29 @@ const ApplicationFee = () => {
     queryFn: getAllFeeSetup,
   });
 
+  // console.log(item);
+
   const applicationFeeData = data?.data ?? [];
 
   const deleteApplicationFeeMutation = useMutation({
     mutationFn: deleteFeeSetup,
   });
 
-  const handleDeleteApplicationFee = async (id: number) => {
+  // const handleDelete = (data: GetAllFeeSetup) => {
+  //   setItem(data);
+  //   setOpenDelete(true);
+  // };
+
+  const deleteApplicationFeeHandler = async () => {
     try {
-      await deleteApplicationFeeMutation.mutateAsync(id, {
+      await deleteApplicationFeeMutation.mutateAsync(item?.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
           refetch();
+          setOpenDelete(false);
         },
       });
     } catch (error: any) {
@@ -66,7 +73,7 @@ const ApplicationFee = () => {
     setSearchTerm(e.target.value);
   };
 
-  const columns: ColumnsType<getAllFeeSetup> = [
+  const columns: ColumnsType<GetAllFeeSetup> = [
     {
       key: "id",
       title: "ID",
@@ -113,7 +120,10 @@ const ApplicationFee = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: () => handleDeleteApplicationFee(record?.id),
+            onClick: () => {
+              setOpenDelete(true);
+              setItem(record);
+            },
           },
         ];
 
@@ -188,6 +198,21 @@ const ApplicationFee = () => {
           handleClose={() => {
             setShowAddModal(false);
           }}
+        />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Application Fee Setup"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteApplicationFeeMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteApplicationFeeHandler}
+          title={"this item"}
+          isActive={false}
         />
       </Modal>
     </main>
