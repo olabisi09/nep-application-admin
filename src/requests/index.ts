@@ -280,9 +280,9 @@ export const createOrUpdateEvent = async (payload: Partial<SetupPayload>) => {
   )?.data as Response;
 };
 
-// export const deleteEvents = async (id: number) => {
-//   return (await api.delete(`/HomePage/DeleteNewEventById?Id=${id}`))?.data as Response;
-// }
+export const deleteEvents = async (id: number) => {
+  return (await api.delete(`/HomePage/DeleteNewEventId?Id=${id}`))?.data as Response;
+}
 
 export const getSocialMedia = async () => {
   return (await api.get("/GeneralTemplate/GetAllSocialMediaLinks"))
