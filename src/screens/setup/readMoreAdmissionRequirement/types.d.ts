@@ -16,6 +16,8 @@ interface AdmissionRequirementDetails {
   activeStatus: boolean;
   programName: null;
   isDeleted: boolean;
+  programTypeName: string;
+  programTypeId: number;
 }
 
 interface AdmissionReqDetailsPayload {

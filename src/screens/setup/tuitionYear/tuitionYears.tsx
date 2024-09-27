@@ -106,11 +106,11 @@ const TuitionYears = () => {
   const deleteTuitionYearMutation = useMutation({ mutationFn: deleteTuitionYear });
 
   const columns: ColumnsType<TuitionYear> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "level",
       title: "Level",

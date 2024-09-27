@@ -272,7 +272,7 @@ export const getEvents = async () => {
     ?.data as GetResponse;
 };
 
-export const createOrUpdateEvent = async (payload: Partial<SetupPayload>) => {
+export const createOrUpdateEvent = async (payload: FormData) => {
   return (
     await api.post("/HomePage/HomePage/CreateUpdateNewEvent", payload, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -281,8 +281,9 @@ export const createOrUpdateEvent = async (payload: Partial<SetupPayload>) => {
 };
 
 export const deleteEvents = async (id: number) => {
-  return (await api.delete(`/HomePage/DeleteNewEventId?Id=${id}`))?.data as Response;
-}
+  return (await api.delete(`/HomePage/DeleteNewEventId?Id=${id}`))
+    ?.data as Response;
+};
 
 export const getSocialMedia = async () => {
   return (await api.get("/GeneralTemplate/GetAllSocialMediaLinks"))
@@ -565,6 +566,18 @@ export const deleteAdmissionRequirement = async (id: number) => {
 export const getAllPrograms = async () => {
   return (await api.get("/Academics/GetAllProgramAsync"))
     ?.data as ProgramResponse;
+};
+
+export const createProgram = async (payload: DepartmentPayload) => {
+  return (await api.post("/Academics/CreateProgramAsync", payload))?.data;
+};
+
+export const updateProgram = async (payload: DepartmentPayload) => {
+  return (await api.put("/Academics/UpdateProgramAsync", payload))?.data;
+};
+
+export const Program = async (payload: DepartmentPayload) => {
+  return (await api.post("/Academics/CreateProgramAsync", payload))?.data;
 };
 
 export const deleteQualificationType = async (id: number) => {
@@ -1013,12 +1026,12 @@ export const getAllWhyItemsByWhyId = async (whyId: number | string) => {
 
 export const createUpdateWhyItem = async (payload: FormData) => {
   return (
-    await api.post(`HomePage/HomePage/createUpdateWhySchoolItem`, payload)
+    await api.post(`/HomePage/HomePage/createUpdateWhySchoolItem`, payload)
   )?.data as Response;
 };
 
 export const deleteWhyItem = async (id: number) => {
-  return (await api.delete(`HomePage/HomePage/DeleteWhyschoolitemId?Id=${id}`))
+  return (await api.delete(`/HomePage/DeleteWhyschoolitemId?Id=${id}`))
     ?.data as Response;
 };
 

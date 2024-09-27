@@ -27,6 +27,7 @@ export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
       setUpload(file[0]);
     }
   };
+  
   const clearFile = () => {
     setUpload(null);
   };

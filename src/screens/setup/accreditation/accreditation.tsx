@@ -70,11 +70,11 @@ const AccreditationSetup = () => {
   const accreditationData = data?.data ?? [];
 
   const columns: ColumnsType<AccreditationData> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "program",
       title: "Program",

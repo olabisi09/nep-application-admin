@@ -106,9 +106,7 @@ const WhyItem = () => {
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({
-            queryKey: ["get-AllWhy"],
-          });
+          refetch();
           setOpenDelete(false);
         },
       });
@@ -170,7 +168,7 @@ const WhyItem = () => {
           whyId={id!}
           whyItem={indexData}
           refetch={refetch}
-          handleClose={() => setOpen(false)}
+          handleClose={() => setOpenEdit(false)}
         />
       </Modal>
       <Modal

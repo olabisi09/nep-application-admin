@@ -5,6 +5,7 @@ export const validateSetup = Yup.object().shape({
   description: Yup.string().required("Description is required"),
   image: Yup.mixed().required("Image is required"),
   status: Yup.string().required("Status is required"),
+  eventDate: Yup.date().required('Please select a date').min(new Date(), 'Date must be today or later'),
 });
 
 export const validateTemplate = Yup.object().shape({

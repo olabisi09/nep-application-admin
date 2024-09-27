@@ -1,47 +1,45 @@
-interface getall {
+interface Response {
+  statusCode: number;
+  message: string;
+}
+
+interface ProgramPayload {
+  id?: number;
+  programTypeId: number;
+  programId: number;
+  activeStatus: boolean;
+  isDeleted?: boolean;
+}
+
+interface ProgramDataResponse extends Response {
+  data: ProgramData[];
+}
+
+interface ProgramData {
+  id: number;
+  programTypeId: number;
+  programId: number;
+  programTypeName: string;
+  program: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+}
+
+interface DepartmentResponse {
   code: number;
   message: string;
-  data: Datum[];
+  data: Department[];
 }
 
-interface Datum {
+interface Department {
+  categoryId: number;
+  categoryName: string;
   categoryCode: string;
-  programTypeCode: string;
-  programCategoryCode: null;
-  code: string;
   name: string;
   description: string;
-  requirements: string;
-  duration: string;
-  qualification: string;
-  careerProspect: string;
-  tuition: string;
-  curriculum: string;
-  scholarship: string;
-  userStory: string;
-  accreditation: string;
+  isDeleted: boolean;
   id: number;
   created: string;
   createdBy: null;
   activeStatus: boolean;
-}
-
-interface ProgramTypeResponse extends GenericResponse {
-  data: ProgramType[];
-}
-
-interface ProgramType {
-  name: string;
-  id: number;
-  created: string;
-  createdBy: null;
-  activeStatus: boolean;
-}
-
-interface CreateProgramTypePayload {
-  name: string;
-}
-
-interface EditProgramTypePayload extends CreateProgramTypePayload {
-  id: number;
 }

@@ -113,11 +113,11 @@ const AddReadMoreProgramme = ({ handleClose }: { handleClose: () => void }) => {
 
           <Input
             name="duration"
-            label="Duration (Months)"
-            placeholder="Input Duration in months"
+            label="Duration (Years)"
+            placeholder="Input Duration in years"
           />
 
-          <Select name="session" placeholder="Select Session" label="Session" />
+          <Input name="session" placeholder="Session Intake" label="Session Intake" />
 
           <Select
             name="status"
@@ -254,8 +254,8 @@ const EditReadMoreProgramme = ({
 
           <Input
             name="duration"
-            label="Duration (Months)"
-            placeholder="Input Duration in months"
+            label="Duration (Years)"
+            placeholder="Input Duration in years"
           />
           <Input name="session" placeholder="Select Session" label="Session" />
 

@@ -2,10 +2,16 @@ import Input from "../../../custom/input/input";
 import Button from "../../../custom/button/button";
 import { Form, Formik, FormikValues } from "formik";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createDepartment, updateDepartment } from "../../../requests";
+import { createProgram, updateDepartment, updateProgram } from "../../../requests";
 import { App } from "antd";
 import * as Yup from "yup";
 import { Select } from "../../../custom";
+
+const validate = Yup.object().shape({
+  name: Yup.string().required("Department name is required"),
+  code: Yup.string().required("Department code is required"),
+  faculty: Yup.string().required("Faculty is required"),
+});
 
 const CreateDepartment = ({
   handleClose,
@@ -16,28 +22,22 @@ const CreateDepartment = ({
 }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const addDepartmentMutation = useMutation({ mutationFn: createDepartment });
-
-  const validate = Yup.object().shape({
-    name: Yup.string().required("Department name is required"),
-    description: Yup.string().required("Description is required"),
-    categoryId: Yup.number().required().min(1, "Faculty is required"),
-  });
+  const addDepartmentMutation = useMutation({ mutationFn: createProgram });
 
   const facultyOptions =
     faculties &&
-    faculties.map((item) => <option value={item.id}>{item.name}</option>);
+    faculties.map((item) => (
+      <option value={item.categoryCode}>{item.name}</option>
+    ));
 
   const handleAddDepartment = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: Partial<Department> = {
+    const payload: DepartmentPayload = {
       name: values.name,
-      description: values.description,
-      categoryId: values.categoryId,
-      activeStatus: true,
-      isDeleted: false,
+      categoryCode: values.faculty,
+      code: values.code,
     };
 
     try {
@@ -64,8 +64,8 @@ const CreateDepartment = ({
     <Formik
       initialValues={{
         name: "",
-        description: "",
-        categoryId: 0,
+        code: "",
+        faculty: "",
       }}
       onSubmit={(values, { resetForm }) => {
         handleAddDepartment(values, resetForm);
@@ -79,12 +79,12 @@ const CreateDepartment = ({
           placeholder="Input department name"
         />
         <Input
-          name="description"
-          label="Description"
-          placeholder="Input description"
+          name="code"
+          label="Department code"
+          placeholder="Input department code"
         />
         <Select
-          name="categoryId"
+          name="faculty"
           label="Faculty"
           placeholder="Select faculty"
           options={facultyOptions}
@@ -113,31 +113,31 @@ const EditDepartment = ({
   handleClose,
   faculties,
 }: {
-  item: Department;
+  item: Program;
   handleClose: () => void;
   faculties: Category[];
 }) => {
   const queryClient = useQueryClient();
   const { notification } = App.useApp();
   const editDepartmentMutation = useMutation({
-    mutationFn: updateDepartment,
+    mutationFn: updateProgram,
   });
 
   const facultyOptions =
     faculties &&
-    faculties.map((item) => <option value={item.id}>{item.name}</option>);
+    faculties?.map((item) => (
+      <option value={item?.categoryCode}>{item?.name}</option>
+    ));
 
   const handleEditDepartment = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: Partial<Department> = {
+    const payload: DepartmentPayload = {
+      id: item?.id,
       name: values.name,
-      description: values.description,
-      categoryId: values.categoryId,
-      id: item.id,
-      activeStatus: true,
-      isDeleted: false,
+      categoryCode: values.faculty,
+      code: values.code,
     };
 
     try {
@@ -164,12 +164,13 @@ const EditDepartment = ({
     <Formik
       initialValues={{
         name: item?.name,
-        description: item?.description,
-        categoryId: item?.categoryId,
+        code: item?.code,
+        faculty: item?.categoryCode,
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditDepartment(values, resetForm);
       }}
+      validationSchema={validate}
       enableReinitialize={true}
     >
       <Form className="fields">
@@ -179,12 +180,12 @@ const EditDepartment = ({
           placeholder="Input department name"
         />
         <Input
-          name="description"
-          label="Description"
-          placeholder="Input description"
+          name="code"
+          label="Department Code"
+          placeholder="Input department code"
         />
         <Select
-          name="categoryId"
+          name="faculty"
           label="Faculty"
           placeholder="Select faculty"
           options={facultyOptions}

@@ -68,11 +68,11 @@ const AdmissionReqDetail = () => {
   };
 
   const columns: ColumnsType<AdmissionRequirementDetails> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "name",
       title: "Name",

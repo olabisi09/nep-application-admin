@@ -24,7 +24,7 @@ import { getAllCourseOverview } from "./request";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../deleteModal/deleteModal";
-import { deleteOverview, deleteReadMoreOverView } from "../../../requests";
+import { deleteReadMoreOverView } from "../../../requests";
 
 const ReadMoreCourse = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -73,11 +73,11 @@ const ReadMoreCourse = () => {
   };
 
   const columns: ColumnsType<ReadMoreOverview> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "programName",
       title: "Program Name",

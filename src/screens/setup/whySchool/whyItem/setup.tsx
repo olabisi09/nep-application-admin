@@ -71,8 +71,8 @@ export const SetupWhyItem = ({
     <Formik
       initialValues={{
         image: null,
-        title: whyItem?.name || "",
-        description: whyItem?.description || "",
+        title: whyItem?.name ?? "",
+        description: whyItem?.description ?? "",
         status: whyItem?.activeStatus ? "Active" : "Inactive",
       }}
       onSubmit={(values, { resetForm }) => {

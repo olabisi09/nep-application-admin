@@ -125,6 +125,7 @@ const AddReadMoreCourseOverview = ({
               </>
             }
           />
+          
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button

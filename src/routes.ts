@@ -8,6 +8,7 @@ export const routes = {
     faculty: "/faculty-setup",
     department: "/department-setup",
     program: "/program-setup",
+    programType: "/program-type-setup",
     readMoreProgram: "/read-more-program-setup",
     readMoreCourse: "/read-more-course-overview-setup",
     readMoreAdmissionRequirement: "/read-more-admission-requirement-setup",
@@ -34,6 +35,7 @@ export const routes = {
     title: "/title-setup",
     maritalStatus: "/marital-status-setup",
 
+    exploreProgrammes: "explore-programmes",
     aboutUs: "/about-us",
     whyUs: "/why-us",
     whyItems: "/why-us/:id/why-items",

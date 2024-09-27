@@ -1,69 +1,60 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddCareerProspects from "./addCareerProspects";
+import AddProgram from "./addProgramType";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { deleteProgramType, getProgramTypes } from "./request";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteCareerProspect, getCareerProspects } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
-import { useNavigate } from "react-router-dom";
-import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import EditProgramType from "./editProgramType";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 
-const CareerProspects = () => {
+const ProgramSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [careerProspectItems, setCareerProspectItems] =
-    useState<CareerProspect>({} as CareerProspect);
-  const [openDelete, setOpenDelete] = useState(false); // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
+  const [record, setRecord] = useState<ProgramType>({} as ProgramType);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const { notification } = App.useApp();
-
-  const navigate = useNavigate();
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
 
-  const deleteCareerProspectMutation = useMutation({
-    mutationFn: deleteCareerProspect,
-  });
-
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-career-prospect"],
-    queryFn: getCareerProspects,
+    queryKey: ["get-program-types"],
+    queryFn: getProgramTypes,
   });
 
-  const careerProspectData = data?.data as CareerProspect[];
+  const programTypesData = data?.data ?? [];
 
-  const deleteCareerProspectHandler = async () => {
+  const deleteProgramTypeMutation = useMutation({
+    mutationFn: deleteProgramType,
+  });
+
+  const deleteProgramTypeHandler = async () => {
     try {
-      await deleteCareerProspectMutation.mutateAsync(careerProspectItems?.id, {
-        onSuccess: (data) => {
-          notification.success({
-            message: "Success",
-            description: data?.message,
-          });
-          refetch();
-          setOpenDelete((prevState) => !prevState);
-        },
-      });
+      await deleteProgramTypeMutation.mutateAsync(
+        record?.id,
+        {
+          onSuccess: (data) => {
+            notification.success({
+              message: "Success",
+              description: data?.message,
+            });
+            refetch();
+            setOpenDelete((prevState) => !prevState);
+          },
+        }
+      );
     } catch (error: any) {
       notification.error({
         message: "Error",
@@ -72,31 +63,16 @@ const CareerProspects = () => {
     }
   };
 
-  const columns: ColumnsType<CareerProspect> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
+  const columns: ColumnsType<ProgramType> = [
     {
-      key: "programName",
-      title: "Program Name",
-      dataIndex: "programName",
+      key: "id",
+      title: "ID",
+      dataIndex: "id",
     },
     {
-      key: "description",
-      title: "Description",
-      dataIndex: "description",
-      render: (_: any, { description }: any) => {
-        const limitedCleanHtml = sanitizeAndLimitString(description);
-        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
-      },
-    },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+      key: "name",
+      title: "Name",
+      dataIndex: "name",
     },
     {
       key: "action",
@@ -105,26 +81,22 @@ const CareerProspects = () => {
         const items: MenuProps["items"] = [
           {
             key: "1",
-            label: "Add Items",
-            onClick: () => navigate(`/career-prospect-items/${record.id}`),
-          },
-          {
-            key: "2",
             label: "Edit",
             onClick: () => {
-              setCareerProspectItems(record);
               setOpenEdit(true);
+              setRecord(record);
             },
           },
           {
-            key: "3",
+            key: "2",
             label: "Delete",
             onClick: () => {
-              setCareerProspectItems(record);
+              setRecord(record);
               setOpenDelete(true);
             },
           },
         ];
+
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />
@@ -134,10 +106,16 @@ const CareerProspects = () => {
     },
   ];
 
-  const handleModal = (status: boolean) => setShowAddModal(status);
+  const handleClose = useCallback(() => {
+    setShowAddModal((prevState) => !prevState);
+  }, []);
+
+  const handleEditClose = useCallback(() => {
+    setOpenEdit((prevState) => !prevState);
+  }, []);
 
   if (isLoading) {
-    return <Spin />;
+    return <Spin size="large" />;
   }
 
   if (isError) {
@@ -147,14 +125,13 @@ const CareerProspects = () => {
   return (
     <main>
       <section className="space-between">
-        <h3>Career Prospects Setup</h3>
+        <h3>Program Type Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
           text="Setup"
         />
       </section>
-
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -179,9 +156,8 @@ const CareerProspects = () => {
             )}
           </div>
         </div>
-
         <Table
-          dataSource={careerProspectData}
+          dataSource={programTypesData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}
@@ -192,41 +168,38 @@ const CareerProspects = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Career Prospects Setup"
-        footer={null}>
-        <AddCareerProspects
-          item={careerProspectItems}
-          handleClose={() => handleModal(false)}
-        />
+        title="Program Setup"
+        footer={null}
+      >
+        <AddProgram handleClose={handleClose} />
       </Modal>
 
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Career Prospects Setup"
-        footer={null}>
-        <AddCareerProspects
-          item={careerProspectItems}
-          handleClose={() => setOpenEdit(false)}
-        />
+        title="Program Type Setup"
+        footer={null}
+      >
+        <EditProgramType handleClose={handleEditClose} record={record} />
       </Modal>
 
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete Career Prospect Setup"
-        footer={null}>
+        title="Delete Program Setup"
+        footer={null}
+      >
         <DeleteModalContent
-          isLoading={deleteCareerProspectMutation?.isPending}
+          isLoading={deleteProgramTypeMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={deleteCareerProspectHandler}
-          title={careerProspectItems?.id}
+          handleSubmit={deleteProgramTypeHandler}
+          title={record?.name}
         />
       </Modal>
     </main>
   );
 };
 
-export default CareerProspects;
+export default ProgramSetUp;

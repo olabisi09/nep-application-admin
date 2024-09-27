@@ -44,7 +44,7 @@ export const CreateAdmissionReqDetail = ({
       admissionRequirementId: Number(id),
       description: values.description,
       noOfSittings: 0,
-      programTypeId: values.programType,
+      programTypeId: Number(values.programType),
       activeStatus: values.status === "Active",
       isDeleted: false,
     };
@@ -87,13 +87,12 @@ export const CreateAdmissionReqDetail = ({
 
   return (
     <Formik
-      initialValues={
-        {
-          name: "",
-          description: "",
-          status: "",
-        } as SetupInit
-      }
+      initialValues={{
+        name: "",
+        description: "",
+        programType: "",
+        status: "",
+      }}
       onSubmit={(values, { resetForm }) => {
         handleAddAdmissionRequirementDetail(values, resetForm);
       }}
@@ -177,6 +176,7 @@ export const EditAdmissionReqDetail = ({
       description: values.description,
       noOfSittings: 0,
       activeStatus: values.status === "Active" ? true : false,
+      programTypeId: Number(values.programType),
       isDeleted: false,
     };
 
@@ -220,13 +220,12 @@ export const EditAdmissionReqDetail = ({
 
   return (
     <Formik
-      initialValues={
-        {
-          name: item?.name ?? "",
-          description: "",
-          status: initialStatus,
-        } as SetupInit
-      }
+      initialValues={{
+        name: item?.name ?? "",
+        description: "",
+        status: initialStatus,
+        programType: item?.programTypeId,
+      }}
       enableReinitialize
       onSubmit={(values, { resetForm }) => {
         handleAddAdmissionRequirementDetail(values, resetForm);
