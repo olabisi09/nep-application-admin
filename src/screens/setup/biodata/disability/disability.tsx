@@ -1,6 +1,6 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Search } from "../../../../assets/search.svg";
+import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -10,48 +10,46 @@ import {
   App,
   Spin,
 } from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
-import { useCallback, useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import { AddModeOfStudy, EditModeOfStudy } from "./addModeOfStudy";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteModeOfStudy, getAllModeOfStudy } from "../../../requests";
-import { ColumnsType } from "antd/es/table";
-import DeleteModalContent from "../../deleteModal/deleteModal";
+import { Form, Formik } from "formik";
+import styles from "../../styles.module.scss";
 
-const ModeOfStudy = () => {
+import { useState } from "react";
+
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { ColumnsType } from "antd/es/table";
+import { AddDisability, EditDisability } from "./addDisability";
+import { Button, SearchInput } from "../../../../custom";
+import { deleteDisability, getAllDisability } from "../../../../requests";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
+
+const DisabilitySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [modeOfStudy, setModeOfStudy] = useState<ModeOfStudy>(
-    {} as ModeOfStudy
-  );
+  const [disability, setDisability] = useState<Disability>({} as Disability);
   const [openDelete, setOpenDelete] = useState(false);
   const { notification } = App.useApp();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-mode-of-study"],
-    queryFn: getAllModeOfStudy,
+    queryKey: ["get-disability"],
+    queryFn: getAllDisability,
   });
 
-  const deleteModeOfStudyMutation = useMutation({
-    mutationFn: deleteModeOfStudy,
+  const deleteDisabilityMutation = useMutation({
+    mutationFn: deleteDisability,
   });
 
-  const handleDelete = (data: ModeOfStudy) => {
-    setModeOfStudy(data);
+  const handleDelete = (data: Disability) => {
+    setDisability(data);
     setOpenDelete(true);
   };
 
-  const deleteAdmissionReqHandler = async () => {
+  const DeleteDisabilityHandler = async () => {
     try {
-      await deleteModeOfStudyMutation.mutateAsync(modeOfStudy?.id, {
+      await deleteDisabilityMutation.mutateAsync(disability?.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -73,36 +71,22 @@ const ModeOfStudy = () => {
     setSearchTerm(e.target.value);
   };
 
-  const items: MenuProps["items"] = [
+  const columns: ColumnsType<Disability> = [
     {
-      key: "1",
-      label: (
-        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
-          Edit
-        </button>
-      ),
-    },
-  ];
-  const columns: ColumnsType<ModeOfStudy> = [
-    {
-      title: "S/N",
-      dataIndex: "index",
-      key: "index",
-      render: (text: any, record: any, index: number) => (
-        <span>{(currentPage - 1) * pageSize + index + 1}</span>
-      ),
+      key: "id",
+      title: "ID",
+      dataIndex: "id",
     },
     {
       key: "name",
       title: "Name",
       dataIndex: "name",
     },
-
     {
-      key: "status",
+      key: "isActive",
       title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+      dataIndex: "isActive",
+      render: (_, { isActive }) => (isActive ? "Active" : "Inactive"),
     },
     {
       key: "action",
@@ -113,14 +97,19 @@ const ModeOfStudy = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setModeOfStudy(record);
+              setDisability(record);
               setOpenEdit(true);
             },
           },
           {
             key: "2",
-            label: "Delete",
-            onClick: () => handleDelete(record),
+            label: (
+              <button
+                style={{ border: "0rem", background: "none" }}
+                onClick={() => handleDelete(record)}>
+                Delete
+              </button>
+            ),
           },
         ];
         return (
@@ -132,7 +121,7 @@ const ModeOfStudy = () => {
     },
   ];
 
-  const modeOfStudyData = data?.data;
+  const disabilityData = data?.data;
 
   if (isLoading) {
     return <Spin />;
@@ -143,14 +132,13 @@ const ModeOfStudy = () => {
   return (
     <main>
       <section className="space-between">
-        <h3>Mode of Study Setup</h3>
+        <h3>Disability Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
           text="Setup"
         />
       </section>
-
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -176,7 +164,7 @@ const ModeOfStudy = () => {
           </div>
         </div>
         <Table
-          dataSource={modeOfStudyData}
+          dataSource={disabilityData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record, index) => `${record.id}${index}`}
@@ -187,41 +175,43 @@ const ModeOfStudy = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Mode of Study Setup"
+        title="Disability Setup"
         footer={null}>
-        <AddModeOfStudy handleClose={() => setShowAddModal(false)} />
+        <AddDisability handleClose={() => setShowAddModal(false)} />
       </Modal>
 
-      
+      {disability?.id && openEdit && (
         <Modal
           open={openEdit}
           onCancel={() => setOpenEdit(false)}
           centered
-          title="Mode of Study Setup"
+          title="Disability Setup"
           footer={null}>
-          <EditModeOfStudy
-            modeOfStudy={modeOfStudy}
+          <EditDisability
+            title={disability}
             handleClose={() => setOpenEdit(false)}
           />
         </Modal>
-      
+      )}
 
-      <Modal
-        open={openDelete}
-        onCancel={() => setOpenDelete(false)}
-        centered
-        title="Delete Mode of Study Setup"
-        footer={null}>
-        <DeleteModalContent
-          isLoading={deleteModeOfStudyMutation?.isPending}
-          handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={deleteAdmissionReqHandler}
-          title={"this item"}
-          isActive={false}
-        />
-      </Modal>
+      {disability?.id && openDelete && (
+        <Modal
+          open={openDelete}
+          onCancel={() => setOpenDelete(false)}
+          centered
+          title="Delete Disability Setup"
+          footer={null}>
+          <DeleteModalContent
+            isLoading={deleteDisabilityMutation?.isPending}
+            handleCloseModal={() => setOpenDelete(false)}
+            handleSubmit={DeleteDisabilityHandler}
+            title={disability?.name}
+            isActive={false}
+          />
+        </Modal>
+      )}
     </main>
   );
 };
 
-export default ModeOfStudy;
+export default DisabilitySetup;

@@ -653,7 +653,7 @@ interface getAllFeeSetupResponse extends Response {
   data: getAllFeeSetup[];
 }
 
-interface getAllFeeSetup {
+interface GetAllFeeSetup {
   id: number;
   modeOfStudyId: number;
   modeOfStudy: string;
@@ -849,4 +849,24 @@ interface Datum {
   programTypeId: number;
   programTypeName: null | string;
   isDeleted: boolean;
+}
+
+interface Disability {
+  id: number;
+  name: string;
+  isActive: boolean;
+}
+interface DisabilityResponse extends Response {
+  data: Disability[];
+}
+
+interface Religion {
+  id: number;
+  name: string;
+  isActive: boolean;
+  isDeleted: boolean;
+}
+
+interface ReligionResponse extends Response {
+  data: Religion[];
 }

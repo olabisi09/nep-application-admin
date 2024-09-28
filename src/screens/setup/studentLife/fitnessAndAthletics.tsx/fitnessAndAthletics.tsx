@@ -21,6 +21,7 @@ import { ColumnsType } from "antd/es/table";
 import { useNavigate, useParams } from "react-router-dom";
 import FitnessAndAthleticsForm from "./fitnessAndAthleticsForm";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const FitnessAndAthletics = () => {
   const { notification } = App.useApp();
@@ -29,6 +30,10 @@ const FitnessAndAthletics = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [fitnessAthleticsItems, setFitnessAthleticsItems] =
     useState<FitnessAthletics>({} as FitnessAthletics);
+  const [openDelete, setOpenDelete] = useState(false);
+  // const [record, setRecord] = useState<FitnessAthletics>(
+  //   {} as FitnessAthletics
+  // );
 
   const navigate = useNavigate();
 
@@ -41,6 +46,46 @@ const FitnessAndAthletics = () => {
     queryFn: () => getFitnessAndAthleticsByStudentLifeId(id!),
     enabled: !!id,
   });
+
+  // const deleteFitnessAndAthleticsHandler = async () => {
+  //   try {
+  //     await deleteFitnessAthleticsMutation.mutateAsync(record?.id, {
+  //       onSuccess: (data) => {
+  //         notification.success({
+  //           message: "Success",
+  //           description: data?.message,
+  //         });
+  //         refetch();
+  //         setOpenDelete((prevState) => !prevState);
+  //       },
+  //     });
+  //   } catch (error: any) {
+  //     notification.error({
+  //       message: "Error",
+  //       description: error?.response?.data?.message,
+  //     });
+  //   }
+  // };
+
+  const deleteFitnessAndAthleticsHandler = async () => {
+    try {
+      await deleteFitnessAthleticsMutation.mutateAsync(fitnessAthleticsItems?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<FitnessAthletics> = [
     {
@@ -77,14 +122,14 @@ const FitnessAndAthletics = () => {
             key: "1",
             label: "Add items",
             onClick: () => {
-              navigate(`/student-life/${record.id}/fitness-athletics-item`)
+              navigate(`/student-life/${record.id}/fitness-athletics-item`);
             },
           },
           {
             key: "2",
             label: "Add Images",
             onClick: () => {
-              navigate(`/student-life/${record.id}/fitness-athletics-image`)
+              navigate(`/student-life/${record.id}/fitness-athletics-image`);
             },
           },
           {
@@ -98,23 +143,9 @@ const FitnessAndAthletics = () => {
           {
             key: "4",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteFitnessAthleticsMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setFitnessAthleticsItems(record);
+              setOpenDelete(true);
             },
           },
         ];
@@ -142,11 +173,14 @@ const FitnessAndAthletics = () => {
     <div>
       <section className="space-between">
         <h3>Student Life: Fitness and Athletics Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+
+        {fitnessAthleticsData?.length === 0 && (
+          <Button
+            onClick={() => setOpen(true)}
+            iconBefore={<Plus />}
+            text="Setup"
+          />
+        )}
       </section>
       <br />
       <Card bordered={false}>
@@ -180,6 +214,20 @@ const FitnessAndAthletics = () => {
         <FitnessAndAthleticsForm
           item={fitnessAthleticsItems}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Fitness And Athletics"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteFitnessAthleticsMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteFitnessAndAthleticsHandler}
+          title={fitnessAthleticsItems?.title}
         />
       </Modal>
     </div>

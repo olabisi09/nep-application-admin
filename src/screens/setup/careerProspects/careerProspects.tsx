@@ -21,6 +21,7 @@ import { deleteCareerProspect, getCareerProspects } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const CareerProspects = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -30,6 +31,7 @@ const CareerProspects = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [careerProspectItems, setCareerProspectItems] =
     useState<CareerProspect>({} as CareerProspect);
+  const [openDelete, setOpenDelete] = useState(false); // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
 
   const { notification } = App.useApp();
 
@@ -49,6 +51,26 @@ const CareerProspects = () => {
   });
 
   const careerProspectData = data?.data as CareerProspect[];
+
+  const deleteCareerProspectHandler = async () => {
+    try {
+      await deleteCareerProspectMutation.mutateAsync(careerProspectItems?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<CareerProspect> = [
     {
@@ -97,24 +119,9 @@ const CareerProspects = () => {
           {
             key: "3",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteCareerProspectMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setCareerProspectItems(record);
+              setOpenDelete(true);
             },
           },
         ];
@@ -186,8 +193,7 @@ const CareerProspects = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Career Prospects Setup"
-        footer={null}
-      >
+        footer={null}>
         <AddCareerProspects
           item={careerProspectItems}
           handleClose={() => handleModal(false)}
@@ -199,11 +205,24 @@ const CareerProspects = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Career Prospects Setup"
-        footer={null}
-      >
+        footer={null}>
         <AddCareerProspects
           item={careerProspectItems}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Career Prospect Setup"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteCareerProspectMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteCareerProspectHandler}
+          title={careerProspectItems?.id}
         />
       </Modal>
     </main>

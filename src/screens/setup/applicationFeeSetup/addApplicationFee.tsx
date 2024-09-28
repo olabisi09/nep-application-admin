@@ -1,10 +1,6 @@
 import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
-import {
-  useMutation,
-  useQueries,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
 import {
   createOrUpdateApplicationFee,
@@ -21,7 +17,7 @@ import { validator } from "../../../utils/validator";
 import { getProgramTypes } from "./request";
 
 interface ComponentProps {
-  record: getAllFeeSetup;
+  record: GetAllFeeSetup;
   handleClose: () => void;
 }
 
@@ -112,19 +108,12 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
     </option>
   ));
 
-  const programTypeOptions = programTypesData?.map((item) => (
-    <option key={item?.id} value={item?.id}>
-      {item?.name}
-    </option>
-  ));
-
   const validationSchema = Yup.object().shape({
     programName: validator.programName,
     programType: validator.programType,
     modeOfStudy: validator.modeOfStudy,
     amount: validator.amount,
     applicationBatch: validator.applicationBatch,
-    status: validator.status,
   });
 
   const hasRecord = Object.keys(record)?.length > 0;
@@ -170,12 +159,6 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
                 placeholder="Select Batch"
                 name="applicationBatch"
                 options={applicationBatchOptions}
-              />
-              <Select
-                label="Program Type"
-                placeholder="select program Type"
-                name="programType"
-                options={programTypeOptions}
               />
 
               <Input name="amount" placeholder="0.00" label="Amount" />

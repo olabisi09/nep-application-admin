@@ -70,9 +70,13 @@ const StudentLife = () => {
       case "Campus Experience":
         return <CampusExperience handleClose={() => setOpen(false)} />;
       case "Fitness & Athletics":
-        return <FitnessAthletics item={item} handleClose={() => setOpen(false)} />;
+        return (
+          <FitnessAthletics item={item} handleClose={() => setOpen(false)} />
+        );
       case "Support & Guidance":
-        return <SupportGuidance item={item} handleClose={() => setOpen(false)} />;
+        return (
+          <SupportGuidance item={item} handleClose={() => setOpen(false)} />
+        );
       default:
         return <CreateStudentLife handleClose={() => setOpen(false)} />;
     }
@@ -125,7 +129,8 @@ const StudentLife = () => {
           {
             key: "4",
             label: "Campus Experience",
-            onClick: () => navigate(`/student-life/${record.id}/campus-experience`),
+            onClick: () =>
+              navigate(`/student-life/${record.id}/campus-experience`),
           },
           {
             key: "5",
@@ -142,7 +147,8 @@ const StudentLife = () => {
           {
             key: "7",
             label: "Student Activities",
-            onClick: () => navigate(`/student-life/${record.id}/student-activities`),
+            onClick: () =>
+              navigate(`/student-life/${record.id}/student-activities`),
           },
           {
             key: "8",
@@ -172,11 +178,14 @@ const StudentLife = () => {
     <div>
       <section className="space-between">
         <h3>Student Life Setup</h3>
-        <Button
-          onClick={() => onFormClick("Create")}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+
+        {studentLife?.length === 0 && (
+          <Button
+            onClick={() => onFormClick("Create")}
+            iconBefore={<Plus />}
+            text="Setup"
+          />
+        )}
       </section>
       <br />
       <Card bordered={false} style={{ minWidth: "720px" }}>

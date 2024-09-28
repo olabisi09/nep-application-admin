@@ -20,6 +20,7 @@ import {
 import { ColumnsType } from "antd/es/table";
 import { useParams } from "react-router-dom";
 import SchoolSummaryForm from "./schoolSummaryForm";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const SchoolSummary = () => {
   const { notification } = App.useApp();
@@ -29,6 +30,7 @@ const SchoolSummary = () => {
   const [schoolSummaryItems, setSchoolSummaryItems] = useState<SchoolSummary>(
     {} as SchoolSummary
   );
+  const [openDelete, setOpenDelete] = useState(false);
 
   const deleteSchoolSummaryMutation = useMutation({
     mutationFn: deleteSchoolSummary,
@@ -39,6 +41,26 @@ const SchoolSummary = () => {
     queryFn: () => getSchoolSummaryByStudentLifeId(id!),
     enabled: !!id,
   });
+
+  const deleteSchoolSummaryHandler = async () => {
+    try {
+      await deleteSchoolSummaryMutation.mutateAsync(schoolSummaryItems?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<SchoolSummary> = [
     {
@@ -71,30 +93,16 @@ const SchoolSummary = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setSchoolSummaryItems({...schoolSummaryItems, ...record});
+              setSchoolSummaryItems({ ...schoolSummaryItems, ...record });
               setOpenEdit(true);
             },
           },
           {
             key: "2",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteSchoolSummaryMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setSchoolSummaryItems(record);
+              setOpenDelete(true);
             },
           },
         ];
@@ -144,24 +152,35 @@ const SchoolSummary = () => {
         onCancel={() => setOpen(false)}
         centered
         title="Create School Summary"
-        footer={null}
-      >
+        footer={null}>
         <SchoolSummaryForm
           item={schoolSummaryItems}
           handleClose={() => setOpen(false)}
         />
       </Modal>
-      
+
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit School Summary"
-        footer={null}
-      >
+        footer={null}>
         <SchoolSummaryForm
           item={schoolSummaryItems}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete School Summary Setup"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteSchoolSummaryMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteSchoolSummaryHandler}
+          title={schoolSummaryItems?.title}
         />
       </Modal>
     </div>

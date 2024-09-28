@@ -1,9 +1,9 @@
 import { App } from "antd";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import { Form, Formik, FormikValues } from "formik";
-import { Button, Input, Select } from "../../../custom";
-import { editProgramType, getProgramTypes } from "./request";
+import { Button, Input } from "../../../custom";
+import { editProgramType } from "./request";
 
 interface Props {
   handleClose: () => void;
@@ -17,13 +17,6 @@ const EditProgramType = ({ handleClose, record }: Props) => {
   const validate = Yup.object().shape({
     name: Yup.string().required("Program Type name is required"),
   });
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["get-program-types"],
-    queryFn: getProgramTypes,
-  });
-
-  const programTypesData = data?.data ?? [];
 
   const editProgramTypeMutation = useMutation({
     mutationFn: editProgramType,
@@ -59,12 +52,6 @@ const EditProgramType = ({ handleClose, record }: Props) => {
     }
   };
 
-  const programTypeOptions = programTypesData?.map((item) => (
-    <option key={item?.id} value={item?.id}>
-      {item?.name}
-    </option>
-  ));
-
   return (
     <Formik
       initialValues={{ name: record.name ?? "" }}
@@ -81,7 +68,6 @@ const EditProgramType = ({ handleClose, record }: Props) => {
               name="name"
               placeholder="Select Program Type"
               label="Program Type"
-            //   options={programTypeOptions}
             />
 
             <div className="btn-group">

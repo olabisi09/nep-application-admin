@@ -2,7 +2,6 @@ import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
@@ -19,7 +18,6 @@ const TuitionYears = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
-  const [open, setOpen] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [tuitionYear, setTuitionYear] = useState<TuitionYear>({} as TuitionYear)
@@ -60,7 +58,6 @@ const TuitionYears = () => {
     isLoading: isLevelLoading,
     isError: isLevelError,
     error: levelError,
-    refetch: refetchLevel,
   } = queryResults[1];
 
   const {
@@ -68,7 +65,6 @@ const TuitionYears = () => {
     isLoading: isTuitionFeeLoading,
     isError: isTuitionFeeError,
     error: tuitionFeeError,
-    refetch: refetchTuitionFee,
   } = queryResults[2];
 
   const {
@@ -76,7 +72,6 @@ const TuitionYears = () => {
     isLoading: isProgramsLoading,
     isError: isProgramsError,
     error: programsError,
-    refetch: refetchPrograms,
   } = queryResults[3];
 
   const handleSearch = (e: any) => {
@@ -88,7 +83,7 @@ const TuitionYears = () => {
     setOpenDelete(true);
   };
 
-  const DeleteTuitionHandler = async () => {
+  const deleteTuitionHandler = async () => {
     try {
       await deleteTuitionYearMutation.mutateAsync(tuitionYear?.id, {
         onSuccess: (data) => {
@@ -230,7 +225,7 @@ const TuitionYears = () => {
         programItem={programsData?.data || []} 
         levelItem={levelData?.data || []}
         tuitionFeeItem={tuitionFeeData?.data || []}  
-        handleClose={() => setOpen(false)}
+        handleClose={() => setShowAddModal(false)}
       />
       </Modal>
 
@@ -259,7 +254,7 @@ const TuitionYears = () => {
         <DeleteModalContent
           isLoading={deleteTuitionYearMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteTuitionHandler}
+          handleSubmit={deleteTuitionHandler}
           title={tuitionYear?.feeDescription}
         />
       </Modal>

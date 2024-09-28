@@ -21,6 +21,7 @@ import { ColumnsType } from "antd/es/table";
 import { useNavigate, useParams } from "react-router-dom";
 import SupportAndGuidanceForm from "./supportAndGuidanceForm";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const SupportAndGuidance = () => {
   const { notification } = App.useApp();
@@ -29,6 +30,7 @@ const SupportAndGuidance = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [supportAndGuidanceItems, setSupportAndGuidanceItems] =
     useState<SupportAndGuidance>({} as SupportAndGuidance);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const navigate = useNavigate();
 
@@ -41,6 +43,29 @@ const SupportAndGuidance = () => {
     queryFn: () => getSupportAndGuidanceByStudentLifeId(id!),
     enabled: !!id,
   });
+
+  const deleteSupportGuidanceHandler = async () => {
+    try {
+      await deleteSupportAndStudentMutation.mutateAsync(
+        supportAndGuidanceItems?.id,
+        {
+          onSuccess: (data) => {
+            notification.success({
+              message: "Success",
+              description: data?.message,
+            });
+            refetch();
+            setOpenDelete((prevState) => !prevState);
+          },
+        }
+      );
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<SupportAndGuidance> = [
     {
@@ -77,7 +102,7 @@ const SupportAndGuidance = () => {
             key: "1",
             label: "Add Items",
             onClick: () => {
-              navigate(`/student-life/${record.id}/support-and-guidance-item`)
+              navigate(`/student-life/${record.id}/support-and-guidance-item`);
             },
           },
           {
@@ -91,23 +116,9 @@ const SupportAndGuidance = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteSupportAndStudentMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setSupportAndGuidanceItems(record);
+              setOpenDelete(true);
             },
           },
         ];
@@ -135,11 +146,14 @@ const SupportAndGuidance = () => {
     <div>
       <section className="space-between">
         <h3>Student Life: Support And Guidance Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+
+        {supportAndGuidanceData?.length === 0 && (
+          <Button
+            onClick={() => setOpen(true)}
+            iconBefore={<Plus />}
+            text="Setup"
+          />
+        )}
       </section>
       <br />
       <Card bordered={false}>
@@ -173,6 +187,19 @@ const SupportAndGuidance = () => {
         <SupportAndGuidanceForm
           item={supportAndGuidanceItems}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Support And Guidance Setup"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteSupportAndStudentMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteSupportGuidanceHandler}
+          title={supportAndGuidanceItems?.title}
         />
       </Modal>
     </div>

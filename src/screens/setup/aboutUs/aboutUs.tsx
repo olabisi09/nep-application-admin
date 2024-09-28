@@ -17,18 +17,40 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteAboutUs, getAboutUs } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const AboutUs = () => {
   const { notification } = App.useApp();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [about, setAbout] = useState<Setup>({} as Setup);
+  const [openDelete, setOpenDelete] = useState(false);  // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
 
-  const deleteAboutUsMutation = useMutation({ mutationFn: deleteAboutUs });
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-about-us"],
     queryFn: getAboutUs,
   });
+  const deleteAboutUsMutation = useMutation({ mutationFn: deleteAboutUs });
+
+  const deleteAboutUsHandler = async () => {
+    try {
+      await deleteAboutUsMutation.mutateAsync(about?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<Setup> = [
     {
@@ -80,23 +102,9 @@ const AboutUs = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteAboutUsMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setAbout(record);
+              setOpenDelete(true);
             },
           },
         ];
@@ -142,8 +150,7 @@ const AboutUs = () => {
         onCancel={() => setOpen(false)}
         centered
         title="About Us Setup"
-        footer={null}
-      >
+        footer={null}>
         <CreateAboutUs handleClose={() => setOpen(false)} />
       </Modal>
       <Modal
@@ -151,9 +158,21 @@ const AboutUs = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit About Us Setup"
-        footer={null}
-      >
+        footer={null}>
         <EditAboutUs item={about} handleClose={() => setOpenEdit(false)} />
+      </Modal>
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete About Us Setup"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteAboutUsMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteAboutUsHandler}
+          title={about?.title}
+        />
       </Modal>
     </div>
   );

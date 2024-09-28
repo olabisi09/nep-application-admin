@@ -21,6 +21,7 @@ import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
 import { CreateOverview, EditOverview } from "./setup";
 import { useParams } from "react-router-dom";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const Overview = () => {
   const { notification } = App.useApp();
@@ -30,6 +31,8 @@ const Overview = () => {
   const [overview, setOverview] = useState<ItemByStudentLife>(
     {} as ItemByStudentLife
   );
+  const [openDelete, setOpenDelete] = useState(false);
+  const [record, setRecord] = useState<Overview>({} as Overview);
 
   const deleteOverviewMutation = useMutation({ mutationFn: deleteOverview });
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -37,6 +40,26 @@ const Overview = () => {
     queryFn: () => getOverviewByStudentLifeId(id!),
     enabled: !!id,
   });
+
+  const deleteOverviewHandler = async () => {
+    try {
+      await deleteOverviewMutation.mutateAsync(record?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<ItemByStudentLife> = [
     {
@@ -88,23 +111,9 @@ const Overview = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteOverviewMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setRecord(record);
+              setOpenDelete(true);
             },
           },
         ];
@@ -129,11 +138,14 @@ const Overview = () => {
     <div>
       <section className="space-between">
         <h3>Student Life: Overview Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+
+        {overviewData?.length === 0 && (
+          <Button
+            onClick={() => setOpen(true)}
+            iconBefore={<Plus />}
+            text="Setup"
+          />
+        )}
       </section>
       <br />
       <Card bordered={false}>
@@ -150,8 +162,7 @@ const Overview = () => {
         onCancel={() => setOpen(false)}
         centered
         title="Create Overview"
-        footer={null}
-      >
+        footer={null}>
         <CreateOverview
           studentLifeId={id!}
           handleClose={() => setOpen(false)}
@@ -162,9 +173,21 @@ const Overview = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Overview"
-        footer={null}
-      >
+        footer={null}>
         <EditOverview item={overview} handleClose={() => setOpenEdit(false)} />
+      </Modal>
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Overview"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteOverviewMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteOverviewHandler}
+          title={record?.title}
+        />
       </Modal>
     </div>
   );

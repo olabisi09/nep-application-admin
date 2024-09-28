@@ -1,7 +1,15 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+  App,
+} from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
@@ -9,7 +17,11 @@ import SearchInput from "../../../custom/searchInput/searchInput";
 import AddTuition, { EditTuition } from "./addTuition";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQueries } from "@tanstack/react-query";
-import { deleteTuition, getAllPrograms, getAllTuitionFee } from "../../../requests";
+import {
+  deleteTuition,
+  getAllPrograms,
+  getAllTuitionFee,
+} from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
@@ -55,11 +67,6 @@ const Tuition = () => {
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
-  };
-
-  const handleDelete = (data: Tuition) => {
-    setTuition(data);
-    setOpenDelete(true);
   };
 
   const deleteTuitionMutation = useMutation({ mutationFn: deleteTuition });
@@ -126,8 +133,9 @@ const Tuition = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: async () => {
-              handleDelete(record);
+            onClick: () => {
+              setTuition(record);
+              setOpenDelete(true);
             },
           },
         ];
@@ -145,11 +153,7 @@ const Tuition = () => {
   }
 
   if (isTuitionError || isProgramsError) {
-    return (
-      <div>
-        Error: {tuitionError?.message || programsError?.message}
-      </div>
-    );
+    return <div>Error: {tuitionError?.message || programsError?.message}</div>;
   }
 
   const tuitions = tuitionData?.data as Tuition[];
@@ -202,9 +206,11 @@ const Tuition = () => {
         onCancel={() => setOpen(false)}
         centered
         title="Tuition Setup"
-        footer={null}
-      >
-        <AddTuition  programItem={programsData?.data || []} handleClose={() => setOpen(false)} />
+        footer={null}>
+        <AddTuition
+          programItem={programsData?.data || []}
+          handleClose={() => setOpen(false)}
+        />
       </Modal>
 
       <Modal
@@ -212,9 +218,12 @@ const Tuition = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Tuition Setup"
-        footer={null}
-      >
-        <EditTuition programItem={programsData?.data || []}  item={tuition} handleClose={() => setOpenEdit(false)} />
+        footer={null}>
+        <EditTuition
+          programItem={programsData?.data || []}
+          item={tuition}
+          handleClose={() => setOpenEdit(false)}
+        />
       </Modal>
 
       <Modal
@@ -222,8 +231,7 @@ const Tuition = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Tuition Setup"
-        footer={null}
-      >
+        footer={null}>
         <DeleteModalContent
           isLoading={deleteTuitionMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

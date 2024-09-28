@@ -188,7 +188,7 @@ const ProgramSetUp = () => {
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete Program Type Setup"
+        title="Delete Program Setup"
         footer={null}
       >
         <DeleteModalContent

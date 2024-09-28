@@ -16,18 +16,40 @@ import { CreateSchoolMgt, EditSchoolMgt } from "./setup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteSchoolMgt, getSchoolMgt } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const SchoolMgt = () => {
   const { notification } = App.useApp();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [mgt, setMgt] = useState<Setup>({} as Setup);
+  const [openDelete, setOpenDelete] = useState(false); // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
 
   const deleteMgtMutation = useMutation({ mutationFn: deleteSchoolMgt });
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-school-mgt"],
     queryFn: getSchoolMgt,
   });
+
+  const deleteMgtHandler = async () => {
+    try {
+      await deleteMgtMutation.mutateAsync(mgt?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<Setup> = [
     {
@@ -75,23 +97,9 @@ const SchoolMgt = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteMgtMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setMgt(record);
+              setOpenDelete(true);
             },
           },
         ];
@@ -138,8 +146,7 @@ const SchoolMgt = () => {
         onCancel={() => setOpen(false)}
         centered
         title="School Management Setup"
-        footer={null}
-      >
+        footer={null}>
         <CreateSchoolMgt handleClose={() => setOpen(false)} />
       </Modal>
       <Modal
@@ -147,9 +154,21 @@ const SchoolMgt = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit School Management Setup"
-        footer={null}
-      >
+        footer={null}>
         <EditSchoolMgt item={mgt} handleClose={() => setOpen(false)} />
+      </Modal>
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete School Management Setup"
+        footer={null}>
+        <DeleteModalContent
+          isLoading={deleteMgtMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteMgtHandler}
+          title={mgt?.title}
+        />
       </Modal>
     </div>
   );
