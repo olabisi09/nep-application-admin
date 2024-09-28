@@ -44,7 +44,7 @@ const Sidebar = () => {
         },
         {
           key: "addReligion",
-          label: <NavLink to="/relig-setup">Add Religion</NavLink>,
+          label: <NavLink to="/religion-setup">Add Religion</NavLink>,
           icon: <Line />,
         },
         {

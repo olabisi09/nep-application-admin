@@ -34,7 +34,7 @@ const AddReligion = ({ handleClose }: { handleClose: () => void }) => {
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-disability"] });
+          queryClient.refetchQueries({ queryKey: ["get-religion"] });
           handleClose();
           resetForm();
         },
@@ -131,8 +131,8 @@ const EditReligion = ({
   return (
     <Formik
       initialValues={{
-        name: "",
-        isActive: "",
+        name: religion?.name,
+        isActive: religion?.isActive,
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditTitle(values, resetForm);
