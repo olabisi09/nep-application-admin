@@ -43,6 +43,11 @@ const Sidebar = () => {
           icon: <Line />,
         },
         {
+          key: "addReligion",
+          label: <NavLink to="/relig-setup">Add Religion</NavLink>,
+          icon: <Line />,
+        },
+        {
           key: "addGender",
           label: <NavLink to="/gender-setup">Add Gender</NavLink>,
           icon: <Line />,

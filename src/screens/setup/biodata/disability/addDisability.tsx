@@ -104,7 +104,7 @@ const EditDisability = ({
     resetForm: () => void
   ) => {
     const payload: Partial<Disability> = {
-      id: values?.id,
+      id: title?.id,
       name: values?.name,
       isActive: values?.status === "true" ? true : false,
     };
