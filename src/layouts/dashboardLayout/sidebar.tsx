@@ -32,16 +32,43 @@ const Sidebar = () => {
       label: "Setup Bio-Data",
       icon: <Settings />,
       children: [
-        { key: "addTitle", label: <NavLink to="/title-setup">Add Title</NavLink>, icon: <Line /> },
-        { key: "addGender", label:<NavLink to="/gender-setup">Add Gender</NavLink>, icon: <Line /> },
         {
-          key: "addMaritalStatus",
-          label:<NavLink to="/marital-status-setup">Add Marital Status</NavLink>,
+          key: "addTitle",
+          label: <NavLink to="/title-setup">Add Title</NavLink>,
           icon: <Line />,
         },
-        { key: "addCountry", label:<NavLink to="/country-setup">Add Country</NavLink>, icon: <Line /> },
-        { key: "addState", label:<NavLink to="/state-setup">Add State</NavLink>, icon: <Line /> },
-        { key: "addLGA", label:<NavLink to="/lga-setup">Add LGA</NavLink>, icon: <Line /> },
+        {
+          key: "addDisability",
+          label: <NavLink to="/disability-setup">Add Disability</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "addGender",
+          label: <NavLink to="/gender-setup">Add Gender</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "addMaritalStatus",
+          label: (
+            <NavLink to="/marital-status-setup">Add Marital Status</NavLink>
+          ),
+          icon: <Line />,
+        },
+        {
+          key: "addCountry",
+          label: <NavLink to="/country-setup">Add Country</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "addState",
+          label: <NavLink to="/state-setup">Add State</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "addLGA",
+          label: <NavLink to="/lga-setup">Add LGA</NavLink>,
+          icon: <Line />,
+        },
       ],
     },
     {
@@ -49,27 +76,51 @@ const Sidebar = () => {
       label: "Setup Programs",
       icon: <Settings />,
       children: [
-        { key: "faculty", label: <NavLink to="/faculty-setup">Faculty</NavLink>,  icon: <Line /> },
-        { key: "department", label: <NavLink to="/department-setup">Department</NavLink>, icon: <Line /> },
-        { key: "program", label: <NavLink to="/program-setup">Program</NavLink>, icon: <Line /> },
+        {
+          key: "faculty",
+          label: <NavLink to="/faculty-setup">Faculty</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "department",
+          label: <NavLink to="/department-setup">Department</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "program",
+          label: <NavLink to="/program-setup">Program</NavLink>,
+          icon: <Line />,
+        },
         {
           key: "readMoreProgram",
-          label: <NavLink to="/read-more-program-setup">Read More - Program</NavLink>,
+          label: (
+            <NavLink to="/read-more-program-setup">Read More - Program</NavLink>
+          ),
           icon: <Line />,
         },
         {
           key: "readMoreCourse",
-          label: <NavLink to="/read-more-course-overview-setup">Read More -Course Overview</NavLink>,
+          label: (
+            <NavLink to="/read-more-course-overview-setup">
+              Read More -Course Overview
+            </NavLink>
+          ),
           icon: <Line />,
         },
         {
           key: "admissionRequirements",
-          label: <NavLink to="/read-more-admission-requirement-setup">Admission Requirements</NavLink>,
+          label: (
+            <NavLink to="/read-more-admission-requirement-setup">
+              Admission Requirements
+            </NavLink>
+          ),
           icon: <Line />,
         },
         {
           key: "careerProspects",
-          label: <NavLink to="/career-prospects-setup">Career Prospects</NavLink>,
+          label: (
+            <NavLink to="/career-prospects-setup">Career Prospects</NavLink>
+          ),
           icon: <Line />,
         },
         {
@@ -124,7 +175,9 @@ const Sidebar = () => {
         },
         {
           key: "qualificationType",
-          label: <NavLink to="/qualification-type-setup">Qualification Type</NavLink>,
+          label: (
+            <NavLink to="/qualification-type-setup">Qualification Type</NavLink>
+          ),
           icon: <Line />,
         },
         {

@@ -1,6 +1,6 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Search } from "../../../../assets/search.svg";
+import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -10,41 +10,51 @@ import {
   App,
   Spin,
 } from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
+import { Form, Formik } from "formik";
+import styles from "../../styles.module.scss";
+
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import AddApplicationFee from "./addApplicationFee";
-import { deleteFeeSetup, getAllFeeSetup } from "../../../requests";
+
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
-import DeleteModalContent from "../../deleteModal/deleteModal";
 
-const ApplicationFee = () => {
+import { Button, SearchInput } from "../../../../custom";
+import {
+  deleteReligion,
+  getAllDisability,
+  getAllReligion,
+} from "../../../../requests";
+import { AddReligion, EditReligion } from "./addReligion";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
+
+const ReligionSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [item, setItem] = useState<GetAllFeeSetup>({} as GetAllFeeSetup);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [religion, setReligion] = useState<Religion>({} as Religion);
   const [openDelete, setOpenDelete] = useState(false);
-
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-all-fee-setup"],
-    queryFn: getAllFeeSetup,
+    queryKey: ["get-religion"],
+    queryFn: getAllReligion,
   });
 
-  const applicationFeeData = data?.data ?? [];
-
-  const deleteApplicationFeeMutation = useMutation({
-    mutationFn: deleteFeeSetup,
+  const deleteReligionMutation = useMutation({
+    mutationFn: deleteReligion,
   });
 
-  const deleteApplicationFeeHandler = async () => {
+  const handleDelete = (data: Religion) => {
+    setReligion(data);
+    setOpenDelete(true);
+  };
+
+  const DeleteReligionHandler = async () => {
     try {
-      await deleteApplicationFeeMutation.mutateAsync(item?.id, {
+      await deleteReligionMutation.mutateAsync(religion?.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -66,36 +76,22 @@ const ApplicationFee = () => {
     setSearchTerm(e.target.value);
   };
 
-  const columns: ColumnsType<GetAllFeeSetup> = [
+  const columns: ColumnsType<Religion> = [
     {
       key: "id",
       title: "ID",
       dataIndex: "id",
     },
     {
-      key: "program",
-      title: "Program",
-      dataIndex: "program",
+      key: "name",
+      title: "Name",
+      dataIndex: "name",
     },
     {
-      key: "programType",
-      title: "Program Type",
-      dataIndex: "programTypeName",
-    },
-    {
-      key: "modeOfStudy",
-      title: "Mode of Study",
-      dataIndex: "modeOfStudy",
-    },
-    {
-      key: "amount",
-      title: "Amount",
-      dataIndex: "amount",
-    },
-    {
-      key: " programTypeName",
-      title: "Program Type",
-      dataIndex: "programTypeName",
+      key: "isActive",
+      title: "Status",
+      dataIndex: "isActive",
+      render: (_, { isActive }) => (isActive ? "Active" : "Inactive"),
     },
     {
       key: "action",
@@ -106,20 +102,21 @@ const ApplicationFee = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setShowAddModal(true);
-              setItem(record);
+              setReligion(record);
+              setOpenEdit(true);
             },
           },
           {
             key: "2",
-            label: "Delete",
-            onClick: () => {
-              setOpenDelete(true);
-              setItem(record);
-            },
+            label: (
+              <button
+                style={{ border: "0rem", background: "none" }}
+                onClick={() => handleDelete(record)}>
+                Delete
+              </button>
+            ),
           },
         ];
-
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />
@@ -129,18 +126,18 @@ const ApplicationFee = () => {
     },
   ];
 
-  if (isLoading) {
-    return <Spin size="large" />;
-  }
+  const religionData = data?.data;
 
+  if (isLoading) {
+    return <Spin />;
+  }
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
-
   return (
     <main>
       <section className="space-between">
-        <h3>Application Fee Setup</h3>
+        <h3>Religion Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
@@ -172,11 +169,10 @@ const ApplicationFee = () => {
           </div>
         </div>
         <Table
-          dataSource={applicationFeeData}
+          dataSource={religionData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          scroll={{ x: 400 }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 
@@ -184,32 +180,43 @@ const ApplicationFee = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Application Fee Setup"
+        title="Disability Setup"
         footer={null}>
-        <AddApplicationFee
-          record={item}
-          handleClose={() => {
-            setShowAddModal(false);
-          }}
-        />
+        <AddReligion handleClose={() => setShowAddModal(false)} />
       </Modal>
 
-      <Modal
-        open={openDelete}
-        onCancel={() => setOpenDelete(false)}
-        centered
-        title="Delete Application Fee Setup"
-        footer={null}>
-        <DeleteModalContent
-          isLoading={deleteApplicationFeeMutation?.isPending}
-          handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={deleteApplicationFeeHandler}
-          title={"this item"}
-          isActive={false}
-        />
-      </Modal>
+      {religion?.id && openEdit && (
+        <Modal
+          open={openEdit}
+          onCancel={() => setOpenEdit(false)}
+          centered
+          title="Disability Setup"
+          footer={null}>
+          <EditReligion
+            religion={religion}
+            handleClose={() => setOpenEdit(false)}
+          />
+        </Modal>
+      )}
+
+      {religion?.id && openDelete && (
+        <Modal
+          open={openDelete}
+          onCancel={() => setOpenDelete(false)}
+          centered
+          title="Delete Religion Setup"
+          footer={null}>
+          <DeleteModalContent
+            isLoading={deleteReligionMutation?.isPending}
+            handleCloseModal={() => setOpenDelete(false)}
+            handleSubmit={DeleteReligionHandler}
+            title={religion?.name}
+            isActive={false}
+          />
+        </Modal>
+      )}
     </main>
   );
 };
 
-export default ApplicationFee;
+export default ReligionSetup;

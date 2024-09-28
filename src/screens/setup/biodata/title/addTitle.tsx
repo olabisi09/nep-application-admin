@@ -119,7 +119,7 @@ const EditTitle = ({ title, handleClose }: { title: Title; handleClose: () => vo
     validationSchema={validate}
   >
     <Form className="fields">
-      <Input name="name" label="Title" placeholder="Input Title" />
+      <Input name="name" label="Disability" placeholder="Input Disability" />
       <Select
           name="activeStatus"
           placeholder="Select Status"
