@@ -73,12 +73,12 @@ const StateSetup = () => {
     },
   ];
   const columns = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
-    
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
+
     {
       key: "countryId",
       title: "Country Name",
@@ -89,12 +89,12 @@ const StateSetup = () => {
       title: "State Name",
       dataIndex: "stateName",
     },
-    {
-      key: "activeStatus",
-      title: "Active Status",
-      dataIndex: "activeStatus",
-      render: (text: boolean) => (text ? "Active" : "Inactive"),
-    },
+    // {
+    //   key: "activeStatus",
+    //   title: "Active Status",
+    //   dataIndex: "activeStatus",
+    //   render: (text: boolean) => (text ? "Active" : "Inactive"),
+    // },
 
     {
       key: "action",
@@ -130,7 +130,6 @@ const StateSetup = () => {
       });
     }
   };
-  
 
   if (isLoading) {
     return <Spin />;
@@ -141,7 +140,7 @@ const StateSetup = () => {
 
   return (
     <main>
-        <section className="space-between">
+      <section className="space-between">
         <h3>State/Province/District Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
@@ -186,11 +185,10 @@ const StateSetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="State/Province/District Setup"
-        footer={null}
-      >
+        footer={null}>
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
-            <AddState handleClose={() => setShowAddModal(false)}  />
+            <AddState handleClose={() => setShowAddModal(false)} />
           </Form>
         </Formik>
       </Modal>
@@ -200,8 +198,7 @@ const StateSetup = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit State/Province/District Setup"
-        footer={null}
-      >
+        footer={null}>
         <AddState handleClose={() => setOpenEdit(false)} data={indexData} />
       </Modal>
       <Modal
@@ -209,8 +206,7 @@ const StateSetup = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete State/Province/District Setup"
-        footer={null}
-      >
+        footer={null}>
         <DeleteModalContent
           isLoading={deleteStateMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

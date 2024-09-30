@@ -77,22 +77,22 @@ const ReligionSetup = () => {
   };
 
   const columns: ColumnsType<Religion> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "name",
       title: "Name",
       dataIndex: "name",
     },
-    {
-      key: "isActive",
-      title: "Status",
-      dataIndex: "isActive",
-      render: (_, { isActive }) => (isActive ? "Active" : "Inactive"),
-    },
+    // {
+    //   key: "isActive",
+    //   title: "Status",
+    //   dataIndex: "isActive",
+    //   render: (_, { isActive }) => (isActive ? "Active" : "Inactive"),
+    // },
     {
       key: "action",
       title: "",
