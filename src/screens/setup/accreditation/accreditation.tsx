@@ -32,7 +32,7 @@ const AccreditationSetup = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [item, setItem] = useState<AccreditationData>({} as AccreditationData);
-  const [openDelete, setOpenDelete] = useState(false); // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
+  const [openDelete, setOpenDelete] = useState(false); 
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -70,11 +70,6 @@ const AccreditationSetup = () => {
   const accreditationData = data?.data ?? [];
 
   const columns: ColumnsType<AccreditationData> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "program",
       title: "Program",
@@ -108,7 +103,8 @@ const AccreditationSetup = () => {
                 onClick={() => {
                   setOpenEdit(true);
                   setItem(record);
-                }}>
+                }}
+              >
                 Edit
               </button>
             ),
@@ -150,6 +146,7 @@ const AccreditationSetup = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -187,7 +184,8 @@ const AccreditationSetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Accreditation Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddAccreditation
           record={item}
           handleClose={() => setShowAddModal(false)}
@@ -199,18 +197,21 @@ const AccreditationSetup = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Accreditation Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddAccreditation
           record={item}
           handleClose={() => setOpenEdit(false)}
         />
       </Modal>
+      
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete About Us Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteAccreditationMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
