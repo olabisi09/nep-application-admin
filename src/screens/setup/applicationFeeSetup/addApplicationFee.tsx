@@ -37,7 +37,8 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
       programId: values.programName,
       programTypeId: values.programType,
       amount: values.amount,
-      activeStatus: values.activeStatus,
+      activeStatus: values.status === "true",
+      applicationBatchId: Number(values.applicationBatch),
     };
 
     try {
@@ -118,20 +119,33 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
 
   const hasRecord = Object.keys(record)?.length > 0;
 
+  const statusOptions = (
+    <>
+      <option value="">Select an option</option>
+      <option>Active</option>
+      <option>Inactive</option>
+    </>
+  );
+
+  console.log(record);
+
   return (
     <Formik
       initialValues={{
         programName: record?.programId ?? "",
         programType: record?.programTypeId ?? "",
         modeOfStudy: record?.modeOfStudyId ?? "",
-        applicationBatch: record?.id ?? "",
+        applicationBatch: record?.applicationBatchId ?? "",
         amount: record?.amount ?? "",
+        status: record?.activeStatus,
       }}
       onSubmit={(values) => {
         createUpdateApplicationFeeHandler(values);
       }}
       validationSchema={validationSchema}>
-      {(props) => {
+      {({ values }) => {
+        console.log(values);
+
         return (
           <Form>
             <section className="fields">

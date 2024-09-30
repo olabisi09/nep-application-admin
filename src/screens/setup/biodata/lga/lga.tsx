@@ -77,7 +77,7 @@ const LgaSetup = () => {
     {
       key: "stateId",
       title: "State Name",
-      dataIndex: "stateId",
+      dataIndex: "stateName",
     },
     {
       key: "lgaName",

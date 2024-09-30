@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Input from "../../../../custom/input/input";
 import { createOrUpdateTitle, StatusOptions } from "../../../../requests";
-import * as Yup from "yup"
+import * as Yup from "yup";
 import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
 import Select from "../../../../custom/select/select";
@@ -16,10 +16,13 @@ const AddTitle = ({ handleClose }: { handleClose: () => void }) => {
     name: Yup.string().required("Title Name is required"),
     activeStatus: Yup.string().required("Status is required"),
   });
-  const handleAddTitle = async (values: FormikValues, resetForm: () => void) => {
+  const handleAddTitle = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     const payload: Partial<Title> = {
       titleName: values?.name,
-      activeStatus: values?.status === "true" ? true : false,
+      activeStatus: values.activeStatus === "true",
     };
 
     try {
@@ -43,15 +46,14 @@ const AddTitle = ({ handleClose }: { handleClose: () => void }) => {
   };
   return (
     <Formik
-    initialValues={{ name: "", activeStatus: "" }}
-    onSubmit={(values, { resetForm }) => {
-      handleAddTitle(values, resetForm);
-    }}
-    validationSchema={validate}
-  >
-    <Form className="fields">
-      <Input name="name" label="Title" placeholder="Input Title" />
-      <Select
+      initialValues={{ name: "", activeStatus: "true" }} // Default to true
+      onSubmit={(values, { resetForm }) => {
+        handleAddTitle(values, resetForm);
+      }}
+      validationSchema={validate}>
+      <Form className="fields">
+        <Input name="name" label="Title" placeholder="Input Title" />
+        <Select
           name="activeStatus"
           placeholder="Select Status"
           label="Status"
@@ -67,15 +69,24 @@ const AddTitle = ({ handleClose }: { handleClose: () => void }) => {
         />
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
-          <Button text="Create" isLoading={addTitleMutation.isPending} disabled={addTitleMutation.isPending} />
+          <Button
+            text="Create"
+            isLoading={addTitleMutation.isPending}
+            disabled={addTitleMutation.isPending}
+          />
         </div>
-    </Form>
-  </Formik>
-   
+      </Form>
+    </Formik>
   );
 };
 
-const EditTitle = ({ title, handleClose }: { title: Title; handleClose: () => void }) => {
+const EditTitle = ({
+  title,
+  handleClose,
+}: {
+  title: Title;
+  handleClose: () => void;
+}) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -84,11 +95,14 @@ const EditTitle = ({ title, handleClose }: { title: Title; handleClose: () => vo
     activeStatus: Yup.string().required("Status is required"),
   });
   const editTitleMutation = useMutation({ mutationFn: createOrUpdateTitle });
-  const handleEditTitle = async (values: FormikValues, resetForm: () => void) => {
+  const handleEditTitle = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     const payload: Partial<Title> = {
       id: title?.id,
       titleName: values?.name,
-      activeStatus: values?.status === "true" ? true : false,
+      activeStatus: values.activeStatus === "true",
     };
 
     try {
@@ -110,17 +124,22 @@ const EditTitle = ({ title, handleClose }: { title: Title; handleClose: () => vo
       });
     }
   };
-  return(
+  return (
     <Formik
-    initialValues={{ name: title?.titleName, activeStatus: title?.activeStatus }}
-    onSubmit={(values, { resetForm }) => {
-      handleEditTitle(values, resetForm);
-    }}
-    validationSchema={validate}
-  >
-    <Form className="fields">
-      <Input name="name" label="Disability" placeholder="Input Disability" />
-      <Select
+      initialValues={{
+        name: title?.titleName,
+        activeStatus:
+          title?.activeStatus !== undefined
+            ? String(title?.activeStatus)
+            : "true", // Default to true if undefined
+      }}
+      onSubmit={(values, { resetForm }) => {
+        handleEditTitle(values, resetForm);
+      }}
+      validationSchema={validate}>
+      <Form className="fields">
+        <Input name="name" label="Disability" placeholder="Input Disability" />
+        <Select
           name="activeStatus"
           placeholder="Select Status"
           label="Status"
@@ -136,10 +155,14 @@ const EditTitle = ({ title, handleClose }: { title: Title; handleClose: () => vo
         />
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
-          <Button text="Create" isLoading={editTitleMutation.isPending} disabled={editTitleMutation.isPending} />
+          <Button
+            text="Create"
+            isLoading={editTitleMutation.isPending}
+            disabled={editTitleMutation.isPending}
+          />
         </div>
-    </Form>
-  </Formik>
-  )
-}
-export { AddTitle, EditTitle};
+      </Form>
+    </Formik>
+  );
+};
+export { AddTitle, EditTitle };

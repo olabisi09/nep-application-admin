@@ -33,7 +33,7 @@ const AddState = ({ handleClose, data }: Props) => {
       id: data?.id || 0,
       stateName: values.stateName,
       activeStatus: values?.status === "true",
-      countryId:values?.countryId,
+      countryId: values?.countryId,
     };
 
     try {
@@ -88,17 +88,18 @@ const AddState = ({ handleClose, data }: Props) => {
   return (
     <Formik
       initialValues={{
-        countryId:data?.countryId || "",
+        countryId: data?.countryId || "",
         stateName: data?.stateName || "",
         status:
-          data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
+          data?.activeStatus !== undefined
+            ? String(data?.activeStatus)
+            : "true",
       }}
       onSubmit={(values, { resetForm }) => {
         CreateStateHandler(values, resetForm);
       }}
       enableReinitialize={true}
-      validationSchema={validationSchema}
-    >
+      validationSchema={validationSchema}>
       {({ handleSubmit }) => {
         return (
           <Form className="fields">
@@ -134,12 +135,12 @@ const AddState = ({ handleClose, data }: Props) => {
                 disabled={CreateStateMutation?.isPending}
                 text={
                   data
-                  ? CreateStateMutation?.isPending
-                    ? "Updating"
-                    : "Update"
-                  : CreateStateMutation?.isPending
-                  ? "Creating"
-                  : "Create"
+                    ? CreateStateMutation?.isPending
+                      ? "Updating"
+                      : "Update"
+                    : CreateStateMutation?.isPending
+                    ? "Creating"
+                    : "Create"
                 }
               />
             </div>

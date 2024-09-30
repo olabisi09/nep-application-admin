@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import Input from "../../../../custom/input/input";
 import { Form, Formik, FormikValues } from "formik";
 import Button from "../../../../custom/button/button";
-import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import {
   StatusOptions,
   createOrUpdateLGA,
-  createOrUpdateState,
-  getCountry,
   getState,
-  getStateByCountryId,
 } from "../../../../requests";
 import * as Yup from "yup";
 import { App } from "antd";
@@ -24,9 +21,6 @@ const AddLga = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const [selectedCountry, setSelectedCountry] = useState<number>(0);
-  const [stateOptions, setStateOptions] = useState<any[]>([]);
-
   const CreateLgaMutation = useMutation({
     mutationFn: createOrUpdateLGA,
     mutationKey: ["create-Lga"],
@@ -38,9 +32,8 @@ const AddLga = ({ handleClose, data }: Props) => {
   ) => {
     const payload: Partial<LGA> = {
       id: data?.id || 0,
-      stateId: 5,
+      stateId: values?.stateName,
       activeStatus: values?.status === "true",
-      countryId: values?.countryName,
       lgaName: values?.lgaName,
     };
 
@@ -66,103 +59,52 @@ const AddLga = ({ handleClose, data }: Props) => {
     }
   };
 
-  const [getCountryQuery, getStateQuery] = useQueries({
-    queries: [
-      {
-        queryKey: ["get-counties"],
-        queryFn: getCountry,
-        refetchOnWindowFocus: false,
-        retry: 0,
-        enabled: true,
-      },
-      {
-        queryKey: ["get-state-by-country-id"],
-        queryFn: () => getStateByCountryId(selectedCountry),
-        refetchOnWindowFocus: false,
-        retry: 0,
-        enabled: selectedCountry !== 0,
-      },
-    ],
+  // Fetch states independently, without country selection dependency
+  const { data: stateData, refetch: refetchStates } = useQuery({
+    queryKey: ["get-states"],
+    queryFn: getState,
+    refetchOnWindowFocus: false,
+    retry: 0,
+    enabled: true, // Fetch all states on load
   });
 
-  useEffect(() => {
-    if (selectedCountry) {
-      // Fetch states when a country is selected
-      getStateQuery.refetch();
-    }
-  }, [selectedCountry]);
-
-  const CountryData = getCountryQuery?.data?.data as Country[];
-
-  const CountryOptions: any =
-    CountryData &&
-    CountryData?.length > 0 &&
-    CountryData?.map((item: any, index: number) => (
-      <option value={item?.id} key={index}>
-        {item?.countryName}
-      </option>
-    ));
-
-  const StateData = getStateQuery?.data?.data as State[];
-
-  useEffect(() => {
-    if (StateData) {
-      setStateOptions(StateData);
-    }
-  }, [StateData]);
-
   const StateOptions: any =
-    stateOptions &&
-    stateOptions?.length > 0 &&
-    stateOptions?.map((item: any, index: number) => (
+    stateData?.data &&
+    stateData?.data.length > 0 &&
+    stateData?.data.map((item: any, index: number) => (
       <option value={item?.id} key={index}>
         {item?.stateName}
       </option>
     ));
 
   const validationSchema = Yup.object().shape({
-    countryName: Yup.string().required("Country is required"),
-    // stateName: Yup.string().required("State is required"),
+    stateName: Yup.string().required("State is required"),
     lgaName: Yup.string().required("Lga is required"),
     status: Yup.string().required("Active Status is required"),
   });
-  console.log(selectedCountry, 'sed')
 
   return (
     <Formik
       initialValues={{
         lgaName: data?.lgaName || "",
-        countryName: data?.countryId || "",
         stateName: data?.stateId || "",
-        status: data?.activeStatus !== undefined ? String(data?.activeStatus) : "",
+        status:
+          data?.activeStatus !== undefined ? String(data?.activeStatus) : "",
       }}
       onSubmit={(values, { resetForm }) => {
         CreateLgaHandler(values, resetForm);
       }}
       enableReinitialize={true}
-      validationSchema={validationSchema}
-    >
+      validationSchema={validationSchema}>
       {({ handleSubmit, setFieldValue }) => {
         return (
           <Form className="fields">
-            <Select
-              name="countryName"
-              placeholder="Input Country Name"
-              label="Country Name"
-              options={CountryOptions}
-              onChange={(e) => {
-                const countryId = e.target.value;
-                setSelectedCountry(parseInt(countryId));
-                setFieldValue('countryName', countryId);
-                setFieldValue('stateName', ''); // Reset state on country change
-              }}
-            />
             <Select
               name="stateName"
               placeholder="Input State/Province/District Name"
               label="State/Province/District Name"
               options={StateOptions}
-              onChange={(e) => setFieldValue('stateName', e.target.value)}
+              onChange={(e) => setFieldValue("stateName", e.target.value)}
             />
             <Input
               name="lgaName"
@@ -182,7 +124,7 @@ const AddLga = ({ handleClose, data }: Props) => {
                   ))}
                 </>
               }
-              onChange={(e) => setFieldValue('status', e.target.value)}
+              onChange={(e) => setFieldValue("status", e.target.value)}
             />
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
@@ -191,8 +133,12 @@ const AddLga = ({ handleClose, data }: Props) => {
                 disabled={CreateLgaMutation?.isPending}
                 text={
                   data
-                    ? (CreateLgaMutation?.isPending ? 'Updating' : 'Update')
-                    : (CreateLgaMutation?.isPending ? 'Creating' : 'Create')
+                    ? CreateLgaMutation?.isPending
+                      ? "Updating"
+                      : "Update"
+                    : CreateLgaMutation?.isPending
+                    ? "Creating"
+                    : "Create"
                 }
               />
             </div>

@@ -544,7 +544,7 @@ interface ApplicationFee {
   cost: number;
   activeStatus: boolean;
   isDeleted: boolean;
-  programTypeId: number;
+  applicationBatchId: number;
 }
 
 interface GetAllProgramApplicationFeeResponse extends Response {

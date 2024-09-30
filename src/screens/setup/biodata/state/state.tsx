@@ -82,7 +82,7 @@ const StateSetup = () => {
     {
       key: "countryId",
       title: "Country Name",
-      dataIndex: "countryId",
+      dataIndex: "countryName",
     },
     {
       key: "stateName",
