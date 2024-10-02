@@ -16,7 +16,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   deleteDepartment,
   getAllCategory,
-  getDepartments,
+  getAllPrograms,
 } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { CreateDepartment, EditDepartment } from "./setup";
@@ -27,40 +27,40 @@ const Department = () => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [department, setDepartment] = useState<Department>({} as Department);
+  const [department, setDepartment] = useState<Program>({} as Program);
 
   const deleteDepartmentMutation = useMutation({
     mutationFn: deleteDepartment,
   });
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-department"],
-    queryFn: getDepartments,
+    queryFn: getAllPrograms,
   });
   const facultyQuery = useQuery({
     queryKey: ["get-faculty"],
     queryFn: getAllCategory,
   });
 
-  const columns: ColumnsType<Department> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
+  const columns: ColumnsType<Program> = [
+    {
+      key: "id",
+      title: "ID",
+      dataIndex: "id",
+    },
     {
       key: "name",
       title: "Department name",
       dataIndex: "name",
     },
     {
-      key: "categoryName",
+      key: "facultyName",
       title: "Faculty",
-      dataIndex: "categoryName",
+      dataIndex: "facultyName",
     },
     {
-      key: "description",
-      title: "Description",
-      dataIndex: "description",
+      key: "code",
+      title: "Code",
+      dataIndex: "code",
     },
     // {
     //   key: "status",
@@ -99,7 +99,7 @@ const Department = () => {
     },
   ];
 
-  const handleDeleteDepartment = async (department: Department) => {
+  const handleDeleteDepartment = async (department: Program) => {
     try {
       await deleteDepartmentMutation.mutateAsync(department.id, {
         onSuccess: (data) => {
@@ -119,7 +119,7 @@ const Department = () => {
     }
   };
 
-  const departments = data?.data as Department[];
+  const departments = data?.data as Program[];
   const faculties = facultyQuery.data?.data as Category[];
 
   if (isLoading) {

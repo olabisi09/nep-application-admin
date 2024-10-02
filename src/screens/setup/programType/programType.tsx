@@ -1,69 +1,60 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  notification,
-} from "antd";
+import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useCallback, useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import {
-  AddReadMoreCourseOverview,
-  EditReadMoreCourseOverview,
-} from "./addReadMoreCourse";
+import AddProgram from "./addProgramType";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { deleteProgramType, getProgramTypes } from "./request";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getAllCourseOverview } from "./request";
 import { ColumnsType } from "antd/es/table";
-import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import EditProgramType from "./editProgramType";
 import DeleteModalContent from "../../deleteModal/deleteModal";
-import { deleteReadMoreOverView } from "../../../requests";
 
-const ReadMoreCourse = () => {
+const ProgramSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [courseOverview, setCourseOverview] = useState<ReadMoreOverview>(
-    {} as ReadMoreOverview
-  );
+  const [record, setRecord] = useState<ProgramType>({} as ProgramType);
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { notification } = App.useApp();
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-all-course-overview"],
-    queryFn: getAllCourseOverview,
+    queryKey: ["get-program-types"],
+    queryFn: getProgramTypes,
   });
 
-  const courseOverviewData = data?.data ?? [];
+  const programTypesData = data?.data ?? [];
 
-  const deleteReadMoreOverViewMutation = useMutation({
-    mutationFn: deleteReadMoreOverView,
+  const deleteProgramTypeMutation = useMutation({
+    mutationFn: deleteProgramType,
   });
 
-  const deleteReadMoreOverViewHandler = async () => {
+  const deleteProgramTypeHandler = async () => {
     try {
-      await deleteReadMoreOverViewMutation.mutateAsync(courseOverview?.id, {
-        onSuccess: (data) => {
-          notification.success({
-            message: "Success",
-            description: data?.message,
-          });
-          refetch();
-          setOpenDelete((prevState) => !prevState);
-        },
-      });
+      await deleteProgramTypeMutation.mutateAsync(
+        record?.id,
+        {
+          onSuccess: (data) => {
+            notification.success({
+              message: "Success",
+              description: data?.message,
+            });
+            refetch();
+            setOpenDelete((prevState) => !prevState);
+          },
+        }
+      );
     } catch (error: any) {
       notification.error({
         message: "Error",
@@ -72,32 +63,17 @@ const ReadMoreCourse = () => {
     }
   };
 
-  const columns: ColumnsType<ReadMoreOverview> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
+  const columns: ColumnsType<ProgramType> = [
     {
-      key: "programName",
-      title: "Program Name",
-      dataIndex: "programName",
+      key: "id",
+      title: "ID",
+      dataIndex: "id",
     },
     {
-      key: "description",
-      title: "Description",
-      dataIndex: "description",
-      render: (_: any, { description }: any) => {
-        const limitedCleanHtml = sanitizeAndLimitString(description);
-        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
-      },
+      key: "name",
+      title: "Name",
+      dataIndex: "name",
     },
-    // {
-    //   key: "status",
-    //   title: "Status",
-    //   dataIndex: "activeStatus",
-    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    // },
     {
       key: "action",
       title: "",
@@ -107,15 +83,15 @@ const ReadMoreCourse = () => {
             key: "1",
             label: "Edit",
             onClick: () => {
-              setCourseOverview(record);
               setOpenEdit(true);
+              setRecord(record);
             },
           },
           {
             key: "2",
             label: "Delete",
             onClick: () => {
-              setCourseOverview(record);
+              setRecord(record);
               setOpenDelete(true);
             },
           },
@@ -130,9 +106,12 @@ const ReadMoreCourse = () => {
     },
   ];
 
-  const handleCloseModal = useCallback(() => {
-    setShowAddModal(false);
-    setOpenEdit(false);
+  const handleClose = useCallback(() => {
+    setShowAddModal((prevState) => !prevState);
+  }, []);
+
+  const handleEditClose = useCallback(() => {
+    setOpenEdit((prevState) => !prevState);
   }, []);
 
   if (isLoading) {
@@ -146,14 +125,13 @@ const ReadMoreCourse = () => {
   return (
     <main>
       <section className="space-between">
-        <h3>Read More - Course Overview Setup</h3>
+        <h3>Program Type Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
           text="Setup"
         />
       </section>
-
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -178,9 +156,8 @@ const ReadMoreCourse = () => {
             )}
           </div>
         </div>
-
         <Table
-          dataSource={courseOverviewData}
+          dataSource={programTypesData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}
@@ -191,39 +168,38 @@ const ReadMoreCourse = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Read More - Program Setup"
-        footer={null}>
-        <AddReadMoreCourseOverview handleClose={handleCloseModal} />
+        title="Program Setup"
+        footer={null}
+      >
+        <AddProgram handleClose={handleClose} />
       </Modal>
 
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Read More - Program Setup"
-        footer={null}>
-        <EditReadMoreCourseOverview
-          handleClose={handleCloseModal}
-          record={courseOverview}
-        />
+        title="Program Type Setup"
+        footer={null}
+      >
+        <EditProgramType handleClose={handleEditClose} record={record} />
       </Modal>
 
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete Application Fee Setup"
-        footer={null}>
+        title="Delete Program Setup"
+        footer={null}
+      >
         <DeleteModalContent
-          isLoading={deleteReadMoreOverViewMutation?.isPending}
+          isLoading={deleteProgramTypeMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={deleteReadMoreOverViewHandler}
-          title={courseOverview?.id}
-          isActive={false}
+          handleSubmit={deleteProgramTypeHandler}
+          title={record?.name}
         />
       </Modal>
     </main>
   );
 };
 
-export default ReadMoreCourse;
+export default ProgramSetUp;

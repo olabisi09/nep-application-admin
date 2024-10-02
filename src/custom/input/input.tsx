@@ -16,6 +16,7 @@ interface ComponentProps {
   asterisk?: boolean;
   onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
   isRow?: boolean;
+  min?: string | number | undefined;
 }
 
 const Input: React.FC<ComponentProps> = (props) => {
@@ -27,6 +28,7 @@ const Input: React.FC<ComponentProps> = (props) => {
     placeholder,
     isRow,
     asterisk = false,
+    min,
   } = props;
 
   const inputType = ["password", "textarea"];
@@ -70,6 +72,7 @@ const Input: React.FC<ComponentProps> = (props) => {
               placeholder={placeholder}
               disabled={disabled}
               className={classNames(styles.customInput, inputClassName)}
+              min={min}
             />
           )}
 

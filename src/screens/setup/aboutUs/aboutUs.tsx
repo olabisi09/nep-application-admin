@@ -54,11 +54,6 @@ const AboutUs = () => {
 
   const columns: ColumnsType<Setup> = [
     {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
-    {
       key: "title",
       title: "Title",
       dataIndex: "title",

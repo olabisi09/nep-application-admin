@@ -5,18 +5,23 @@ export const getProgramTypes = async () => {
     ?.data as ProgramTypeResponse;
 };
 
-export const createProgramType = async (payload: CreateProgramTypePayload) => {
-  return (await api.post("/Academics/CreateProgramTypesAsync", payload))
+export const getAllProgram = async () => {
+  return (await api.get("/Utilities/Utilities/GetAllProgramDetails"))
+    ?.data as ProgramDataResponse;
+};
+
+export const getAllDepartment = async () => {
+  return (await api.get("/Academics/GetAllDepartmentAsync"))
+    ?.data as DepartmentResponse;
+};
+
+export const createUpdateProgram = async (payload: ProgramPayload) => {
+  return (await api.post("/Utilities/Utilities/CreateUpdateProgramDeytails", payload))
     ?.data as Response;
 };
 
-export const editProgramType = async (payload: EditProgramTypePayload) => {
-  return (await api.put("/Academics/UpdateProgramTypesAsync", payload))
-    ?.data as Response;
-};
-
-export const deleteProgramType = async (id: number) => {
-  return (await api.delete(`/Academics/DeleteProgramTypesAsync?Id=${id}`))
+export const deleteProgram = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteProgramDetailsId?Id=${id}`))
     ?.data as Response;
 };
 

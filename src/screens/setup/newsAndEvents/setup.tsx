@@ -26,17 +26,15 @@ export const CreateEvent = ({ handleClose }: { handleClose: () => void }) => {
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: Partial<SetupPayload> = {
-      Title: values.title,
-      Description: values.description,
-      Image: values.image,
-      //ImageUrl: "",
-      ActiveStatus: values.status === "Active",
-      IsDeleted: false,
-    };
+    const formData = new FormData();
+    formData.append("Title", values.title);
+    formData.append("Description", values.description);
+    formData.append("EventDate", values.eventDate);
+    formData.append("Image", values.image);
+    formData.append("ActiveStatus", String(values.status === "Active"));
 
     try {
-      await addEventMutation.mutateAsync(payload, {
+      await addEventMutation.mutateAsync(formData, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -57,7 +55,7 @@ export const CreateEvent = ({ handleClose }: { handleClose: () => void }) => {
   const statusOptions = (
     <>
       <option>Active</option>
-      <option>Inative</option>
+      <option>Inactive</option>
     </>
   );
 
@@ -85,6 +83,14 @@ export const CreateEvent = ({ handleClose }: { handleClose: () => void }) => {
               setFieldValue("description", data);
             }}
           />
+
+          <Input
+            name="eventDate"
+            type="date"
+            label="Event date"
+            min={new Date().toISOString().split("T")[0]}
+          />
+
           {values.image ? (
             <div className="small-gap">
               <Image />
@@ -107,12 +113,14 @@ export const CreateEvent = ({ handleClose }: { handleClose: () => void }) => {
               }}
             />
           )}
+
           <Select
             name="status"
             label="Status"
             placeholder="Select status"
             options={statusOptions}
           />
+
           <div className="btn-group">
             <Button
               type="button"
@@ -147,20 +155,19 @@ export const EditEvent = ({
   });
 
   const handleEditEvent = async (values: FormikValues) => {
-    let payload: Partial<SetupPayload> = {
-      Id: item.id,
-      Title: values.title,
-      Description: values.description,
-      ActiveStatus: values.activeStatus === "Active",
-      IsDeleted: false,
-    };
+    const formData = new FormData();
+    formData.append("Id", item?.id?.toString());
+    formData.append("Title", values.title);
+    formData.append("EventDate", values.eventDate);
+    formData.append("Description", values.description);
+    formData.append("ActiveStatus", String(values.status === "Active"));
 
     if (!!values.image) {
-      payload.Image = values.image;
+      formData.append("Image", values.image);
     }
 
     try {
-      await editEventMutation.mutateAsync(payload, {
+      await editEventMutation.mutateAsync(formData, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -201,12 +208,17 @@ export const EditEvent = ({
       {({ values, setFieldValue }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />
-          <Input
-            name="title"
-            type="textarea"
+
+          <Editor
+            name="description"
             label="Description"
-            placeholder="Input description"
+            onChange={(_, editor) => {
+              const data = editor.getData();
+              setFieldValue("description", data);
+            }}
+            initialData={item?.description}
           />
+
           {values.image ? (
             <div className="small-gap">
               <Image />

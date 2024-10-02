@@ -30,7 +30,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
     mutationKey: ["create-update-applicationFee"],
   });
 
-  const createUpdateApplicationFeeHandler = async (values: FormikValues) => {
+  const createUpdateApplicationFeeHandler = async (values: FormikValues, resetForm: () => void) => {
     const payload: Partial<ApplicationFee> = {
       id: record?.id || 0,
       modeOfStudyId: values.modeOfStudy,
@@ -139,8 +139,8 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
         amount: record?.amount ?? "",
         status: record?.activeStatus,
       }}
-      onSubmit={(values) => {
-        createUpdateApplicationFeeHandler(values);
+      onSubmit={(values, { resetForm }) => {
+        createUpdateApplicationFeeHandler(values, resetForm);
       }}
       validationSchema={validationSchema}>
       {({ values }) => {

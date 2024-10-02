@@ -1,58 +1,43 @@
-import { useState } from "react";
 import Input from "../../../custom/input/input";
-import Upload from "../../../custom/upload/upload";
-import { ReactComponent as Image } from "../../../assets/image.svg";
 import Button from "../../../custom/button/button";
 import { Form, Formik, FormikValues } from "formik";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateAboutUs } from "../../../requests";
 import { App } from "antd";
 import * as Yup from "yup";
 import Editor from "../../../custom/editor/editor";
 import { Select } from "../../../custom";
+import { CreateUpdateExplore } from "./request";
 
-const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
+const CreateExplore = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const [upload, setUpload] = useState<File | null>(null);
-  const addAboutUsMutation = useMutation({ mutationFn: createOrUpdateAboutUs });
+
+  const addExploreMutation = useMutation({ mutationFn: CreateUpdateExplore });
 
   const validate = Yup.object().shape({
     title: Yup.string().required("Title is required"),
     description: Yup.string().required("Description is required"),
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files;
-    if (file) {
-      setUpload(file[0]);
-    }
-  };
-  const clearFile = () => {
-    setUpload(null);
-  };
-
-  const handleAddAboutUs = async (
+  const handleAddExplore = async (
     values: FormikValues,
     resetForm: () => void,
     handleClose: () => void
   ) => {
-    const payload: Partial<SetupPayload> = {
-      Title: values.title,
-      Description: values.description,
-      Image: upload,
-      ActiveStatus: values.status === "Active" ? true : false,
-      IsDeleted: false,
+    const payload: ExplorePayload = {
+      title: values.title,
+      description: values.description,
+      isActive: values.status === "Active" ? true : false,
     };
 
     try {
-      await addAboutUsMutation.mutateAsync(payload, {
+      await addExploreMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-about-us"] });
+          queryClient.refetchQueries({ queryKey: ["get-explore"] });
           handleClose();
           resetForm();
         },
@@ -80,7 +65,7 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
         status: "",
       }}
       onSubmit={(values, { resetForm }) => {
-        handleAddAboutUs(values, resetForm, handleClose);
+        handleAddExplore(values, resetForm, handleClose);
       }}
       validationSchema={validate}
     >
@@ -95,15 +80,6 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
               setFieldValue("description", data);
             }}
           />
-          {upload ? (
-            <div className="small-gap">
-              <Image />
-              <span>{upload.name}</span>
-              <Button onClick={clearFile} variant="text" text="x" />
-            </div>
-          ) : (
-            <Upload name="image" label="Image" onChange={handleFileChange} />
-          )}
 
           <Select
             name="status"
@@ -122,8 +98,8 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
             <Button
               text="Create"
               type="submit"
-              disabled={addAboutUsMutation.isPending}
-              isLoading={addAboutUsMutation.isPending}
+              disabled={addExploreMutation.isPending}
+              isLoading={addExploreMutation.isPending}
             />
           </div>
         </Form>
@@ -132,54 +108,39 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
   );
 };
 
-const EditAboutUs = ({
+const EditExplore = ({
   item,
   handleClose,
 }: {
-  item: Setup;
+  item: Explore;
   handleClose: () => void;
 }) => {
   const queryClient = useQueryClient();
   const { notification } = App.useApp();
-  const [upload, setUpload] = useState<File | null>(null);
-  const editAboutUsMutation = useMutation({
-    mutationFn: createOrUpdateAboutUs,
+
+  const editExploreMutation = useMutation({
+    mutationFn: CreateUpdateExplore,
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files;
-    if (file) {
-      setUpload(file[0]);
-    }
-  };
-  const clearFile = () => {
-    setUpload(null);
-  };
-
-  const handleEditAboutUs = async (
+  const handleEditExplore = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    let payload: Partial<SetupPayload> = {
-      Id: item.id,
-      Title: values.title,
-      Description: values.description,
-      ActiveStatus: values.status === "Active" ? true : false,
-      IsDeleted: false,
+    let payload: ExplorePayload = {
+      id: item.id,
+      title: values.title,
+      description: values.description,
+      isActive: values.status === "Active" ? true : false,
     };
 
-    if (upload) {
-      payload.Image = upload;
-    }
-
     try {
-      await editAboutUsMutation.mutateAsync(payload, {
+      await editExploreMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-about-us"] });
+          queryClient.refetchQueries({ queryKey: ["get-explore"] });
           handleClose();
           resetForm();
         },
@@ -199,7 +160,7 @@ const EditAboutUs = ({
     </>
   );
 
-  const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = item?.isActive === true ? "Active" : "Inactive";
 
   return (
     <Formik
@@ -209,13 +170,14 @@ const EditAboutUs = ({
         status: initialStatus,
       }}
       onSubmit={(values, { resetForm }) => {
-        handleEditAboutUs(values, resetForm);
+        handleEditExplore(values, resetForm);
       }}
       enableReinitialize={true}
     >
       {({ setFieldValue }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />
+
           <Editor
             name="description"
             label="Description"
@@ -225,15 +187,6 @@ const EditAboutUs = ({
             }}
             initialData={item.description}
           />
-          {upload ? (
-            <div className="small-gap">
-              <Image />
-              <span>{upload.name}</span>
-              <Button onClick={clearFile} variant="text" text="x" />
-            </div>
-          ) : (
-            <Upload name="image" label="Image" onChange={handleFileChange} />
-          )}
 
           <Select
             name="status"
@@ -252,8 +205,8 @@ const EditAboutUs = ({
             <Button
               type="submit"
               text="Update"
-              isLoading={editAboutUsMutation.isPending}
-              disabled={editAboutUsMutation.isPending}
+              isLoading={editExploreMutation.isPending}
+              disabled={editExploreMutation.isPending}
             />
           </div>
         </Form>
@@ -262,4 +215,4 @@ const EditAboutUs = ({
   );
 };
 
-export { CreateAboutUs, EditAboutUs };
+export { CreateExplore, EditExplore };

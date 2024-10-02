@@ -2,7 +2,7 @@ import { string } from "yup";
 import * as Yup from "yup";
 
 export const validator = {
-  programName: string().required("Program Name is required"),
+  programName: string().required("Department Name is required"),
   programType: string().required("Program Type is required"),
   status: string().required("Status is required"),
   description: string().required("Description is required"),

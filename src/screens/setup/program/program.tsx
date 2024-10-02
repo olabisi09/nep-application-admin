@@ -6,13 +6,14 @@ import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useCallback, useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddProgram from "./addProgram";
+import AddProgram from "./addProgramType";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { deleteProgramType, getProgramTypes } from "./request";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
-import EditProgramType from "./editProgram";
+import EditProgramType from "./editProgramType";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import { getAllProgram } from "./request";
+import { deleteProgram } from "./request";
 
 const ProgramSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -20,7 +21,7 @@ const ProgramSetUp = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [record, setRecord] = useState<ProgramType>({} as ProgramType);
+  const [record, setRecord] = useState<ProgramData>({} as ProgramData);
   const [openDelete, setOpenDelete] = useState(false);
 
   const { notification } = App.useApp();
@@ -30,19 +31,19 @@ const ProgramSetUp = () => {
   };
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-program-types"],
-    queryFn: getProgramTypes,
+    queryKey: ["get-all-program"],
+    queryFn: getAllProgram,
   });
 
   const programTypesData = data?.data ?? [];
 
-  const deleteProgramTypeMutation = useMutation({
-    mutationFn: deleteProgramType,
+  const deleteProgramMutation = useMutation({
+    mutationFn: deleteProgram,
   });
 
   const deleteProgramTypeHandler = async () => {
     try {
-      await deleteProgramTypeMutation.mutateAsync(
+      await deleteProgramMutation.mutateAsync(
         record?.id,
         {
           onSuccess: (data) => {
@@ -63,16 +64,31 @@ const ProgramSetUp = () => {
     }
   };
 
+<<<<<<< HEAD
   const columns: ColumnsType<ProgramType> = [
     // {
     //   key: "id",
     //   title: "ID",
     //   dataIndex: "id",
     // },
+=======
+  const columns: ColumnsType<ProgramData> = [
     {
-      key: "name",
-      title: "Name",
-      dataIndex: "name",
+      key: "programType",
+      title: "Program Type",
+      dataIndex: "programTypeName",
+    },
+>>>>>>> e98ffc5e0889fadf3b40b7da7bda17abc41d4509
+    {
+      key: "department",
+      title: "Department",
+      dataIndex: "program",
+    },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
@@ -125,7 +141,7 @@ const ProgramSetUp = () => {
   return (
     <main>
       <section className="space-between">
-        <h3>Program Type Setup</h3>
+        <h3>Program Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
@@ -168,7 +184,7 @@ const ProgramSetUp = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Program Setup"
+        title="Create Program"
         footer={null}
       >
         <AddProgram handleClose={handleClose} />
@@ -178,7 +194,7 @@ const ProgramSetUp = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Program Type Setup"
+        title="Edit Program"
         footer={null}
       >
         <EditProgramType handleClose={handleEditClose} record={record} />
@@ -192,10 +208,10 @@ const ProgramSetUp = () => {
         footer={null}
       >
         <DeleteModalContent
-          isLoading={deleteProgramTypeMutation?.isPending}
+          isLoading={deleteProgramMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteProgramTypeHandler}
-          title={record?.name}
+          title="Program"
         />
       </Modal>
     </main>

@@ -45,11 +45,11 @@ const CareerProspectItems = () => {
   const careerProspectItemData = data?.data as CareerProspectItem[];
 
   const columns: ColumnsType<CareerProspectItem> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "title",
       title: "Title",

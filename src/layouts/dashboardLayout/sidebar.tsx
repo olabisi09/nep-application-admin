@@ -7,6 +7,7 @@ import { ReactComponent as Arrow } from "../../assets/menu-arrow.svg";
 import styles from "./dashboardLayout.module.scss";
 import { Menu } from "antd";
 import { logout } from "../../utils/logout";
+import { routes } from "../../routes";
 
 const Sidebar = () => {
   const items = [
@@ -94,6 +95,11 @@ const Sidebar = () => {
         {
           key: "program",
           label: <NavLink to="/program-setup">Program</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "programType",
+          label: <NavLink to="/program-type-setup">Program Type</NavLink>,
           icon: <Line />,
         },
         {
@@ -197,6 +203,13 @@ const Sidebar = () => {
       label: "Setup School Info",
       icon: <Settings />,
       children: [
+        {
+          key: "exploreProgrammes",
+          label: (
+            <NavLink to={routes.setup.exploreProgrammes}>Explore Programmes</NavLink>
+          ),
+          icon: <Line />,
+        },
         {
           key: "aboutUs",
           label: <NavLink to={"/about-us"}>About Us</NavLink>,

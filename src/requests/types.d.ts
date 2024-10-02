@@ -60,6 +60,7 @@ interface Tuition {
   id: number;
   readmoreId: number;
   description: string;
+  programName: string;
   activeStatus: boolean;
 }
 
@@ -282,6 +283,7 @@ interface SocialMediaLink {
 interface SocialMediaLinkResponse extends Response {
   data: SocialMediaLink[];
 }
+
 interface AdmissionRequirement {
   activeStatus: boolean;
   description: string;
@@ -289,30 +291,22 @@ interface AdmissionRequirement {
   isDeleted: boolean;
   readMoreId: number;
 }
+
 interface AdmissionRequirementResponse extends Response {
   data: AdmissionRequirement[];
 }
+
 interface Program {
   categoryCode: string;
-  programTypeCode: string;
-  programCategoryCode: any;
   code: string;
   name: string;
-  description: string;
-  requirements: string;
-  duration: string;
-  qualification: string;
-  careerProspect: string;
-  tuition: string;
-  curriculum: string;
-  scholarship: string;
-  userStory: string;
-  accreditation: string;
   id: number;
   created: string;
   createdBy: any;
   activeStatus: boolean;
+  facultyName: string;
 }
+
 interface ProgramResponse extends Response {
   data: Program[];
 }
@@ -851,11 +845,19 @@ interface Datum {
   isDeleted: boolean;
 }
 
+interface DepartmentPayload {
+  id?: number;
+  categoryCode: string;
+  code: string;
+  name: string;
+}
+
 interface Disability {
   id: number;
   name: string;
   isActive: boolean;
 }
+
 interface DisabilityResponse extends Response {
   data: Disability[];
 }

@@ -83,7 +83,7 @@ const AddTuitionYears = ({
             <>
               {tuitionFeeItem?.map((option: Tuition) => (
                 <option key={option?.id} value={option?.id}>
-                  {option?.description}
+                  {option?.programName}
                 </option>
               ))}
             </>
