@@ -92,7 +92,7 @@ const AccreditationSetup = () => {
     },
     {
       key: "action",
-      title: "",
+      title: "Action",
       render: (_, record) => {
         const items: MenuProps["items"] = [
           {

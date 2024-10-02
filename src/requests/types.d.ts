@@ -655,7 +655,7 @@ interface GetAllFeeSetup {
   programId: number;
   amount: number;
   applicationBatchId: number;
-  applicationBatchName: null;
+  applicationBatchName: string;
   programTypeId: number;
   programTypeName: string;
   activeStatus: boolean;

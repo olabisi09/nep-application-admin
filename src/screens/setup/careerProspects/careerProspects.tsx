@@ -100,7 +100,7 @@ const CareerProspects = () => {
     },
     {
       key: "action",
-      title: "",
+      title: "Action",
       render: (_, record) => {
         const items: MenuProps["items"] = [
           {
@@ -193,7 +193,8 @@ const CareerProspects = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Career Prospects Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddCareerProspects
           item={careerProspectItems}
           handleClose={() => handleModal(false)}
@@ -205,7 +206,8 @@ const CareerProspects = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Career Prospects Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddCareerProspects
           item={careerProspectItems}
           handleClose={() => setOpenEdit(false)}
@@ -217,7 +219,8 @@ const CareerProspects = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Career Prospect Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteCareerProspectMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

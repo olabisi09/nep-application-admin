@@ -1,7 +1,15 @@
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, App, Spin } from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  App,
+  Spin,
+} from "antd";
 import { Form, Formik } from "formik";
 import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
@@ -80,7 +88,7 @@ const TitleSetup = () => {
     // },
     {
       key: "action",
-      title: "",
+      title: "Action",
       render: (_, record) => {
         const items: MenuProps["items"] = [
           {
@@ -94,7 +102,10 @@ const TitleSetup = () => {
           {
             key: "2",
             label: (
-              <button style={{ border: "0rem", background: "none" }} onClick={() => handleDelete(record)}>
+              <button
+                style={{ border: "0rem", background: "none" }}
+                onClick={() => handleDelete(record)}
+              >
                 Delete
               </button>
             ),
@@ -121,7 +132,11 @@ const TitleSetup = () => {
     <main>
       <section className="space-between">
         <h3>Title Setup</h3>
-        <Button onClick={() => setShowAddModal(true)} iconBefore={<Add />} text="Setup" />
+        <Button
+          onClick={() => setShowAddModal(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
       </section>
       <section className={styles.card}>
         <div className={styles.inside}>
@@ -129,29 +144,62 @@ const TitleSetup = () => {
           <div>
             {!showSearch && (
               <span>
-                <Search onClick={() => setShowSearch((showSearch) => !showSearch)} />
+                <Search
+                  onClick={() => setShowSearch((showSearch) => !showSearch)}
+                />
               </span>
             )}
-            {showSearch && <SearchInput value={searchTerm} onChange={handleSearch} />}
+            {showSearch && (
+              <SearchInput value={searchTerm} onChange={handleSearch} />
+            )}
 
-            {!showAllFilter && <Filter onClick={() => setShowAllFilter((showAllFilter) => !showAllFilter)} />}
+            {!showAllFilter && (
+              <Filter
+                onClick={() =>
+                  setShowAllFilter((showAllFilter) => !showAllFilter)
+                }
+              />
+            )}
           </div>
         </div>
-        <Table dataSource={titleData} columns={columns} pagination={{ position: ["bottomCenter"] }} rowKey={(record, index) => `${record.id}${index}`} />
+        <Table
+          dataSource={titleData}
+          columns={columns}
+          pagination={{ position: ["bottomCenter"] }}
+          rowKey={(record, index) => `${record.id}${index}`}
+        />
       </section>
 
-      <Modal open={showAddModal} onCancel={() => setShowAddModal(false)} centered title="Title Setup" footer={null}>
+      <Modal
+        open={showAddModal}
+        onCancel={() => setShowAddModal(false)}
+        centered
+        title="Title Setup"
+        footer={null}
+      >
         <AddTitle handleClose={() => setShowAddModal(false)} />
       </Modal>
 
       {title?.id && openEdit && (
-        <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Title Setup" footer={null}>
+        <Modal
+          open={openEdit}
+          onCancel={() => setOpenEdit(false)}
+          centered
+          title="Title Setup"
+          footer={null}
+        >
           <EditTitle title={title} handleClose={() => setOpenEdit(false)} />
         </Modal>
       )}
 
       {title?.id && openDelete && (
-        <Modal open={openDelete} onCancel={() => setOpenDelete(false)} centered title="Delete Title Setup" footer={null}>
+        <Modal
+          open={openDelete}
+          onCancel={() => setOpenDelete(false)}
+          centered
+          title="Delete Title Setup"
+          footer={null}
+        >
           <DeleteModalContent
             isLoading={deleteTitleMutation?.isPending}
             handleCloseModal={() => setOpenDelete(false)}

@@ -90,7 +90,7 @@ const CountrySetup = () => {
 
     {
       key: "action",
-      title: "",
+      title: "Action",
       render: (record: Country) => (
         <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />

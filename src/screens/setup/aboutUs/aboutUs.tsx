@@ -24,7 +24,7 @@ const AboutUs = () => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [about, setAbout] = useState<Setup>({} as Setup);
-  const [openDelete, setOpenDelete] = useState(false);  // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
+  const [openDelete, setOpenDelete] = useState(false); // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-about-us"],
@@ -83,7 +83,7 @@ const AboutUs = () => {
     },
     {
       key: "action",
-      title: "",
+      title: "Action",
       render: (_, record) => {
         const items: MenuProps["items"] = [
           {
@@ -145,7 +145,8 @@ const AboutUs = () => {
         onCancel={() => setOpen(false)}
         centered
         title="About Us Setup"
-        footer={null}>
+        footer={null}
+      >
         <CreateAboutUs handleClose={() => setOpen(false)} />
       </Modal>
       <Modal
@@ -153,7 +154,8 @@ const AboutUs = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit About Us Setup"
-        footer={null}>
+        footer={null}
+      >
         <EditAboutUs item={about} handleClose={() => setOpenEdit(false)} />
       </Modal>
       <Modal
@@ -161,7 +163,8 @@ const AboutUs = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete About Us Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteAboutUsMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
