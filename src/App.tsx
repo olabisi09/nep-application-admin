@@ -64,6 +64,8 @@ import AdmissionReqDetail from "./screens/setup/readMoreAdmissionRequirement/adm
 import WhyItem from "./screens/setup/whySchool/whyItem/whyItem";
 import ProgramSetUp from "./screens/setup/program/program";
 import ExploreProgrammes from "./screens/setup/exploreProgrammes/exploreProgrammes";
+import DisabilitySetup from "./screens/setup/biodata/disability/disability";
+import ReligionSetup from "./screens/setup/biodata/religion/religion";
 
 function App() {
   const authRoute = [
@@ -187,7 +189,14 @@ function App() {
       path: routes.setup.maritalStatus,
       element: <MaritalSetup />,
     },
-
+    {
+      path: routes.setup.disability,
+      element: <DisabilitySetup />,
+    },
+    {
+      path: routes.setup.religion,
+      element: <ReligionSetup />,
+    },
     {
       path: routes.setup.aboutUs,
       element: <AboutUs />,

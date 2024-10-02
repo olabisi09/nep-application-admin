@@ -1054,3 +1054,35 @@ export const deleteReadMoreProgram = async (id: number) => {
   return (await api.delete(`/ReadMore/DeleteReadMoreProgrammeById?Id=${id}`))
     ?.data as Response;
 };
+export const getAllDisability = async () => {
+  return (await api.get("/Utilities/Utilities/GetAllDisability"))
+    ?.data as DisabilityResponse;
+};
+
+export const createOrUpdateDisability = async (
+  payload: Partial<Disability>
+) => {
+  return (
+    await api.post(`/Utilities/Utilities/CreateUpdateDisability`, payload)
+  )?.data as Response;
+};
+
+export const deleteDisability = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteDisability?Id=${id}`))
+    ?.data as Response;
+};
+
+export const getAllReligion = async () => {
+  return (await api.get("/Utilities/Utilities/GetAllReligion"))
+    ?.data as ReligionResponse;
+};
+
+export const createOrUpdateReligion = async (payload: Partial<Religion>) => {
+  return (await api.post(`/Utilities/Utilities/CreateUpdateReliogion`, payload))
+    ?.data as ReligionResponse;
+};
+
+export const deleteReligion = async (id: number) => {
+  return (await api.delete(`Utilities/Utilities/DeleteReligion?Id=${id}`))
+    ?.data as ReligionResponse;
+};

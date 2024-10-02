@@ -64,11 +64,11 @@ const LgaSetup = () => {
     },
   ];
   const columns = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "countryName",
       title: "country Name",
@@ -77,19 +77,19 @@ const LgaSetup = () => {
     {
       key: "stateId",
       title: "State Name",
-      dataIndex: "stateId",
+      dataIndex: "stateName",
     },
     {
       key: "lgaName",
       title: "LGA Name",
       dataIndex: "lgaName",
     },
-    {
-      key: "activeStatus",
-      title: "Active Status",
-      dataIndex: "activeStatus",
-      render: (text: boolean) => (text ? "Active" : "Inactive"),
-    },
+    // {
+    //   key: "activeStatus",
+    //   title: "Active Status",
+    //   dataIndex: "activeStatus",
+    //   render: (text: boolean) => (text ? "Active" : "Inactive"),
+    // },
 
     {
       key: "action",

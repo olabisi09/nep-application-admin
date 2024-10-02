@@ -1,38 +1,40 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Input from "../../../../custom/input/input";
-import { createOrUpdateTitle, StatusOptions } from "../../../../requests";
+
 import * as Yup from "yup";
 import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
-import Select from "../../../../custom/select/select";
-import Button from "../../../../custom/button/button";
+import { Button, Input, Select } from "../../../../custom";
+import { createOrUpdateReligion, StatusOptions } from "../../../../requests";
 
-const AddTitle = ({ handleClose }: { handleClose: () => void }) => {
+const AddReligion = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const addTitleMutation = useMutation({ mutationFn: createOrUpdateTitle });
+
+  const addReligionMutation = useMutation({
+    mutationFn: createOrUpdateReligion,
+  });
 
   const validate = Yup.object().shape({
-    name: Yup.string().required("Title Name is required"),
-    activeStatus: Yup.string().required("Status is required"),
+    name: Yup.string().required("Disability Name is required"),
+    isActive: Yup.string().required("Status is required"),
   });
-  const handleAddTitle = async (
+  const handleAddReligion = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: Partial<Title> = {
-      titleName: values?.name,
-      activeStatus: values.activeStatus === "true",
+    const payload: Partial<Religion> = {
+      name: values?.name,
+      isActive: values.isActive === "true",
     };
 
     try {
-      await addTitleMutation.mutateAsync(payload, {
+      await addReligionMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-titles"] });
+          queryClient.refetchQueries({ queryKey: ["get-religion"] });
           handleClose();
           resetForm();
         },
@@ -46,15 +48,16 @@ const AddTitle = ({ handleClose }: { handleClose: () => void }) => {
   };
   return (
     <Formik
-      initialValues={{ name: "", activeStatus: "true" }} // Default to true
+      initialValues={{ name: "", isActive: "" }}
       onSubmit={(values, { resetForm }) => {
-        handleAddTitle(values, resetForm);
+        handleAddReligion(values, resetForm);
       }}
-      validationSchema={validate}>
+      validationSchema={validate}
+    >
       <Form className="fields">
-        <Input name="name" label="Title" placeholder="Input Title" />
+        <Input name="name" label="Religion" placeholder="Input Religion" />
         <Select
-          name="activeStatus"
+          name="isActive"
           placeholder="Select Status"
           label="Status"
           options={
@@ -71,8 +74,8 @@ const AddTitle = ({ handleClose }: { handleClose: () => void }) => {
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button
             text="Create"
-            isLoading={addTitleMutation.isPending}
-            disabled={addTitleMutation.isPending}
+            isLoading={addReligionMutation.isPending}
+            disabled={addReligionMutation.isPending}
           />
         </div>
       </Form>
@@ -80,39 +83,41 @@ const AddTitle = ({ handleClose }: { handleClose: () => void }) => {
   );
 };
 
-const EditTitle = ({
-  title,
+const EditReligion = ({
+  religion,
   handleClose,
 }: {
-  title: Title;
+  religion: Religion;
   handleClose: () => void;
 }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
   const validate = Yup.object().shape({
-    name: Yup.string().required("Title Name is required"),
-    activeStatus: Yup.string().required("Status is required"),
+    name: Yup.string().required("Religion is required"),
+    isActive: Yup.string().required("Status is required"),
   });
-  const editTitleMutation = useMutation({ mutationFn: createOrUpdateTitle });
+  const editReligionMutation = useMutation({
+    mutationFn: createOrUpdateReligion,
+  });
   const handleEditTitle = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: Partial<Title> = {
-      id: title?.id,
-      titleName: values?.name,
-      activeStatus: values.activeStatus === "true",
+    const payload: Partial<Religion> = {
+      id: religion?.id,
+      name: values?.name,
+      isActive: values.isActive === "true",
     };
 
     try {
-      await editTitleMutation.mutateAsync(payload, {
+      await editReligionMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-titles"] });
+          queryClient.refetchQueries({ queryKey: ["get-religion"] });
           handleClose();
           resetForm();
         },
@@ -127,20 +132,18 @@ const EditTitle = ({
   return (
     <Formik
       initialValues={{
-        name: title?.titleName,
-        activeStatus:
-          title?.activeStatus !== undefined
-            ? String(title?.activeStatus)
-            : "true", // Default to true if undefined
+        name: religion?.name,
+        isActive: religion?.isActive,
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditTitle(values, resetForm);
       }}
-      validationSchema={validate}>
+      validationSchema={validate}
+    >
       <Form className="fields">
-        <Input name="name" label="Disability" placeholder="Input Disability" />
+        <Input name="name" label="Religion" placeholder="Input Religion" />
         <Select
-          name="activeStatus"
+          name="isActive"
           placeholder="Select Status"
           label="Status"
           options={
@@ -157,12 +160,12 @@ const EditTitle = ({
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button
             text="Create"
-            isLoading={editTitleMutation.isPending}
-            disabled={editTitleMutation.isPending}
+            isLoading={editReligionMutation.isPending}
+            disabled={editReligionMutation.isPending}
           />
         </div>
       </Form>
     </Formik>
   );
 };
-export { AddTitle, EditTitle };
+export { AddReligion, EditReligion };

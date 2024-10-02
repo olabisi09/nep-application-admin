@@ -538,7 +538,7 @@ interface ApplicationFee {
   cost: number;
   activeStatus: boolean;
   isDeleted: boolean;
-  programTypeId: number;
+  applicationBatchId: number;
 }
 
 interface GetAllProgramApplicationFeeResponse extends Response {
@@ -850,4 +850,25 @@ interface DepartmentPayload {
   categoryCode: string;
   code: string;
   name: string;
+}
+
+interface Disability {
+  id: number;
+  name: string;
+  isActive: boolean;
+}
+
+interface DisabilityResponse extends Response {
+  data: Disability[];
+}
+
+interface Religion {
+  id: number;
+  name: string;
+  isActive: boolean;
+  isDeleted: boolean;
+}
+
+interface ReligionResponse extends Response {
+  data: Religion[];
 }

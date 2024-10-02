@@ -34,6 +34,8 @@ export const routes = {
     gender: "/gender-setup",
     title: "/title-setup",
     maritalStatus: "/marital-status-setup",
+    disability: "/disability-setup",
+    religion: "/religion-setup",
 
     exploreProgrammes: "explore-programmes",
     aboutUs: "/about-us",

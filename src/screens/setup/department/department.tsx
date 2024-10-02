@@ -153,8 +153,7 @@ const Department = () => {
         onCancel={() => setOpen(false)}
         centered
         title="Create Department"
-        footer={null}
-      >
+        footer={null}>
         <CreateDepartment
           handleClose={() => setOpen(false)}
           faculties={faculties}
@@ -165,8 +164,7 @@ const Department = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Department"
-        footer={null}
-      >
+        footer={null}>
         <EditDepartment
           item={department}
           handleClose={() => setOpenEdit(false)}
@@ -178,8 +176,7 @@ const Department = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Department"
-        footer={null}
-      >
+        footer={null}>
         <DeleteModalContent
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={() => handleDeleteDepartment(department)}
