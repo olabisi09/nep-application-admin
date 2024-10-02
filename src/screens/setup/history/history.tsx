@@ -51,11 +51,11 @@ const History = () => {
     }
   };
   const columns: ColumnsType<Setup> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "title",
       title: "Title",
@@ -74,12 +74,12 @@ const History = () => {
         <img className="table-img" src={imageUrl} alt="" />
       ),
     },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    },
+    // {
+    //   key: "status",
+    //   title: "Status",
+    //   dataIndex: "activeStatus",
+    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    // },
     {
       key: "action",
       title: "",

@@ -60,11 +60,11 @@ const AdmissionRequirement = () => {
   };
 
   const columns: ColumnsType<AdmissionRequirement> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "description",
       title: "Description",
@@ -79,12 +79,12 @@ const AdmissionRequirement = () => {
       title: "Program Name",
       dataIndex: "programName",
     },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    },
+    // {
+    //   key: "status",
+    //   title: "Status",
+    //   dataIndex: "activeStatus",
+    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    // },
     {
       key: "action",
       title: "",

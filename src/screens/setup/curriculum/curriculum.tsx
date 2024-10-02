@@ -66,11 +66,11 @@ const CurriculumSetup = () => {
   ];
 
   const columns: ColumnsType<Curriculum> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "programName",
       title: "Program Name",
@@ -90,12 +90,12 @@ const CurriculumSetup = () => {
       title: "Level Name ",
       dataIndex: "levelName",
     },
-    {
-      key: "activeStatus",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (text: boolean) => (text ? "Active" : "Inactive"),
-    },
+    // {
+    //   key: "activeStatus",
+    //   title: "Status",
+    //   dataIndex: "activeStatus",
+    //   render: (text: boolean) => (text ? "Active" : "Inactive"),
+    // },
     {
       key: "action",
       title: "",

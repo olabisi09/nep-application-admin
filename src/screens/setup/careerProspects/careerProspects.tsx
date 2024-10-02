@@ -73,11 +73,11 @@ const CareerProspects = () => {
   };
 
   const columns: ColumnsType<CareerProspect> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "programName",
       title: "Program Name",
@@ -92,12 +92,12 @@ const CareerProspects = () => {
         return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
     },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    },
+    // {
+    //   key: "status",
+    //   title: "Status",
+    //   dataIndex: "activeStatus",
+    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    // },
     {
       key: "action",
       title: "",

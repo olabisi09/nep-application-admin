@@ -77,11 +77,11 @@ const FacultySetup = () => {
   ];
 
   const columns: ColumnsType<FacultyResponse> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "name",
       title: "Faculty Name",
