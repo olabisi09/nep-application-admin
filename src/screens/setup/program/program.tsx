@@ -64,21 +64,12 @@ const ProgramSetUp = () => {
     }
   };
 
-<<<<<<< HEAD
-  const columns: ColumnsType<ProgramType> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
-=======
   const columns: ColumnsType<ProgramData> = [
     {
       key: "programType",
       title: "Program Type",
       dataIndex: "programTypeName",
     },
->>>>>>> e98ffc5e0889fadf3b40b7da7bda17abc41d4509
     {
       key: "department",
       title: "Department",
