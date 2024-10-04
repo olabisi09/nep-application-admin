@@ -17,6 +17,11 @@ const Sidebar = () => {
       icon: <Settings />,
       children: [
         {
+          key: "users",
+          label: <NavLink to={routes.userMgt.users}>Users</NavLink>,
+          icon: <Line />,
+        },
+        {
           key: "addUsers",
           label: <NavLink to="/admin-users">Add Users</NavLink>,
           icon: <Line />,
@@ -24,6 +29,11 @@ const Sidebar = () => {
         {
           key: "addRoles",
           label: <NavLink to="/admin-roles">Add Roles</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "schoolId",
+          label: <NavLink to={routes.userMgt.addSchoolId}>Add School ID</NavLink>,
           icon: <Line />,
         },
       ],

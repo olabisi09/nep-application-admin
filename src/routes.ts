@@ -66,6 +66,8 @@ export const routes = {
   userMgt: {
     addUsers: "/admin-users",
     addRoles: "/admin-roles",
+    addSchoolId: "/school-id-config",
+    users: "/student-user",
   },
   onboarding: "/onboarding",
 };

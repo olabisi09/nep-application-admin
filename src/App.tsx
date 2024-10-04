@@ -66,6 +66,8 @@ import ProgramSetUp from "./screens/setup/program/program";
 import ExploreProgrammes from "./screens/setup/exploreProgrammes/exploreProgrammes";
 import DisabilitySetup from "./screens/setup/biodata/disability/disability";
 import ReligionSetup from "./screens/setup/biodata/religion/religion";
+import SchoolID from "./screens/setup/schoolIDConfig/schoolIDConfig";
+import StudentUser from "./screens/userManagement/user/users";
 
 function App() {
   const authRoute = [
@@ -305,6 +307,14 @@ function App() {
       path: routes.setup.exploreProgrammes,
       element: <ExploreProgrammes />,
     },
+    {
+      path: routes.userMgt.addSchoolId,
+      element: <SchoolID />,
+    },
+    {
+      path: routes.userMgt.users,
+      element: <StudentUser />,
+    },
   ];
 
   const userMgtRoutes = [
@@ -315,6 +325,10 @@ function App() {
     {
       path: routes.userMgt.addRoles,
       element: <AdminRoles />,
+    },
+    {
+      path: routes.userMgt.addSchoolId,
+      element: <SchoolID />,
     },
   ];
 
