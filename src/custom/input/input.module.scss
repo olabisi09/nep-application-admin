@@ -1,10 +1,19 @@
+.loginContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
 .customInput {
   flex: 1;
-  border: 0.5px solid #d1d2d1;
   border-radius: 4px;
   padding-inline: 0.714rem;
-  // padding-block: 0.1rem;
+  padding-block: 0.1rem;
   position: relative;
+  background-color: #fff;
 }
 
 .inputTwo {
@@ -57,33 +66,16 @@ label {
   font-weight: 700;
 }
 
-.loginContainer {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  width: 100%;
-}
-
-.customInput {
-  border-radius: 4px;
-  padding-inline: 0.714rem;
-  padding-block: 1rem;
-  background-color: #fff;
-  position: relative; 
-}
-
 .showToggle {
-  position: absolute; 
+  position: absolute;
   right: 10px;
   top: 50%;
-  transform: translateY(-50%); 
+  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
-  color: #007bff; 
-  font-size: 14px; 
+  color: green;
+  font-size: 14px;
   padding: 0;
   outline: none;
 }

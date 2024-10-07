@@ -1,3 +1,5 @@
+import ContactUs from "./screens/userManagement/contactUs/contactUs";
+
 export const routes = {
   auth: {
     login: "/",
@@ -66,6 +68,7 @@ export const routes = {
   userMgt: {
     addUsers: "/admin-users",
     addRoles: "/admin-roles",
+    contactUs: "/contact-us",
   },
   onboarding: "/onboarding",
 };
@@ -82,6 +85,10 @@ export const breadcrumbNames = [
         path: "/admin-roles",
         title: "Admin Roles",
       },
+      // {
+      //   path: "/contact-us",
+      //   title: "Contact Us",
+      // },
     ],
   },
   {

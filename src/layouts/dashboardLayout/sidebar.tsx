@@ -26,6 +26,11 @@ const Sidebar = () => {
           label: <NavLink to="/admin-roles">Add Roles</NavLink>,
           icon: <Line />,
         },
+        {
+          key: "contactUs",
+          label: <NavLink to="/contact-us">Contact Feed Back</NavLink>,
+          icon: <Line />,
+        },
       ],
     },
     {
@@ -206,7 +211,9 @@ const Sidebar = () => {
         {
           key: "exploreProgrammes",
           label: (
-            <NavLink to={routes.setup.exploreProgrammes}>Explore Programmes</NavLink>
+            <NavLink to={routes.setup.exploreProgrammes}>
+              Explore Programmes
+            </NavLink>
           ),
           icon: <Line />,
         },

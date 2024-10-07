@@ -66,6 +66,7 @@ import ProgramSetUp from "./screens/setup/program/program";
 import ExploreProgrammes from "./screens/setup/exploreProgrammes/exploreProgrammes";
 import DisabilitySetup from "./screens/setup/biodata/disability/disability";
 import ReligionSetup from "./screens/setup/biodata/religion/religion";
+import ContactUs from "./screens/userManagement/contactUs/contactUs";
 
 function App() {
   const authRoute = [
@@ -315,6 +316,11 @@ function App() {
     {
       path: routes.userMgt.addRoles,
       element: <AdminRoles />,
+    },
+
+    {
+      path: routes.userMgt.contactUs,
+      element: <ContactUs />,
     },
   ];
 
