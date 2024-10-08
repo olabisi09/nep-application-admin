@@ -8,6 +8,7 @@ import styles from "./dashboardLayout.module.scss";
 import { Menu } from "antd";
 import { logout } from "../../utils/logout";
 import { routes } from "../../routes";
+import { icons } from "ckeditor5";
 
 const Sidebar = () => {
   const items = [
@@ -16,6 +17,11 @@ const Sidebar = () => {
       label: "User Management",
       icon: <Settings />,
       children: [
+        {
+          key: "users",
+          label: <NavLink to={routes.userMgt.users}>Users</NavLink>,
+          icon: <Line />,
+        },
         {
           key: "addUsers",
           label: <NavLink to="/admin-users">Add Users</NavLink>,
@@ -28,7 +34,16 @@ const Sidebar = () => {
         },
         {
           key: "contactUs",
-          label: <NavLink to="/contact-us">Contact Feed Back</NavLink>,
+          label: (
+            <NavLink to={routes.userMgt.contactUs}>Contact Feed Back</NavLink>
+          ),
+          icon: <Line />,
+        },
+        {
+          key: "schoolId",
+          label: (
+            <NavLink to={routes.userMgt.addSchoolId}>Add School ID</NavLink>
+          ),
           icon: <Line />,
         },
       ],

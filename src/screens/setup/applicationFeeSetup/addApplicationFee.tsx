@@ -119,16 +119,6 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
 
   const hasRecord = Object.keys(record)?.length > 0;
 
-  const statusOptions = (
-    <>
-      <option value="">Select an option</option>
-      <option>Active</option>
-      <option>Inactive</option>
-    </>
-  );
-
-  console.log(record);
-
   return (
     <Formik
       initialValues={{
@@ -143,9 +133,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
         createUpdateApplicationFeeHandler(values, resetForm);
       }}
       validationSchema={validationSchema}>
-      {({ values }) => {
-        console.log(values);
-
+      {() => {
         return (
           <Form>
             <section className="fields">
@@ -199,6 +187,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
                   text="Cancel"
                   onClick={handleClose}
                 />
+                
                 <Button
                   type="submit"
                   disabled={createUpdateApplicationFeeMutation.isPending}

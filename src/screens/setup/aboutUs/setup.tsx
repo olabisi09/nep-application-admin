@@ -28,6 +28,7 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
       setUpload(file[0]);
     }
   };
+
   const clearFile = () => {
     setUpload(null);
   };
@@ -95,6 +96,7 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
               setFieldValue("description", data);
             }}
           />
+          
           {upload ? (
             <div className="small-gap">
               <Image />

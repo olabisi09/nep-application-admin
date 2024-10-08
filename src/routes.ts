@@ -1,4 +1,4 @@
-import ContactUs from "./screens/userManagement/contactUs/contactUs";
+import ContactUs from "./screens/setup/contactUs/contactUs";
 
 export const routes = {
   auth: {
@@ -69,6 +69,8 @@ export const routes = {
     addUsers: "/admin-users",
     addRoles: "/admin-roles",
     contactUs: "/contact-us",
+    addSchoolId: "/school-id-config",
+    users: "/student-user",
   },
   onboarding: "/onboarding",
 };
@@ -85,10 +87,10 @@ export const breadcrumbNames = [
         path: "/admin-roles",
         title: "Admin Roles",
       },
-      // {
-      //   path: "/contact-us",
-      //   title: "Contact Us",
-      // },
+      {
+        path: "/contact-us",
+        title: "Contact Us",
+      },
     ],
   },
   {
