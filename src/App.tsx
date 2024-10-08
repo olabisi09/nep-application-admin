@@ -316,6 +316,11 @@ function App() {
       path: routes.userMgt.users,
       element: <StudentUser />,
     },
+
+    {
+      path: routes.userMgt.contactUs,
+      element: <ContactUs />,
+    },
   ];
 
   const userMgtRoutes = [
@@ -328,10 +333,6 @@ function App() {
       element: <AdminRoles />,
     },
 
-    {
-      path: routes.userMgt.contactUs,
-      element: <ContactUs />,
-    },
     {
       path: routes.userMgt.addSchoolId,
       element: <SchoolID />,

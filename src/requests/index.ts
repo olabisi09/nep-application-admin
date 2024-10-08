@@ -1086,3 +1086,8 @@ export const deleteReligion = async (id: number) => {
   return (await api.delete(`Utilities/Utilities/DeleteReligion?Id=${id}`))
     ?.data as ReligionResponse;
 };
+
+export const getAllContactForm = async () => {
+  return (await api.get("/Utilities/Utilities/GetAllContactForm"))
+    ?.data as ContactUsResponse;
+};
