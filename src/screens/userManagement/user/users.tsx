@@ -17,10 +17,6 @@ import { useState } from "react";
 //   import { CreateSchoolID, EditSchoolID } from "./form";
 
 const StudentUser = () => {
-  // const [open, setOpen] = useState(false);
-  // const [openEdit, setOpenEdit] = useState(false);
-  // const [record, setRecord] = useState<User>({} as User);
-  //   const [openDelete, setOpenDelete] = useState(false);
   const [current, setCurrent] = useState(1);
 
   const { data, isLoading, isError, error } = useQuery({
@@ -31,28 +27,6 @@ const StudentUser = () => {
   const onChange: PaginationProps["onChange"] = (page) => {
     setCurrent(page);
   };
-
-  // const deleteAboutUsMutation = useMutation({ mutationFn: deleteAboutUs });
-
-  // const deleteAboutUsHandler = async () => {
-  //   try {
-  //     await deleteAboutUsMutation.mutateAsync(about?.id, {
-  //       onSuccess: (data) => {
-  //         notification.success({
-  //           message: "Success",
-  //           description: data?.message,
-  //         });
-  //         refetch();
-  //         setOpenDelete((prevState) => !prevState);
-  //       },
-  //     });
-  //   } catch (error: any) {
-  //     notification.error({
-  //       message: "Error",
-  //       description: error?.response?.data?.message,
-  //     });
-  //   }
-  // };
 
   const columns: ColumnsType<User> = [
     {
@@ -85,35 +59,6 @@ const StudentUser = () => {
       title: "Phone Number",
       dataIndex: "phoneNumber",
     },
-    {
-      key: "action",
-      title: "",
-      render: (_, record) => {
-        const items: MenuProps["items"] = [
-          // {
-          //   key: "1",
-          //   label: "Edit",
-          //   onClick: () => {
-          //     setRecord(record);
-          //     setOpenEdit(true);
-          //   },
-          // },
-          //   {
-          //     key: "2",
-          //     label: "Delete",
-          //     onClick: () => {
-          //       setRecord(record);
-          //       setOpenDelete(true);
-          //     },
-          //   },
-        ];
-        return (
-          <Dropdown menu={{ items }} trigger={["click"]}>
-            <AntButton type="text" icon={<Ellipsis />} />
-          </Dropdown>
-        );
-      },
-    },
   ];
 
   const userData = data?.data as User[];
@@ -130,11 +75,6 @@ const StudentUser = () => {
     <div>
       <section className="space-between">
         <h3>Student User Setup</h3>
-        {/* <Button
-            onClick={() => setOpen(true)}
-            iconBefore={<Plus />}
-            text="Setup"
-          /> */}
       </section>
 
       <br />
