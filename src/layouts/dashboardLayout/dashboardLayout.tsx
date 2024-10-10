@@ -62,6 +62,7 @@ const DashboardLayout = () => {
       <section className={styles.sidebar}>
         <Sidebar />
       </section>
+      
       <Drawer
         onClose={handleClose}
         placement={"left"}

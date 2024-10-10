@@ -1,5 +1,4 @@
 import Button from "../../custom/button/button";
-import { ReactComponent as Icon } from "../../assets/magnifier.svg";
 import styles from "./styles.module.scss";
 
 interface Props {

@@ -21,6 +21,7 @@ interface ProgramData {
   programId: number;
   programTypeName: string;
   program: string;
+  programName: string;
   activeStatus: boolean;
   isDeleted: boolean;
 }

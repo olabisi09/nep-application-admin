@@ -68,6 +68,8 @@ import DisabilitySetup from "./screens/setup/biodata/disability/disability";
 import ReligionSetup from "./screens/setup/biodata/religion/religion";
 import SchoolID from "./screens/setup/schoolIDConfig/schoolIDConfig";
 import StudentUser from "./screens/userManagement/user/users";
+import ApplicationBatchSetup from "./screens/setup/applicationBatch/applicationBatch";
+import GradeSetUp from "./screens/setup/grade/grade";
 
 function App() {
   const authRoute = [
@@ -314,6 +316,14 @@ function App() {
     {
       path: routes.userMgt.users,
       element: <StudentUser />,
+    },
+    {
+      path: routes.setup.applicationBatch,
+      element: <ApplicationBatchSetup />,
+    },
+    {
+      path: routes.setup.grade,
+      element: <GradeSetUp />,
     },
   ];
 

@@ -5,42 +5,42 @@ import { FormikValues, Form, FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 import Select from "../../../custom/select/select";
 import Button from "../../../custom/button/button";
-import { CreateUpdateSubject } from "./request";
+import { CreateUpdateGrade } from "./request";
 
 interface Props {
-  data?: SubjectPayload;
+  data?: Grade;
   handleClose: () => void;
 }
 
-const AddSubject = ({ handleClose, data }: Props) => {
+const AddGrade = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const CreateSubjectMutation = useMutation({
-    mutationFn: CreateUpdateSubject,
+  const createUpdateGradeMutation = useMutation({
+    mutationFn: CreateUpdateGrade,
     mutationKey: ["create-subject"],
   });
 
-  const CreateSubjectHandler = async (
+  const createGradeHandler = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
-    const payload: SubjectPayload = {
+    const payload: GradePayload = {
       id: data?.id || 0,
-      subject: values.subject,
+      grade: values.grade,
       activeStatus: values?.status === "true",
       isDeleted: false,
     };
 
     try {
-      await CreateSubjectMutation.mutateAsync(payload, {
+      await createUpdateGradeMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
           queryClient.invalidateQueries({
-            queryKey: ["get-subject"],
+            queryKey: ["get-all-grade"],
           });
           resetForm();
           handleClose();
@@ -55,17 +55,17 @@ const AddSubject = ({ handleClose, data }: Props) => {
   };
 
   const validationSchema = Yup.object().shape({
-    subject: Yup.string().required("Subject is required"),
+    grade: Yup.string().required("Grade is required"),
     status: Yup.string().required("Status is required"),
   });
 
   const formik = useFormik<FormikValues>({
     initialValues: {
-      subject: data?.subject || "",
+      grade: data?.grade || "",
       status: data?.activeStatus ? "true" : "false",
     },
     onSubmit: (values, { resetForm }) => {
-      CreateSubjectHandler(values, resetForm);
+        createGradeHandler(values, resetForm);
     },
     validationSchema: validationSchema,
     enableReinitialize: true,
@@ -82,9 +82,9 @@ const AddSubject = ({ handleClose, data }: Props) => {
     <FormikProvider value={formik}>
       <Form className="fields">
         <Input
-          name="subject"
-          placeholder="Input Subject Name"
-          label="Subject Name"
+          name="grade"
+          placeholder="Input Grade"
+          label="Grade Name"
         />
         <Select
           name="status"
@@ -96,9 +96,9 @@ const AddSubject = ({ handleClose, data }: Props) => {
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button
             type="submit"
-            disabled={CreateSubjectMutation.isPending}
-            isLoading={CreateSubjectMutation.isPending}
-            text={CreateSubjectMutation.isPending ? "Submiting..." : "Submit"}
+            disabled={createUpdateGradeMutation.isPending}
+            isLoading={createUpdateGradeMutation.isPending}
+            text={createUpdateGradeMutation.isPending ? "Submitting..." : "Submit"}
           />
         </div>
       </Form>
@@ -106,4 +106,4 @@ const AddSubject = ({ handleClose, data }: Props) => {
   );
 };
 
-export default AddSubject;
+export default AddGrade;
