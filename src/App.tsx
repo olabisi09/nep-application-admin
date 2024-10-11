@@ -318,12 +318,6 @@ function App() {
       path: routes.userMgt.users,
       element: <StudentUser />,
     },
-<<<<<<< HEAD
-
-    {
-      path: routes.userMgt.contactUs,
-      element: <ContactUs />,
-=======
     {
       path: routes.setup.applicationBatch,
       element: <ApplicationBatchSetup />,
@@ -331,7 +325,6 @@ function App() {
     {
       path: routes.setup.grade,
       element: <GradeSetUp />,
->>>>>>> 35faea67504499b646b088563f67ce3b0d794139
     },
   ];
 
