@@ -7,27 +7,32 @@ import {
   Table,
   Button as AntButton,
   MenuProps,
-  Spin,
   App,
+  Spin,
 } from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddSubject from "./addSubject";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../deleteModal/deleteModal";
-import { deleteSubjects, getSubjects } from "./request";
+import { ColumnsType } from "antd/es/table";
+import { deleteFaculty } from "../../../requests";
+import { getApplicationBatch } from "./request";
+import AddApplicationBatch from "./addApplicationBatch";
+import EditApplicationBatch from "./editApplicationBatch";
+import { formatDate } from "../../../utils/formatDate";
 
-const SubjectSetUp = () => {
+const ApplicationBatchSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [indexData, setIndexData] = useState({} as Subject);
+  const [indexData, setIndexData] = useState({} as ApplicationBatch);
   const [openDelete, setOpenDelete] = useState(false);
+
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -35,64 +40,88 @@ const SubjectSetUp = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleEdit = (data: Subject) => {
+  const handleEdit = (data: ApplicationBatch) => {
     setIndexData(data);
     setOpenEdit(true);
   };
 
-  const handleDelete = (data: Subject) => {
-    setIndexData(data);
-    setOpenDelete(true);
+  const handleDelete = (data: ApplicationBatch) => {
+    if (data && data?.id) {
+      setIndexData(data);
+      setOpenDelete(true);
+    } else {
+      notification.error({
+        message: "Error",
+        description: "Invalid Application Batch ID",
+      });
+    }
   };
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-subject"],
-    queryFn: getSubjects,
+    queryKey: ["get-all-application-batch"],
+    queryFn: getApplicationBatch,
   });
 
-  const SubjectData = data?.data as Subject[];
+  const applicationBatchData = data?.data ?? [];
 
-  const items = (record: Subject): MenuProps["items"] => [
+  const items = (record: ApplicationBatch): MenuProps["items"] => [
     {
       key: "1",
-      label: (
-        <button style={{ border: "0rem" }} onClick={() => handleEdit(record)}>
-          Edit
-        </button>
-      ),
+      label: "Edit",
+      onClick: () => handleEdit(record),
     },
     {
       key: "2",
-      label: (
-        <button style={{ border: "0rem" }} onClick={() => handleDelete(record)}>
-          Delete
-        </button>
-      ),
+      label: "Delete",
+      onClick: () => handleDelete(record),
     },
   ];
 
-  const columns = [
+  const columns: ColumnsType<ApplicationBatch> = [
     {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
+      key: "batchName",
+      title: "Batch",
+      dataIndex: "batchName",
     },
     {
-      key: "subject",
-      title: "Subject Name",
-      dataIndex: "subject",
+      key: "session",
+      title: "Session",
+      dataIndex: "sessionName",
     },
     {
-      key: "activeStatus",
-      title: "Active Status",
-      dataIndex: "activeStatus",
-      render: (text: boolean) => (text ? "Active" : "Inactive"),
+      key: "programName",
+      title: "Program",
+      dataIndex: "programName",
+    },
+    {
+      key: "startDate",
+      title: "Start Date",
+      dataIndex: "startDate",
+      render: (_, { startDate }) => formatDate(startDate),
+    },
+    {
+      key: "endDate",
+      title: "End Date",
+      dataIndex: "endDate",
+      render: (_, { endDate }) => formatDate(endDate),
+    },
+    {
+      key: "lateStartDate",
+      title: "Late Application Start Date",
+      dataIndex: "lateStartDate",
+      render: (_, { lateStartDate }) => formatDate(lateStartDate),
+    },
+    {
+      key: "lateEndDate",
+      title: "Late Application End Date",
+      dataIndex: "lateEndDate",
+      render: (_, { lateEndDate }) => formatDate(lateEndDate),
     },
 
     {
       key: "action",
       title: "",
-      render: (record: Subject) => (
+      render: (record: ApplicationBatch) => (
         <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
@@ -100,26 +129,33 @@ const SubjectSetUp = () => {
     },
   ];
 
-  const deleteSubjectMutation = useMutation({ mutationFn: deleteSubjects });
+  const deleteApplicationBatchMutation = useMutation({
+    mutationFn: deleteFaculty,
+  });
 
-  const deleteCountryHandler = async () => {
-    try {
-      await deleteSubjectMutation.mutateAsync(indexData.id, {
-        onSuccess: (data) => {
-          notification.success({
-            message: "Success",
-            description: data?.message,
-          });
-          queryClient.refetchQueries({
-            queryKey: ["get-subject"],
-          });
-          setOpenDelete(false);
-        },
-      });
-    } catch (error: any) {
+  const deleteApplicationBatchHandler = async () => {
+    if (indexData.id) {
+      try {
+        await deleteApplicationBatchMutation.mutateAsync(indexData.id, {
+          onSuccess: (data) => {
+            notification.success({
+              message: "Success",
+              description: data?.message,
+            });
+            queryClient.refetchQueries({ queryKey: ["get-faculty"] });
+            setOpenDelete(false);
+          },
+        });
+      } catch (error: any) {
+        notification.error({
+          message: "Error",
+          description: error?.response?.data?.message,
+        });
+      }
+    } else {
       notification.error({
         message: "Error",
-        description: error?.response?.data?.message,
+        description: "Invalid Faculty ID",
       });
     }
   };
@@ -127,6 +163,7 @@ const SubjectSetUp = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -134,13 +171,14 @@ const SubjectSetUp = () => {
   return (
     <main>
       <section className="space-between">
-        <h3>Subject Setup</h3>
+        <h3>Application Batch Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -165,11 +203,11 @@ const SubjectSetUp = () => {
             )}
           </div>
         </div>
+
         <Table
-          dataSource={SubjectData}
+          dataSource={applicationBatchData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 
@@ -177,38 +215,41 @@ const SubjectSetUp = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Subject Setup"
+        title="Create Application Batch"
         footer={null}
       >
-        <AddSubject handleClose={() => setShowAddModal(false)} />
+        <AddApplicationBatch handleClose={() => setShowAddModal(false)} />
       </Modal>
 
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title=" Edit Subject Setup"
+        title="Edit Application Batch"
         footer={null}
       >
-        <AddSubject handleClose={() => setOpenEdit(false)} data={indexData} />
+        <EditApplicationBatch
+          handleClose={() => setOpenEdit(false)}
+          record={indexData}
+        />
       </Modal>
 
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete Country Setup"
+        title="Delete Application Batch"
         footer={null}
       >
         <DeleteModalContent
-          isLoading={deleteSubjectMutation?.isPending}
+          isLoading={deleteApplicationBatchMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={deleteCountryHandler}
-          title={indexData?.subject}
+          handleSubmit={deleteApplicationBatchHandler}
+          title={indexData?.batchName}
         />
       </Modal>
     </main>
   );
 };
 
-export default SubjectSetUp;
+export default ApplicationBatchSetup;

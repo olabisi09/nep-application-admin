@@ -106,12 +106,14 @@ const Overview = ({ handleClose }: { handleClose: () => void }) => {
               }}
             />
           )}
+          
           <Select
             name="status"
             label="Status"
             placeholder="Select status"
             options={statusOptions}
           />
+
           <div className="btn-group">
             <Button
               type="button"

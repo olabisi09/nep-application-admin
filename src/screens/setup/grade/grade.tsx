@@ -14,19 +14,19 @@ import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddSubject from "./addSubject";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../deleteModal/deleteModal";
-import { deleteSubjects, getSubjects } from "./request";
+import { deleteGrade, getGrades } from "./request";
+import AddGrade from "./addGrade";
 
-const SubjectSetUp = () => {
+const GradeSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [indexData, setIndexData] = useState({} as Subject);
+  const [indexData, setIndexData] = useState({} as Grade);
   const [openDelete, setOpenDelete] = useState(false);
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
@@ -35,24 +35,24 @@ const SubjectSetUp = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleEdit = (data: Subject) => {
+  const handleEdit = (data: Grade) => {
     setIndexData(data);
     setOpenEdit(true);
   };
 
-  const handleDelete = (data: Subject) => {
+  const handleDelete = (data: Grade) => {
     setIndexData(data);
     setOpenDelete(true);
   };
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-subject"],
-    queryFn: getSubjects,
+    queryKey: ["get-all-grade"],
+    queryFn: getGrades,
   });
 
-  const SubjectData = data?.data as Subject[];
+  const gradeData = data?.data as Grade[];
 
-  const items = (record: Subject): MenuProps["items"] => [
+  const items = (record: Grade): MenuProps["items"] => [
     {
       key: "1",
       label: (
@@ -78,9 +78,9 @@ const SubjectSetUp = () => {
       dataIndex: "id",
     },
     {
-      key: "subject",
-      title: "Subject Name",
-      dataIndex: "subject",
+      key: "grade",
+      title: "Grade Name",
+      dataIndex: "grade",
     },
     {
       key: "activeStatus",
@@ -92,7 +92,7 @@ const SubjectSetUp = () => {
     {
       key: "action",
       title: "",
-      render: (record: Subject) => (
+      render: (record: Grade) => (
         <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
@@ -100,11 +100,11 @@ const SubjectSetUp = () => {
     },
   ];
 
-  const deleteSubjectMutation = useMutation({ mutationFn: deleteSubjects });
+  const deleteGradeMutation = useMutation({ mutationFn: deleteGrade });
 
   const deleteCountryHandler = async () => {
     try {
-      await deleteSubjectMutation.mutateAsync(indexData.id, {
+      await deleteGradeMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -134,7 +134,7 @@ const SubjectSetUp = () => {
   return (
     <main>
       <section className="space-between">
-        <h3>Subject Setup</h3>
+        <h3>Grade Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
@@ -166,7 +166,7 @@ const SubjectSetUp = () => {
           </div>
         </div>
         <Table
-          dataSource={SubjectData}
+          dataSource={gradeData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}
@@ -177,20 +177,20 @@ const SubjectSetUp = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Subject Setup"
+        title="Create Grade Setup"
         footer={null}
       >
-        <AddSubject handleClose={() => setShowAddModal(false)} />
+        <AddGrade handleClose={() => setShowAddModal(false)} />
       </Modal>
 
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title=" Edit Subject Setup"
+        title=" Edit Grade Setup"
         footer={null}
       >
-        <AddSubject handleClose={() => setOpenEdit(false)} data={indexData} />
+        <AddGrade handleClose={() => setOpenEdit(false)} data={indexData} />
       </Modal>
 
       <Modal
@@ -201,14 +201,14 @@ const SubjectSetUp = () => {
         footer={null}
       >
         <DeleteModalContent
-          isLoading={deleteSubjectMutation?.isPending}
+          isLoading={deleteGradeMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteCountryHandler}
-          title={indexData?.subject}
+          title={indexData?.grade}
         />
       </Modal>
     </main>
   );
 };
 
-export default SubjectSetUp;
+export default GradeSetUp;

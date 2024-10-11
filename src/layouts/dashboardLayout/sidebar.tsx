@@ -19,7 +19,7 @@ const Sidebar = () => {
       children: [
         {
           key: "users",
-          label: <NavLink to={routes.userMgt.users}>Users</NavLink>,
+          label: <NavLink to={routes.userMgt.users}>Applicants</NavLink>,
           icon: <Line />,
         },
         {
@@ -123,6 +123,15 @@ const Sidebar = () => {
           icon: <Line />,
         },
         {
+          key: "applicationBatch",
+          label: (
+            <NavLink to={routes.setup.applicationBatch}>
+              Application Batch
+            </NavLink>
+          ),
+          icon: <Line />,
+        },
+        {
           key: "readMoreProgram",
           label: (
             <NavLink to="/read-more-program-setup">Read More - Program</NavLink>
@@ -216,6 +225,11 @@ const Sidebar = () => {
           label: <NavLink to="/subject-setup">Subject</NavLink>,
           icon: <Line />,
         },
+        {
+          key: "grade",
+          label: <NavLink to={routes.setup.grade}>Grade</NavLink>,
+          icon: <Line />,
+        },
       ],
     },
     {
@@ -280,6 +294,7 @@ const Sidebar = () => {
       ],
     },
   ];
+
   return (
     <>
       <section>
@@ -289,6 +304,7 @@ const Sidebar = () => {
             <p>KWARARAFA</p>
           </span>
         </div>
+
         <div className={styles.menuItems}>
           <Menu
             items={items}
@@ -301,6 +317,7 @@ const Sidebar = () => {
           />
         </div>
       </section>
+      
       <button className={styles.logout} onClick={logout}>
         <Logout />
         <p className={styles.end}>Logout</p>
