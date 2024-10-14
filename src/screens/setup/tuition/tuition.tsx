@@ -236,7 +236,8 @@ const Tuition = () => {
           isLoading={deleteTuitionMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteTuitionHandler}
-          title={tuition?.description}
+          // title={tuition?.description}
+          title={"this item"}
         />
       </Modal>
     </main>
