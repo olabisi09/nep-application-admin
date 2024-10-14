@@ -106,9 +106,9 @@ const ReadMoreCourse = () => {
           {
             key: "1",
             label: "Edit",
-            onClick: () => {
-              setCourseOverview(record);
-              setOpenEdit(true);
+            onClick: () => {              
+              setCourseOverview( {...courseOverview, ...record} );
+              setOpenEdit(prevState => !prevState);
             },
           },
           {
@@ -198,9 +198,9 @@ const ReadMoreCourse = () => {
 
       <Modal
         open={openEdit}
-        onCancel={() => setOpenEdit(false)}
+        onCancel={() => setOpenEdit(prevState => !prevState)}
         centered
-        title="Read More - Program Setup"
+        title="Edit Read More - Program Setup"
         footer={null}>
         <EditReadMoreCourseOverview
           handleClose={handleCloseModal}
@@ -218,7 +218,7 @@ const ReadMoreCourse = () => {
           isLoading={deleteReadMoreOverViewMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteReadMoreOverViewHandler}
-          title={courseOverview?.id}
+          title={courseOverview?.programName + " Overview"}
           isActive={false}
         />
       </Modal>

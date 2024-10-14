@@ -48,6 +48,7 @@ const AddModeOfStudy = ({ handleClose }: { handleClose: () => void }) => {
       onSubmit={(values, { resetForm }) => {
         handleAddModeOfStudy(values, resetForm);
       }}
+      enableReinitialize
       validationSchema={validate}
     >
       <Form className="fields">
@@ -118,6 +119,7 @@ const EditModeOfStudy = ({ modeOfStudy, handleClose }: { modeOfStudy: ModeOfStud
       handleEditModeOfStudy(values, resetForm);
     }}
     validationSchema={validate}
+    enableReinitialize
   >
     <Form className="fields">
       <Input name="name" label="Mode of Study Name" placeholder="Input Mode of Study Name" />

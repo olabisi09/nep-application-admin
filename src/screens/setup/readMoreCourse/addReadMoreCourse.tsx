@@ -2,10 +2,7 @@ import { Form, Formik, FormikValues } from "formik";
 import Select from "../../../custom/select/select";
 import Button from "../../../custom/button/button";
 import { App, Spin } from "antd";
-import {
-  getAllPrograms,
-  StatusOptions,
-} from "../../../requests";
+import { getAllPrograms, StatusOptions } from "../../../requests";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import Editor from "../../../custom/editor/editor";
@@ -125,7 +122,7 @@ const AddReadMoreCourseOverview = ({
               </>
             }
           />
-          
+
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button
@@ -191,76 +188,81 @@ const EditReadMoreCourseOverview = ({
       });
     }
   };
+
+  const programOptions = programsData?.map((option) => {
+    if (isLoading) {
+      return <Spin />;
+    } else if (isError) {
+      return <p>{error?.message}</p>;
+    } else {
+      return (
+        <option key={option.id} value={option.id}>
+          {option.name}
+        </option>
+      );
+    }
+  });
+
   return (
     <Formik
       initialValues={{
-        programName: record?.readMoreId,
-        description: record?.description,
+        programName: record?.readMoreId || "",
+        description: record?.description || "",
         status: record?.activeStatus ? "true" : "false",
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditCourseOverview(values, resetForm);
       }}
       validationSchema={validationSchema}
+      enableReinitialize
     >
-      {({ setFieldValue }) => (
-        <Form className="fields">
-          <Select
-            name="programName"
-            placeholder="Select Program Name "
-            label="Program Name"
-            options={
-              <>
-                {isLoading ? (
-                  <Spin />
-                ) : isError ? (
-                  <p>{error?.message}</p>
-                ) : (
-                  programsData &&
-                  programsData?.map((option: Program) => (
-                    <option key={option.id} value={option.id}>
-                      {option.name}
-                    </option>
-                  ))
-                )}
-              </>
-            }
-          />
-          <Editor
-            name="description"
-            label="Description"
-            onChange={(_, editor) => {
-              const data = editor.getData();
-              setFieldValue("description", data);
-            }}
-            initialData={record.description}
-          />
-
-          <Select
-            name="status"
-            placeholder="Select Status"
-            label="Status"
-            options={
-              <>
-                {StatusOptions.map((option: any) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </>
-            }
-          />
-
-          <div className="btn-group">
-            <Button onClick={handleClose} variant="text" text="Cancel" />
-            <Button
-              text="Update"
-              isLoading={editCourseOverviewMutation?.isPending}
-              disabled={editCourseOverviewMutation?.isPending}
+      {({ handleChange, setFieldValue }) => {        
+        return (
+          <Form className="fields">
+            <Select
+              name="programName"
+              placeholder="Select Program Name "
+              label="Program Name"
+              options={programOptions}
+              onChange={handleChange}
             />
-          </div>
-        </Form>
-      )}
+
+            <Editor
+              name="description"
+              label="Description"
+              onChange={(_, editor) => {
+                const data = editor.getData();
+                setFieldValue("description", data);
+              }}
+              initialData={record.description}
+            />
+
+            <Select
+              name="status"
+              placeholder="Select Status"
+              label="Status"
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              }
+            />
+
+            <div className="btn-group">
+              <Button onClick={handleClose} variant="text" text="Cancel" />
+              <Button
+                text="Update"
+                isLoading={editCourseOverviewMutation?.isPending}
+                disabled={editCourseOverviewMutation?.isPending}
+              />
+            </div>
+          </Form>
+        );
+      }}
     </Formik>
   );
 };

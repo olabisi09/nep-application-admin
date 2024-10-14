@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   Card,
   Dropdown,
@@ -8,16 +10,15 @@ import {
   Spin,
   App,
 } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { useParams } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
+
 import { ReactComponent as Plus } from "../../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { Button } from "../../../../custom";
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-
-import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
 import { CreateAdmissionReqDetail, EditAdmissionReqDetail } from "./form";
-import { useParams } from "react-router-dom";
 import {
   deleteAdmissionRequirementDetailsById,
   getAdmissionRequirementDetailsByAdmissionReqId,
@@ -25,7 +26,6 @@ import {
 import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const AdmissionReqDetail = () => {
-  const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -33,6 +33,8 @@ const AdmissionReqDetail = () => {
   const [reqDetails, setReqDetails] = useState<AdmissionRequirementDetails>(
     {} as AdmissionRequirementDetails
   );
+
+  const { notification } = App.useApp();
 
   const deleteAdmissionRequirementDetailsMutation = useMutation({
     mutationFn: deleteAdmissionRequirementDetailsById,
@@ -68,11 +70,6 @@ const AdmissionReqDetail = () => {
   };
 
   const columns: ColumnsType<AdmissionRequirementDetails> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "name",
       title: "Name",
@@ -166,7 +163,7 @@ const AdmissionReqDetail = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create Overview"
+        title="Create Admission Requirement Details"
         footer={null}
       >
         <CreateAdmissionReqDetail handleClose={() => setOpen(false)} />
@@ -176,7 +173,7 @@ const AdmissionReqDetail = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit Overview"
+        title="Edit Admission Requirement Details"
         footer={null}
       >
         <EditAdmissionReqDetail
@@ -189,7 +186,7 @@ const AdmissionReqDetail = () => {
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete Tuition Setup"
+        title="Delete Admission Requirement Details Setup"
         footer={null}
       >
         <DeleteModalContent

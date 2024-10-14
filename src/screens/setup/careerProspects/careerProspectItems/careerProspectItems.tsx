@@ -8,17 +8,22 @@ import {
   Button as AntButton,
   MenuProps,
   Spin,
+  App,
 } from "antd";
 import styles from "../../styles.module.scss";
 import { useCallback, useState } from "react";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
 import { CreateCareerProspectItem, EditCareerProspectItem } from "./addItem";
 import { Button, SearchInput } from "../../../../custom";
 import { useParams } from "react-router-dom";
-import { getCareerProspectItemByCareerProspectId } from "../request";
+import {
+  deleteCareerProspectItem,
+  getCareerProspectItemByCareerProspectId,
+} from "../request";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const CareerProspectItems = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -26,8 +31,11 @@ const CareerProspectItems = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [careerProspectItems, setCareerProspectItems] =
     useState<CareerProspectItem>({} as CareerProspectItem);
+
+  const { notification } = App.useApp();
 
   const { id } = useParams();
   const careerProspectId = id ?? "";
@@ -36,11 +44,38 @@ const CareerProspectItems = () => {
     setSearchTerm(e.target.value);
   };
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-career-prospect-id"],
     queryFn: () => getCareerProspectItemByCareerProspectId(careerProspectId),
     enabled: !!careerProspectId,
   });
+
+  const deleteCareerProspectItemMutation = useMutation({
+    mutationFn: deleteCareerProspectItem,
+  });
+
+  const deleteCareerProspectItemHandler = async () => {
+    try {
+      await deleteCareerProspectItemMutation.mutateAsync(
+        careerProspectItems?.id,
+        {
+          onSuccess: (data) => {
+            notification.success({
+              message: "Success",
+              description: data?.message,
+            });
+            refetch();
+            setOpenDelete((prevState) => !prevState);
+          },
+        }
+      );
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const careerProspectItemData = data?.data as CareerProspectItem[];
 
@@ -86,7 +121,10 @@ const CareerProspectItems = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: () => {},
+            onClick: () => {
+              setCareerProspectItems(record);
+              setOpenDelete((prevState) => !prevState);
+            },
           },
         ];
         return (
@@ -179,6 +217,21 @@ const CareerProspectItems = () => {
         footer={null}
       >
         <CreateCareerProspectItem handleClose={handleCloseCreateModal} />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Admission Requirement Details Setup"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteCareerProspectItemMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteCareerProspectItemHandler}
+          title={careerProspectItems?.title}
+        />
       </Modal>
     </main>
   );

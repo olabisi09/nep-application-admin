@@ -1,12 +1,21 @@
+import { App, Spin } from "antd";
 import { Form, Formik, FormikValues } from "formik";
-import Select from "../../../custom/select/select";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { object } from "yup";
+
+import Select from "../../../custom/select/select";
 import {
   createOrUpdateCareerProspect,
   getAllPrograms,
 } from "../../../requests";
-import { App, Spin } from "antd";
 import { Button, Editor } from "../../../custom";
+import { validator } from "../../../utils/validator";
+
+const validationSchema = object().shape({
+  description: validator.description,
+  programName: validator.programName,
+  status: validator.status,
+});
 
 const AddCareerProspects = ({
   handleClose,
@@ -96,9 +105,11 @@ const AddCareerProspects = ({
         description: item?.description ?? "",
         status: hasRecords ? initialStatus : "",
       }}
+      enableReinitialize
       onSubmit={(values, { resetForm }) => {
         handleCreateUpdateCareerProspect(values, resetForm);
       }}
+      validationSchema={validationSchema}
     >
       {({ values, setFieldValue }) => {
         return (
