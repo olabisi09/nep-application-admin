@@ -3,8 +3,8 @@ import Input from "../../../custom/input/input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import { Form, Formik, FormikValues } from "formik";
-import { Button } from "../../../custom";
-import { createFaculty } from "../../../requests";
+import { Button, Select } from "../../../custom";
+import { createFaculty, StatusOptions } from "../../../requests";
 
 interface Props {
   handleClose: () => void;
@@ -84,6 +84,21 @@ const AddFaculty = ({ handleClose }: Props) => {
               label="Description"
               placeholder="Description"
               name="description"
+            />
+
+            <Select
+              name="activeStatus"
+              placeholder="Select Status"
+              label="Status"
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              }
             />
 
             <div className="btn-group">

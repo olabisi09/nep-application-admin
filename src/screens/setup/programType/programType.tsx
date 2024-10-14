@@ -64,16 +64,23 @@ const ProgramSetUp = () => {
   };
 
   const columns: ColumnsType<ProgramType> = [
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
-    {
-      key: "name",
+      key: "Program Type",
       title: "Name",
       dataIndex: "name",
     },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    },
+
     {
       key: "action",
       title: "",

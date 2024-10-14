@@ -2,8 +2,9 @@ import { App } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import { Form, Formik, FormikValues } from "formik";
-import { Button, Input } from "../../../custom";
+import { Button, Input, Select } from "../../../custom";
 import { createProgramType } from "./request";
+import { StatusOptions } from "../../../requests";
 
 interface Props {
   handleClose: () => void;
@@ -67,7 +68,20 @@ const AddProgramType = ({ handleClose }: Props) => {
               placeholder="Select Program Type"
               label="Program Type"
             />
-
+            <Select
+              name="activeStatus"
+              placeholder="Select Status"
+              label="Status"
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              }
+            />
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button

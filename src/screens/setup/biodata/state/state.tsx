@@ -89,12 +89,12 @@ const StateSetup = () => {
       title: "State Name",
       dataIndex: "stateName",
     },
-    // {
-    //   key: "activeStatus",
-    //   title: "Active Status",
-    //   dataIndex: "activeStatus",
-    //   render: (text: boolean) => (text ? "Active" : "Inactive"),
-    // },
+    {
+      key: "activeStatus",
+      title: "Active Status",
+      dataIndex: "activeStatus",
+      render: (text: boolean) => (text ? "Active" : "Inactive"),
+    },
 
     {
       key: "action",

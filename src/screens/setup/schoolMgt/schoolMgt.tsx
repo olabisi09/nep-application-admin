@@ -52,11 +52,11 @@ const SchoolMgt = () => {
   };
 
   const columns: ColumnsType<Setup> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "title",
       title: "Title",

@@ -70,12 +70,12 @@ const SocialMedia = () => {
       dataIndex: "socialMediaLogoUrl",
       render: (_, { socialMediaLogoUrl }) => <img src={socialMediaLogoUrl} alt="" className="table-img"/>,
     },
-    // {
-    //   key: "status",
-    //   title: "Status",
-    //   dataIndex: "activeStatus",
-    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    // },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    },
     {
       key: "action",
       title: "",

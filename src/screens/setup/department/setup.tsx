@@ -2,7 +2,7 @@ import Input from "../../../custom/input/input";
 import Button from "../../../custom/button/button";
 import { Form, Formik, FormikValues } from "formik";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createProgram, updateDepartment, updateProgram } from "../../../requests";
+import { createProgram, StatusOptions, updateDepartment, updateProgram } from "../../../requests";
 import { App } from "antd";
 import * as Yup from "yup";
 import { Select } from "../../../custom";
@@ -70,8 +70,7 @@ const CreateDepartment = ({
       onSubmit={(values, { resetForm }) => {
         handleAddDepartment(values, resetForm);
       }}
-      validationSchema={validate}
-    >
+      validationSchema={validate}>
       <Form className="fields">
         <Input
           name="name"
@@ -88,6 +87,21 @@ const CreateDepartment = ({
           label="Faculty"
           placeholder="Select faculty"
           options={facultyOptions}
+        />
+
+        <Select
+          name="activeStatus"
+          placeholder="Select Status"
+          label="Status"
+          options={
+            <>
+              {StatusOptions.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </>
+          }
         />
         <div className="btn-group">
           <Button
@@ -171,8 +185,7 @@ const EditDepartment = ({
         handleEditDepartment(values, resetForm);
       }}
       validationSchema={validate}
-      enableReinitialize={true}
-    >
+      enableReinitialize={true}>
       <Form className="fields">
         <Input
           name="name"
@@ -189,6 +202,20 @@ const EditDepartment = ({
           label="Faculty"
           placeholder="Select faculty"
           options={facultyOptions}
+        />
+        <Select
+          name="activeStatus"
+          placeholder="Select Status"
+          label="Status"
+          options={
+            <>
+              {StatusOptions.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </>
+          }
         />
         <div className="btn-group">
           <Button

@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { Form, Formik, FormikValues } from "formik";
 
 import { Button, Select } from "../../../custom";
-import { getAllAcademicSession } from "../../../requests";
+import { getAllAcademicSession, StatusOptions } from "../../../requests";
 import { getAllProgram } from "../program/request";
 import { createUpdateApplicationBatch } from "./request";
 import { formatDate } from "../../../utils/formatDate";
@@ -183,6 +183,20 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
               label="Late registration End Date"
               placeholder=""
               name="lateRegistrationEndDate"
+            />
+            <Select
+              name="isActive"
+              placeholder="Select Status"
+              label="Status"
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              }
             />
 
             <div className="btn-group">

@@ -25,9 +25,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
 
-
-
-const MaritalSetup = ()=> {
+const MaritalSetup = () => {
   const { notification } = App.useApp();
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -112,18 +110,17 @@ const MaritalSetup = ()=> {
       title: "Status",
       dataIndex: "statusName",
     },
-    // {
-    //   key: "activeStatus",
-    //   title: "Active Status",
-    //   dataIndex: "activeStatus",
-    //   render: (text:boolean) => (text ? "Active" : "Inactive"),
-
-    // },
+    {
+      key: "activeStatus",
+      title: "Active Status",
+      dataIndex: "activeStatus",
+      render: (text: boolean) => (text ? "Active" : "Inactive"),
+    },
 
     {
       key: "action",
       title: "",
-      render: ( record: MaritalStatus) => (
+      render: (record: MaritalStatus) => (
         <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
@@ -140,7 +137,7 @@ const MaritalSetup = ()=> {
   }
   return (
     <main>
-        <section className="space-between">
+      <section className="space-between">
         <h3>Marital Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
@@ -185,8 +182,7 @@ const MaritalSetup = ()=> {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Marital Setup"
-        footer={null}
-      >
+        footer={null}>
         <AddMarital handleClose={() => setShowAddModal(false)} />
       </Modal>
 
@@ -195,9 +191,8 @@ const MaritalSetup = ()=> {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Marital Setup"
-        footer={null}
-      >
-        <AddMarital handleClose={() => setOpenEdit(false)} data={indexData}/>
+        footer={null}>
+        <AddMarital handleClose={() => setOpenEdit(false)} data={indexData} />
       </Modal>
 
       <Modal
@@ -205,8 +200,7 @@ const MaritalSetup = ()=> {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Marital Setup"
-        footer={null}
-      >
+        footer={null}>
         <DeleteModalContent
           isLoading={DeleteMaritalStatusMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

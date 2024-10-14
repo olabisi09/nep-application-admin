@@ -1,7 +1,15 @@
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+  App,
+} from "antd";
 import { Form, Formik } from "formik";
 import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
@@ -84,12 +92,12 @@ const LgaSetup = () => {
       title: "LGA Name",
       dataIndex: "lgaName",
     },
-    // {
-    //   key: "activeStatus",
-    //   title: "Active Status",
-    //   dataIndex: "activeStatus",
-    //   render: (text: boolean) => (text ? "Active" : "Inactive"),
-    // },
+    {
+      key: "activeStatus",
+      title: "Active Status",
+      dataIndex: "activeStatus",
+      render: (text: boolean) => (text ? "Active" : "Inactive"),
+    },
 
     {
       key: "action",
@@ -134,8 +142,7 @@ const LgaSetup = () => {
 
   return (
     <main>
-   
-        <section className="space-between">
+      <section className="space-between">
         <h3>LGA Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
@@ -180,8 +187,7 @@ const LgaSetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="LGA Setup"
-        footer={null}
-      >
+        footer={null}>
         <AddLga handleClose={() => setShowAddModal(false)} />
       </Modal>
 
@@ -190,8 +196,7 @@ const LgaSetup = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit LGA Setup"
-        footer={null}
-      >
+        footer={null}>
         <AddLga handleClose={() => setOpenEdit(false)} data={indexData} />
       </Modal>
       <Modal
@@ -199,8 +204,7 @@ const LgaSetup = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete LGA Setup"
-        footer={null}
-      >
+        footer={null}>
         <DeleteModalContent
           isLoading={deleteLgaMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

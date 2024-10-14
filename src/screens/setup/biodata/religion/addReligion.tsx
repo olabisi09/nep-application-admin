@@ -15,7 +15,7 @@ const AddReligion = ({ handleClose }: { handleClose: () => void }) => {
   });
 
   const validate = Yup.object().shape({
-    name: Yup.string().required("Disability Name is required"),
+    name: Yup.string().required("Religion is required"),
     isActive: Yup.string().required("Status is required"),
   });
   const handleAddReligion = async (
@@ -52,8 +52,7 @@ const AddReligion = ({ handleClose }: { handleClose: () => void }) => {
       onSubmit={(values, { resetForm }) => {
         handleAddReligion(values, resetForm);
       }}
-      validationSchema={validate}
-    >
+      validationSchema={validate}>
       <Form className="fields">
         <Input name="name" label="Religion" placeholder="Input Religion" />
         <Select
@@ -138,8 +137,7 @@ const EditReligion = ({
       onSubmit={(values, { resetForm }) => {
         handleEditTitle(values, resetForm);
       }}
-      validationSchema={validate}
-    >
+      validationSchema={validate}>
       <Form className="fields">
         <Input name="name" label="Religion" placeholder="Input Religion" />
         <Select

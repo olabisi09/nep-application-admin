@@ -83,11 +83,11 @@ const StudentLife = () => {
   };
 
   const columns: ColumnsType<Setup> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "title",
       title: "Title",
@@ -101,6 +101,12 @@ const StudentLife = () => {
         const limitedCleanHtml = sanitizeAndLimitString(description);
         return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
+    },
+    {
+      key: "activeStatus",
+      title: "Active Status",
+      dataIndex: "activeStatus",
+      render: (text: boolean) => (text ? "Active" : "Inactive"),
     },
     {
       key: "action",
@@ -203,8 +209,7 @@ const StudentLife = () => {
         centered
         title={currentForm || "Student Life Setup"}
         footer={null}
-        width={500}
-      >
+        width={500}>
         {renderForms()}
       </Modal>
     </div>

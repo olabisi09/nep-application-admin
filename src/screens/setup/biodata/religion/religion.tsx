@@ -20,11 +20,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
 
 import { Button, SearchInput } from "../../../../custom";
-import {
-  deleteReligion,
-  getAllDisability,
-  getAllReligion,
-} from "../../../../requests";
+import { deleteReligion, getAllReligion } from "../../../../requests";
 import { AddReligion, EditReligion } from "./addReligion";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
 
@@ -87,12 +83,12 @@ const ReligionSetup = () => {
       title: "Name",
       dataIndex: "name",
     },
-    // {
-    //   key: "isActive",
-    //   title: "Status",
-    //   dataIndex: "isActive",
-    //   render: (_, { isActive }) => (isActive ? "Active" : "Inactive"),
-    // },
+    {
+      key: "isActive",
+      title: "Status",
+      dataIndex: "isActive",
+      render: (_, { isActive }) => (isActive ? "Active" : "Inactive"),
+    },
     {
       key: "action",
       title: "",
@@ -190,7 +186,7 @@ const ReligionSetup = () => {
           open={openEdit}
           onCancel={() => setOpenEdit(false)}
           centered
-          title="Disability Setup"
+          title="Religion Setup"
           footer={null}>
           <EditReligion
             religion={religion}

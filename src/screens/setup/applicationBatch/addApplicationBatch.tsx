@@ -4,7 +4,7 @@ import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import { Form, Formik, FormikValues } from "formik";
 import { Button, Select } from "../../../custom";
-import { getAllAcademicSession } from "../../../requests";
+import { getAllAcademicSession, StatusOptions } from "../../../requests";
 import { getAllProgram } from "../program/request";
 import { createUpdateApplicationBatch } from "./request";
 import { validator } from "../../../utils/validator";
@@ -69,7 +69,9 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
             description: data?.message,
           });
 
-          queryClient.refetchQueries({ queryKey: ["get-all-application-batch"] });
+          queryClient.refetchQueries({
+            queryKey: ["get-all-application-batch"],
+          });
           handleClose();
           resetForm();
         },
@@ -134,8 +136,7 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
         handleAddApplicationBatch(values, resetForm);
       }}
       validationSchema={validate}
-      enableReinitialize={true}
-    >
+      enableReinitialize={true}>
       {() => {
         return (
           <Form className="fields">
@@ -145,8 +146,18 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
               name="batchName"
             />
 
-            <Select name="session" placeholder="Select session" label="Session" options={sessionOptions()} />
-            <Select name="program" placeholder="Select program" label="Program" options={programOptions()} />
+            <Select
+              name="session"
+              placeholder="Select session"
+              label="Session"
+              options={sessionOptions()}
+            />
+            <Select
+              name="program"
+              placeholder="Select program"
+              label="Program"
+              options={programOptions()}
+            />
 
             <Input
               type="date"
@@ -169,6 +180,20 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
               label="Late registration End Date"
               placeholder=""
               name="lateRegistrationEndDate"
+            />
+            <Select
+              name="isActive"
+              placeholder="Select Status"
+              label="Status"
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              }
             />
 
             <div className="btn-group">
