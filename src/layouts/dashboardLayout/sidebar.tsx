@@ -1,11 +1,13 @@
+import { Menu } from "antd";
 import { NavLink } from "react-router-dom";
+
 import { ReactComponent as KwarafaLogo } from "../../assets/logo.svg";
 import { ReactComponent as Settings } from "../../assets/settings.svg";
 import { ReactComponent as Line } from "../../assets/line.svg";
 import { ReactComponent as Logout } from "../../assets/logout.svg";
 import { ReactComponent as Arrow } from "../../assets/menu-arrow.svg";
+
 import styles from "./dashboardLayout.module.scss";
-import { Menu } from "antd";
 import { logout } from "../../utils/logout";
 import { routes } from "../../routes";
 import { icons } from "ckeditor5";
