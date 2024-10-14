@@ -62,22 +62,22 @@ const Session = () => {
   }
 
   const columns: ColumnsType<Session> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "name",
       title: "Session",
       dataIndex: "name",
     },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, {activeStatus}) => (activeStatus ? "Active" : "Inactive"),
-    },
+    // {
+    //   key: "status",
+    //   title: "Status",
+    //   dataIndex: "activeStatus",
+    //   render: (_, {activeStatus}) => (activeStatus ? "Active" : "Inactive"),
+    // },
     {
       key: "action",
       title: "",

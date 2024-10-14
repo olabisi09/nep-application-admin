@@ -10,6 +10,7 @@ import { ReactComponent as Arrow } from "../../assets/menu-arrow.svg";
 import styles from "./dashboardLayout.module.scss";
 import { logout } from "../../utils/logout";
 import { routes } from "../../routes";
+import { icons } from "ckeditor5";
 
 const Sidebar = () => {
   const items = [
@@ -31,6 +32,13 @@ const Sidebar = () => {
         {
           key: "addRoles",
           label: <NavLink to="/admin-roles">Add Roles</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "contactUs",
+          label: (
+            <NavLink to={routes.userMgt.contactUs}>Contact Feed Back</NavLink>
+          ),
           icon: <Line />,
         },
         {

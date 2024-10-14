@@ -62,22 +62,22 @@ const Level = () => {
   }
     
   const columns: ColumnsType<Level> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "levelName",
       title: "Level Name",
       dataIndex: "levelName",
     },
-    {
-      key: "activeStatus",
-      title: "Status",
-      dataIndex: "isActive",
-      render: (isActive: boolean) => (isActive ? "Active" : "Not Active"),
-    },
+    // {
+    //   key: "activeStatus",
+    //   title: "Status",
+    //   dataIndex: "isActive",
+    //   render: (isActive: boolean) => (isActive ? "Active" : "Not Active"),
+    // },
     {
       key: "action",
       title: "",

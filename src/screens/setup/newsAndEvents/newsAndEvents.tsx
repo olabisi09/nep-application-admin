@@ -57,11 +57,11 @@ const NewsAndEvents = () => {
   };
 
   const columns: ColumnsType<Setup> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "title",
       title: "Title",
@@ -84,12 +84,12 @@ const NewsAndEvents = () => {
         <img src={imageUrl} alt="" width="50" height="50" />
       ),
     },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    },
+    // {
+    //   key: "status",
+    //   title: "Status",
+    //   dataIndex: "activeStatus",
+    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    // },
     {
       key: "action",
       title: "",

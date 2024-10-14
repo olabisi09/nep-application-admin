@@ -84,26 +84,26 @@ const ModeOfStudy = () => {
     },
   ];
   const columns: ColumnsType<ModeOfStudy> = [
-    {
-      title: "S/N",
-      dataIndex: "index",
-      key: "index",
-      render: (text: any, record: any, index: number) => (
-        <span>{(currentPage - 1) * pageSize + index + 1}</span>
-      ),
-    },
+    // {
+    //   title: "S/N",
+    //   dataIndex: "index",
+    //   key: "index",
+    //   render: (text: any, record: any, index: number) => (
+    //     <span>{(currentPage - 1) * pageSize + index + 1}</span>
+    //   ),
+    // },
     {
       key: "name",
       title: "Name",
       dataIndex: "name",
     },
 
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    },
+    // {
+    //   key: "status",
+    //   title: "Status",
+    //   dataIndex: "activeStatus",
+    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    // },
     {
       key: "action",
       title: "",

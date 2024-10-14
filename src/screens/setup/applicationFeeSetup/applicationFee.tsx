@@ -67,11 +67,11 @@ const ApplicationFee = () => {
   };
 
   const columns: ColumnsType<GetAllFeeSetup> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "program",
       title: "Program",
@@ -93,13 +93,13 @@ const ApplicationFee = () => {
       dataIndex: "amount",
     },
     {
-      key: " programTypeName",
-      title: "Program Type",
-      dataIndex: "programTypeName",
+      key: " applicationBatchName",
+      title: "Application Batch",
+      dataIndex: "applicationBatchName",
     },
     {
       key: "action",
-      title: "",
+      title: "Action",
       render: (_, record) => {
         const items: MenuProps["items"] = [
           {
@@ -185,7 +185,8 @@ const ApplicationFee = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Application Fee Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddApplicationFee
           record={item}
           handleClose={() => {
@@ -199,7 +200,8 @@ const ApplicationFee = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Application Fee Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteApplicationFeeMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

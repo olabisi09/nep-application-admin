@@ -3,8 +3,8 @@ import Input from "../../../custom/input/input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Yup from "yup";
 import { Form, Formik, FormikValues } from "formik";
-import { Button } from "../../../custom";
-import { editFaculty } from "../../../requests";
+import { Button, Select } from "../../../custom";
+import { editFaculty, StatusOptions } from "../../../requests";
 
 interface Props {
   handleClose: () => void;
@@ -90,11 +90,26 @@ const EditFaculty = ({ handleClose, record }: Props) => {
               placeholder="Description"
               name="description"
             />
-
+            <Select
+              name="activeStatus"
+              placeholder="Select Status"
+              label="Status"
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              }
+            />
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button
-                text={editFacultyMutation.isPending ? "Submitting..." : "Submit"}
+                text={
+                  editFacultyMutation.isPending ? "Submitting..." : "Submit"
+                }
                 type="submit"
                 isLoading={editFacultyMutation?.isPending}
                 disabled={editFacultyMutation?.isPending}

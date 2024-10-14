@@ -28,11 +28,11 @@ const SchoolForm = () => {
     },
   ];
   const columns = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "name",
       title: "Name",

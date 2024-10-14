@@ -1,6 +1,5 @@
 import { Field, FieldProps } from "formik";
-import React, { ChangeEventHandler } from "react";
-
+import React, { ChangeEventHandler, useState } from "react";
 import styles from "./input.module.scss";
 import classNames from "classnames";
 
@@ -8,11 +7,8 @@ interface ComponentProps {
   label: string;
   name: string;
   placeholder?: string;
-  displayInput?: string;
   disabled?: boolean;
-  bg?: string;
   type?: string;
-  value?: string;
   asterisk?: boolean;
   onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
   isRow?: boolean;
@@ -24,66 +20,68 @@ const Input: React.FC<ComponentProps> = (props) => {
     name,
     label,
     disabled,
-    type,
+    type = "text",
     placeholder,
     isRow,
     asterisk = false,
     min,
   } = props;
 
-  const inputType = ["password", "textarea"];
+  const [isShowPassword, setIsShowPassword] = useState(false);
 
-  let inputClassName: string;
+  const showPasswordHandle = () => {
+    setIsShowPassword((prevState) => !prevState);
+  };
 
-  switch (true) {
-    case isRow:
-      inputClassName = styles.input;
-      break;
-    case type === inputType[0]:
-      inputClassName = styles.inputTwo;
-      break;
-    // case type === inputType[1]:
-    //   inputClassName = styles.textarea;
-    //   break;
-    default:
-      inputClassName = styles.inputTwo;
-      break;
-  }
+  const inputType =
+    type === "password" ? (isShowPassword ? "text" : "password") : type;
+
+  let inputClassName = isRow ? styles.input : styles.inputTwo;
 
   return (
     <Field name={name}>
       {({ field, meta }: FieldProps) => (
         <div className={isRow ? styles.loginContainer : ""}>
           <label>
-            {props.asterisk === true ? (
+            {asterisk ? (
               <span>
-                {props.label}
+                {label}
                 <sup className={styles.asterisk}>*</sup>
               </span>
             ) : (
-              props.label
+              label
             )}
           </label>
 
-          {type !== inputType[1] && (
-            <input
-              {...field}
-              type={type}
-              placeholder={placeholder}
-              disabled={disabled}
-              className={classNames(styles.customInput, inputClassName)}
-              min={min}
-            />
-          )}
-
-          {type === inputType[1] && (
-            <textarea
-              className={styles.inputTwo}
-              {...field}
-              placeholder={placeholder}
-              rows={3}
-            />
-          )}
+          <div className={styles.customInput}>
+            {type !== "textarea" ? (
+              <>
+                <input
+                  {...field}
+                  type={inputType}
+                  placeholder={placeholder}
+                  disabled={disabled}
+                  className={classNames(styles.customInput, inputClassName)}
+                  min={min}
+                />
+                {type === "password" && (
+                  <button
+                    type="button"
+                    className={styles.showToggle}
+                    onClick={showPasswordHandle}>
+                    {isShowPassword ? "Hide" : "Show"}
+                  </button>
+                )}
+              </>
+            ) : (
+              <textarea
+                className={styles.inputTwo}
+                {...field}
+                placeholder={placeholder}
+                rows={3}
+              />
+            )}
+          </div>
 
           {meta.touched && meta.error && (
             <div className={styles.error}>{meta.error}</div>

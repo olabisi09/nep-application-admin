@@ -66,6 +66,7 @@ import ProgramSetUp from "./screens/setup/program/program";
 import ExploreProgrammes from "./screens/setup/exploreProgrammes/exploreProgrammes";
 import DisabilitySetup from "./screens/setup/biodata/disability/disability";
 import ReligionSetup from "./screens/setup/biodata/religion/religion";
+import ContactUs from "./screens/setup/contactUs/contactUs";
 import SchoolID from "./screens/setup/schoolIDConfig/schoolIDConfig";
 import StudentUser from "./screens/userManagement/user/users";
 import ApplicationBatchSetup from "./screens/setup/applicationBatch/applicationBatch";
@@ -336,6 +337,7 @@ function App() {
       path: routes.userMgt.addRoles,
       element: <AdminRoles />,
     },
+
     {
       path: routes.userMgt.addSchoolId,
       element: <SchoolID />,

@@ -117,7 +117,12 @@ const ApplicationBatchSetup = () => {
       dataIndex: "lateEndDate",
       render: (_, { lateEndDate }) => formatDate(lateEndDate),
     },
-
+    {
+      key: "isActive",
+      title: "Status",
+      dataIndex: "isActive",
+      render: (_, { isActive }) => (isActive ? "Active" : "Inactive"),
+    },
     {
       key: "action",
       title: "",
@@ -216,8 +221,7 @@ const ApplicationBatchSetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Create Application Batch"
-        footer={null}
-      >
+        footer={null}>
         <AddApplicationBatch handleClose={() => setShowAddModal(false)} />
       </Modal>
 
@@ -226,8 +230,7 @@ const ApplicationBatchSetup = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Application Batch"
-        footer={null}
-      >
+        footer={null}>
         <EditApplicationBatch
           handleClose={() => setOpenEdit(false)}
           record={indexData}
@@ -239,8 +242,7 @@ const ApplicationBatchSetup = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Application Batch"
-        footer={null}
-      >
+        footer={null}>
         <DeleteModalContent
           isLoading={deleteApplicationBatchMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

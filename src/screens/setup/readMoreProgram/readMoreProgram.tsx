@@ -74,11 +74,11 @@ const ReadMoreProgram = () => {
   };
 
   const columns: ColumnsType<ReadMoreProgramme> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "programName",
       title: "Program Name",
@@ -103,12 +103,12 @@ const ReadMoreProgram = () => {
       title: "Session Intake",
       dataIndex: "sessionIntake",
     },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    },
+    // {
+    //   key: "status",
+    //   title: "Status",
+    //   dataIndex: "activeStatus",
+    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    // },
     {
       key: "action",
       title: "",

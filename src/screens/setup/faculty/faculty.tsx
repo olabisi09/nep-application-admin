@@ -46,7 +46,7 @@ const FacultySetup = () => {
 
   const handleDelete = (data: FacultyResponse) => {
     if (data && data?.id) {
-      setIndexData(data); 
+      setIndexData(data);
       setOpenDelete(true);
     } else {
       notification.error({
@@ -77,11 +77,11 @@ const FacultySetup = () => {
   ];
 
   const columns: ColumnsType<FacultyResponse> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "name",
       title: "Faculty Name",
@@ -101,7 +101,12 @@ const FacultySetup = () => {
         return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
     },
-
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    },
     {
       key: "action",
       title: "",
@@ -198,8 +203,7 @@ const FacultySetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Faculty Setup"
-        footer={null}
-      >
+        footer={null}>
         <AddFaculty handleClose={() => setShowAddModal(false)} />
       </Modal>
 
@@ -208,8 +212,7 @@ const FacultySetup = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Faculty"
-        footer={null}
-      >
+        footer={null}>
         <EditFaculty
           handleClose={() => setOpenEdit(false)}
           record={indexData}
@@ -221,8 +224,7 @@ const FacultySetup = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Faculty Setup"
-        footer={null}
-      >
+        footer={null}>
         <DeleteModalContent
           isLoading={deleteFacultyMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

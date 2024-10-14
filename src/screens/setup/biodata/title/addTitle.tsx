@@ -91,7 +91,7 @@ const EditTitle = ({
   const queryClient = useQueryClient();
 
   const validate = Yup.object().shape({
-    name: Yup.string().required("Title Name is required"),
+    name: Yup.string().required("Title is required"),
     activeStatus: Yup.string().required("Status is required"),
   });
   const editTitleMutation = useMutation({ mutationFn: createOrUpdateTitle });
@@ -138,7 +138,7 @@ const EditTitle = ({
       }}
       validationSchema={validate}>
       <Form className="fields">
-        <Input name="name" label="Disability" placeholder="Input Disability" />
+        <Input name="name" label="Title" placeholder="Input Title" />
         <Select
           name="activeStatus"
           placeholder="Select Status"

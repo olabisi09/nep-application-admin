@@ -71,22 +71,22 @@ const Qualification = () => {
     },
   ];
   const columns = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "qualificationName",
       title: "qualification Name",
       dataIndex: "qualificationName",
     },
-    {
-      key: "activeStatus",
-      title: "Active Status",
-      dataIndex: "activeStatus",
-      render: (text: boolean) => (text ? "Active" : "Inactive"),
-    },
+    // {
+    //   key: "activeStatus",
+    //   title: "Active Status",
+    //   dataIndex: "activeStatus",
+    //   render: (text: boolean) => (text ? "Active" : "Inactive"),
+    // },
 
     {
       key: "action",
