@@ -103,12 +103,12 @@ const ReadMoreProgram = () => {
       title: "Session Intake",
       dataIndex: "sessionIntake",
     },
-    // {
-    //   key: "status",
-    //   title: "Status",
-    //   dataIndex: "activeStatus",
-    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    // },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    },
     {
       key: "action",
       title: "",

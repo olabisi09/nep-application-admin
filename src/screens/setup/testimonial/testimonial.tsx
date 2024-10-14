@@ -62,14 +62,14 @@ const TestimonySetup = () => {
     },
   ];
   const columns: ColumnsType<Testimonial> = [
-    {
-      title: "S/N",
-      dataIndex: "index",
-      key: "index",
-      render: (text: any, record: any, index: number) => (
-        <span>{(currentPage - 1) * pageSize + index + 1}</span>
-      ),
-    },
+    // {
+    //   title: "S/N",
+    //   dataIndex: "index",
+    //   key: "index",
+    //   render: (text: any, record: any, index: number) => (
+    //     <span>{(currentPage - 1) * pageSize + index + 1}</span>
+    //   ),
+    // },
     {
       key: "programName",
       title: "Program Name",

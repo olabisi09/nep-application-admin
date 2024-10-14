@@ -92,11 +92,11 @@ const Tuition = () => {
   };
 
   const columns: ColumnsType<Tuition> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "description",
       title: "Description",
@@ -238,6 +238,7 @@ const Tuition = () => {
           handleSubmit={deleteTuitionHandler}
           // title={tuition?.description}
           title={"this item"}
+          
         />
       </Modal>
     </main>
