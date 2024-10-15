@@ -79,12 +79,12 @@ const AdmissionRequirement = () => {
       title: "Program Name",
       dataIndex: "programName",
     },
-    // {
-    //   key: "status",
-    //   title: "Status",
-    //   dataIndex: "activeStatus",
-    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    // },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    },
     {
       key: "action",
       title: "",
@@ -229,7 +229,7 @@ const AdmissionRequirement = () => {
           open={openDelete}
           onCancel={() => setOpenDelete(false)}
           centered
-          title="Delete Admission Requirement Setup"
+          title="Delete Admission Requirement"
           footer={null}
         >
           <DeleteModalContent
