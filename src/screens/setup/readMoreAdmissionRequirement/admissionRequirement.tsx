@@ -229,7 +229,7 @@ const AdmissionRequirement = () => {
           open={openDelete}
           onCancel={() => setOpenDelete(false)}
           centered
-          title="Delete Admission Requirement Setup"
+          title="Delete Admission Requirement"
           footer={null}
         >
           <DeleteModalContent
