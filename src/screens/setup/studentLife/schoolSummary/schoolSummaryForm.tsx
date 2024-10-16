@@ -113,7 +113,9 @@ const SchoolSummaryForm = ({
           handleAddSchoolSummary(values, resetForm);
         }
       }}
-      validationSchema={validationSchema}>
+      validationSchema={validationSchema}
+      enableReinitialize
+    >
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />
         <Input name="figure" label="Figure" placeholder="Input figure" />

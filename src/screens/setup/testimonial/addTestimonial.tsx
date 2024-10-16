@@ -6,7 +6,11 @@ import Button from "../../../custom/button/button";
 import Upload from "../../../custom/upload/upload";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { App, Spin } from "antd";
-import { createOrUpdateTestimonial, getAllPrograms, StatusOptions } from "../../../requests";
+import {
+  createOrUpdateTestimonial,
+  getAllPrograms,
+  StatusOptions,
+} from "../../../requests";
 import * as Yup from "yup";
 import { Form, Formik, FormikValues } from "formik";
 import Editor from "../../../custom/editor/editor";
@@ -15,7 +19,9 @@ const AddTestimonial = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
   const [upload, setUpload] = useState<File | null>(null);
-  const addTestimonialMutation = useMutation({ mutationFn: createOrUpdateTestimonial });
+  const addTestimonialMutation = useMutation({
+    mutationFn: createOrUpdateTestimonial,
+  });
   const {
     data: programsData,
     isLoading,
@@ -41,7 +47,10 @@ const AddTestimonial = ({ handleClose }: { handleClose: () => void }) => {
   const clearFile = () => {
     setUpload(null);
   };
-  const handleCreateTestimonial = async (values: FormikValues, resetForm: () => void) => {
+  const handleCreateTestimonial = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     const payload: Partial<Testimonial> = {
       description: values.description,
       readMoreId: parseInt(values.programName),
@@ -78,7 +87,7 @@ const AddTestimonial = ({ handleClose }: { handleClose: () => void }) => {
     >
       {({ setFieldValue }) => (
         <Form className="fields">
-           <Select
+          <Select
             name="programName"
             placeholder="Select Program Name "
             label="Program Name"
@@ -117,7 +126,7 @@ const AddTestimonial = ({ handleClose }: { handleClose: () => void }) => {
           ) : (
             <Upload name="image" label="Image" onChange={handleFileChange} />
           )}
-           <Select
+          <Select
             name="status"
             placeholder="Select Status"
             label="Status"
@@ -133,19 +142,31 @@ const AddTestimonial = ({ handleClose }: { handleClose: () => void }) => {
           />
 
           <div className="btn-group">
-            <Button  variant="text" text="Cancel" onClick={handleClose}/>
-            <Button text="Create" isLoading={addTestimonialMutation.isPending} disabled={addTestimonialMutation?.isPending}/>
+            <Button variant="text" text="Cancel" onClick={handleClose} />
+            <Button
+              text="Create"
+              isLoading={addTestimonialMutation.isPending}
+              disabled={addTestimonialMutation?.isPending}
+            />
           </div>
         </Form>
       )}
     </Formik>
   );
 };
-const EditTestimonial = ({testimonial,handleClose}: {testimonial:Testimonial,handleClose:()=> void }) => {
+const EditTestimonial = ({
+  testimonial,
+  handleClose,
+}: {
+  testimonial: Testimonial;
+  handleClose: () => void;
+}) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
   const [upload, setUpload] = useState<File | null>(null);
-  const editTestimonialMutation = useMutation({ mutationFn: createOrUpdateTestimonial });
+  const editTestimonialMutation = useMutation({
+    mutationFn: createOrUpdateTestimonial,
+  });
   const {
     data: programsData,
     isLoading,
@@ -171,7 +192,10 @@ const EditTestimonial = ({testimonial,handleClose}: {testimonial:Testimonial,han
   const clearFile = () => {
     setUpload(null);
   };
-  const handleEditTestimonial = async (values: FormikValues, resetForm: () => void) => {
+  const handleEditTestimonial = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     const payload: Partial<Testimonial> = {
       id: testimonial.id,
       description: values.description,
@@ -189,8 +213,7 @@ const EditTestimonial = ({testimonial,handleClose}: {testimonial:Testimonial,han
           });
           handleClose();
           queryClient.refetchQueries({ queryKey: ["get-testimonials"] });
-          resetForm()
-          
+          resetForm();
         },
       });
     } catch (error: any) {
@@ -202,76 +225,88 @@ const EditTestimonial = ({testimonial,handleClose}: {testimonial:Testimonial,han
   };
   return (
     <Formik
-    initialValues={{ programName: testimonial?.readMoreId, description: testimonial?.description, status: testimonial?.activeStatus }}
-    onSubmit={(values, { resetForm }) => {
-      handleEditTestimonial(values, resetForm);
-    }}
-    validationSchema={validate}
-  >
-    {({ setFieldValue }) => (
-      <Form className="fields">
-         <Select
-          name="programName"
-          placeholder="Select Program Name "
-          label="Program Name"
-          options={
-            <>
-              {isLoading ? (
-                <Spin />
-              ) : isError ? (
-                <p>{error?.message}</p>
-              ) : (
-                programsData &&
-                programsData?.data?.length > 0 &&
-                programsData?.data.map((option: Program) => (
-                  <option key={option.id} value={option.id}>
-                    {option.name}
-                  </option>
-                ))
-              )}
-            </>
-          }
-        />
-        <Editor
-          name="description"
-          label="Description"
-          onChange={(_, editor) => {
-            const data = editor.getData();
-            setFieldValue("description", data);
-          }}
-          initialData={testimonial.description}
-        />
-        {upload ? (
-          <div className="small-gap">
-            <Image />
-            <span>{upload.name}</span>
-            <Button onClick={clearFile} variant="text" text="x" />
-          </div>
-        ) : (
-          <Upload name="image" label="Image" onChange={handleFileChange} />
-        )}
-         <Select
-          name="status"
-          placeholder="Select Status"
-          label="Status"
-          options={
-            <>
-              {StatusOptions.map((option: any) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </>
-          }
-        />
+      initialValues={{
+        programName: testimonial?.readMoreId,
+        description: testimonial?.description,
+        status: testimonial?.activeStatus,
+      }}
+      onSubmit={(values, { resetForm }) => {
+        handleEditTestimonial(values, resetForm);
+      }}
+      validationSchema={validate}
+      enableReinitialize
+    >
+      {({ setFieldValue }) => (
+        <Form className="fields">
+          <Select
+            name="programName"
+            placeholder="Select Program Name "
+            label="Program Name"
+            options={
+              <>
+                {isLoading ? (
+                  <Spin />
+                ) : isError ? (
+                  <p>{error?.message}</p>
+                ) : (
+                  programsData &&
+                  programsData?.data?.length > 0 &&
+                  programsData?.data.map((option: Program) => (
+                    <option key={option.id} value={option.id}>
+                      {option.name}
+                    </option>
+                  ))
+                )}
+              </>
+            }
+          />
 
-        <div className="btn-group">
-          <Button  variant="text" text="Cancel" onClick={handleClose}/>
-          <Button text="Update" isLoading={editTestimonialMutation.isPending} disabled={editTestimonialMutation?.isPending}/>
-        </div>
-      </Form>
-    )}
-  </Formik>
-  )
+          <Editor
+            name="description"
+            label="Description"
+            onChange={(_, editor) => {
+              const data = editor.getData();
+              setFieldValue("description", data);
+            }}
+            initialData={testimonial.description}
+          />
+          
+          {upload ? (
+            <div className="small-gap">
+              <Image />
+              <span>{upload.name}</span>
+              <Button onClick={clearFile} variant="text" text="x" />
+            </div>
+          ) : (
+            <Upload name="image" label="Image" onChange={handleFileChange} />
+          )}
+
+          <Select
+            name="status"
+            placeholder="Select Status"
+            label="Status"
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
+          />
+
+          <div className="btn-group">
+            <Button variant="text" text="Cancel" onClick={handleClose} />
+            <Button
+              text="Update"
+              isLoading={editTestimonialMutation.isPending}
+              disabled={editTestimonialMutation?.isPending}
+            />
+          </div>
+        </Form>
+      )}
+    </Formik>
+  );
 };
 export { AddTestimonial, EditTestimonial };

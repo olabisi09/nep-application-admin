@@ -197,7 +197,7 @@ const SubjectSetUp = () => {
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete Country Setup"
+        title="Delete Subject Setup"
         footer={null}
       >
         <DeleteModalContent
