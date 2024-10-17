@@ -314,6 +314,12 @@ function App() {
       path: routes.userMgt.addSchoolId,
       element: <SchoolID />,
     },
+
+    {
+      path: routes.userMgt.contactUs,
+      element: <ContactUs />,
+    },
+
     {
       path: routes.userMgt.users,
       element: <StudentUser />,
@@ -341,6 +347,10 @@ function App() {
     {
       path: routes.userMgt.addSchoolId,
       element: <SchoolID />,
+    },
+    {
+      path: routes.userMgt.contactUs,
+      element: <ContactUs />,
     },
   ];
 

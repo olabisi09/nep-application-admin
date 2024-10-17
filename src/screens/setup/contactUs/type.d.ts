@@ -1,7 +1,7 @@
 interface ContactUsResponse {
   statusCode: number;
   message: string;
-  data: ContactUsData;
+  data: ContactUsData[];
 }
 
 interface ContactUsData {

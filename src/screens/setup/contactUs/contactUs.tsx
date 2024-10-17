@@ -40,6 +40,9 @@ const ContactUs = () => {
       key: "message",
       title: "Message",
       dataIndex: "message",
+      render: (text: string) => (
+        <div style={{ wordBreak: "break-word" }}>{text}</div>
+      ),
     },
   ];
 
@@ -51,8 +54,9 @@ const ContactUs = () => {
     return <div>Error: {contactUsQuery.error?.message}</div>;
   }
 
-  const userData = contactUsQuery.data?.data;
-  const newData = [{ ...userData }] as ContactUsData[];
+  const userData = contactUsQuery.data?.data as ContactUsData[];
+  //const newData = [{ ...userData }] as ContactUsData[];
+  //console.log(newData);
 
   return (
     <div>
@@ -64,7 +68,7 @@ const ContactUs = () => {
 
       <Card bordered={false}>
         <Table
-          dataSource={newData}
+          dataSource={userData}
           columns={columns}
           rowKey="id"
           pagination={{ position: ["bottomCenter"] }}

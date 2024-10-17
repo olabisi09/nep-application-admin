@@ -1,5 +1,3 @@
-import ContactUs from "./screens/setup/contactUs/contactUs";
-
 export const routes = {
   auth: {
     login: "/",
@@ -89,10 +87,10 @@ export const breadcrumbNames = [
         path: "/admin-roles",
         title: "Admin Roles",
       },
-      // {
-      //   path: "/contact-us",
-      //   title: "Contact Us",
-      // },
+      {
+        path: "/contact-us",
+        title: "Contact Us",
+      },
     ],
   },
   {

@@ -36,9 +36,8 @@ const Sidebar = () => {
         },
         {
           key: "contactUs",
-          label: (
-            <NavLink to={routes.userMgt.contactUs}>Contact Feed Back</NavLink>
-          ),
+          label:
+            <NavLink to={routes.userMgt.contactUs}>Contact Feed Back</NavLink>,
           icon: <Line />,
         },
         {
@@ -319,7 +318,7 @@ const Sidebar = () => {
           />
         </div>
       </section>
-      
+
       <button className={styles.logout} onClick={logout}>
         <Logout />
         <p className={styles.end}>Logout</p>
