@@ -2,7 +2,12 @@ import Input from "../../../custom/input/input";
 import Button from "../../../custom/button/button";
 import { Form, Formik, FormikValues } from "formik";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createProgram, StatusOptions, updateDepartment, updateProgram } from "../../../requests";
+import {
+  createProgram,
+  StatusOptions,
+  updateDepartment,
+  updateProgram,
+} from "../../../requests";
 import { App } from "antd";
 import * as Yup from "yup";
 import { Select } from "../../../custom";
@@ -70,7 +75,8 @@ const CreateDepartment = ({
       onSubmit={(values, { resetForm }) => {
         handleAddDepartment(values, resetForm);
       }}
-      validationSchema={validate}>
+      validationSchema={validate}
+    >
       <Form className="fields">
         <Input
           name="name"
@@ -174,18 +180,22 @@ const EditDepartment = ({
     }
   };
 
+  const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
+
   return (
     <Formik
       initialValues={{
         name: item?.name,
         code: item?.code,
         faculty: item?.categoryCode,
+        activeStatus: initialStatus,
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditDepartment(values, resetForm);
       }}
       validationSchema={validate}
-      enableReinitialize={true}>
+      enableReinitialize={true}
+    >
       <Form className="fields">
         <Input
           name="name"

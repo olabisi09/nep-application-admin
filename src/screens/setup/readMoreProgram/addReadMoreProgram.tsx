@@ -232,6 +232,7 @@ const EditReadMoreProgramme = ({
         handleAddReadMoreProgramme(values, resetForm);
       }}
       validationSchema={validationSchema}
+      enableReinitialize
     >
       {({ setFieldValue }) => (
         <Form className="fields">

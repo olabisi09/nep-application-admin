@@ -32,21 +32,23 @@ const Department = () => {
   const deleteDepartmentMutation = useMutation({
     mutationFn: deleteDepartment,
   });
+
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-department"],
     queryFn: getAllPrograms,
   });
+
   const facultyQuery = useQuery({
     queryKey: ["get-faculty"],
     queryFn: getAllCategory,
   });
 
   const columns: ColumnsType<Program> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "name",
       title: "Department name",
@@ -125,9 +127,11 @@ const Department = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
   return (
     <div>
       <section className="space-between">

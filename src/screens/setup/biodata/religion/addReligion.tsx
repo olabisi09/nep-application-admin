@@ -18,6 +18,7 @@ const AddReligion = ({ handleClose }: { handleClose: () => void }) => {
     name: Yup.string().required("Religion is required"),
     isActive: Yup.string().required("Status is required"),
   });
+
   const handleAddReligion = async (
     values: FormikValues,
     resetForm: () => void
@@ -46,6 +47,7 @@ const AddReligion = ({ handleClose }: { handleClose: () => void }) => {
       });
     }
   };
+  
   return (
     <Formik
       initialValues={{ name: "", isActive: "" }}

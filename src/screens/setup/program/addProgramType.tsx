@@ -34,6 +34,7 @@ const AddProgram = ({ handleClose }: Props) => {
   const validate = Yup.object().shape({
     programType: validator.programType,
     department: validator.programName,
+    status: validator.status,
   });
 
   const addProgramMutation = useMutation({
