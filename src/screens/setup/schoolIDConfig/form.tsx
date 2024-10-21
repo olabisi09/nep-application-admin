@@ -6,6 +6,7 @@ import { App } from "antd";
 import * as Yup from "yup";
 import { Select } from "../../../custom";
 import { createUpdateSchoolID } from "../schoolIDConfig/request";
+import { validator } from "../../../utils/validator";
 
 const CreateSchoolID = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
@@ -14,8 +15,8 @@ const CreateSchoolID = ({ handleClose }: { handleClose: () => void }) => {
   const addSchoolIDMutation = useMutation({ mutationFn: createUpdateSchoolID });
 
   const validate = Yup.object().shape({
-    title: Yup.string().required("Title is required"),
-    description: Yup.string().required("Description is required"),
+    codeName: validator.codeName,
+    codeValue: validator.codeValue,
   });
 
   const handleAddSchoolID = async (
