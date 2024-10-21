@@ -18,6 +18,7 @@ const DashboardLayout = () => {
   const currentLocation = breadcrumbNames?.find((x) =>
     x.routes?.find((y) => y.path === location.pathname)
   );
+  
   const currentRoute = currentLocation?.routes?.find(
     (x) => x.path === location.pathname
   );

@@ -24,16 +24,16 @@ const Sidebar = () => {
           label: <NavLink to={routes.userMgt.users}>Applicants</NavLink>,
           icon: <Line />,
         },
-        {
-          key: "addUsers",
-          label: <NavLink to="/admin-users">Add Users</NavLink>,
-          icon: <Line />,
-        },
-        {
-          key: "addRoles",
-          label: <NavLink to="/admin-roles">Add Roles</NavLink>,
-          icon: <Line />,
-        },
+        // {
+        //   key: "addUsers",
+        //   label: <NavLink to="/admin-users">Add Users</NavLink>,
+        //   icon: <Line />,
+        // },
+        // {
+        //   key: "addRoles",
+        //   label: <NavLink to="/admin-roles">Add Roles</NavLink>,
+        //   icon: <Line />,
+        // },
         {
           key: "contactUs",
           label: (
@@ -289,7 +289,7 @@ const Sidebar = () => {
           icon: <Line />,
         },
         {
-          key: "studentLifte",
+          key: "studentLife",
           label: <NavLink to={"/student-life"}>Student Life</NavLink>,
           icon: <Line />,
         },

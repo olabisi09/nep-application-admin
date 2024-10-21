@@ -1,5 +1,3 @@
-import ContactUs from "./screens/setup/contactUs/contactUs";
-
 export const routes = {
   auth: {
     login: "/",
