@@ -132,6 +132,7 @@ const History = () => {
           text="Setup"
         />
       </section>
+
       <br />
       <Card bordered={false}>
         <Table
@@ -142,6 +143,7 @@ const History = () => {
           scroll={{ x: true }}
         />
       </Card>
+
       <Modal
         open={open}
         onCancel={() => setOpen(false)}
@@ -150,6 +152,7 @@ const History = () => {
         footer={null}>
         <CreateHistory handleClose={() => setOpen(false)} />
       </Modal>
+
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
@@ -163,7 +166,7 @@ const History = () => {
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete About Us Setup"
+        title="Delete History Setup"
         footer={null}>
         <DeleteModalContent
           isLoading={deleteHistoryMutation?.isPending}

@@ -183,7 +183,7 @@ const NewsAndEvents = () => {
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete Program Setup"
+        title="Delete News and Events Setup"
         footer={null}
       >
         <DeleteModalContent

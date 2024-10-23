@@ -230,7 +230,7 @@ const CareerProspects = () => {
           isLoading={deleteCareerProspectMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteCareerProspectHandler}
-          title={careerProspectItems?.id}
+          title="this item"
         />
       </Modal>
     </main>

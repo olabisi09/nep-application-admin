@@ -37,7 +37,7 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
     setUpload(null);
   };
 
-  const handleAddSchoolMgt = async (values: FormikValues) => {
+  const handleAddSchoolMgt = async (values: FormikValues, resetForm: () => void) => {
     const payload: Partial<SetupPayload> = {
       Title: values.title,
       Description: values.description,
@@ -55,6 +55,8 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
           });
           queryClient.refetchQueries({ queryKey: ["get-school-mgt"] });
           handleClose();
+          resetForm();
+          clearFile();
         },
       });
     } catch (error: any) {
@@ -72,8 +74,8 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
         description: "",
         status: "",
       }}
-      onSubmit={(values) => {
-        handleAddSchoolMgt(values);
+      onSubmit={(values, { resetForm }) => {
+        handleAddSchoolMgt(values, resetForm);
       }}
       validationSchema={validate}
     >
@@ -148,11 +150,12 @@ const EditSchoolMgt = ({
       setUpload(file[0]);
     }
   };
+
   const clearFile = () => {
     setUpload(null);
   };
 
-  const handleEditSchoolMgt = async (values: FormikValues) => {
+  const handleEditSchoolMgt = async (values: FormikValues, resetForm: () => void) => {
     let payload: Partial<SetupPayload> = {
       Id: item.id,
       Title: values.title,
@@ -174,6 +177,7 @@ const EditSchoolMgt = ({
           });
           queryClient.refetchQueries({ queryKey: ["get-school-mgt"] });
           handleClose();
+          resetForm();
         },
       });
     } catch (error: any) {
@@ -192,10 +196,10 @@ const EditSchoolMgt = ({
         status: item?.activeStatus,
         //image: upload || item?.image,
       }}
-      onSubmit={(values) => {
-        handleEditSchoolMgt(values);
+      onSubmit={(values, { resetForm }) => {
+        handleEditSchoolMgt(values, resetForm);
       }}
-      enableReinitialize={true}
+      enableReinitialize
     >
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />

@@ -3,14 +3,22 @@ import Button from "../../../custom/button/button";
 import Input from "../../../custom/input/input";
 import { App, Spin } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUpdateSocialMediaLink, getGeneralTemplates, StatusOptions } from "../../../requests";
+import {
+  createUpdateSocialMediaLink,
+  getGeneralTemplates,
+  StatusOptions,
+} from "../../../requests";
 import { useState } from "react";
 import * as Yup from "yup";
 import Select from "../../../custom/select/select";
 import Upload from "../../../custom/upload/upload";
 import { ReactComponent as Image } from "../../../assets/image.svg";
 
-const CreateSocialMediaSetup = ({ handleClose }: { handleClose: () => void }) => {
+const CreateSocialMediaSetup = ({
+  handleClose,
+}: {
+  handleClose: () => void;
+}) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
   const [upload, setUpload] = useState<File | null>(null);
@@ -18,7 +26,9 @@ const CreateSocialMediaSetup = ({ handleClose }: { handleClose: () => void }) =>
     queryKey: ["get-general-template"],
     queryFn: getGeneralTemplates,
   });
-  const createUpdateSocialLinkMutation = useMutation({ mutationFn: createUpdateSocialMediaLink });
+  const createUpdateSocialLinkMutation = useMutation({
+    mutationFn: createUpdateSocialMediaLink,
+  });
 
   const validate = Yup.object().shape({
     socialMediaName: Yup.string().required("The name is required"),
@@ -66,31 +76,51 @@ const CreateSocialMediaSetup = ({ handleClose }: { handleClose: () => void }) =>
 
   return (
     <Formik
-      initialValues={{ socialMediaName: "", socialMediaUrl: "", template: "", status: "" }}
+      initialValues={{
+        socialMediaName: "",
+        socialMediaUrl: "",
+        template: "",
+        status: "",
+      }}
       onSubmit={(values) => {
         handleCreateSocialMediaLink(values);
       }}
       validationSchema={validate}
     >
       <Form className="fields">
-        <Input name="socialMediaName" label="Social Media Name" placeholder="Input name e.g facebook, twitter" />
-        <Input name="socialMediaUrl" label="Social Media URL" placeholder="Input URL" />
+        <Input
+          name="socialMediaName"
+          label="Social Media Name"
+          placeholder="Input name e.g facebook, twitter"
+        />
+        <Input
+          name="socialMediaUrl"
+          label="Social Media URL"
+          placeholder="Input URL"
+        />
         <Select
           name="template"
           placeholder="Select Template"
           label="Template"
           options={
             <>
-              {isLoading ? <Spin /> : isError ? <p>{error?.message}</p> :  data &&
+              {isLoading ? (
+                <Spin />
+              ) : isError ? (
+                <p>{error?.message}</p>
+              ) : (
+                data &&
                 data?.data?.length > 0 &&
                 data?.data.map((option: GeneralTemplate) => (
                   <option key={option.id} value={option.id}>
                     {option.id} {option.schoolName}
                   </option>
-                ))}
+                ))
+              )}
             </>
           }
         />
+        
         {upload ? (
           <div className="small-gap">
             <Image />
@@ -107,7 +137,6 @@ const CreateSocialMediaSetup = ({ handleClose }: { handleClose: () => void }) =>
           label="Status"
           options={
             <>
-        
               {StatusOptions.map((option: any) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -118,14 +147,25 @@ const CreateSocialMediaSetup = ({ handleClose }: { handleClose: () => void }) =>
         />
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
-          <Button text="Create" isLoading={createUpdateSocialLinkMutation.isPending} disabled={createUpdateSocialLinkMutation?.isPending} type="submit"/>
+          <Button
+            text="Create"
+            isLoading={createUpdateSocialLinkMutation.isPending}
+            disabled={createUpdateSocialLinkMutation?.isPending}
+            type="submit"
+          />
         </div>
       </Form>
     </Formik>
   );
 };
 
-const EditSocialMediaLink = ({ handleClose, socialMediaLink }: { handleClose: () => void; socialMediaLink: SocialMediaLink }) => {
+const EditSocialMediaLink = ({
+  handleClose,
+  socialMediaLink,
+}: {
+  handleClose: () => void;
+  socialMediaLink: SocialMediaLink;
+}) => {
   const queryClient = useQueryClient();
   const { notification } = App.useApp();
   const [upload, setUpload] = useState<File | null>(null);
@@ -134,7 +174,9 @@ const EditSocialMediaLink = ({ handleClose, socialMediaLink }: { handleClose: ()
     queryKey: ["get-general-template"],
     queryFn: getGeneralTemplates,
   });
-  const createUpdateSocialLinkMutation = useMutation({ mutationFn: createUpdateSocialMediaLink });
+  const createUpdateSocialLinkMutation = useMutation({
+    mutationFn: createUpdateSocialMediaLink,
+  });
   const validate = Yup.object().shape({
     socialMediaName: Yup.string().required("The name is required"),
     socialMediaUrl: Yup.string().required("The url is required"),
@@ -171,7 +213,7 @@ const EditSocialMediaLink = ({ handleClose, socialMediaLink }: { handleClose: ()
           });
           queryClient.refetchQueries({ queryKey: ["get-social-media-link"] });
           handleClose();
-          clearFile()
+          clearFile();
         },
       });
     } catch (error: any) {
@@ -184,64 +226,87 @@ const EditSocialMediaLink = ({ handleClose, socialMediaLink }: { handleClose: ()
 
   return (
     <Formik
-    initialValues={{ socialMediaName: socialMediaLink?.socialMediaName, socialMediaUrl: socialMediaLink?.socialMediaUrl, template: socialMediaLink?.templateId, status: socialMediaLink?.activeStatus }}
-    onSubmit={(values) => {
-      handleEditSocialMediaLink(values);
-    }}
-    validationSchema={validate}
-    enableReinitialize
-  >
-    <Form className="fields">
-      <Input name="socialMediaName" label="Social Media Name" placeholder="Input name e.g facebook, twitter" />
-      <Input name="socialMediaUrl" label="Social Media URL" placeholder="Input URL" />
-      <Select
-        name="template"
-        placeholder="Select Template"
-        label="Template"
-        options={
-          <>
-            {isLoading ? <Spin /> : isError ? <p>{error?.message}</p> :  data &&
-              data?.data?.length > 0 &&
-              data?.data.map((option: GeneralTemplate) => (
-                <option key={option.id} value={option.id}>
-                  {option.id} {option.schoolName}
+      initialValues={{
+        socialMediaName: socialMediaLink?.socialMediaName,
+        socialMediaUrl: socialMediaLink?.socialMediaUrl,
+        template: socialMediaLink?.templateId,
+        status: socialMediaLink?.activeStatus,
+      }}
+      onSubmit={(values) => {
+        handleEditSocialMediaLink(values);
+      }}
+      validationSchema={validate}
+      enableReinitialize
+    >
+      <Form className="fields">
+        <Input
+          name="socialMediaName"
+          label="Social Media Name"
+          placeholder="Input name e.g facebook, twitter"
+        />
+        <Input
+          name="socialMediaUrl"
+          label="Social Media URL"
+          placeholder="Input URL"
+        />
+        <Select
+          name="template"
+          placeholder="Select Template"
+          label="Template"
+          options={
+            <>
+              {isLoading ? (
+                <Spin />
+              ) : isError ? (
+                <p>{error?.message}</p>
+              ) : (
+                data &&
+                data?.data?.length > 0 &&
+                data?.data.map((option: GeneralTemplate) => (
+                  <option key={option.id} value={option.id}>
+                    {option.id} {option.schoolName}
+                  </option>
+                ))
+              )}
+            </>
+          }
+        />
+        {upload ? (
+          <div className="small-gap">
+            <Image />
+            <span>{upload.name}</span>
+            <Button onClick={clearFile} variant="text" text="x" />
+          </div>
+        ) : (
+          <Upload name="image" label="Image" onChange={handleFileChange} />
+        )}
+
+        <Select
+          name="status"
+          placeholder="Select Status"
+          label="Status"
+          options={
+            <>
+              {StatusOptions.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
                 </option>
               ))}
-          </>
-        }
-      />
-      {upload ? (
-        <div className="small-gap">
-          <Image />
-          <span>{upload.name}</span>
-          <Button onClick={clearFile} variant="text" text="x" />
+            </>
+          }
+        />
+        <div className="btn-group">
+          <Button onClick={handleClose} variant="text" text="Cancel" />
+          <Button
+            text="Update"
+            isLoading={createUpdateSocialLinkMutation.isPending}
+            disabled={createUpdateSocialLinkMutation?.isPending}
+            type="submit"
+          />
         </div>
-      ) : (
-        <Upload name="image" label="Image" onChange={handleFileChange} />
-      )}
-
-      <Select
-        name="status"
-        placeholder="Select Status"
-        label="Status"
-        options={
-          <>
-      
-            {StatusOptions.map((option: any) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </>
-        }
-      />
-      <div className="btn-group">
-        <Button onClick={handleClose} variant="text" text="Cancel" />
-        <Button text="Update" isLoading={createUpdateSocialLinkMutation.isPending} disabled={createUpdateSocialLinkMutation?.isPending} type="submit"/>
-      </div>
-    </Form>
-  </Formik>
-  )
+      </Form>
+    </Formik>
+  );
 };
 
 export { CreateSocialMediaSetup, EditSocialMediaLink };

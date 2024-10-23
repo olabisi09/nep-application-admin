@@ -63,12 +63,12 @@ const SchoolSummary = () => {
   };
 
   const columns: ColumnsType<SchoolSummary> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
-    {
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
+     {
       key: "title",
       title: "Title",
       dataIndex: "title",
@@ -141,7 +141,7 @@ const SchoolSummary = () => {
           text="Setup"
         />
       </section>
-      
+
       <br />
 
       <Card bordered={false}>

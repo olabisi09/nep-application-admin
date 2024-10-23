@@ -49,11 +49,11 @@ const WhyItem = () => {
   const whyItems = data?.data as WhyItem[];
 
   const columns: ColumnsType<WhyItem> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "name",
       title: "Name",

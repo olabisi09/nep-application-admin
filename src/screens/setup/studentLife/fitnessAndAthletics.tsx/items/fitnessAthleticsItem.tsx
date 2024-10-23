@@ -42,11 +42,11 @@ const FitnessAthleticsItem = () => {
   });
 
   const columns: ColumnsType<FitnessAthleticsItem> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "title",
       title: "Title",

@@ -63,11 +63,11 @@ const CampusExperienceItem = () => {
   };
 
   const columns: ColumnsType<CampusExperienceItem> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "description",
       title: "Description",
@@ -133,7 +133,7 @@ const CampusExperienceItem = () => {
         <h3>Student Life: Campus Experience Item Setup</h3>
         <Button onClick={handleOpenModal} iconBefore={<Plus />} text="Setup" />
       </section>
-      
+
       <br />
 
       <Card bordered={false}>

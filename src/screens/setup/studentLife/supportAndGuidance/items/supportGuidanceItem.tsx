@@ -42,11 +42,11 @@ const SupportGuidanceItem = () => {
   });
 
   const columns: ColumnsType<SupportGuidanceItem> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "title",
       title: "Title",

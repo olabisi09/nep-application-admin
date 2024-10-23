@@ -43,6 +43,7 @@ const CreateDepartment = ({
       name: values.name,
       categoryCode: values.faculty,
       code: values.code,
+      activeStatus: values.activeStatus === 'true',
     };
 
     try {
@@ -71,6 +72,7 @@ const CreateDepartment = ({
         name: "",
         code: "",
         faculty: "",
+        activeStatus: "",
       }}
       onSubmit={(values, { resetForm }) => {
         handleAddDepartment(values, resetForm);
@@ -159,6 +161,7 @@ const EditDepartment = ({
       name: values.name,
       categoryCode: values.faculty,
       code: values.code,
+      activeStatus: values.activeStatus === 'true',
     };
 
     try {
@@ -182,7 +185,7 @@ const EditDepartment = ({
     }
   };
 
-  const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = item?.activeStatus;
 
   return (
     <Formik

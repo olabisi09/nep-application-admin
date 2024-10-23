@@ -62,11 +62,11 @@ const Overview = () => {
   };
 
   const columns: ColumnsType<ItemByStudentLife> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "title",
       title: "Title",

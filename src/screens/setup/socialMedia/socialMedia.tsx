@@ -173,6 +173,7 @@ const SocialMedia = () => {
         />
       </section>
       <br />
+      
       <Card bordered={false}>
         <Table
           dataSource={socialMediaLinks}
@@ -196,7 +197,7 @@ const SocialMedia = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="About Us Setup"
+        title="Create Social Media Link Setup"
         footer={null}
       >
         <CreateSocialMediaSetup handleClose={() => setOpen(false)} />
@@ -205,7 +206,7 @@ const SocialMedia = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit About Us Setup"
+        title="Edit Social Media Link Setup"
         footer={null}
       >
         <EditSocialMediaLink socialMediaLink={socialMediaLink} handleClose={() => setOpenEdit(false)} />

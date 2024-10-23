@@ -29,12 +29,12 @@ export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
       setUpload(file[0]);
     }
   };
-  
+
   const clearFile = () => {
     setUpload(null);
   };
 
-  const handleAddHistory = async (values: FormikValues) => {
+  const handleAddHistory = async (values: FormikValues, resetForm: () => void) => {
     const payload: Partial<SetupPayload> = {
       Title: values.title,
       Description: values.description,
@@ -52,6 +52,8 @@ export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
           });
           queryClient.refetchQueries({ queryKey: ["get-history"] });
           handleClose();
+          resetForm();
+          clearFile();
         },
       });
     } catch (error: any) {
@@ -76,7 +78,7 @@ export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
         description: "",
         status: "",
       }}
-      onSubmit={(values) => handleAddHistory(values)}
+      onSubmit={(values, { resetForm }) => handleAddHistory(values, resetForm)}
       validationSchema={validate}
     >
       <Form className="fields">
@@ -146,7 +148,10 @@ export const EditHistory = ({
     setUpload(null);
   };
 
-  const handleEditHistory = async (values: FormikValues) => {
+  const handleEditHistory = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     let payload: Partial<SetupPayload> = {
       Id: item.id,
       Title: values.title,
@@ -167,7 +172,9 @@ export const EditHistory = ({
             description: data?.message,
           });
           queryClient.refetchQueries({ queryKey: ["get-history"] });
+          setUpload(null);
           handleClose();
+          resetForm();
         },
       });
     } catch (error: any) {
@@ -185,16 +192,21 @@ export const EditHistory = ({
     </>
   );
 
-  const initialStatus = item?.activeStatus ? 'Active' : 'Inactive';
+  const initialStatus =
+    item?.activeStatus === true
+      ? "Active"
+      : item?.activeStatus === false
+      ? "Inactive"
+      : "";
 
   return (
     <Formik
       initialValues={{
-        title: item?.title,
-        description: item?.description,
-        status: initialStatus
+        title: item?.title ?? "",
+        description: item?.description ?? "",
+        status: initialStatus ?? "",
       }}
-      onSubmit={(values) => handleEditHistory(values)}
+      onSubmit={(values, { resetForm }) => handleEditHistory(values, resetForm)}
       enableReinitialize
     >
       <Form className="fields">
@@ -216,7 +228,12 @@ export const EditHistory = ({
           <Upload name="image" label="Image" onChange={handleFileChange} />
         )}
 
-        <Select name="status" label="Status" placeholder="Active" options={statusOptions} />
+        <Select
+          name="status"
+          label="Status"
+          placeholder="Active"
+          options={statusOptions}
+        />
 
         <div className="btn-group">
           <Button

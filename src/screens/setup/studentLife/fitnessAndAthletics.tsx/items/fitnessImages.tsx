@@ -41,11 +41,11 @@ const FitnessAthleticsImages = () => {
   });
 
   const columns: ColumnsType<FitnessImage> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "pictureUrl",
       title: "Picture",

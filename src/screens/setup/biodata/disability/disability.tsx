@@ -72,11 +72,11 @@ const DisabilitySetup = () => {
   };
 
   const columns: ColumnsType<Disability> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "name",
       title: "Name",

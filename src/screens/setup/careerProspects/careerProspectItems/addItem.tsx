@@ -202,6 +202,7 @@ export const EditCareerProspectItem = ({
       onSubmit={(values, { resetForm }) => {
         handleEditCareerProspectItem(values, resetForm);
       }}
+      validationSchema={validationSchema}
     >
       {({ setFieldValue }) => (
         <Form className="fields">

@@ -851,6 +851,7 @@ interface DepartmentPayload {
   categoryCode: string;
   code: string;
   name: string;
+  activeStatus: boolean;
 }
 
 interface Disability {

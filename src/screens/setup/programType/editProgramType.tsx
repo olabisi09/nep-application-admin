@@ -30,7 +30,7 @@ const EditProgramType = ({ handleClose, record }: Props) => {
     const payload: EditProgramTypePayload = {
       id: record?.id,
       name: values.name,
-      activeStatus: values.activeStatus === "Active"
+      activeStatus: values.activeStatus === "true"
     };
 
     try {
@@ -54,7 +54,7 @@ const EditProgramType = ({ handleClose, record }: Props) => {
     }
   };
 
-  const initialStatus = record?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = record?.activeStatus;
 
   return (
     <Formik

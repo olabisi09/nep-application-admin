@@ -13,6 +13,7 @@ const EditStudentLife = ({
 }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
+
   const editStudentLifeMutation = useMutation({
     mutationFn: createOrUpdateStudentLife,
   });
@@ -51,7 +52,7 @@ const EditStudentLife = ({
   const statusOptions = (
     <>
       <option>Active</option>
-      <option>Inative</option>
+      <option>Inactive</option>
     </>
   );
 

@@ -48,11 +48,11 @@ const FaqItem = () => {
   const faqItems = data?.data as FaqItem[];
 
   const columns: ColumnsType<FaqItem> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "question",
       title: "Question",
@@ -103,9 +103,7 @@ const FaqItem = () => {
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({
-            queryKey: ["get-AllFAQ"],
-          });
+          refetch();
           setOpenDelete(false);
         },
       });
