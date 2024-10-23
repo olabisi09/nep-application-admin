@@ -10,17 +10,22 @@ import Button from "../../../custom/button/button";
 const AddModeOfStudy = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const addModeOfStudyMutation = useMutation({ mutationFn: createOrUpdateModeOfStudy });
+  const addModeOfStudyMutation = useMutation({
+    mutationFn: createOrUpdateModeOfStudy,
+  });
 
   const validate = Yup.object().shape({
     name: Yup.string().required("Mode of study Name is required"),
     activeStatus: Yup.string().required("Status is required"),
   });
 
-  const handleAddModeOfStudy = async (values: FormikValues, resetForm: () => void) => {
+  const handleAddModeOfStudy = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     const payload: Partial<ModeOfStudy> = {
       name: values?.name,
-      activeStatus: values?.status === "false" ? false : true,
+      activeStatus: values?.status === "Active",
     };
 
     try {
@@ -42,6 +47,7 @@ const AddModeOfStudy = ({ handleClose }: { handleClose: () => void }) => {
       });
     }
   };
+
   return (
     <Formik
       initialValues={{ name: "", activeStatus: "" }}
@@ -52,45 +58,64 @@ const AddModeOfStudy = ({ handleClose }: { handleClose: () => void }) => {
       validationSchema={validate}
     >
       <Form className="fields">
-        <Input name="name" label="Mode of Study Name" placeholder="Input Mode of Study Name" />
+        <Input
+          name="name"
+          label="Mode of Study Name"
+          placeholder="Input Mode of Study Name"
+        />
         <Select
-            name="activeStatus"
-            placeholder="Select Status"
-            label="Status"
-            options={
-              <>
-                {StatusOptions.map((option: any) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </>
-            }
+          name="activeStatus"
+          placeholder="Select Status"
+          label="Status"
+          options={
+            <>
+              {StatusOptions.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </>
+          }
+        />
+        <div className="btn-group">
+          <Button onClick={handleClose} variant="text" text="Cancel" />
+          <Button
+            text="Create"
+            isLoading={addModeOfStudyMutation.isPending}
+            disabled={addModeOfStudyMutation.isPending}
           />
-          <div className="btn-group">
-            <Button onClick={handleClose} variant="text" text="Cancel" />
-            <Button text="Create" isLoading={addModeOfStudyMutation.isPending} disabled={addModeOfStudyMutation.isPending} />
-          </div>
+        </div>
       </Form>
     </Formik>
   );
 };
 
-const EditModeOfStudy = ({ modeOfStudy, handleClose }: { modeOfStudy: ModeOfStudy; handleClose: () => void }) => {
+const EditModeOfStudy = ({
+  modeOfStudy,
+  handleClose,
+}: {
+  modeOfStudy: ModeOfStudy;
+  handleClose: () => void;
+}) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const editModeOfStudyMutation = useMutation({ mutationFn: createOrUpdateModeOfStudy });
+  const editModeOfStudyMutation = useMutation({
+    mutationFn: createOrUpdateModeOfStudy,
+  });
 
   const validate = Yup.object().shape({
     name: Yup.string().required("Mode of study Name is required"),
     activeStatus: Yup.string().required("Status is required"),
   });
 
-  const handleEditModeOfStudy = async (values: FormikValues, resetForm: () => void) => {
+  const handleEditModeOfStudy = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     const payload: Partial<ModeOfStudy> = {
       id: modeOfStudy.id,
       name: values?.name,
-      activeStatus: values?.status === "false" ? false : true,
+      activeStatus: values?.activeStatus === 'true',
     };
 
     try {
@@ -112,38 +137,54 @@ const EditModeOfStudy = ({ modeOfStudy, handleClose }: { modeOfStudy: ModeOfStud
       });
     }
   };
-  return(
-    <Formik
-    initialValues={{ name: modeOfStudy?.name, activeStatus: modeOfStudy?.activeStatus }}
-    onSubmit={(values, { resetForm }) => {
-      handleEditModeOfStudy(values, resetForm);
-    }}
-    validationSchema={validate}
-    enableReinitialize
-  >
-    <Form className="fields">
-      <Input name="name" label="Mode of Study Name" placeholder="Input Mode of Study Name" />
-      <Select
-          name="activeStatus"
-          placeholder="Select Status"
-          label="Status"
-          options={
-            <>
-              {StatusOptions.map((option: any) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </>
-          }
-        />
-        <div className="btn-group">
-          <Button onClick={handleClose} variant="text" text="Cancel" />
-          <Button text="Update" isLoading={editModeOfStudyMutation.isPending} disabled={editModeOfStudyMutation.isPending} />
-        </div>
-    </Form>
-  </Formik>
-  )
-}
 
-export { AddModeOfStudy, EditModeOfStudy};
+  const initialStatus = modeOfStudy?.activeStatus;
+
+  return (
+    <Formik
+      initialValues={{ name: modeOfStudy?.name, activeStatus: initialStatus }}
+      onSubmit={(values, { resetForm }) => {
+        handleEditModeOfStudy(values, resetForm);
+      }}
+      validationSchema={validate}
+      enableReinitialize
+    >
+      {({ values }) => {
+        console.log(values.activeStatus);
+        return (
+          <Form className="fields">
+            <Input
+              name="name"
+              label="Mode of Study Name"
+              placeholder="Input Mode of Study Name"
+            />
+            <Select
+              name="activeStatus"
+              placeholder="Select Status"
+              label="Status"
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              }
+            />
+            <div className="btn-group">
+              <Button onClick={handleClose} variant="text" text="Cancel" />
+              <Button
+                text="Update"
+                isLoading={editModeOfStudyMutation.isPending}
+                disabled={editModeOfStudyMutation.isPending}
+              />
+            </div>
+          </Form>
+        );
+      }}
+    </Formik>
+  );
+};
+
+export { AddModeOfStudy, EditModeOfStudy };

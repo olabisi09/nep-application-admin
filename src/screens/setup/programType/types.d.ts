@@ -40,8 +40,10 @@ interface ProgramType {
 
 interface CreateProgramTypePayload {
   name: string;
+  activeStatus: boolean;
 }
 
 interface EditProgramTypePayload extends CreateProgramTypePayload {
   id: number;
+
 }

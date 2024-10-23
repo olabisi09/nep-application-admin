@@ -9,6 +9,7 @@ import { App } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createOrUpdateHistory } from "../../../requests";
 import * as Yup from "yup";
+import { validator } from "../../../utils/validator";
 
 export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
@@ -19,6 +20,7 @@ export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
   const validate = Yup.object().shape({
     title: Yup.string().required("Title is required"),
     description: Yup.string().required("Description is required"),
+    status: validator.status,
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +39,7 @@ export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
       Title: values.title,
       Description: values.description,
       Image: upload,
-      ActiveStatus: values.activeStatus === "Active",
+      ActiveStatus: values.status === "Active",
       IsDeleted: false,
     };
 
@@ -139,6 +141,7 @@ export const EditHistory = ({
       setUpload(file[0]);
     }
   };
+
   const clearFile = () => {
     setUpload(null);
   };
@@ -148,7 +151,7 @@ export const EditHistory = ({
       Id: item.id,
       Title: values.title,
       Description: values.description,
-      ActiveStatus: values.activeStatus === "Active",
+      ActiveStatus: values.status === "Active",
       IsDeleted: false,
     };
 
@@ -175,11 +178,21 @@ export const EditHistory = ({
     }
   };
 
+  const statusOptions = (
+    <>
+      <option>Active</option>
+      <option>Inactive</option>
+    </>
+  );
+
+  const initialStatus = item?.activeStatus ? 'Active' : 'Inactive';
+
   return (
     <Formik
       initialValues={{
         title: item?.title,
         description: item?.description,
+        status: initialStatus
       }}
       onSubmit={(values) => handleEditHistory(values)}
       enableReinitialize
@@ -192,6 +205,7 @@ export const EditHistory = ({
           label="Description"
           placeholder="Input description"
         />
+
         {upload ? (
           <div className="small-gap">
             <Image />
@@ -201,7 +215,9 @@ export const EditHistory = ({
         ) : (
           <Upload name="image" label="Image" onChange={handleFileChange} />
         )}
-        <Select name="status" label="Status" placeholder="Active" />
+
+        <Select name="status" label="Status" placeholder="Active" options={statusOptions} />
+
         <div className="btn-group">
           <Button
             type="button"

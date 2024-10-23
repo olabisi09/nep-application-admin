@@ -15,7 +15,10 @@ import Button from "../../../custom/button/button";
 import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { deleteQualificationType, getQualificationType } from "../../../requests";
+import {
+  deleteQualificationType,
+  getQualificationType,
+} from "../../../requests";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import AddQualificationType from "./addQualificationType";
@@ -70,6 +73,7 @@ const Qualification = () => {
       ),
     },
   ];
+
   const columns = [
     // {
     //   key: "id",
@@ -78,16 +82,15 @@ const Qualification = () => {
     // },
     {
       key: "qualificationName",
-      title: "qualification Name",
+      title: "Qualification Name",
       dataIndex: "qualificationName",
     },
-    // {
-    //   key: "activeStatus",
-    //   title: "Active Status",
-    //   dataIndex: "activeStatus",
-    //   render: (text: boolean) => (text ? "Active" : "Inactive"),
-    // },
-
+    {
+      key: "activeStatus",
+      title: "Active Status",
+      dataIndex: "activeStatus",
+      render: (text: boolean) => (text ? "Active" : "Inactive"),
+    },
     {
       key: "action",
       title: "",
@@ -99,9 +102,11 @@ const Qualification = () => {
     },
   ];
 
-  const deleteQualificationTypeMutation = useMutation({ mutationFn: deleteQualificationType });
+  const deleteQualificationTypeMutation = useMutation({
+    mutationFn: deleteQualificationType,
+  });
 
-  const DeleteQualificationTypeHandler = async () => {
+  const deleteQualificationTypeHandler = async () => {
     try {
       await deleteQualificationTypeMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
@@ -109,6 +114,7 @@ const Qualification = () => {
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({
             queryKey: ["get-QualificationType"],
           });
@@ -122,14 +128,15 @@ const Qualification = () => {
       });
     }
   };
+
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
 
-  
   return (
     <main>
       <section className="space-between">
@@ -140,6 +147,7 @@ const Qualification = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -164,6 +172,7 @@ const Qualification = () => {
             )}
           </div>
         </div>
+
         <Table
           dataSource={QualificationTypeData}
           columns={columns}
@@ -189,8 +198,12 @@ const Qualification = () => {
         title="Edit Qualification Type Setup"
         footer={null}
       >
-        <AddQualificationType handleClose={() => setOpenEdit(false)} data={indexData} />
+        <AddQualificationType
+          handleClose={() => setOpenEdit(false)}
+          data={indexData}
+        />
       </Modal>
+
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
@@ -201,7 +214,7 @@ const Qualification = () => {
         <DeleteModalContent
           isLoading={deleteQualificationTypeMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteQualificationTypeHandler}
+          handleSubmit={deleteQualificationTypeHandler}
           title={indexData?.qualificationName}
         />
       </Modal>

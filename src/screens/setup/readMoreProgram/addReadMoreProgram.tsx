@@ -217,7 +217,7 @@ const EditReadMoreProgramme = ({
     </>
   ));
 
-  const initialStatus = record?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = record?.activeStatus === true;
 
   return (
     <Formik

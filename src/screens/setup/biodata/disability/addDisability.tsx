@@ -129,6 +129,7 @@ const EditDisability = ({
       });
     }
   };
+
   return (
     <Formik
       initialValues={{
@@ -139,6 +140,7 @@ const EditDisability = ({
         handleEditTitle(values, resetForm);
       }}
       validationSchema={validate}
+      enableReinitialize
     >
       <Form className="fields">
         <Input name="name" label="Disability" placeholder="Input Disability" />
@@ -156,10 +158,11 @@ const EditDisability = ({
             </>
           }
         />
+
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button
-            text="Create"
+            text="Update"
             isLoading={editDisabilityMutation.isPending}
             disabled={editDisabilityMutation.isPending}
           />

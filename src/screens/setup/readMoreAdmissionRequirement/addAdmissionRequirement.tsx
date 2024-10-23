@@ -209,7 +209,7 @@ const EditAdmissionRequirement = ({
         programName: admissionRequirement.readMoreId,
         description: admissionRequirement.description,
         status:
-          admissionRequirement.activeStatus === true ? "Active" : "Inactive",
+          admissionRequirement.activeStatus,
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditAdmissionRequirement(values, resetForm);

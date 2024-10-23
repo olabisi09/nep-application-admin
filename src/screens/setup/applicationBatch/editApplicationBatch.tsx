@@ -61,7 +61,7 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
       lateEndDate: values.lateRegistrationEndDate,
       startDate: values.startDate,
       endDate: values.endDate,
-      isActive: true,
+      isActive: values.status === 'Active',
     };
 
     try {
@@ -93,6 +93,7 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
     endDate: validator.endDate,
     lateRegistrationStartDate: validator.lateApplicationStartDate,
     lateRegistrationEndDate: validator.lateApplicationEndDate,
+    status: validator.status,
   });
 
   const sessionOptions = () => {
@@ -123,6 +124,8 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
   //   }
   // };
 
+  const initialStatus = record?.isActive === true ? "Active" : "Inactive";
+
   return (
     <Formik
       initialValues={{
@@ -133,12 +136,13 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
         endDate: formatDate(record?.endDate) ?? "",
         lateRegistrationStartDate: formatDate(record?.lateStartDate) ?? "",
         lateRegistrationEndDate: formatDate(record?.lateEndDate) ?? "",
+        status: initialStatus,
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditApplicationBatch(values, resetForm);
       }}
       validationSchema={validate}
-      enableReinitialize={true}
+      enableReinitialize
     >
       {() => {
         return (
@@ -186,7 +190,7 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
               name="lateRegistrationEndDate"
             />
             <Select
-              name="isActive"
+              name="status"
               placeholder="Select Status"
               label="Status"
               options={

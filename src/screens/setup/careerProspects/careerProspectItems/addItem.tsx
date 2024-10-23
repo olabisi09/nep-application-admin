@@ -194,7 +194,7 @@ export const EditCareerProspectItem = ({
       initialValues={
         {
           name: item?.title ?? "",
-          description: "",
+          description: item?.description,
           status: initialStatus,
         } as SetupInit
       }

@@ -21,7 +21,8 @@ const ExploreProgrammes = () => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [explore, setExplore] = useState<Explore>({} as Explore);
-  // const [openDelete, setOpenDelete] = useState(false);  // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
+  // const [openDelete, setOpenDelete] = useState(false);  
+  // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-explore"],
@@ -139,7 +140,7 @@ const ExploreProgrammes = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="About Us Setup"
+        title="Create Explore Programmes Setup"
         footer={null}
       >
         <CreateExplore handleClose={() => setOpen(false)} />
@@ -149,7 +150,7 @@ const ExploreProgrammes = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit About Us Setup"
+        title="Edit Explore Programmes Setup"
         footer={null}
       >
         <EditExplore item={explore} handleClose={() => setOpenEdit(false)} />

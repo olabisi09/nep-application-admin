@@ -191,7 +191,7 @@ const ReadMoreCourse = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Read More - Program Setup"
+        title="Create Read More - Course Overview Setup"
         footer={null}>
         <AddReadMoreCourseOverview handleClose={handleCloseModal} />
       </Modal>
@@ -200,7 +200,7 @@ const ReadMoreCourse = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(prevState => !prevState)}
         centered
-        title="Edit Read More - Program Setup"
+        title="Edit Read More - Course Overview Setup"
         footer={null}>
         <EditReadMoreCourseOverview
           handleClose={handleCloseModal}

@@ -30,6 +30,7 @@ const EditProgramType = ({ handleClose, record }: Props) => {
     const payload: EditProgramTypePayload = {
       id: record?.id,
       name: values.name,
+      activeStatus: values.activeStatus === "Active"
     };
 
     try {
@@ -53,9 +54,11 @@ const EditProgramType = ({ handleClose, record }: Props) => {
     }
   };
 
+  const initialStatus = record?.activeStatus === true ? "Active" : "Inactive";
+
   return (
     <Formik
-      initialValues={{ name: record.name ?? "" }}
+      initialValues={{ name: record.name ?? "", activeStatus: initialStatus }}
       onSubmit={(values, { resetForm }) => {
         editProgramTypeHandler(values, resetForm);
       }}

@@ -48,7 +48,7 @@ const EditProgram = ({ handleClose, record }: Props) => {
       id: record?.id,
       programTypeId: Number(values.programType),
       programId: Number(values.department),
-      activeStatus: !!values.status,
+      activeStatus: values.status === 'Active',
     };
 
     try {

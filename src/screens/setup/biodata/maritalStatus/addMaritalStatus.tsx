@@ -27,7 +27,7 @@ const AddMarital = ({ handleClose, data }: Props) => {
   const createMaritalStatusHandler = async (values: FormikValues) => {
     const payload: Partial<MaritalStatus> = {
       id: data?.id || 0,
-      statusName: values.MaritalName,
+      statusName: values.maritalName,
       activeStatus: values?.status === "true", // Convert "true" to true, "false" to false
     };
 
@@ -74,8 +74,8 @@ const AddMarital = ({ handleClose, data }: Props) => {
         <Form className="fields">
           <Input
             name="maritalName"
-            placeholder="Input Marital Name"
-            label="Marital Name"
+            placeholder="Input Marital Status Name"
+            label="Marital Status Name"
           />
           <Select
             name="status"

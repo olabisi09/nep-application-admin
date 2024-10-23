@@ -64,6 +64,12 @@ const FaqItem = () => {
       dataIndex: "answer",
     },
     {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    },
+    {
       key: "action",
       title: "",
       render: (_, record) => {
@@ -79,6 +85,7 @@ const FaqItem = () => {
             onClick: () => handleDelete(record),
           },
         ];
+
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />

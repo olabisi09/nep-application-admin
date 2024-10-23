@@ -3,9 +3,7 @@ import { Button, Select, Upload } from "../../../../../custom";
 import { ReactComponent as Image } from "../../../../../assets/image.svg";
 import { App } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  createOrUpdateCampusExperienceImage,
-} from "../../../../../requests";
+import { createOrUpdateCampusExperienceImage } from "../../../../../requests";
 import { object } from "yup";
 import { useParams } from "react-router-dom";
 import { validator } from "../../../../../utils/validator";
@@ -91,7 +89,7 @@ const CampusExperienceImageForm = ({
 
   const handleRemoveImageUrl = () => {
     setImageUrl("");
-  }
+  };
 
   return (
     <Formik
@@ -116,16 +114,6 @@ const CampusExperienceImageForm = ({
               <span>{values.image.name}</span>
               <Button
                 onClick={() => setFieldValue("image", null)}
-                variant="text"
-                text="x"
-              />
-            </div>
-          ) : imageUrl ? (
-            <div className="small-gap">
-              <Image />
-              <span>{imageUrl}</span>
-              <Button
-                onClick={handleRemoveImageUrl}
                 variant="text"
                 text="x"
               />

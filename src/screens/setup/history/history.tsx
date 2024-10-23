@@ -17,6 +17,7 @@ import { ColumnsType } from "antd/es/table";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteHistory, getHistory } from "../../../requests";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 
 const History = () => {
   const { notification } = App.useApp();
@@ -65,6 +66,7 @@ const History = () => {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      render: (_, { description }) => (sanitizeAndLimitString(description)),
     },
     {
       key: "pictureUrl",

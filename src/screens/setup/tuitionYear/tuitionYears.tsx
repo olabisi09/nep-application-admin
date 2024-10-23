@@ -255,7 +255,7 @@ const TuitionYears = () => {
           isLoading={deleteTuitionYearMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteTuitionHandler}
-          title={tuitionYear?.feeDescription}
+          title="this item"
         />
       </Modal>
     </main>

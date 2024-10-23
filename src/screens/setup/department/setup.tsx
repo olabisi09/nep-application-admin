@@ -139,6 +139,7 @@ const EditDepartment = ({
 }) => {
   const queryClient = useQueryClient();
   const { notification } = App.useApp();
+  
   const editDepartmentMutation = useMutation({
     mutationFn: updateProgram,
   });
@@ -167,6 +168,7 @@ const EditDepartment = ({
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({ queryKey: ["get-department"] });
           handleClose();
           resetForm();
@@ -227,6 +229,7 @@ const EditDepartment = ({
             </>
           }
         />
+
         <div className="btn-group">
           <Button
             onClick={handleClose}

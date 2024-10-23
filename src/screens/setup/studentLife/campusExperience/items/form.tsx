@@ -22,7 +22,7 @@ const CampusExperienceItemForm = ({
     mutationFn: createOrUpdateCampusExperienceItem,
   });
 
-  const campusExperienceId = parseInt(id ?? '') ?? 0;
+  const campusExperienceId = parseInt(id ?? "") ?? 0;
 
   const handleCampusExperienceItem = async (
     values: FormikValues,
@@ -30,7 +30,7 @@ const CampusExperienceItemForm = ({
   ) => {
     const payload: Partial<CampusExperienceItem> = {
       id: item?.id ?? 0,
-      campusExperienceId, 
+      campusExperienceId,
       description: values.description,
       activeStatus: values.status === "Active" ? true : false,
       isDeleted: false,
@@ -43,7 +43,9 @@ const CampusExperienceItemForm = ({
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-campus-experience-by-id"] });
+          queryClient.refetchQueries({
+            queryKey: ["get-campus-experience-by-id"],
+          });
           handleClose();
           resetForm();
         },
@@ -58,30 +60,32 @@ const CampusExperienceItemForm = ({
 
   const statusOptions = (
     <>
-      <option value=''>-- select an option --</option>
+      <option value="">-- select an option --</option>
       <option value="Active">Active</option>
       <option value="Inactive">Inactive</option>
     </>
   );
 
-   const validationSchema = Yup.object().shape({
-     status: validator.status,
-     description: validator.description,
-   });
+  const validationSchema = Yup.object().shape({
+    status: validator.status,
+    description: validator.description,
+  });
 
-  const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = item?.activeStatus ? "Active" : "Inactive";
   const hasRecords = Object.keys(item).length > 0;
 
   return (
     <Formik
       initialValues={{
         description: item.description ?? "",
-        status: initialStatus,
+        status: initialStatus ?? '',
       }}
       onSubmit={(values, { resetForm }) =>
         handleCampusExperienceItem(values, resetForm)
       }
-      validationSchema={validationSchema}>
+      validationSchema={validationSchema}
+      enableReinitialize
+    >
       {({ setFieldValue }) => {
         return (
           <Form className="fields">

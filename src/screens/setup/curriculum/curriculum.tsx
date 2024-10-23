@@ -30,12 +30,14 @@ const CurriculumSetup = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as Curriculum);
   const [openDelete, setOpenDelete] = useState(false);
+
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
+
   const handleEdit = (data: Curriculum) => {
     setIndexData(data);
     setOpenEdit(true);
@@ -51,7 +53,8 @@ const CurriculumSetup = () => {
     queryFn: getAllCurriculum,
   });
 
-  const CurriculumData = data?.data as Curriculum[];
+  const curriculumData = data?.data as Curriculum[];
+
   const items = (record: Curriculum): MenuProps["items"] => [
     {
       key: "1",
@@ -90,12 +93,12 @@ const CurriculumSetup = () => {
       title: "Level Name ",
       dataIndex: "levelName",
     },
-    // {
-    //   key: "activeStatus",
-    //   title: "Status",
-    //   dataIndex: "activeStatus",
-    //   render: (text: boolean) => (text ? "Active" : "Inactive"),
-    // },
+    {
+      key: "activeStatus",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (text: boolean) => (text ? "Active" : "Inactive"),
+    },
     {
       key: "action",
       title: "",
@@ -117,9 +120,11 @@ const CurriculumSetup = () => {
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({
             queryKey: ["get-curriculum"],
           });
+
           setOpenDelete(false);
         },
       });
@@ -134,6 +139,7 @@ const CurriculumSetup = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -173,7 +179,7 @@ const CurriculumSetup = () => {
           </div>
         </div>
         <Table
-          dataSource={CurriculumData}
+          dataSource={curriculumData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}

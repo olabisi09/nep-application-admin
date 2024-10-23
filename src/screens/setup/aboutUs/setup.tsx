@@ -54,6 +54,7 @@ const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
             description: data?.message,
           });
           queryClient.refetchQueries({ queryKey: ["get-about-us"] });
+          setUpload(null);
           handleClose();
           resetForm();
         },
@@ -154,6 +155,7 @@ const EditAboutUs = ({
       setUpload(file[0]);
     }
   };
+
   const clearFile = () => {
     setUpload(null);
   };

@@ -93,6 +93,7 @@ interface Setup {
   readMoreId: number;
   studentLifeId: string;
   image: any;
+  eventDate: string;
 }
 
 interface GeneralTemplate {

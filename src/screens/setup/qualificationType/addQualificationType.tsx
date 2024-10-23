@@ -2,7 +2,10 @@ import Input from "../../../custom/input/input";
 import { Form, Formik, FormikValues } from "formik";
 import Button from "../../../custom/button/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { StatusOptions, createOrUpdateQualificationType,  } from "../../../requests";
+import {
+  StatusOptions,
+  createOrUpdateQualificationType,
+} from "../../../requests";
 import * as Yup from "yup";
 import { App } from "antd";
 import Select from "../../../custom/select/select";
@@ -16,12 +19,12 @@ const AddQualificationType = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const CreateQualificationTypeMutation = useMutation({
+  const createQualificationTypeMutation = useMutation({
     mutationFn: createOrUpdateQualificationType,
     mutationKey: ["create-qualification-type"],
   });
 
-  const CreateQualificationTypeHandler = async (
+  const createQualificationTypeHandler = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
@@ -32,7 +35,7 @@ const AddQualificationType = ({ handleClose, data }: Props) => {
     };
 
     try {
-      await CreateQualificationTypeMutation.mutateAsync(payload, {
+      await createQualificationTypeMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -58,6 +61,8 @@ const AddQualificationType = ({ handleClose, data }: Props) => {
     status: Yup.string().required("Active Status is required"),
   });
 
+  const hasRecord = Object.keys(data ?? {})?.length > 0;
+
   return (
     <Formik
       initialValues={{
@@ -66,9 +71,9 @@ const AddQualificationType = ({ handleClose, data }: Props) => {
           data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
       }}
       onSubmit={(values, { resetForm }) => {
-        CreateQualificationTypeHandler(values, resetForm);
+        createQualificationTypeHandler(values, resetForm);
       }}
-      enableReinitialize={true}
+      enableReinitialize
       validationSchema={validationSchema}
     >
       {({ handleSubmit }) => {
@@ -94,14 +99,14 @@ const AddQualificationType = ({ handleClose, data }: Props) => {
                 </>
               }
             />
+            
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button
                 onClick={handleSubmit as any}
-                disabled={CreateQualificationTypeMutation?.isPending}
-                text={
-                  CreateQualificationTypeMutation?.isPending ? "Creating..." : "Create"
-                }
+                disabled={createQualificationTypeMutation?.isPending}
+                isLoading={createQualificationTypeMutation?.isPending}
+                text={hasRecord ? "Update" : "Create"}
               />
             </div>
           </Form>

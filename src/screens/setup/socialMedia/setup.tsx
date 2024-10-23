@@ -189,6 +189,7 @@ const EditSocialMediaLink = ({ handleClose, socialMediaLink }: { handleClose: ()
       handleEditSocialMediaLink(values);
     }}
     validationSchema={validate}
+    enableReinitialize
   >
     <Form className="fields">
       <Input name="socialMediaName" label="Social Media Name" placeholder="Input name e.g facebook, twitter" />

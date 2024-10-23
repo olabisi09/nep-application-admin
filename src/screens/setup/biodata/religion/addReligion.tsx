@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import * as Yup from "yup";
 import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+
 import { Button, Input, Select } from "../../../../custom";
 import { createOrUpdateReligion, StatusOptions } from "../../../../requests";
 
@@ -47,14 +47,15 @@ const AddReligion = ({ handleClose }: { handleClose: () => void }) => {
       });
     }
   };
-  
+
   return (
     <Formik
       initialValues={{ name: "", isActive: "" }}
       onSubmit={(values, { resetForm }) => {
         handleAddReligion(values, resetForm);
       }}
-      validationSchema={validate}>
+      validationSchema={validate}
+    >
       <Form className="fields">
         <Input name="name" label="Religion" placeholder="Input Religion" />
         <Select
@@ -98,9 +99,11 @@ const EditReligion = ({
     name: Yup.string().required("Religion is required"),
     isActive: Yup.string().required("Status is required"),
   });
+
   const editReligionMutation = useMutation({
     mutationFn: createOrUpdateReligion,
   });
+
   const handleEditTitle = async (
     values: FormikValues,
     resetForm: () => void
@@ -130,6 +133,7 @@ const EditReligion = ({
       });
     }
   };
+  
   return (
     <Formik
       initialValues={{
@@ -139,7 +143,9 @@ const EditReligion = ({
       onSubmit={(values, { resetForm }) => {
         handleEditTitle(values, resetForm);
       }}
-      validationSchema={validate}>
+      validationSchema={validate}
+      enableReinitialize
+    >
       <Form className="fields">
         <Input name="name" label="Religion" placeholder="Input Religion" />
         <Select
@@ -156,10 +162,11 @@ const EditReligion = ({
             </>
           }
         />
+
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button
-            text="Create"
+            text="Update"
             isLoading={editReligionMutation.isPending}
             disabled={editReligionMutation.isPending}
           />

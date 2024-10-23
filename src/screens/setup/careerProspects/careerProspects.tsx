@@ -134,6 +134,11 @@ const CareerProspects = () => {
     },
   ];
 
+  const handleOpenModal = () => {
+    setCareerProspectItems({} as CareerProspect);
+    setShowAddModal((prevState) => !prevState);
+  };
+
   const handleModal = (status: boolean) => setShowAddModal(status);
 
   if (isLoading) {
@@ -149,7 +154,7 @@ const CareerProspects = () => {
       <section className="space-between">
         <h3>Career Prospects Setup</h3>
         <Button
-          onClick={() => setShowAddModal(true)}
+          onClick={handleOpenModal}
           iconBefore={<Add />}
           text="Setup"
         />

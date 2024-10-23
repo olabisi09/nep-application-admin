@@ -118,6 +118,11 @@ const SchoolSummary = () => {
 
   const schoolSummaryData = data?.data as SchoolSummary[];
 
+  const handleOpenModal = () => {
+    setSchoolSummaryItems({} as SchoolSummary);
+    setOpen((prevState) => !prevState);
+  };
+
   if (isLoading) {
     return <Spin />;
   }
@@ -131,12 +136,14 @@ const SchoolSummary = () => {
       <section className="space-between">
         <h3>Student Life: School Summary Setup</h3>
         <Button
-          onClick={() => setOpen(true)}
+          onClick={handleOpenModal}
           iconBefore={<Plus />}
           text="Setup"
         />
       </section>
+      
       <br />
+
       <Card bordered={false}>
         <Table
           dataSource={schoolSummaryData}
@@ -152,7 +159,8 @@ const SchoolSummary = () => {
         onCancel={() => setOpen(false)}
         centered
         title="Create School Summary"
-        footer={null}>
+        footer={null}
+      >
         <SchoolSummaryForm
           item={schoolSummaryItems}
           handleClose={() => setOpen(false)}
@@ -164,18 +172,21 @@ const SchoolSummary = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit School Summary"
-        footer={null}>
+        footer={null}
+      >
         <SchoolSummaryForm
           item={schoolSummaryItems}
           handleClose={() => setOpenEdit(false)}
         />
       </Modal>
+
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete School Summary Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteSchoolSummaryMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
