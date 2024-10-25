@@ -20,15 +20,16 @@ import {
 import { ColumnsType } from "antd/es/table";
 import { useParams } from "react-router-dom";
 import CampusExperienceImageForm from "./campusExperienceImageForm";
+import DeleteModalContent from "../../../../deleteModal/deleteModal";
 
 const CampusExperienceImages = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [campusExperience, setCampusExperience] = useState<CampusExperienceImage>(
-    {} as CampusExperienceImage
-  );
+  const [openDelete, setOpenDelete] = useState(false);
+  const [campusExperience, setCampusExperience] =
+    useState<CampusExperienceImage>({} as CampusExperienceImage);
 
   const deleteCampusExperienceImageMutation = useMutation({
     mutationFn: deleteCampusExperienceImage,
@@ -40,12 +41,34 @@ const CampusExperienceImages = () => {
     enabled: !!id,
   });
 
+  const deleteCampusExperienceImageHandler = async () => {
+    try {
+      await deleteCampusExperienceImageMutation.mutateAsync(
+        campusExperience.id,
+        {
+          onSuccess: (data) => {
+            notification.success({
+              message: "Success",
+              description: data?.message,
+            });
+            refetch();
+          },
+        }
+      );
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
+
   const columns: ColumnsType<CampusExperienceImage> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "pictureUrl",
       title: "Picture",
@@ -77,22 +100,8 @@ const CampusExperienceImages = () => {
             key: "2",
             label: "Delete",
             onClick: async () => {
-              try {
-                await deleteCampusExperienceImageMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+              setCampusExperience(record);
+              setOpenDelete((prevState) => !prevState);
             },
           },
         ];
@@ -143,7 +152,7 @@ const CampusExperienceImages = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create School Activities"
+        title="Create Campus Experience Image"
         footer={null}
       >
         <CampusExperienceImageForm
@@ -156,12 +165,27 @@ const CampusExperienceImages = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit School Activities"
+        title="Edit Campus Experience Image"
         footer={null}
       >
         <CampusExperienceImageForm
           item={campusExperience}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Campus Experience Image"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteCampusExperienceImageMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteCampusExperienceImageHandler}
+          title='this item'
         />
       </Modal>
     </div>

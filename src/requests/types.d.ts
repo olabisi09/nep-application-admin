@@ -93,6 +93,7 @@ interface Setup {
   readMoreId: number;
   studentLifeId: string;
   image: any;
+  eventDate: string;
 }
 
 interface GeneralTemplate {
@@ -850,6 +851,7 @@ interface DepartmentPayload {
   categoryCode: string;
   code: string;
   name: string;
+  activeStatus: boolean;
 }
 
 interface Disability {

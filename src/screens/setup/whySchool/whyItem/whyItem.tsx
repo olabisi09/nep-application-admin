@@ -49,11 +49,11 @@ const WhyItem = () => {
   const whyItems = data?.data as WhyItem[];
 
   const columns: ColumnsType<WhyItem> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "name",
       title: "Name",
@@ -72,6 +72,12 @@ const WhyItem = () => {
       render: (_, { iconUrl }) => (
         <img className="table-img" src={iconUrl} alt="" />
       ),
+    },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",

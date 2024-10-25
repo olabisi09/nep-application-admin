@@ -9,9 +9,13 @@ export const getCareerProspectItemByCareerProspectId = async (
 };
 
 export const createOrUpdateCareerProspectItem = async (
-    payload: Partial<CareerProspectItemPayload>
-  ) => {
-    return (
-      await api.post("/ReadMore/CreateUpdateCareerProspectItem", payload)
-    )?.data as Response;
-  };
+  payload: Partial<CareerProspectItemPayload>
+) => {
+  return (await api.post("/ReadMore/CreateUpdateCareerProspectItem", payload))
+    ?.data as Response;
+};
+
+export const deleteCareerProspectItem = async (id: number) => {
+  return (await api.delete(`/ReadMore/DeleteCareerProspectItemById?Id=${id}`))
+    ?.data;
+};

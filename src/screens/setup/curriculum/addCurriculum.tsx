@@ -24,7 +24,7 @@ const AddCurriculum = ({ handleClose, details }: Props) => {
   const [Id, setId] = useState<number | null>(null);
 
   const validate = Yup.object().shape({
-    programName: Yup.string().required("Program name is required"),
+    readmoreId: Yup.string().required("Program name is required"),
     description: Yup.string().required("Description is required"),
     levelId: Yup.string().required("Level name is required"),
     activeStatus: Yup.string().required("Active status is required"),
@@ -142,6 +142,7 @@ const AddCurriculum = ({ handleClose, details }: Props) => {
             </>
           }
         />
+
         <Editor
           name="description"
           label="Description"
@@ -151,6 +152,7 @@ const AddCurriculum = ({ handleClose, details }: Props) => {
           }}
           initialData={details?.description}
         />
+
         <Select
           name="levelId"
           label="Level Name"
@@ -173,6 +175,7 @@ const AddCurriculum = ({ handleClose, details }: Props) => {
             </>
           }
         />
+
         <Select
           name="activeStatus"
           placeholder="Select Status"
@@ -187,6 +190,7 @@ const AddCurriculum = ({ handleClose, details }: Props) => {
             </>
           }
         />
+        
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button

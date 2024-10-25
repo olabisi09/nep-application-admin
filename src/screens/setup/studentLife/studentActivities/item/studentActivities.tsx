@@ -42,11 +42,11 @@ const StudentActivityItem = () => {
   });
 
   const columns: ColumnsType<StudentActivity> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "title",
       title: "Title",

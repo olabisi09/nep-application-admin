@@ -19,20 +19,20 @@ const AddMarital = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const CreateMaritalStatusMutation = useMutation({
+  const createMaritalStatusMutation = useMutation({
     mutationFn: createOrUpdateMaritalStatus,
     mutationKey: ["create-marital-status"],
   });
 
-  const CreateMaritalStatusHandler = async (values: FormikValues) => {
+  const createMaritalStatusHandler = async (values: FormikValues) => {
     const payload: Partial<MaritalStatus> = {
       id: data?.id || 0,
-      statusName: values.MaritalName,
+      statusName: values.maritalName,
       activeStatus: values?.status === "true", // Convert "true" to true, "false" to false
     };
 
     try {
-      await CreateMaritalStatusMutation.mutateAsync(payload, {
+      await createMaritalStatusMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -53,19 +53,19 @@ const AddMarital = ({ handleClose, data }: Props) => {
   };
 
   const validationSchema = Yup.object().shape({
-    MaritalName: Yup.string().required("Marital Name is required"),
+    maritalName: Yup.string().required("Marital Name is required"),
     status: Yup.string().required("Active Status is required"),
   });
 
   return (
     <Formik
       initialValues={{
-        MaritalName: data?.statusName,
+        maritalName: data?.statusName,
         status:
           data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
       }}
       onSubmit={(values) => {
-        CreateMaritalStatusHandler(values);
+        createMaritalStatusHandler(values);
       }}
       enableReinitialize={true}
       validationSchema={validationSchema}
@@ -73,9 +73,9 @@ const AddMarital = ({ handleClose, data }: Props) => {
       {({ handleSubmit }) => (
         <Form className="fields">
           <Input
-            name="MaritalName"
-            placeholder="Input Marital Name"
-            label="Marital Name"
+            name="maritalName"
+            placeholder="Input Marital Status Name"
+            label="Marital Status Name"
           />
           <Select
             name="status"
@@ -95,13 +95,13 @@ const AddMarital = ({ handleClose, data }: Props) => {
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button
               onClick={handleSubmit as any} // type casting as any to avoid TypeScript errors
-              disabled={CreateMaritalStatusMutation?.isPending}
+              disabled={createMaritalStatusMutation?.isPending}
               text={
                 data
-                  ? CreateMaritalStatusMutation?.isPending
+                  ? createMaritalStatusMutation?.isPending
                     ? "Updating"
                     : "Update"
-                  : CreateMaritalStatusMutation?.isPending
+                  : createMaritalStatusMutation?.isPending
                   ? "Creating"
                   : "Create"
               }

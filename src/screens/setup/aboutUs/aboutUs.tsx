@@ -130,7 +130,9 @@ const AboutUs = () => {
           text="Setup"
         />
       </section>
+
       <br />
+
       <Card bordered={false}>
         <Table
           dataSource={aboutUs}
@@ -140,6 +142,7 @@ const AboutUs = () => {
           scroll={{ x: true }}
         />
       </Card>
+
       <Modal
         open={open}
         onCancel={() => setOpen(false)}
@@ -149,6 +152,7 @@ const AboutUs = () => {
       >
         <CreateAboutUs handleClose={() => setOpen(false)} />
       </Modal>
+
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
@@ -158,6 +162,7 @@ const AboutUs = () => {
       >
         <EditAboutUs item={about} handleClose={() => setOpenEdit(false)} />
       </Modal>
+      
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}

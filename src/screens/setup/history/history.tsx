@@ -17,6 +17,7 @@ import { ColumnsType } from "antd/es/table";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteHistory, getHistory } from "../../../requests";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 
 const History = () => {
   const { notification } = App.useApp();
@@ -65,6 +66,7 @@ const History = () => {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      render: (_, { description }) => (sanitizeAndLimitString(description)),
     },
     {
       key: "pictureUrl",
@@ -130,6 +132,7 @@ const History = () => {
           text="Setup"
         />
       </section>
+
       <br />
       <Card bordered={false}>
         <Table
@@ -140,6 +143,7 @@ const History = () => {
           scroll={{ x: true }}
         />
       </Card>
+
       <Modal
         open={open}
         onCancel={() => setOpen(false)}
@@ -148,6 +152,7 @@ const History = () => {
         footer={null}>
         <CreateHistory handleClose={() => setOpen(false)} />
       </Modal>
+
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
@@ -161,7 +166,7 @@ const History = () => {
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete About Us Setup"
+        title="Delete History Setup"
         footer={null}>
         <DeleteModalContent
           isLoading={deleteHistoryMutation?.isPending}

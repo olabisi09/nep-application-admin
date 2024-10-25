@@ -229,7 +229,7 @@ const ReadMoreProgram = () => {
           isLoading={deleteReadProgramViewMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteReadMoreProgramHandler}
-          title={programme?.id}
+          title="this read more program"
         />
       </Modal>
     </main>

@@ -5,14 +5,17 @@ import { ReactComponent as Image } from "../../../assets/image.svg";
 import Button from "../../../custom/button/button";
 import { Form, Formik, FormikValues } from "formik";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateSchoolMgt } from "../../../requests";
+import { createOrUpdateSchoolMgt, StatusOptions } from "../../../requests";
 import { App } from "antd";
 import * as Yup from "yup";
+import { Select } from "../../../custom";
+import { validator } from "../../../utils/validator";
 
 const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
   const [upload, setUpload] = useState<File | null>(null);
+
   const addSchoolMgtMutation = useMutation({
     mutationFn: createOrUpdateSchoolMgt,
   });
@@ -20,6 +23,7 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
   const validate = Yup.object().shape({
     title: Yup.string().required("Title is required"),
     description: Yup.string().required("Description is required"),
+    status: validator.status,
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,16 +32,17 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
       setUpload(file[0]);
     }
   };
+
   const clearFile = () => {
     setUpload(null);
   };
 
-  const handleAddSchoolMgt = async (values: FormikValues) => {
+  const handleAddSchoolMgt = async (values: FormikValues, resetForm: () => void) => {
     const payload: Partial<SetupPayload> = {
       Title: values.title,
       Description: values.description,
       Image: upload,
-      ActiveStatus: values.activeStatus === "Active",
+      ActiveStatus: values.activeStatus === "true",
       IsDeleted: false,
     };
 
@@ -50,6 +55,8 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
           });
           queryClient.refetchQueries({ queryKey: ["get-school-mgt"] });
           handleClose();
+          resetForm();
+          clearFile();
         },
       });
     } catch (error: any) {
@@ -65,9 +72,10 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
       initialValues={{
         title: "",
         description: "",
+        status: "",
       }}
-      onSubmit={(values) => {
-        handleAddSchoolMgt(values);
+      onSubmit={(values, { resetForm }) => {
+        handleAddSchoolMgt(values, resetForm);
       }}
       validationSchema={validate}
     >
@@ -79,6 +87,7 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
           label="Description"
           placeholder="Input description"
         />
+
         {upload ? (
           <div className="small-gap">
             <Image />
@@ -88,6 +97,21 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
         ) : (
           <Upload name="image" label="Image" onChange={handleFileChange} />
         )}
+
+        <Select
+          name="status"
+          placeholder="Select Status"
+          label="Status"
+          options={
+            <>
+              {StatusOptions.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </>
+          }
+        />
         <div className="btn-group">
           <Button
             onClick={handleClose}
@@ -126,16 +150,17 @@ const EditSchoolMgt = ({
       setUpload(file[0]);
     }
   };
+
   const clearFile = () => {
     setUpload(null);
   };
 
-  const handleEditSchoolMgt = async (values: FormikValues) => {
+  const handleEditSchoolMgt = async (values: FormikValues, resetForm: () => void) => {
     let payload: Partial<SetupPayload> = {
       Id: item.id,
       Title: values.title,
       Description: values.description,
-      ActiveStatus: values.activeStatus === "Active",
+      ActiveStatus: values.status === "true",
       IsDeleted: false,
     };
 
@@ -152,6 +177,7 @@ const EditSchoolMgt = ({
           });
           queryClient.refetchQueries({ queryKey: ["get-school-mgt"] });
           handleClose();
+          resetForm();
         },
       });
     } catch (error: any) {
@@ -167,12 +193,13 @@ const EditSchoolMgt = ({
       initialValues={{
         title: item?.title,
         description: item?.description,
+        status: item?.activeStatus,
         //image: upload || item?.image,
       }}
-      onSubmit={(values) => {
-        handleEditSchoolMgt(values);
+      onSubmit={(values, { resetForm }) => {
+        handleEditSchoolMgt(values, resetForm);
       }}
-      enableReinitialize={true}
+      enableReinitialize
     >
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />
@@ -182,6 +209,7 @@ const EditSchoolMgt = ({
           label="Description"
           placeholder="Input description"
         />
+
         {upload ? (
           <div className="small-gap">
             <Image />
@@ -191,6 +219,22 @@ const EditSchoolMgt = ({
         ) : (
           <Upload name="image" label="Image" onChange={handleFileChange} />
         )}
+
+        <Select
+          name="status"
+          placeholder="Select Status"
+          label="Status"
+          options={
+            <>
+              {StatusOptions.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </>
+          }
+        />
+
         <div className="btn-group">
           <Button
             onClick={handleClose}

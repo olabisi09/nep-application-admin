@@ -34,11 +34,11 @@ const AddUsers = () => {
     },
   ];
   const columns = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "firstName",
       title: "First Name",

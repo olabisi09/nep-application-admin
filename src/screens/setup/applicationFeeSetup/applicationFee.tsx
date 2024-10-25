@@ -98,6 +98,12 @@ const ApplicationFee = () => {
       dataIndex: "applicationBatchName",
     },
     {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    },
+    {
       key: "action",
       title: "Action",
       render: (_, record) => {
@@ -129,6 +135,11 @@ const ApplicationFee = () => {
     },
   ];
 
+  const handleShowModal = () => {
+    setItem({} as GetAllFeeSetup);
+    setShowAddModal((prevState) => !prevState);
+  };
+
   if (isLoading) {
     return <Spin size="large" />;
   }
@@ -142,11 +153,12 @@ const ApplicationFee = () => {
       <section className="space-between">
         <h3>Application Fee Setup</h3>
         <Button
-          onClick={() => setShowAddModal(true)}
+          onClick={handleShowModal}
           iconBefore={<Add />}
           text="Setup"
         />
       </section>
+      
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>

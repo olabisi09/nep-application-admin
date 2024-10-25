@@ -72,11 +72,11 @@ const GradeSetUp = () => {
   ];
 
   const columns = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "grade",
       title: "Grade Name",

@@ -902,7 +902,7 @@ export const updateDepartment = async (payload: Partial<Department>) => {
 };
 
 export const deleteDepartment = async (id: number) => {
-  return (await api.delete(`/Academics/DeleteDepartmentAsync?Id=${id}`))
+  return (await api.delete(`/Academics/DeleteProgramAsync?Id=${id}`))
     ?.data as Response;
 };
 

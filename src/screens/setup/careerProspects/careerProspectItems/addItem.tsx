@@ -4,12 +4,20 @@ import { App } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { createOrUpdateCareerProspectItem } from "../request";
+import { object } from "yup";
+import { validator } from "../../../../utils/validator";
 
 interface SetupInit {
   name: string;
   description: string;
   status: string;
 }
+
+const validationSchema = object().shape({
+  name: validator.careerProspectItemName,
+  description: validator.description,
+  status: validator.status,
+})
 
 export const CreateCareerProspectItem = ({
   handleClose,
@@ -63,7 +71,7 @@ export const CreateCareerProspectItem = ({
   const statusOptions = (
     <>
       <option>Active</option>
-      <option>Inative</option>
+      <option>Inactive</option>
     </>
   );
 
@@ -79,6 +87,8 @@ export const CreateCareerProspectItem = ({
       onSubmit={(values, { resetForm }) => {
         handleAddCareerProspectItem(values, resetForm);
       }}
+      validationSchema={validationSchema}
+      enableReinitialize
     >
       {({ setFieldValue }) => (
         <Form className="fields">
@@ -173,7 +183,7 @@ export const EditCareerProspectItem = ({
   const statusOptions = (
     <>
       <option>Active</option>
-      <option>Inative</option>
+      <option>Inactive</option>
     </>
   );
 
@@ -184,7 +194,7 @@ export const EditCareerProspectItem = ({
       initialValues={
         {
           name: item?.title ?? "",
-          description: "",
+          description: item?.description,
           status: initialStatus,
         } as SetupInit
       }
@@ -192,6 +202,7 @@ export const EditCareerProspectItem = ({
       onSubmit={(values, { resetForm }) => {
         handleEditCareerProspectItem(values, resetForm);
       }}
+      validationSchema={validationSchema}
     >
       {({ setFieldValue }) => (
         <Form className="fields">

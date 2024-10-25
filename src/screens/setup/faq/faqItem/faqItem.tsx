@@ -48,11 +48,11 @@ const FaqItem = () => {
   const faqItems = data?.data as FaqItem[];
 
   const columns: ColumnsType<FaqItem> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "question",
       title: "Question",
@@ -62,6 +62,12 @@ const FaqItem = () => {
       key: "answer",
       title: "Answer",
       dataIndex: "answer",
+    },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
@@ -79,6 +85,7 @@ const FaqItem = () => {
             onClick: () => handleDelete(record),
           },
         ];
+
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />
@@ -96,9 +103,7 @@ const FaqItem = () => {
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({
-            queryKey: ["get-AllFAQ"],
-          });
+          refetch();
           setOpenDelete(false);
         },
       });

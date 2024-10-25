@@ -18,6 +18,8 @@ import { deleteEvents, getEvents } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import DOMPurify from "dompurify";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import { formatDate } from "../../../utils/formatDate";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 
 const NewsAndEvents = () => {
   const [open, setOpen] = useState(false);
@@ -72,9 +74,15 @@ const NewsAndEvents = () => {
       title: "Description",
       dataIndex: "description",
       render: (_, { description }) => {
-        const cleanhtml = DOMPurify.sanitize(description);
+        const cleanhtml = sanitizeAndLimitString(description);
         return <div dangerouslySetInnerHTML={{ __html: cleanhtml }} />;
       },
+    },
+    {
+      key: "eventDate",
+      title: "Event Date",
+      dataIndex: "eventDate",
+      render: (_, { eventDate }) => formatDate(eventDate),
     },
     {
       key: "picture",
@@ -84,12 +92,12 @@ const NewsAndEvents = () => {
         <img src={imageUrl} alt="" width="50" height="50" />
       ),
     },
-    // {
-    //   key: "status",
-    //   title: "Status",
-    //   dataIndex: "activeStatus",
-    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    // },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    },
     {
       key: "action",
       title: "",
@@ -175,7 +183,7 @@ const NewsAndEvents = () => {
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete Program Setup"
+        title="Delete News and Events Setup"
         footer={null}
       >
         <DeleteModalContent

@@ -28,6 +28,7 @@ const AddProgramType = ({ handleClose }: Props) => {
   ) => {
     const payload: CreateProgramTypePayload = {
       name: values.name,
+      activeStatus: values.activeStatus === "Active"
     };
 
     try {
@@ -53,7 +54,7 @@ const AddProgramType = ({ handleClose }: Props) => {
 
   return (
     <Formik
-      initialValues={{ name: "" }}
+      initialValues={{ name: "", activeStatus: "" }}
       onSubmit={(values, { resetForm }) => {
         createProgramTypeHandler(values, resetForm);
       }}

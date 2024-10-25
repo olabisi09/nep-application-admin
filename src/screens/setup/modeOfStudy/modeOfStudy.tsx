@@ -98,12 +98,12 @@ const ModeOfStudy = () => {
       dataIndex: "name",
     },
 
-    // {
-    //   key: "status",
-    //   title: "Status",
-    //   dataIndex: "activeStatus",
-    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    // },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    },
     {
       key: "action",
       title: "",
@@ -137,9 +137,11 @@ const ModeOfStudy = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
   return (
     <main>
       <section className="space-between">
@@ -188,30 +190,31 @@ const ModeOfStudy = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Mode of Study Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddModeOfStudy handleClose={() => setShowAddModal(false)} />
       </Modal>
 
-      
-        <Modal
-          open={openEdit}
-          onCancel={() => setOpenEdit(false)}
-          centered
-          title="Mode of Study Setup"
-          footer={null}>
-          <EditModeOfStudy
-            modeOfStudy={modeOfStudy}
-            handleClose={() => setOpenEdit(false)}
-          />
-        </Modal>
-      
+      <Modal
+        open={openEdit}
+        onCancel={() => setOpenEdit(false)}
+        centered
+        title="Mode of Study Setup"
+        footer={null}
+      >
+        <EditModeOfStudy
+          modeOfStudy={modeOfStudy}
+          handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
 
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Mode of Study Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteModeOfStudyMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

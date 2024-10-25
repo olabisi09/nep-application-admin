@@ -7,12 +7,15 @@ import {
   getProgramTypes,
 } from "../request";
 import { useParams } from "react-router-dom";
+import { object } from "yup";
+import { validator } from "../../../../utils/validator";
 
-interface SetupInit {
-  name: string;
-  description: string;
-  status: string;
-}
+const validationSchema = object().shape({
+  description: validator.description,
+  programType: validator.programType,
+  name: validator.admissionReqDetailName,
+  status: validator.status,
+});
 
 export const CreateAdmissionReqDetail = ({
   handleClose,
@@ -23,7 +26,7 @@ export const CreateAdmissionReqDetail = ({
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["get-program-type"],
     queryFn: getProgramTypes,
   });
@@ -75,7 +78,7 @@ export const CreateAdmissionReqDetail = ({
   const statusOptions = (
     <>
       <option>Active</option>
-      <option>Inative</option>
+      <option>Inactive</option>
     </>
   );
 
@@ -96,10 +99,12 @@ export const CreateAdmissionReqDetail = ({
       onSubmit={(values, { resetForm }) => {
         handleAddAdmissionRequirementDetail(values, resetForm);
       }}
+      validationSchema={validationSchema}
     >
       {({ setFieldValue }) => (
         <Form className="fields">
           <Input name="name" label="Name" placeholder="Input Name" />
+
           <Editor
             name="description"
             label="Description"
@@ -130,6 +135,7 @@ export const CreateAdmissionReqDetail = ({
               variant="text"
               text="Cancel"
             />
+            
             <Button
               type="submit"
               isLoading={addAdmissionRequirementDetailMutation.isPending}
@@ -154,7 +160,7 @@ export const EditAdmissionReqDetail = ({
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["get-program-type"],
     queryFn: getProgramTypes,
   });
@@ -230,6 +236,7 @@ export const EditAdmissionReqDetail = ({
       onSubmit={(values, { resetForm }) => {
         handleAddAdmissionRequirementDetail(values, resetForm);
       }}
+      validationSchema={validationSchema}
     >
       {({ setFieldValue }) => (
         <Form className="fields">

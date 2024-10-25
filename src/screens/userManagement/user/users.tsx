@@ -74,7 +74,7 @@ const StudentUser = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Student User Setup</h3>
+        <h3>System User Setup</h3>
       </section>
 
       <br />

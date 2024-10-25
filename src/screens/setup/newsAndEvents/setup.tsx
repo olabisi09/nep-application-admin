@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createOrUpdateEvent } from "../../../requests";
 import { validateSetup } from "../../../utils/validations";
 import Editor from "../../../custom/editor/editor";
+import { formatDate } from "../../../utils/formatDate";
 
 interface Init {
   title: string;
@@ -198,6 +199,7 @@ export const EditEvent = ({
         {
           title: item.title,
           description: item.description,
+          eventDate: formatDate(item?.eventDate),
           image: null,
           status: item.activeStatus ? "Active" : "Inactive",
         } as Init
@@ -208,7 +210,12 @@ export const EditEvent = ({
       {({ values, setFieldValue }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />
-
+          <Input
+            name="eventDate"
+            type="date"
+            label="Event date"
+            min={new Date().toISOString().split("T")[0]}
+          />
           <Editor
             name="description"
             label="Description"

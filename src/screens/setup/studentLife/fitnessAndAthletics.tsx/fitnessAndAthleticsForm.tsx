@@ -17,7 +17,7 @@ const FitnessAndAthleticsForm = ({
   const { id } = useParams();
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  
+
   const addFitnessAthleticsMutation = useMutation({
     mutationFn: createOrUpdateFitnessAthletics,
   });
@@ -59,17 +59,17 @@ const FitnessAndAthleticsForm = ({
 
   const statusOptions = (
     <>
-      <option value={''}>-- select an option --</option>
+      <option value={""}>-- select an option --</option>
       <option value="Active">Active</option>
       <option value="Inactive">Inactive</option>
     </>
   );
 
-   const validationSchema = Yup.object().shape({
-     title: validator.title,
-     status: validator.status,
-     description: validator.description,
-   });
+  const validationSchema = Yup.object().shape({
+    title: validator.title,
+    status: validator.status,
+    description: validator.description,
+  });
 
   const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
   const hasRecords = Object.keys(item).length > 0;
@@ -84,7 +84,9 @@ const FitnessAndAthleticsForm = ({
       onSubmit={(values, { resetForm }) =>
         handleAddUpdateFitnessAthletics(values, resetForm)
       }
-      validationSchema={validationSchema}>
+      validationSchema={validationSchema}
+      enableReinitialize
+    >
       {({ setFieldValue }) => {
         return (
           <Form className="fields">

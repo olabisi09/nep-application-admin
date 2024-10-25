@@ -25,14 +25,16 @@
   background-color: #ffffff;
   padding: 2rem;
   border-radius: 2rem;
-  margin-block-end:1rem;
+  margin-block: 1rem;
 }
+
 .inside {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
 }
+
 .inside div {
   display: flex;
   align-items: center;
@@ -69,8 +71,8 @@
   box-sizing: border-box; /* To include padding and border in width */
 }
 
-.modalHeading{
-    color: #2D7832;
-    font-weight: 700;
-    font-size: 2rem;
+.modalHeading {
+  color: #2d7832;
+  font-weight: 700;
+  font-size: 2rem;
 }

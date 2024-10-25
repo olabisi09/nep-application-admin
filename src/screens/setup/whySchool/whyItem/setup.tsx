@@ -4,6 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import { createUpdateWhyItem } from "../../../../requests";
 import { App } from "antd";
 import { ReactComponent as Image } from "../../../../assets/image.svg";
+import { object } from "yup";
+import { validator } from "../../../../utils/validator";
 
 export const SetupWhyItem = ({
   whyItem,
@@ -17,8 +19,16 @@ export const SetupWhyItem = ({
   refetch: () => void;
 }) => {
   const { notification } = App.useApp();
+
   const createUpdateWhyItemMutation = useMutation({
     mutationFn: createUpdateWhyItem,
+  });
+
+  const validationSchema = object().shape({
+    title: validator.title,
+    description: validator.description,
+    image: validator.file,
+    status: validator.status,
   });
 
   const handleCreateUpdateWhyItem = async (
@@ -36,7 +46,7 @@ export const SetupWhyItem = ({
     }
     payload.append(
       "ActiveStatus",
-      values.activeStatus === "Active" ? "true" : "false"
+      values.status === "Active" ? "true" : "false"
     );
     payload.append("IsDeleted", "false");
 
@@ -67,17 +77,21 @@ export const SetupWhyItem = ({
     </>
   );
 
+  const initialStatus = whyItem?.activeStatus === true ? "Active" : "Inactive";
+
   return (
     <Formik
       initialValues={{
         image: null,
         title: whyItem?.name ?? "",
         description: whyItem?.description ?? "",
-        status: whyItem?.activeStatus ? "Active" : "Inactive",
+        status: initialStatus ?? "",
       }}
       onSubmit={(values, { resetForm }) => {
         handleCreateUpdateWhyItem(values, resetForm);
       }}
+      validationSchema={validationSchema}
+      enableReinitialize
     >
       {({ setFieldValue, values }) => (
         <Form className="fields">

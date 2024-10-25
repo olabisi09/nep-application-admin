@@ -1,7 +1,15 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+  App,
+} from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
@@ -9,9 +17,16 @@ import SearchInput from "../../../custom/searchInput/searchInput";
 import AddTuitionYears, { EditTuitionYears } from "./addTuitionYears";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQueries } from "@tanstack/react-query";
-import { deleteTuitionYear, getAllLevel, getAllPrograms, getAllTuitionFee, getAllTuitionYear } from "../../../requests";
+import {
+  deleteTuitionYear,
+  getAllLevel,
+  getAllPrograms,
+  getAllTuitionFee,
+  getAllTuitionYear,
+} from "../../../requests";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { ColumnsType } from "antd/es/table";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 
 const TuitionYears = () => {
   const { notification } = App.useApp();
@@ -20,7 +35,9 @@ const TuitionYears = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [tuitionYear, setTuitionYear] = useState<TuitionYear>({} as TuitionYear)
+  const [tuitionYear, setTuitionYear] = useState<TuitionYear>(
+    {} as TuitionYear
+  );
   const [openDelete, setOpenDelete] = useState(false);
 
   // Merged useQueries
@@ -103,7 +120,9 @@ const TuitionYears = () => {
     }
   };
 
-  const deleteTuitionYearMutation = useMutation({ mutationFn: deleteTuitionYear });
+  const deleteTuitionYearMutation = useMutation({
+    mutationFn: deleteTuitionYear,
+  });
 
   const columns: ColumnsType<TuitionYear> = [
     // {
@@ -120,6 +139,10 @@ const TuitionYears = () => {
       key: "feeDescription",
       title: "Fee Description",
       dataIndex: "feeDescription",
+      render: (_: any, { feeDescription }: any) => {
+        const limitedCleanHtml = sanitizeAndLimitString(feeDescription);
+        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
+      },
     },
     {
       key: "isActive",
@@ -159,12 +182,22 @@ const TuitionYears = () => {
 
   const tuitionYears = tuitionYearData?.data as TuitionYear[];
 
-  if (isTuitionYearLoading || isLevelLoading || isTuitionFeeLoading || isProgramsLoading) {
+  if (
+    isTuitionYearLoading ||
+    isLevelLoading ||
+    isTuitionFeeLoading ||
+    isProgramsLoading
+  ) {
     return <Spin />;
   }
 
-  if (isTuitionYearError || isLevelError || isTuitionFeeError || isProgramsError) {
-    const errorMessage = 
+  if (
+    isTuitionYearError ||
+    isLevelError ||
+    isTuitionFeeError ||
+    isProgramsError
+  ) {
+    const errorMessage =
       tuitionYearError?.message ||
       levelError?.message ||
       tuitionFeeError?.message ||
@@ -221,12 +254,12 @@ const TuitionYears = () => {
         title="Tuition Years Setup"
         footer={null}
       >
-       <AddTuitionYears
-        programItem={programsData?.data || []} 
-        levelItem={levelData?.data || []}
-        tuitionFeeItem={tuitionFeeData?.data || []}  
-        handleClose={() => setShowAddModal(false)}
-      />
+        <AddTuitionYears
+          programItem={programsData?.data || []}
+          levelItem={levelData?.data || []}
+          tuitionFeeItem={tuitionFeeData?.data || []}
+          handleClose={() => setShowAddModal(false)}
+        />
       </Modal>
 
       <Modal
@@ -236,12 +269,13 @@ const TuitionYears = () => {
         title="Edit Tuition Years Setup"
         footer={null}
       >
-        <EditTuitionYears 
-          item={tuitionYear} 
-          programItem={programsData?.data || []} 
+        <EditTuitionYears
+          item={tuitionYear}
+          programItem={programsData?.data || []}
           levelItem={levelData?.data || []}
-          tuitionFeeItem={tuitionFeeData?.data || []} 
-          handleClose={() => setOpenEdit(false)}/>
+          tuitionFeeItem={tuitionFeeData?.data || []}
+          handleClose={() => setOpenEdit(false)}
+        />
       </Modal>
 
       <Modal
@@ -255,7 +289,7 @@ const TuitionYears = () => {
           isLoading={deleteTuitionYearMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteTuitionHandler}
-          title={tuitionYear?.feeDescription}
+          title="this item"
         />
       </Modal>
     </main>

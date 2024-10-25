@@ -31,15 +31,15 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
     error: sessionError,
   } = queries[0];
 
-  const {
-    data: program,
-    isLoading: isProgramLoading,
-    isError: isProgramError,
-    error: programError,
-  } = queries[1];
+  // const {
+  //   data: program,
+  //   isLoading: isProgramLoading,
+  //   isError: isProgramError,
+  //   error: programError,
+  // } = queries[1];
 
   const sessionData = session?.data ?? [];
-  const programData = program?.data ?? [];
+  // const programData = program?.data ?? [];
 
   const addApplicationBatchMutation = useMutation({
     mutationFn: createUpdateApplicationBatch,
@@ -108,19 +108,19 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
     }
   };
 
-  const programOptions = () => {
-    if (isProgramLoading) {
-      return [<option value="">{<Spin size="small" />}</option>];
-    } else if (isProgramError) {
-      return [<option value="">{programError?.message}</option>];
-    } else {
-      return programData?.map((item) => (
-        <option key={item?.id} value={item?.id}>
-          {item?.programName}
-        </option>
-      ));
-    }
-  };
+  // const programOptions = () => {
+  //   if (isProgramLoading) {
+  //     return [<option value="">{<Spin size="small" />}</option>];
+  //   } else if (isProgramError) {
+  //     return [<option value="">{programError?.message}</option>];
+  //   } else {
+  //     return programData?.map((item) => (
+  //       <option key={item?.id} value={item?.id}>
+  //         {item?.programName}
+  //       </option>
+  //     ));
+  //   }
+  // };
 
   return (
     <Formik
@@ -152,12 +152,13 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
               label="Session"
               options={sessionOptions()}
             />
-            <Select
+
+            {/* <Select
               name="program"
               placeholder="Select program"
               label="Program"
               options={programOptions()}
-            />
+            /> */}
 
             <Input
               type="date"

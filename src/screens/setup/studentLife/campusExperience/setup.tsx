@@ -166,7 +166,7 @@ export const EditCampusExperience = ({
   const statusOptions = (
     <>
       <option>Active</option>
-      <option>Inative</option>
+      <option>Inactive</option>
     </>
   );
 

@@ -32,7 +32,7 @@ const AccreditationSetup = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [item, setItem] = useState<AccreditationData>({} as AccreditationData);
-  const [openDelete, setOpenDelete] = useState(false); 
+  const [openDelete, setOpenDelete] = useState(false);
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -57,6 +57,7 @@ const AccreditationSetup = () => {
             description: data?.message,
           });
           refetch();
+          setOpenDelete((prevState) => !prevState);
         },
       });
     } catch (error: any) {
@@ -128,6 +129,11 @@ const AccreditationSetup = () => {
     },
   ];
 
+  const handleOpenModal = () => {
+    setShowAddModal(prevState => !prevState);
+    setItem({} as AccreditationData)
+  };
+
   if (isLoading) {
     return <Spin />;
   }
@@ -141,7 +147,7 @@ const AccreditationSetup = () => {
       <section className="space-between">
         <h3>Accreditation Setup</h3>
         <Button
-          onClick={() => setShowAddModal(true)}
+          onClick={handleOpenModal}
           iconBefore={<Add />}
           text="Setup"
         />
@@ -204,19 +210,19 @@ const AccreditationSetup = () => {
           handleClose={() => setOpenEdit(false)}
         />
       </Modal>
-      
+
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
-        title="Delete About Us Setup"
+        title="Delete Accreditation Setup"
         footer={null}
       >
         <DeleteModalContent
           isLoading={deleteAccreditationMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={handleDeleteHandler}
-          title={item?.id}
+          title='this accreditation'
         />
       </Modal>
     </main>

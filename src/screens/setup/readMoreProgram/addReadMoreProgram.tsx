@@ -217,7 +217,7 @@ const EditReadMoreProgramme = ({
     </>
   ));
 
-  const initialStatus = record?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = record?.activeStatus === true;
 
   return (
     <Formik
@@ -232,6 +232,7 @@ const EditReadMoreProgramme = ({
         handleAddReadMoreProgramme(values, resetForm);
       }}
       validationSchema={validationSchema}
+      enableReinitialize
     >
       {({ setFieldValue }) => (
         <Form className="fields">

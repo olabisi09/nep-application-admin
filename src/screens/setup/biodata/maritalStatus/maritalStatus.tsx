@@ -17,11 +17,7 @@ import { useState } from "react";
 import SearchInput from "../../../../custom/searchInput/searchInput";
 import { AddMarital } from "./addMaritalStatus";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import {
-  createOrUpdateMaritalStatus,
-  deleteMaritalStatus,
-  getMaritalStatus,
-} from "../../../../requests";
+import { deleteMaritalStatus, getMaritalStatus } from "../../../../requests";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
 
@@ -44,6 +40,7 @@ const MaritalSetup = () => {
     queryKey: ["get-marital-status"],
     queryFn: getMaritalStatus,
   });
+
   const handleEdit = (data: MaritalStatus) => {
     setIndexData(data);
     setOpenEdit(true);
@@ -54,14 +51,19 @@ const MaritalSetup = () => {
     setOpenDelete(true);
   };
 
-  const DeleteMaritalStatusMutation = useMutation({
+  const handleOpenCreateModal = () => {
+    setShowAddModal((prevState) => !prevState);
+    setIndexData({} as MaritalStatus);
+  };
+
+  const deleteMaritalStatusMutation = useMutation({
     mutationFn: deleteMaritalStatus,
     mutationKey: ["delete-marital-status"],
   });
 
-  const DeleteMaritalStatusHandler = async () => {
+  const deleteMaritalStatusHandler = async () => {
     try {
-      await DeleteMaritalStatusMutation.mutateAsync(indexData.id, {
+      await deleteMaritalStatusMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -99,6 +101,7 @@ const MaritalSetup = () => {
       ),
     },
   ];
+
   const columns = [
     // {
     //   key: "id",
@@ -127,24 +130,28 @@ const MaritalSetup = () => {
       ),
     },
   ];
+
   const maritalStatus = data?.data as MaritalStatus[];
 
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
   return (
     <main>
       <section className="space-between">
-        <h3>Marital Setup</h3>
+        <h3>Marital Status Setup</h3>
         <Button
-          onClick={() => setShowAddModal(true)}
+          onClick={handleOpenCreateModal}
           iconBefore={<Add />}
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -181,8 +188,9 @@ const MaritalSetup = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Marital Setup"
-        footer={null}>
+        title="Add Marital Status Setup"
+        footer={null}
+      >
         <AddMarital handleClose={() => setShowAddModal(false)} />
       </Modal>
 
@@ -190,8 +198,9 @@ const MaritalSetup = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit Marital Setup"
-        footer={null}>
+        title="Edit Marital Status Setup"
+        footer={null}
+      >
         <AddMarital handleClose={() => setOpenEdit(false)} data={indexData} />
       </Modal>
 
@@ -200,11 +209,12 @@ const MaritalSetup = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Marital Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
-          isLoading={DeleteMaritalStatusMutation?.isPending}
+          isLoading={deleteMaritalStatusMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteMaritalStatusHandler}
+          handleSubmit={deleteMaritalStatusHandler}
           title={indexData?.statusName}
         />
       </Modal>

@@ -198,7 +198,7 @@ export const EditOverview = ({
     <>
       <option>-- select an option --</option>
       <option>Active</option>
-      <option>Inative</option>
+      <option>Inactive</option>
     </>
   );
 
@@ -206,7 +206,7 @@ export const EditOverview = ({
     title: validator.title,
     description: validator.description,
     status: validator.status,
-    image: validator.file,
+    // image: validator.file,
   });
 
   return (
@@ -223,6 +223,7 @@ export const EditOverview = ({
       onSubmit={(values, { resetForm }) =>
         handleEditOverview(values, resetForm)
       }
+      validationSchema={validationSchema}
     >
       {({ values, setFieldValue }) => (
         <Form className="fields">

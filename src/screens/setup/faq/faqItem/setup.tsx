@@ -2,8 +2,9 @@ import Input from "../../../../custom/input/input";
 import Button from "../../../../custom/button/button";
 import { Form, Formik, FormikValues } from "formik";
 import { useMutation } from "@tanstack/react-query";
-import { createOrUpdateFaqItem } from "../../../../requests";
+import { createOrUpdateFaqItem, StatusOptions } from "../../../../requests";
 import { App } from "antd";
+import { Select } from "../../../../custom";
 
 export const CreateFaqItem = ({
   faqId,
@@ -15,6 +16,7 @@ export const CreateFaqItem = ({
   refetch: () => void;
 }) => {
   const { notification } = App.useApp();
+
   const createFaqItemMutation = useMutation({
     mutationFn: createOrUpdateFaqItem,
   });
@@ -27,7 +29,9 @@ export const CreateFaqItem = ({
       question: values.question,
       answer: values.answer,
       faqId: parseInt(faqId),
+      activeStatus: values.status === "true",
     };
+
     try {
       await createFaqItemMutation.mutateAsync(payload, {
         onSuccess: (data) => {
@@ -47,9 +51,10 @@ export const CreateFaqItem = ({
       });
     }
   };
+
   return (
     <Formik
-      initialValues={{ question: "", answer: "" }}
+      initialValues={{ question: "", answer: "", status: "" }}
       onSubmit={(values, { resetForm }) => {
         handleAddFaqItem(values, resetForm);
       }}
@@ -65,6 +70,20 @@ export const CreateFaqItem = ({
           type="textarea"
           label="Answer"
           placeholder="Input answer"
+        />
+        <Select
+          name="status"
+          placeholder="Select Status"
+          label="Status"
+          options={
+            <>
+              {StatusOptions.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </>
+          }
         />
         <div className="btn-group">
           <Button
@@ -108,7 +127,9 @@ export const EditFaqItem = ({
       question: values.question,
       answer: values.answer,
       faqId: item.faqId,
+      activeStatus: values.status === "true",
     };
+
     try {
       await editFaqItemMutation.mutateAsync(payload, {
         onSuccess: (data) => {
@@ -128,9 +149,10 @@ export const EditFaqItem = ({
       });
     }
   };
+
   return (
     <Formik
-      initialValues={{ question: item?.question, answer: item?.answer }}
+      initialValues={{ question: item?.question, answer: item?.answer, status: item?.activeStatus }}
       onSubmit={(values, { resetForm }) => {
         handleUpdateFaqItem(values, resetForm);
       }}
@@ -147,6 +169,20 @@ export const EditFaqItem = ({
           type="textarea"
           label="Answer"
           placeholder="Input answer"
+        />
+        <Select
+          name="status"
+          placeholder="Select Status"
+          label="Status"
+          options={
+            <>
+              {StatusOptions.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </>
+          }
         />
         <div className="btn-group">
           <Button

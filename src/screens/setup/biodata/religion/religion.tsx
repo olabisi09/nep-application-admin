@@ -10,7 +10,6 @@ import {
   App,
   Spin,
 } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../../styles.module.scss";
 
 import { useState } from "react";
@@ -127,9 +126,11 @@ const ReligionSetup = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
   return (
     <main>
       <section className="space-between">
@@ -176,7 +177,7 @@ const ReligionSetup = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Disability Setup"
+        title="Create Religion Setup"
         footer={null}>
         <AddReligion handleClose={() => setShowAddModal(false)} />
       </Modal>
@@ -186,7 +187,7 @@ const ReligionSetup = () => {
           open={openEdit}
           onCancel={() => setOpenEdit(false)}
           centered
-          title="Religion Setup"
+          title="Edit Religion Setup"
           footer={null}>
           <EditReligion
             religion={religion}

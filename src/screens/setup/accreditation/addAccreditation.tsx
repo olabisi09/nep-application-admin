@@ -1,13 +1,6 @@
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Select from "../../../custom/select/select";
-import {
-  createOrUpdateAccreditation,
-  getAllPrograms,
-} from "../../../requests";
+import { createOrUpdateAccreditation, getAllPrograms } from "../../../requests";
 import { Form, Formik, FormikValues } from "formik";
 import { FC } from "react";
 import { Button, Editor } from "../../../custom";
@@ -23,6 +16,8 @@ interface ComponentProps {
 const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
+
+  console.log(record);
 
   const createUpdateAccreditationMutation = useMutation({
     mutationFn: createOrUpdateAccreditation,
@@ -45,7 +40,7 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
       id: record?.id || 0,
       description: values.description,
       readMoreId: values.programName,
-      activeStatus: values?.status === "true", 
+      activeStatus: values?.status === "true",
     };
 
     try {
@@ -112,7 +107,9 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
       onSubmit={(values) => {
         updateAccreditationHandler(values);
       }}
-      validationSchema={validationSchema}>
+      validationSchema={validationSchema}
+      enableReinitialize
+    >
       {(props) => {
         return (
           <Form>
@@ -131,7 +128,7 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
                   const data = record.getData();
                   props.setFieldValue("description", data);
                 }}
-                initialData={record?.description ?? ""} 
+                initialData={record?.description ?? ""}
               />
               <Select
                 name="status"
@@ -147,7 +144,7 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
                   </>
                 }
               />
-            
+
               <div className="btn-group">
                 <Button
                   type="button"

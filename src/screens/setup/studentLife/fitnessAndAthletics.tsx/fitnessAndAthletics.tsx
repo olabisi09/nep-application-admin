@@ -88,11 +88,11 @@ const FitnessAndAthletics = () => {
   };
 
   const columns: ColumnsType<FitnessAthletics> = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
       key: "title",
       title: "Title",

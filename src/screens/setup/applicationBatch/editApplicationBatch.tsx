@@ -34,15 +34,15 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
     error: sessionError,
   } = queries[0];
 
-  const {
-    data: program,
-    isLoading: isProgramLoading,
-    isError: isProgramError,
-    error: programError,
-  } = queries[1];
+  // const {
+  //   data: program,
+  //   isLoading: isProgramLoading,
+  //   isError: isProgramError,
+  //   error: programError,
+  // } = queries[1];
 
   const sessionData = session?.data ?? [];
-  const programData = program?.data ?? [];
+  // const programData = program?.data ?? [];
 
   const editApplicationBatchMutation = useMutation({
     mutationFn: createUpdateApplicationBatch,
@@ -61,7 +61,7 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
       lateEndDate: values.lateRegistrationEndDate,
       startDate: values.startDate,
       endDate: values.endDate,
-      isActive: true,
+      isActive: values.status === 'Active',
     };
 
     try {
@@ -93,6 +93,7 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
     endDate: validator.endDate,
     lateRegistrationStartDate: validator.lateApplicationStartDate,
     lateRegistrationEndDate: validator.lateApplicationEndDate,
+    status: validator.status,
   });
 
   const sessionOptions = () => {
@@ -109,19 +110,21 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
     }
   };
 
-  const programOptions = () => {
-    if (isProgramLoading) {
-      return [<option value="">{<Spin size="small" />}</option>];
-    } else if (isProgramError) {
-      return [<option value="">{programError?.message}</option>];
-    } else {
-      return programData?.map((item) => (
-        <option key={item?.id} value={item?.id}>
-          {item?.programName}
-        </option>
-      ));
-    }
-  };
+  // const programOptions = () => {
+  //   if (isProgramLoading) {
+  //     return [<option value="">{<Spin size="small" />}</option>];
+  //   } else if (isProgramError) {
+  //     return [<option value="">{programError?.message}</option>];
+  //   } else {
+  //     return programData?.map((item) => (
+  //       <option key={item?.id} value={item?.id}>
+  //         {item?.programName}
+  //       </option>
+  //     ));
+  //   }
+  // };
+
+  const initialStatus = record?.isActive === true ? "Active" : "Inactive";
 
   return (
     <Formik
@@ -133,12 +136,13 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
         endDate: formatDate(record?.endDate) ?? "",
         lateRegistrationStartDate: formatDate(record?.lateStartDate) ?? "",
         lateRegistrationEndDate: formatDate(record?.lateEndDate) ?? "",
+        status: initialStatus,
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditApplicationBatch(values, resetForm);
       }}
       validationSchema={validate}
-      enableReinitialize={true}
+      enableReinitialize
     >
       {() => {
         return (
@@ -155,12 +159,13 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
               label="Session"
               options={sessionOptions()}
             />
-            <Select
+
+            {/* <Select
               name="program"
               placeholder="Select program"
               label="Program"
               options={programOptions()}
-            />
+            /> */}
 
             <Input
               type="date"
@@ -185,7 +190,7 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
               name="lateRegistrationEndDate"
             />
             <Select
-              name="isActive"
+              name="status"
               placeholder="Select Status"
               label="Status"
               options={

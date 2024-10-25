@@ -13,6 +13,14 @@ export const validator = {
   applicationBatch: string().required("Application Batch is required"),
   session: string().required("Session is required"),
   program: string().required("Program is required"),
+  codeName: string().required("Code name is required"),
+  codeValue: string().required("Code value is required"),
+  admissionReqDetailName: string().required(
+    "Admission requirement detail name is required"
+  ),
+  careerProspectItemName: string().required(
+    "Career prospect item name is required"
+  ),
   email: string()
     .email("Invalid email Address")
     .required("Email Address  is required"),

@@ -2,7 +2,12 @@ import Input from "../../../custom/input/input";
 import Button from "../../../custom/button/button";
 import { Form, Formik, FormikValues } from "formik";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createProgram, StatusOptions, updateDepartment, updateProgram } from "../../../requests";
+import {
+  createProgram,
+  StatusOptions,
+  updateDepartment,
+  updateProgram,
+} from "../../../requests";
 import { App } from "antd";
 import * as Yup from "yup";
 import { Select } from "../../../custom";
@@ -38,6 +43,7 @@ const CreateDepartment = ({
       name: values.name,
       categoryCode: values.faculty,
       code: values.code,
+      activeStatus: values.activeStatus === 'true',
     };
 
     try {
@@ -66,11 +72,13 @@ const CreateDepartment = ({
         name: "",
         code: "",
         faculty: "",
+        activeStatus: "",
       }}
       onSubmit={(values, { resetForm }) => {
         handleAddDepartment(values, resetForm);
       }}
-      validationSchema={validate}>
+      validationSchema={validate}
+    >
       <Form className="fields">
         <Input
           name="name"
@@ -133,6 +141,7 @@ const EditDepartment = ({
 }) => {
   const queryClient = useQueryClient();
   const { notification } = App.useApp();
+  
   const editDepartmentMutation = useMutation({
     mutationFn: updateProgram,
   });
@@ -152,6 +161,7 @@ const EditDepartment = ({
       name: values.name,
       categoryCode: values.faculty,
       code: values.code,
+      activeStatus: values.activeStatus === 'true',
     };
 
     try {
@@ -161,6 +171,7 @@ const EditDepartment = ({
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({ queryKey: ["get-department"] });
           handleClose();
           resetForm();
@@ -174,18 +185,22 @@ const EditDepartment = ({
     }
   };
 
+  const initialStatus = item?.activeStatus;
+
   return (
     <Formik
       initialValues={{
         name: item?.name,
         code: item?.code,
         faculty: item?.categoryCode,
+        activeStatus: initialStatus,
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditDepartment(values, resetForm);
       }}
       validationSchema={validate}
-      enableReinitialize={true}>
+      enableReinitialize={true}
+    >
       <Form className="fields">
         <Input
           name="name"
@@ -217,6 +232,7 @@ const EditDepartment = ({
             </>
           }
         />
+
         <div className="btn-group">
           <Button
             onClick={handleClose}

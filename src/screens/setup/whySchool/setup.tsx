@@ -30,6 +30,7 @@ const SetupWhySchool = ({ data, handleClose }: Props) => {
       schoolName: values?.title,
       activeStatus: values?.status === "Active",
     };
+    
     try {
       await whySetupMutation.mutateAsync(payload, {
         onSuccess: (data) => {

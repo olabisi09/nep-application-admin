@@ -132,6 +132,7 @@ const SchoolMgt = () => {
         />
       </section>
       <br />
+
       <Card bordered={false}>
         <Table
           dataSource={schoolMgt}
@@ -141,6 +142,7 @@ const SchoolMgt = () => {
           scroll={{ x: true }}
         />
       </Card>
+
       <Modal
         open={open}
         onCancel={() => setOpen(false)}
@@ -149,14 +151,16 @@ const SchoolMgt = () => {
         footer={null}>
         <CreateSchoolMgt handleClose={() => setOpen(false)} />
       </Modal>
+
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit School Management Setup"
         footer={null}>
-        <EditSchoolMgt item={mgt} handleClose={() => setOpen(false)} />
+        <EditSchoolMgt item={mgt} handleClose={() => setOpenEdit(false)} />
       </Modal>
+
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
@@ -167,7 +171,7 @@ const SchoolMgt = () => {
           isLoading={deleteMgtMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteMgtHandler}
-          title={mgt?.title}
+          title="this item"
         />
       </Modal>
     </div>

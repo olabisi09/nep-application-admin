@@ -3,6 +3,8 @@ import { Button, Editor, Input, Select } from "../../../../custom";
 import { createOrUpdateStudentLife } from "../../../../requests";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
+import { object } from "yup";
+import { validator } from "../../../../utils/validator";
 
 const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
@@ -11,6 +13,12 @@ const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
   const addStudentLifeMutation = useMutation({
     mutationFn: createOrUpdateStudentLife,
   });
+
+  const validationSchema = object().shape({
+    title: validator.title,
+    description: validator.description,
+    status: validator.status,
+  })
 
   const handleAddStudentLife = async (
     values: FormikValues,
@@ -59,6 +67,7 @@ const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
       onSubmit={(values, { resetForm }) =>
         handleAddStudentLife(values, resetForm)
       }
+      validationSchema={validationSchema}
     >
       {({ setFieldValue }) => (
         <Form className="fields">
