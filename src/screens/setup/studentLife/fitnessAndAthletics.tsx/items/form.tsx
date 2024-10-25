@@ -33,7 +33,7 @@ const FitnessAthleticsItemForm = ({
       fitnessId,
       title: values.title,
       description: values.description,
-      activeStatus: values.status === "Active" ? true : false,
+      activeStatus: values.status === "Active",
       isDeleted: false,
     };
 
@@ -73,7 +73,11 @@ const FitnessAthleticsItemForm = ({
     description: validator.description,
   });
 
-  const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = item?.activeStatus
+    ? "Active"
+    : item?.activeStatus === false
+    ? "Inactive"
+    : "";
   const hasRecords = Object.keys(item).length > 0;
 
   return (
@@ -87,6 +91,7 @@ const FitnessAthleticsItemForm = ({
         handleFitnessAthleticsItem(values, resetForm)
       }
       validationSchema={validationSchema}
+      enableReinitialize
     >
       {({ setFieldValue }) => {
         return (

@@ -639,6 +639,14 @@ export const deleteSchoolSummary = async (id: number) => {
   )?.data as Response;
 };
 
+export const deleteStudentActivityItem = async (id: number) => {
+  return (
+    await api.delete(
+      `/StudentLife/studentlife/DeleteStudentActivityItem?Id=${id}`
+    )
+  )?.data as Response;
+};
+
 export const getFitnessAndAthleticsByStudentLifeId = async (
   id: string | number
 ) => {
@@ -698,13 +706,13 @@ export const createOrUpdateFitnessImage = async (payload: FormData) => {
   )?.data as Response;
 };
 
-export const deleteFitnessAthleticsItem = async (id: number) => {
+export const deleteFitnessAthleticsImage = async (id: number) => {
   return (
     await api.delete(`/StudentLife/studentlife/DeleteFitnessImage?Id=${id}`)
   )?.data as Response;
 };
 
-export const deleteFitnessAthleticsImage = async (id: number) => {
+export const deleteFitnessAthleticsItem = async (id: number) => {
   return (
     await api.delete(
       `/StudentLife/studentlife/DeleteFitnessAthleticsItem?Id=${id}`

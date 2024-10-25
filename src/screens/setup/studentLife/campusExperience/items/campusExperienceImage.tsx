@@ -52,6 +52,7 @@ const CampusExperienceImages = () => {
               description: data?.message,
             });
             refetch();
+            setOpenDelete((prevState) => !prevState);
           },
         }
       );
@@ -99,7 +100,7 @@ const CampusExperienceImages = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: async () => {
+            onClick: () => {
               setCampusExperience(record);
               setOpenDelete((prevState) => !prevState);
             },
@@ -185,7 +186,7 @@ const CampusExperienceImages = () => {
           isLoading={deleteCampusExperienceImageMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteCampusExperienceImageHandler}
-          title='this item'
+          title="this item"
         />
       </Modal>
     </div>

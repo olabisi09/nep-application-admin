@@ -21,12 +21,14 @@ import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../../../utils/sanitizeAndLimitString";
 import { useParams } from "react-router-dom";
 import CampusExperienceItemForm from "./form";
+import DeleteModalContent from "../../../../deleteModal/deleteModal";
 
 const SupportGuidanceItem = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [support, setSupport] = useState<SupportGuidanceItem>(
     {} as SupportGuidanceItem
   );
@@ -40,6 +42,26 @@ const SupportGuidanceItem = () => {
     queryFn: () => getSupportGuidanceItemBySupportGuidanceId(id!),
     enabled: !!id,
   });
+
+  const deleteSupportGuidanceItemHandler = async () => {
+    try {
+      await deleteSupportGuidanceItemMutation.mutateAsync(support?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<SupportGuidanceItem> = [
     // {
@@ -83,23 +105,9 @@ const SupportGuidanceItem = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteSupportGuidanceItemMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setSupport(record);
+              setOpenDelete((prevState) => !prevState);
             },
           },
         ];
@@ -112,7 +120,12 @@ const SupportGuidanceItem = () => {
     },
   ];
 
-  const campusData = data?.data as SupportGuidanceItem[];
+  const supportData = data?.data as SupportGuidanceItem[];
+
+  const handleOpenModal = () => {
+    setSupport({} as SupportGuidanceItem);
+    setOpen((prevState) => !prevState);
+  };
 
   if (isLoading) {
     return <Spin />;
@@ -125,19 +138,15 @@ const SupportGuidanceItem = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Student Life: Campus Experience Item Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+        <h3>Student Life: Support and Guidance Item Setup</h3>
+        <Button onClick={handleOpenModal} iconBefore={<Plus />} text="Setup" />
       </section>
 
       <br />
 
       <Card bordered={false}>
         <Table
-          dataSource={campusData}
+          dataSource={supportData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -149,7 +158,7 @@ const SupportGuidanceItem = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create Campus Experience Item"
+        title="Create Support and Guidance Item"
         footer={null}
       >
         <CampusExperienceItemForm
@@ -162,12 +171,27 @@ const SupportGuidanceItem = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit Campus Experience Item"
+        title="Edit Support and Guidance Item"
         footer={null}
       >
         <CampusExperienceItemForm
           item={support}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Support and Guidance Item"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteSupportGuidanceItemMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteSupportGuidanceItemHandler}
+          title="this item"
         />
       </Modal>
     </div>

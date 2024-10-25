@@ -70,7 +70,7 @@ const SignIn = () => {
   });
 
   return (
-    <div>
+    <div className="formContainer">
       <h4 className="text-center">Welcome!</h4>
       <small className="text-center">Log in to your account</small>
       <br />
@@ -98,10 +98,12 @@ const SignIn = () => {
                 label="Password"
                 placeholder="Input password"
               />
+
               <div className="space-between">
                 <Checkbox>Remember me</Checkbox>
                 <Link to={routes.auth.forgotPassword}>Forgot Password?</Link>
               </div>
+              
               <Button
                 type="submit"
                 text="Login"
