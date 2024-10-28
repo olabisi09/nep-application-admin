@@ -135,6 +135,11 @@ button {
   display: flex;
   flex-direction: column;
   gap: 1.143rem;
+  width: 100%;
+}
+
+.formContainer {
+  width: 100%;
 }
 
 .small-gap {

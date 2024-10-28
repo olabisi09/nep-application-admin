@@ -3,9 +3,7 @@ import { Button, Select, Upload } from "../../../../../custom";
 import { ReactComponent as Image } from "../../../../../assets/image.svg";
 import { App } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  createOrUpdateFitnessImage,
-} from "../../../../../requests";
+import { createOrUpdateFitnessImage } from "../../../../../requests";
 import { object } from "yup";
 import { useParams } from "react-router-dom";
 import { validator } from "../../../../../utils/validator";
@@ -79,7 +77,11 @@ const FitnessImageForm = ({
     </>
   );
 
-  const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = item?.activeStatus
+    ? "Active"
+    : item?.activeStatus === false
+    ? "Inactive"
+    : "";
   const hasRecords = Object.keys(item).length > 0;
 
   return (
@@ -103,16 +105,6 @@ const FitnessImageForm = ({
             <div className="small-gap">
               <Image />
               <span>{values.image.name}</span>
-              <Button
-                onClick={() => setFieldValue("image", null)}
-                variant="text"
-                text="x"
-              />
-            </div>
-          ) : item?.imagePath ? (
-            <div className="small-gap">
-              <Image />
-              <span>{item?.imagePath}</span>
               <Button
                 onClick={() => setFieldValue("image", null)}
                 variant="text"

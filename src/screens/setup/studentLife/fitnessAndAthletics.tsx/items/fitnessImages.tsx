@@ -20,12 +20,14 @@ import {
 import { ColumnsType } from "antd/es/table";
 import { useParams } from "react-router-dom";
 import FitnessImageForm from "./fitnessImageForm";
+import DeleteModalContent from "../../../../deleteModal/deleteModal";
 
 const FitnessAthleticsImages = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [fitness, setFitness] = useState<FitnessImage>(
     {} as FitnessImage
   );
@@ -39,6 +41,29 @@ const FitnessAthleticsImages = () => {
     queryFn: () => getFitnessAndAthleticsImagesByFitnessId(id!),
     enabled: !!id,
   });
+
+  const deleteFitnessAthleticsImageHandler = async () => {
+    try {
+      await deleteFitnessImageMutation.mutateAsync(
+        fitness.id,
+        {
+          onSuccess: (data) => {
+            notification.success({
+              message: "Success",
+              description: data?.message,
+            });
+            refetch();
+            setOpenDelete((prevState) => !prevState);
+          },
+        }
+      );
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<FitnessImage> = [
     // {
@@ -77,22 +102,8 @@ const FitnessAthleticsImages = () => {
             key: "2",
             label: "Delete",
             onClick: async () => {
-              try {
-                await deleteFitnessImageMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+              setFitness(record);
+              setOpenDelete((prevState) => !prevState);
             },
           },
         ];
@@ -106,7 +117,7 @@ const FitnessAthleticsImages = () => {
     },
   ];
 
-  const schoolSummaryData = data?.data as FitnessImage[];
+  const fitnessImageData = data?.data as FitnessImage[];
 
   if (isLoading) {
     return <Spin />;
@@ -131,7 +142,7 @@ const FitnessAthleticsImages = () => {
 
       <Card bordered={false}>
         <Table
-          dataSource={schoolSummaryData}
+          dataSource={fitnessImageData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record.id}
@@ -143,7 +154,7 @@ const FitnessAthleticsImages = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create School Activities"
+        title="Create Fitness and Athletics Image"
         footer={null}
       >
         <FitnessImageForm
@@ -156,12 +167,27 @@ const FitnessAthleticsImages = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit School Activities"
+        title="Edit Fitness and Athletics Image"
         footer={null}
       >
         <FitnessImageForm
           item={fitness}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Fitness and Athletics Image"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteFitnessImageMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteFitnessAthleticsImageHandler}
+          title='this item'
         />
       </Modal>
     </div>

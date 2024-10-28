@@ -14,25 +14,27 @@ import { Button } from "../../../../../custom";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  deleteSchoolSummary,
+  deleteStudentActivityItem,
   getStudentActivitiesByStudentActivityId,
 } from "../../../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { useParams } from "react-router-dom";
 import StudentActivityItemForm from "./studentActivitiesForm";
 import { sanitizeAndLimitString } from "../../../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../../../deleteModal/deleteModal";
 
 const StudentActivityItem = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [schoolSummaryItems, setSchoolSummaryItems] = useState<StudentActivity>(
     {} as StudentActivity
   );
 
-  const deleteSchoolSummaryMutation = useMutation({
-    mutationFn: deleteSchoolSummary,
+  const deleteStudentActivityMutation = useMutation({
+    mutationFn: deleteStudentActivityItem,
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -40,6 +42,26 @@ const StudentActivityItem = () => {
     queryFn: () => getStudentActivitiesByStudentActivityId(id!),
     enabled: !!id,
   });
+
+  const deleteStudentActivityItemHandler = async () => {
+    try {
+      await deleteStudentActivityMutation.mutateAsync(schoolSummaryItems?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<StudentActivity> = [
     // {
@@ -92,22 +114,8 @@ const StudentActivityItem = () => {
             key: "2",
             label: "Delete",
             onClick: async () => {
-              try {
-                await deleteSchoolSummaryMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+              setSchoolSummaryItems(record);
+              setOpenDelete((prevState) => !prevState);
             },
           },
         ];
@@ -122,6 +130,11 @@ const StudentActivityItem = () => {
   ];
 
   const studentActivityItemData = data?.data as StudentActivity[];
+
+  const handleOpenModal = () => {
+    setSchoolSummaryItems({} as StudentActivity);
+    setOpen((prevState) => !prevState);
+  };
 
   if (isLoading) {
     return <Spin />;
@@ -138,7 +151,7 @@ const StudentActivityItem = () => {
 
         {studentActivityItemData?.length === 0 && (
           <Button
-            onClick={() => setOpen(true)}
+            onClick={handleOpenModal}
             iconBefore={<Plus />}
             text="Setup"
           />
@@ -161,7 +174,7 @@ const StudentActivityItem = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create School Activities"
+        title="Create School Activity Item"
         footer={null}
       >
         <StudentActivityItemForm
@@ -174,12 +187,27 @@ const StudentActivityItem = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit School Activities"
+        title="Edit School Activity Item"
         footer={null}
       >
         <StudentActivityItemForm
           item={schoolSummaryItems}
           handleClose={() => setOpenEdit(false)}
+        />
+      </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete School Activity Item"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteStudentActivityMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteStudentActivityItemHandler}
+          title="this item"
         />
       </Modal>
     </div>

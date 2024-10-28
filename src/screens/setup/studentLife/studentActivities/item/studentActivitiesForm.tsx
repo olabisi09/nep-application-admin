@@ -83,7 +83,11 @@ const StudentActivityItemForm = ({
     </>
   );
 
-  const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = item?.activeStatus
+    ? "Active"
+    : item?.activeStatus === false
+    ? "Inactive"
+    : "";
   const hasRecords = Object.keys(item).length > 0;
 
   return (
@@ -121,16 +125,6 @@ const StudentActivityItemForm = ({
             <div className="small-gap">
               <Image />
               <span>{values.image.name}</span>
-              <Button
-                onClick={() => setFieldValue("image", null)}
-                variant="text"
-                text="x"
-              />
-            </div>
-          ) : item?.imageUrl ? (
-            <div className="small-gap">
-              <Image />
-              <span>{item?.imageUrl}</span>
               <Button
                 onClick={() => setFieldValue("image", null)}
                 variant="text"

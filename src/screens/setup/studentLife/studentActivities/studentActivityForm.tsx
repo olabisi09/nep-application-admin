@@ -60,7 +60,7 @@ const StudentActivityForm = ({
     <>
       <option value={""}>-- select an option --</option>
       <option value="Active"> Active</option>
-      <option value="Inactive">Inactive</option>  
+      <option value="Inactive">Inactive</option>
     </>
   );
 
@@ -70,7 +70,11 @@ const StudentActivityForm = ({
     status: Yup.string().required("Status is required"),
   });
 
-  const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = item?.activeStatus
+    ? "Active"
+    : item?.activeStatus === false
+    ? "Inactive"
+    : "";
   const hasRecords = Object.keys(item).length > 0;
 
   return (
@@ -83,7 +87,9 @@ const StudentActivityForm = ({
       onSubmit={(values, { resetForm }) =>
         handleAddStudentActivity(values, resetForm)
       }
-      validationSchema={validateSetup}>
+      validationSchema={validateSetup}
+      enableReinitialize
+    >
       {({ setFieldValue }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />

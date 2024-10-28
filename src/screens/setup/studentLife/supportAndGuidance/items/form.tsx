@@ -73,7 +73,11 @@ const SupportGuidanceItemForm = ({
     description: validator.description,
   });
 
-  const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = item?.activeStatus
+    ? "Active"
+    : item?.activeStatus === false
+    ? "Inactive"
+    : "";
   const hasRecords = Object.keys(item).length > 0;
 
   return (
@@ -87,6 +91,7 @@ const SupportGuidanceItemForm = ({
         handleSupportGuidanceItem(values, resetForm)
       }
       validationSchema={validationSchema}
+      enableReinitialize
     >
       {({ setFieldValue }) => {
         return (

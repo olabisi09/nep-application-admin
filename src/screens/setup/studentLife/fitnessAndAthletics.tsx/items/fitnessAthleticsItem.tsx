@@ -21,12 +21,15 @@ import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../../../utils/sanitizeAndLimitString";
 import { useParams } from "react-router-dom";
 import FitnessAthleticsItemForm from "./form";
+import DeleteModalContent from "../../../../deleteModal/deleteModal";
 
 const FitnessAthleticsItem = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
+
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [fitness, setFitness] = useState<FitnessAthleticsItem>(
     {} as FitnessAthleticsItem
   );
@@ -40,6 +43,29 @@ const FitnessAthleticsItem = () => {
     queryFn: () => getFitnessAndAthleticsItemByFitnessId(id!),
     enabled: !!id,
   });
+
+  const deleteFitnessAthleticsItemHandler = async () => {
+    try {
+      await deleteFitnessAthleticsItemMutation.mutateAsync(
+        fitness.id,
+        {
+          onSuccess: (data) => {
+            notification.success({
+              message: "Success",
+              description: data?.message,
+            });
+            refetch();
+            setOpenDelete((prevState) => !prevState);
+          },
+        }
+      );
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<FitnessAthleticsItem> = [
     // {
@@ -83,23 +109,9 @@ const FitnessAthleticsItem = () => {
           {
             key: "2",
             label: "Delete",
-            onClick: async () => {
-              try {
-                await deleteFitnessAthleticsItemMutation.mutateAsync(record.id, {
-                  onSuccess: (data) => {
-                    notification.success({
-                      message: "Success",
-                      description: data?.message,
-                    });
-                    refetch();
-                  },
-                });
-              } catch (error: any) {
-                notification.error({
-                  message: "Error",
-                  description: error?.response?.data?.message,
-                });
-              }
+            onClick: () => {
+              setFitness(record);
+              setOpenDelete((prevState) => !prevState);
             },
           },
         ];
@@ -115,6 +127,11 @@ const FitnessAthleticsItem = () => {
 
   const fitnessAthleticsData = data?.data as FitnessAthleticsItem[];
 
+  const handleOpenModal = () => {
+    setFitness({} as FitnessAthleticsItem);
+    setOpen((prevState) => !prevState);
+  };
+
   if (isLoading) {
     return <Spin />;
   }
@@ -128,7 +145,7 @@ const FitnessAthleticsItem = () => {
       <section className="space-between">
         <h3>Student Life: Fitness and Athletics Item Setup</h3>
         <Button
-          onClick={() => setOpen(true)}
+          onClick={handleOpenModal}
           iconBefore={<Plus />}
           text="Setup"
         />
@@ -150,7 +167,7 @@ const FitnessAthleticsItem = () => {
         open={open}
         onCancel={() => setOpen(false)}
         centered
-        title="Create Campus Experience Item"
+        title="Create Fitness and Athletics Item"
         footer={null}
       >
         <FitnessAthleticsItemForm
@@ -163,7 +180,7 @@ const FitnessAthleticsItem = () => {
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
-        title="Edit Campus Experience Item"
+        title="Edit Fitness and Athletics Item"
         footer={null}
       >
         <FitnessAthleticsItemForm
@@ -171,6 +188,22 @@ const FitnessAthleticsItem = () => {
           handleClose={() => setOpenEdit(false)}
         />
       </Modal>
+
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Fitness and Athletics Item"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteFitnessAthleticsItemMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteFitnessAthleticsItemHandler}
+          title='this item'
+        />
+      </Modal>
+    
     </div>
   );
 };

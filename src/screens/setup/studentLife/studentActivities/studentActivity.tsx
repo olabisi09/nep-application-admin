@@ -116,7 +116,7 @@ const StudentActivity = () => {
             label: "Delete",
             onClick: () => {
               setStudentActivity(record);
-              setOpenDelete(true);
+              setOpenDelete((prevState) => !prevState);
             },
           },
         ];
@@ -131,6 +131,11 @@ const StudentActivity = () => {
   ];
 
   const studentActivityData = data?.data as StudentActivities[];
+
+  const handleOpenModal = () => {
+    setStudentActivity({} as StudentActivities);
+    setOpen((prevState) => !prevState);
+  };
 
   if (isLoading) {
     return <Spin />;
@@ -147,7 +152,7 @@ const StudentActivity = () => {
 
         {studentActivityData?.length === 0 && (
           <Button
-            onClick={() => setOpen(true)}
+            onClick={handleOpenModal}
             iconBefore={<Plus />}
             text="Setup"
           />
@@ -171,7 +176,8 @@ const StudentActivity = () => {
         onCancel={() => setOpen(false)}
         centered
         title="Create Student Activity"
-        footer={null}>
+        footer={null}
+      >
         <StudentActivityForm
           item={studentActivity}
           handleClose={() => setOpen(false)}
@@ -183,7 +189,8 @@ const StudentActivity = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Student Activity"
-        footer={null}>
+        footer={null}
+      >
         <StudentActivityForm
           item={studentActivity}
           handleClose={() => setOpenEdit(false)}
@@ -194,7 +201,8 @@ const StudentActivity = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Student Activity Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteStudentActivityMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
