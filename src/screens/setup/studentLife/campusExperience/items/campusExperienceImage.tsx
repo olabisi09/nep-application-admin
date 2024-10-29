@@ -118,6 +118,11 @@ const CampusExperienceImages = () => {
 
   const campusExperienceImageData = data?.data as CampusExperienceImage[];
 
+  const handleOpenModal = () => {
+    setCampusExperience({} as CampusExperienceImage);
+    setOpen((prevState) => !prevState);
+  };
+
   if (isLoading) {
     return <Spin />;
   }
@@ -131,7 +136,7 @@ const CampusExperienceImages = () => {
       <section className="space-between">
         <h3>Student Life: Campus Experience Images Setup</h3>
         <Button
-          onClick={() => setOpen(true)}
+          onClick={handleOpenModal}
           iconBefore={<Plus />}
           text="Setup"
         />
