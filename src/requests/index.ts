@@ -1099,3 +1099,22 @@ export const getAllContactForm = async () => {
   return (await api.get("/Utilities/Utilities/GetAllContactForm"))
     ?.data as ContactUsResponse;
 };
+
+export const createUpdateTab = async (payload: Partial<Tab>) => {
+  return (await api.post("/Utilities/Utilities/CreateUpdateTab", payload))
+    ?.data as Response;
+};
+
+// export const createOrUpdateTitle = async (payload: Partial<ModeOfStudy>) => {
+//   return (await api.post(`/Utilities/Utilities/CreateUpdateTitle`, payload))
+//     ?.data as Response;
+// };
+
+export const getAllTab = async () => {
+  return (await api.get("/Utilities/Utilities/GetAllTab"))?.data as TabResponse;
+};
+
+export const deleteTab = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteTab?Id=${id}`))
+    ?.data as TabResponse;
+};

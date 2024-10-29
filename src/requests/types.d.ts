@@ -874,3 +874,14 @@ interface Religion {
 interface ReligionResponse extends Response {
   data: Religion[];
 }
+
+interface Tab {
+  id: number;
+  tabName: string;
+  isActive: boolean;
+  isDeleted: boolean;
+}
+
+interface TabResponse extends Response {
+  data: Tab[];
+}

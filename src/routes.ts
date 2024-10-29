@@ -29,6 +29,7 @@ export const routes = {
     admissionRequirementDetail: "/admission-requirement/:id/details",
     applicationBatch: "/application-batch",
     grade: "grade-setup",
+    tab: "/tab-setup",
 
     country: "/country-setup",
     state: "/state-setup",

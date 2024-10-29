@@ -1,61 +1,62 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  App,
+  Spin,
+} from "antd";
+import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
-import { useCallback, useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import AddProgram from "./addProgram";
+import { useState } from "react";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
-import EditProgramType from "./editProgram";
+import { deleteTab, getAllTab } from "../../../requests";
+import { Button, SearchInput } from "../../../custom";
+import { AddTab, EditTab } from "./addTab";
 import DeleteModalContent from "../../deleteModal/deleteModal";
-import { getAllProgram } from "./request";
-import { deleteProgram } from "./request";
 
-const ProgramSetUp = () => {
+const TabSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [record, setRecord] = useState<ProgramData>({} as ProgramData);
+  const [tab, setTab] = useState<Tab>({} as Tab);
   const [openDelete, setOpenDelete] = useState(false);
-
   const { notification } = App.useApp();
 
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["get-tab"],
+    queryFn: getAllTab,
+  });
+
+  const deleteTabMutation = useMutation({
+    mutationFn: deleteTab,
+  });
+
+  const handleDelete = (data: Tab) => {
+    setTab(data);
+    setOpenDelete(true);
   };
 
-  const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-all-program"],
-    queryFn: getAllProgram,
-  });
-
-  const programTypesData = data?.data ?? [];
-
-  const deleteProgramMutation = useMutation({
-    mutationFn: deleteProgram,
-  });
-
-  const deleteProgramTypeHandler = async () => {
+  const DeleteTabHandler = async () => {
     try {
-      await deleteProgramMutation.mutateAsync(
-        record?.id,
-        {
-          onSuccess: (data) => {
-            notification.success({
-              message: "Success",
-              description: data?.message,
-            });
-            refetch();
-            setOpenDelete((prevState) => !prevState);
-          },
-        }
-      );
+      await deleteTabMutation.mutateAsync(tab?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete(false);
+        },
+      });
     } catch (error: any) {
       notification.error({
         message: "Error",
@@ -63,47 +64,51 @@ const ProgramSetUp = () => {
       });
     }
   };
+  const handleSearch = (e: any) => {
+    setSearchTerm(e.target.value);
+  };
 
-  const columns: ColumnsType<ProgramData> = [
+  const columns: ColumnsType<Tab> = [
+    // {
+    //   key: "id",
+    //   title: "ID",
+    //   dataIndex: "id",
+    // },
     {
-      key: "programType",
-      title: "Program Type",
-      dataIndex: "programTypeName",
-    },
-    {
-      key: "department",
-      title: "Department",
-      dataIndex: "program",
+      key: "tabName",
+      title: "Name",
+      dataIndex: "tabName",
     },
     {
       key: "status",
       title: "Status",
       dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+      render: (_, { isActive }) => (isActive ? "Active" : "Inactive"),
     },
     {
       key: "action",
-      title: "",
+      title: "Action",
       render: (_, record) => {
         const items: MenuProps["items"] = [
           {
             key: "1",
             label: "Edit",
             onClick: () => {
+              setTab(record);
               setOpenEdit(true);
-              setRecord(record);
             },
           },
           {
             key: "2",
-            label: "Delete",
-            onClick: () => {
-              setRecord(record);
-              setOpenDelete(true);
-            },
+            label: (
+              <button
+                style={{ border: "0rem", background: "none" }}
+                onClick={() => handleDelete(record)}>
+                Delete
+              </button>
+            ),
           },
         ];
-
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />
@@ -113,26 +118,18 @@ const ProgramSetUp = () => {
     },
   ];
 
-  const handleClose = useCallback(() => {
-    setShowAddModal((prevState) => !prevState);
-  }, []);
-
-  const handleEditClose = useCallback(() => {
-    setOpenEdit((prevState) => !prevState);
-  }, []);
+  const tabData = data?.data;
 
   if (isLoading) {
-    return <Spin size="large" />;
+    return <Spin />;
   }
-
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
-
   return (
     <main>
       <section className="space-between">
-        <h3>Program Setup</h3>
+        <h3>Tap Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
@@ -164,10 +161,10 @@ const ProgramSetUp = () => {
           </div>
         </div>
         <Table
-          dataSource={programTypesData}
+          dataSource={tabData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 
@@ -175,38 +172,40 @@ const ProgramSetUp = () => {
         open={showAddModal}
         onCancel={() => setShowAddModal(false)}
         centered
-        title="Create Program"
-        footer={null}
-      >
-        <AddProgram handleClose={handleClose} />
+        title="Tab Setup"
+        footer={null}>
+        <AddTab handleClose={() => setShowAddModal(false)} />
       </Modal>
 
-      <Modal
-        open={openEdit}
-        onCancel={() => setOpenEdit(false)}
-        centered
-        title="Edit Program"
-        footer={null}
-      >
-        <EditProgramType handleClose={handleEditClose} record={record} />
-      </Modal>
+      {tab?.id && openEdit && (
+        <Modal
+          open={openEdit}
+          onCancel={() => setOpenEdit(false)}
+          centered
+          title="Edit Setup"
+          footer={null}>
+          <EditTab tab={tab} handleClose={() => setOpenEdit(false)} />
+        </Modal>
+      )}
 
-      <Modal
-        open={openDelete}
-        onCancel={() => setOpenDelete(false)}
-        centered
-        title="Delete Program Setup"
-        footer={null}
-      >
-        <DeleteModalContent
-          isLoading={deleteProgramMutation?.isPending}
-          handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={deleteProgramTypeHandler}
-          title="Program"
-        />
-      </Modal>
+      {tab?.id && openDelete && (
+        <Modal
+          open={openDelete}
+          onCancel={() => setOpenDelete(false)}
+          centered
+          title="Delete Tab Setup"
+          footer={null}>
+          <DeleteModalContent
+            isLoading={deleteTabMutation?.isPending}
+            handleCloseModal={() => setOpenDelete(false)}
+            handleSubmit={DeleteTabHandler}
+            title={tab?.tabName}
+            isActive={false}
+          />
+        </Modal>
+      )}
     </main>
   );
 };
 
-export default ProgramSetUp;
+export default TabSetup;

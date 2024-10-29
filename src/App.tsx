@@ -71,6 +71,7 @@ import SchoolID from "./screens/setup/schoolIDConfig/schoolIDConfig";
 import StudentUser from "./screens/userManagement/user/users";
 import ApplicationBatchSetup from "./screens/setup/applicationBatch/applicationBatch";
 import GradeSetUp from "./screens/setup/grade/grade";
+import TabSetUp from "./screens/setup/tab/tab";
 
 function App() {
   const authRoute = [
@@ -332,6 +333,10 @@ function App() {
       path: routes.setup.grade,
       element: <GradeSetUp />,
     },
+    {
+      path: routes.setup.tab,
+      element: <TabSetUp />
+    }
   ];
 
   const userMgtRoutes = [

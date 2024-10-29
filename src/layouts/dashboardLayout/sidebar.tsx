@@ -231,6 +231,11 @@ const Sidebar = () => {
           label: <NavLink to={routes.setup.grade}>Grade</NavLink>,
           icon: <Line />,
         },
+        {
+          key: "tab",
+          label: <NavLink to={routes.setup.tab}>Tab</NavLink>,
+          icon: <Line />,
+        }
       ],
     },
     {
