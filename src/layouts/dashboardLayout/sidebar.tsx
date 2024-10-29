@@ -36,8 +36,9 @@ const Sidebar = () => {
         // },
         {
           key: "contactUs",
-          label:
-            <NavLink to={routes.userMgt.contactUs}>Contact Feed Back</NavLink>,
+          label: (
+            <NavLink to={routes.userMgt.contactUs}>Contact Feed Back</NavLink>
+          ),
           icon: <Line />,
         },
         {
@@ -235,7 +236,12 @@ const Sidebar = () => {
           key: "tab",
           label: <NavLink to={routes.setup.tab}>Tab</NavLink>,
           icon: <Line />,
-        }
+        },
+        {
+          key: "displayTab",
+          label: <NavLink to={routes.setup.DisplayTabSetup}>Display Tab</NavLink>,
+          icon: <Line />,
+        },
       ],
     },
     {

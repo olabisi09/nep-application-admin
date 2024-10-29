@@ -894,6 +894,11 @@ export const getAllApplicationBatch = async () => {
     ?.data as applicationBatchResponse;
 };
 
+// export const getAllSession = async () => {
+//   return (await api.get(`/Utilities/Utilities/GetAllApplicationBatch`))
+//     ?.data as getAllSessionResponse;
+// };
+
 export const getDepartments = async () => {
   return (await api.get("/Academics/GetAllDepartmentAsync"))
     ?.data as GetDepartmentsResponse;
@@ -1105,11 +1110,6 @@ export const createUpdateTab = async (payload: Partial<Tab>) => {
     ?.data as Response;
 };
 
-// export const createOrUpdateTitle = async (payload: Partial<ModeOfStudy>) => {
-//   return (await api.post(`/Utilities/Utilities/CreateUpdateTitle`, payload))
-//     ?.data as Response;
-// };
-
 export const getAllTab = async () => {
   return (await api.get("/Utilities/Utilities/GetAllTab"))?.data as TabResponse;
 };
@@ -1117,4 +1117,15 @@ export const getAllTab = async () => {
 export const deleteTab = async (id: number) => {
   return (await api.delete(`/Utilities/Utilities/DeleteTab?Id=${id}`))
     ?.data as TabResponse;
+};
+
+export const getAllDisplayTab = async () => {
+  return (await api.get("/Utilities/Utilities/GetAllTabDisplay"))
+    ?.data as DisplayTabResponse;
+};
+
+export const createUpdateDisplayTab = async (payload: Partial<DisplayTab>) => {
+  return (
+    await api.post("/Utilities/Utilities/CreateUpdateTabDisplay", payload)
+  )?.data as DisplayTabResponse;
 };

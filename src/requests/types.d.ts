@@ -885,3 +885,29 @@ interface Tab {
 interface TabResponse extends Response {
   data: Tab[];
 }
+
+interface GetAllTabResponse extends Response {
+  data: GetAllTab[];
+}
+
+interface GetAllTab {
+  id: number;
+  batchName: string;
+  sessionId: number;
+  tabId: number;
+  tabNumber: number;
+  isActive: boolean;
+}
+
+interface DisplayTabResponse extends Response {
+  data: DisplayTab[];
+}
+
+interface DisplayTab {
+  id: number;
+  batchName: string;
+  sessionId: number;
+  tabId: number;
+  tabNumber: number;
+  isActive: boolean;
+}

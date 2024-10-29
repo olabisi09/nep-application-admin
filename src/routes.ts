@@ -1,3 +1,5 @@
+import DispalyTabSetup from "./screens/setup/displayTab.tsx/displayTab";
+
 export const routes = {
   auth: {
     login: "/",
@@ -30,6 +32,7 @@ export const routes = {
     applicationBatch: "/application-batch",
     grade: "grade-setup",
     tab: "/tab-setup",
+    DisplayTabSetup:"/display-tabsetup",
 
     country: "/country-setup",
     state: "/state-setup",

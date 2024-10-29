@@ -72,6 +72,8 @@ import StudentUser from "./screens/userManagement/user/users";
 import ApplicationBatchSetup from "./screens/setup/applicationBatch/applicationBatch";
 import GradeSetUp from "./screens/setup/grade/grade";
 import TabSetUp from "./screens/setup/tab/tab";
+import DispalyTabSetup from "./screens/setup/displayTab.tsx/displayTab";
+import DisplayTabSetup from "./screens/setup/displayTab.tsx/displayTab";
 
 function App() {
   const authRoute = [
@@ -335,8 +337,12 @@ function App() {
     },
     {
       path: routes.setup.tab,
-      element: <TabSetUp />
-    }
+      element: <TabSetUp />,
+    },
+    {
+      path: routes.setup.DisplayTabSetup,
+      element: <DisplayTabSetup />,
+    },
   ];
 
   const userMgtRoutes = [

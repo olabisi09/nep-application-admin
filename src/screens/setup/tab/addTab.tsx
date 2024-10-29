@@ -8,6 +8,7 @@ import { Button, Input, Select } from "../../../custom";
 const AddTab = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
+  
   const addTabMutation = useMutation({ mutationFn: createUpdateTab });
 
   const validate = Yup.object().shape({
@@ -125,7 +126,8 @@ const EditTab = ({
       onSubmit={(values, { resetForm }) => {
         handleEditTab(values, resetForm);
       }}
-      validationSchema={validate}>
+      validationSchema={validate}
+      enableReinitialize>
       <Form className="fields">
         <Input name="tabName" label="Tab" placeholder="Input Tab" />
         <Select
