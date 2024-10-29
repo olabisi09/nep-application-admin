@@ -1,3 +1,5 @@
+import DispalyTabSetup from "./screens/setup/displayTab.tsx/displayTab";
+
 export const routes = {
   auth: {
     login: "/",
@@ -29,6 +31,8 @@ export const routes = {
     admissionRequirementDetail: "/admission-requirement/:id/details",
     applicationBatch: "/application-batch",
     grade: "grade-setup",
+    tab: "/tab-setup",
+    DisplayTabSetup:"/display-tabsetup",
 
     country: "/country-setup",
     state: "/state-setup",
@@ -87,10 +91,10 @@ export const breadcrumbNames = [
         path: "/admin-roles",
         title: "Admin Roles",
       },
-      // {
-      //   path: "/contact-us",
-      //   title: "Contact Us",
-      // },
+      {
+        path: "/contact-us",
+        title: "Contact Us",
+      },
     ],
   },
   {

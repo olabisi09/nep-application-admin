@@ -71,6 +71,9 @@ import SchoolID from "./screens/setup/schoolIDConfig/schoolIDConfig";
 import StudentUser from "./screens/userManagement/user/users";
 import ApplicationBatchSetup from "./screens/setup/applicationBatch/applicationBatch";
 import GradeSetUp from "./screens/setup/grade/grade";
+import TabSetUp from "./screens/setup/tab/tab";
+import DispalyTabSetup from "./screens/setup/displayTab.tsx/displayTab";
+import DisplayTabSetup from "./screens/setup/displayTab.tsx/displayTab";
 
 function App() {
   const authRoute = [
@@ -314,6 +317,12 @@ function App() {
       path: routes.userMgt.addSchoolId,
       element: <SchoolID />,
     },
+
+    {
+      path: routes.userMgt.contactUs,
+      element: <ContactUs />,
+    },
+
     {
       path: routes.userMgt.users,
       element: <StudentUser />,
@@ -325,6 +334,14 @@ function App() {
     {
       path: routes.setup.grade,
       element: <GradeSetUp />,
+    },
+    {
+      path: routes.setup.tab,
+      element: <TabSetUp />,
+    },
+    {
+      path: routes.setup.DisplayTabSetup,
+      element: <DisplayTabSetup />,
     },
   ];
 
@@ -341,6 +358,10 @@ function App() {
     {
       path: routes.userMgt.addSchoolId,
       element: <SchoolID />,
+    },
+    {
+      path: routes.userMgt.contactUs,
+      element: <ContactUs />,
     },
   ];
 

@@ -232,6 +232,16 @@ const Sidebar = () => {
           label: <NavLink to={routes.setup.grade}>Grade</NavLink>,
           icon: <Line />,
         },
+        {
+          key: "tab",
+          label: <NavLink to={routes.setup.tab}>Tab</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: "displayTab",
+          label: <NavLink to={routes.setup.DisplayTabSetup}>Display Tab</NavLink>,
+          icon: <Line />,
+        },
       ],
     },
     {
@@ -319,7 +329,7 @@ const Sidebar = () => {
           />
         </div>
       </section>
-      
+
       <button className={styles.logout} onClick={logout}>
         <Logout />
         <p className={styles.end}>Logout</p>
