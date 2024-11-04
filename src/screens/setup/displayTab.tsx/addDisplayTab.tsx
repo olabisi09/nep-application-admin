@@ -115,7 +115,7 @@ const AddDisplayTab = ({
         batchName: displayTab?.batchName ?? "",
         sessionId: displayTab?.sessionId ?? "",
         tabName: displayTab?.tabId ?? "",
-        isActive: initialStatus ?? '',
+        isActive: initialStatus,
       }}
       onSubmit={(values, { resetForm }) => {
         handleAddDisplayTab(values, resetForm);
@@ -123,58 +123,62 @@ const AddDisplayTab = ({
       validationSchema={validate}
       enableReinitialize
     >
-      <Form className="fields">
-        <Input
-          name="tabNumber"
-          type="number"
-          label="Tab Number"
-          placeholder="Input Tab Number"
-        />
+      {() => {        
+        return (
+          <Form className="fields">
+            <Input
+              name="tabNumber"
+              type="number"
+              label="Tab Number"
+              placeholder="Input Tab Number"
+            />
 
-        <Select
-          name="batchName"
-          placeholder="Select Batch Name"
-          label="Batch Name"
-          options={batchTypesOptions}
-        />
-        <Select
-          name="sessionId"
-          placeholder="Select Session"
-          label="Session"
-          options={sessionTypesOptions}
-        />
+            <Select
+              name="batchName"
+              placeholder="Select Batch Name"
+              label="Batch Name"
+              options={batchTypesOptions}
+            />
+            <Select
+              name="sessionId"
+              placeholder="Select Session"
+              label="Session"
+              options={sessionTypesOptions}
+            />
 
-        <Select
-          name="tabName"
-          placeholder="Select Tab Name"
-          label="Tab Name"
-          options={tabTypesOptions}
-        />
+            <Select
+              name="tabName"
+              placeholder="Select Tab Name"
+              label="Tab Name"
+              options={tabTypesOptions}
+            />
 
-        <Select
-          name="isActive"
-          placeholder="Select Status"
-          label="Status"
-          options={
-            <>
-              {StatusOptions.map((option: any) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </>
-          }
-        />
+            <Select
+              name="isActive"
+              placeholder="Select Status"
+              label="Status"
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              }
+            />
 
-        <div className="btn-group">
-          <Button onClick={handleClose} variant="text" text="Cancel" />
-          <Button
-            text={hasRecord ? "Update" : "Create"}
-            isLoading={addDisplayTabMutation.isPending}
-            disabled={addDisplayTabMutation.isPending}
-          />
-        </div>
-      </Form>
+            <div className="btn-group">
+              <Button onClick={handleClose} variant="text" text="Cancel" />
+              <Button
+                text={hasRecord ? "Update" : "Create"}
+                isLoading={addDisplayTabMutation.isPending}
+                disabled={addDisplayTabMutation.isPending}
+              />
+            </div>
+          </Form>
+        );
+      }}
     </Formik>
   );
 };

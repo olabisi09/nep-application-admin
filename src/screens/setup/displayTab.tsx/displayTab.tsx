@@ -15,7 +15,7 @@ import { useState } from "react";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
-import { deleteTab, getAllDisplayTab } from "../../../requests";
+import { deleteDisplayTab, getAllDisplayTab } from "../../../requests";
 import { Button, SearchInput } from "../../../custom";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { AddDisplayTab } from "./addDisplayTab";
@@ -35,18 +35,18 @@ const DisplayTabSetup = () => {
     queryFn: getAllDisplayTab,
   });
 
-  const deleteTabMutation = useMutation({
-    mutationFn: deleteTab,
+  const deleteDisplayTabMutation = useMutation({
+    mutationFn: deleteDisplayTab,
   });
 
   const handleDelete = (data: DisplayTab) => {
     setDisplayTab(data);
-    setOpenDelete(true);
+    setOpenDelete((prevState) => !prevState);
   };
 
   const deleteTabHandler = async () => {
     try {
-      await deleteTabMutation.mutateAsync(displayTab?.id, {
+      await deleteDisplayTabMutation.mutateAsync(displayTab?.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -108,16 +108,17 @@ const DisplayTabSetup = () => {
               setOpenEdit(true);
             },
           },
-          // {
-          //   key: "2",
-          //   label: (
-          //     <button
-          //       style={{ border: "0rem", background: "none" }}
-          //       onClick={() => handleDelete(record)}>
-          //       Delete
-          //     </button>
-          //   ),
-          // },
+          {
+            key: "2",
+            label: (
+              <button
+                style={{ border: "0rem", background: "none" }}
+                onClick={() => handleDelete(record)}
+              >
+                Delete
+              </button>
+            ),
+          },
         ];
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
@@ -210,23 +211,21 @@ const DisplayTabSetup = () => {
         </Modal>
       )}
 
-      {displayTab?.id && openDelete && (
-        <Modal
-          open={openDelete}
-          onCancel={() => setOpenDelete(false)}
-          centered
-          title="Delete Display Tab Setup"
-          footer={null}
-        >
-          <DeleteModalContent
-            isLoading={deleteTabMutation?.isPending}
-            handleCloseModal={() => setOpenDelete(false)}
-            handleSubmit={deleteTabHandler}
-            title={displayTab?.batchName}
-            isActive={false}
-          />
-        </Modal>
-      )}
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Display Tab Setup"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteDisplayTabMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteTabHandler}
+          title="this tab display"
+          isActive={false}
+        />
+      </Modal>
     </main>
   );
 };

@@ -1129,3 +1129,8 @@ export const createUpdateDisplayTab = async (payload: Partial<DisplayTab>) => {
     await api.post("/Utilities/Utilities/CreateUpdateTabDisplay", payload)
   )?.data as DisplayTabResponse;
 };
+
+export const deleteDisplayTab = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteTabdisplay?Id=${id}`))
+    ?.data as Response;
+};
