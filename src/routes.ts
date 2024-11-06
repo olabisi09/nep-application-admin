@@ -32,7 +32,7 @@ export const routes = {
     applicationBatch: "/application-batch",
     grade: "grade-setup",
     tab: "/tab-setup",
-    DisplayTabSetup:"/display-tabsetup",
+    DisplayTabSetup:"/tab-display",
 
     country: "/country-setup",
     state: "/state-setup",

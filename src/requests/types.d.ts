@@ -912,5 +912,7 @@ interface DisplayTab {
   batchName: string;
   sessionId: number;
   sessionName: string;
+  programTypeId: number;
+  programTypeName: string;
   isActive: boolean;
 }

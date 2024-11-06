@@ -90,6 +90,11 @@ const DisplayTabSetup = () => {
       dataIndex: "sessionName",
     },
     {
+      key: "programTypeName",
+      title: "Program Type ",
+      dataIndex: "programTypeName",
+    },
+    {
       key: "status",
       title: "Status",
       dataIndex: "activeStatus",

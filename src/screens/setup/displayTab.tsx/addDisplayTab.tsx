@@ -11,6 +11,7 @@ import {
 } from "../../../requests";
 import { Button, Input, Select } from "../../../custom";
 import { validator } from "../../../utils/validator";
+import { getProgramTypes } from "../programType/request";
 
 const AddDisplayTab = ({
   displayTab,
@@ -27,20 +28,24 @@ const AddDisplayTab = ({
       { queryKey: ["get-application-batch"], queryFn: getAllApplicationBatch },
       { queryKey: ["get-all-session"], queryFn: getAllAcademicSession },
       { queryKey: ["get-all-tab"], queryFn: getAllTab },
+      { queryKey: ["get-program-types"], queryFn: getProgramTypes },
     ],
   });
 
   const batchTypeQuery = queries[0];
   const sessionTypeQuery = queries[1];
   const tabTypeQuery = queries[2];
+  const programTypeQuery = queries[3];
 
   const { data: batchType } = batchTypeQuery;
   const { data: sessionType } = sessionTypeQuery;
   const { data: tabType } = tabTypeQuery;
+  const { data: programType } = programTypeQuery;
 
   const batchTypeData = batchType?.data ?? [];
   const sessionTypeData = sessionType?.data ?? [];
   const tabTypeData = tabType?.data ?? [];
+  const programTypeData = programType?.data ?? [];
 
   const addDisplayTabMutation = useMutation({
     mutationFn: createUpdateDisplayTab,
@@ -64,6 +69,7 @@ const AddDisplayTab = ({
       tabNumber: values?.tabNumber,
       batchName: values?.batchName,
       sessionId: values?.sessionId,
+      programTypeId: values?.programType,
       isActive: values.isActive === "true",
     };
 
@@ -105,6 +111,14 @@ const AddDisplayTab = ({
     </option>
   ));
 
+  const programTypesOptions = programTypeData
+    ?.filter((item) => item.activeStatus === true)
+    ?.map((item) => (
+      <option key={item?.id} value={item?.id}>
+        {item?.name}
+      </option>
+    ));
+
   const initialStatus = displayTab?.isActive;
   const hasRecord = Object.keys(displayTab)?.length > 0;
 
@@ -115,6 +129,7 @@ const AddDisplayTab = ({
         batchName: displayTab?.batchName ?? "",
         sessionId: displayTab?.sessionId ?? "",
         tabName: displayTab?.tabId ?? "",
+        programType: displayTab?.programTypeId ?? "",
         isActive: initialStatus,
       }}
       onSubmit={(values, { resetForm }) => {
@@ -123,7 +138,7 @@ const AddDisplayTab = ({
       validationSchema={validate}
       enableReinitialize
     >
-      {() => {        
+      {() => {
         return (
           <Form className="fields">
             <Input
@@ -151,6 +166,13 @@ const AddDisplayTab = ({
               placeholder="Select Tab Name"
               label="Tab Name"
               options={tabTypesOptions}
+            />
+
+            <Select
+              name="programType"
+              placeholder="Select a program type"
+              label="Program Type"
+              options={programTypesOptions}
             />
 
             <Select
