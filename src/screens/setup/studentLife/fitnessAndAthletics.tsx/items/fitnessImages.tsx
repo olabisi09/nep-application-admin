@@ -119,6 +119,11 @@ const FitnessAthleticsImages = () => {
 
   const fitnessImageData = data?.data as FitnessImage[];
 
+  const handleOpenModal = () => {
+    setFitness({} as FitnessImage);
+    setOpen((prevState) => !prevState);
+  };
+
   if (isLoading) {
     return <Spin />;
   }
@@ -132,7 +137,7 @@ const FitnessAthleticsImages = () => {
       <section className="space-between">
         <h3>Student Life: Fitness Images Setup</h3>
         <Button
-          onClick={() => setOpen(true)}
+          onClick={handleOpenModal}
           iconBefore={<Plus />}
           text="Setup"
         />

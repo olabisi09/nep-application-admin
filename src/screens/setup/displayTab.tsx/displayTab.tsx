@@ -10,16 +10,15 @@ import {
   App,
   Spin,
 } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../styles.module.scss";
 import { useState } from "react";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
-import { deleteTab, getAllDisplayTab} from "../../../requests";
+import { deleteDisplayTab, getAllDisplayTab } from "../../../requests";
 import { Button, SearchInput } from "../../../custom";
 import DeleteModalContent from "../../deleteModal/deleteModal";
-import { AddDisplayTab, EditDisplayTab } from "./addDisplayTab";
+import { AddDisplayTab } from "./addDisplayTab";
 
 const DisplayTabSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -36,18 +35,18 @@ const DisplayTabSetup = () => {
     queryFn: getAllDisplayTab,
   });
 
-  const deleteTabMutation = useMutation({
-    mutationFn: deleteTab,
+  const deleteDisplayTabMutation = useMutation({
+    mutationFn: deleteDisplayTab,
   });
 
   const handleDelete = (data: DisplayTab) => {
     setDisplayTab(data);
-    setOpenDelete(true);
+    setOpenDelete((prevState) => !prevState);
   };
 
-  const DeleteTabHandler = async () => {
+  const deleteTabHandler = async () => {
     try {
-      await deleteTabMutation.mutateAsync(displayTab?.id, {
+      await deleteDisplayTabMutation.mutateAsync(displayTab?.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -64,6 +63,7 @@ const DisplayTabSetup = () => {
       });
     }
   };
+
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
@@ -75,6 +75,11 @@ const DisplayTabSetup = () => {
       dataIndex: "tabNumber",
     },
     {
+      key: "tabName",
+      title: "Tab Name",
+      dataIndex: "tabName",
+    },
+    {
       key: "batchName",
       title: "Batch Name",
       dataIndex: "batchName",
@@ -82,9 +87,13 @@ const DisplayTabSetup = () => {
     {
       key: "session",
       title: "Session ",
-      dataIndex: "session",
+      dataIndex: "sessionName",
     },
-
+    {
+      key: "programTypeName",
+      title: "Program Type ",
+      dataIndex: "programTypeName",
+    },
     {
       key: "status",
       title: "Status",
@@ -104,16 +113,17 @@ const DisplayTabSetup = () => {
               setOpenEdit(true);
             },
           },
-          // {
-          //   key: "2",
-          //   label: (
-          //     <button
-          //       style={{ border: "0rem", background: "none" }}
-          //       onClick={() => handleDelete(record)}>
-          //       Delete
-          //     </button>
-          //   ),
-          // },
+          {
+            key: "2",
+            label: (
+              <button
+                style={{ border: "0rem", background: "none" }}
+                onClick={() => handleDelete(record)}
+              >
+                Delete
+              </button>
+            ),
+          },
         ];
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
@@ -124,24 +134,28 @@ const DisplayTabSetup = () => {
     },
   ];
 
- const displayTabData = data?.data;
+  const displayTabData = data?.data;
+
+  const handleOpenModal = () => {
+    setDisplayTab({} as DisplayTab);
+    setShowAddModal((prevState) => !prevState);
+  };
 
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
   return (
     <main>
       <section className="space-between">
         <h3>Display Tab Setup</h3>
-        <Button
-          onClick={() => setShowAddModal(true)}
-          iconBefore={<Add />}
-          text="Setup"
-        />
+        <Button onClick={handleOpenModal} iconBefore={<Add />} text="Setup" />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -179,8 +193,12 @@ const DisplayTabSetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Display Tab Setup"
-        footer={null}>
-        <AddDisplayTab handleClose={() => setShowAddModal(false)} />
+        footer={null}
+      >
+        <AddDisplayTab
+          displayTab={displayTab}
+          handleClose={() => setShowAddModal(false)}
+        />
       </Modal>
 
       {displayTab?.id && openEdit && (
@@ -189,30 +207,30 @@ const DisplayTabSetup = () => {
           onCancel={() => setOpenEdit(false)}
           centered
           title="Edit Display Setup"
-          footer={null}>
-          <EditDisplayTab
-          displayTab={displayTab}
+          footer={null}
+        >
+          <AddDisplayTab
+            displayTab={displayTab}
             handleClose={() => setOpenEdit(false)}
           />
         </Modal>
       )}
 
-      {/* {displayTab?.id && openDelete && (
-        <Modal
-          open={openDelete}
-          onCancel={() => setOpenDelete(false)}
-          centered
-          title="Delete Display Tab Setup"
-          footer={null}>
-          <DeleteModalContent
-            isLoading={deleteTabMutation?.isPending}
-            handleCloseModal={() => setOpenDelete(false)}
-            handleSubmit={DeleteTabHandler}
-            title={displayTab?.batchName}
-            isActive={false}
-          />
-        </Modal>
-      )} */}
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete Display Tab Setup"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteDisplayTabMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteTabHandler}
+          title="this tab display"
+          isActive={false}
+        />
+      </Modal>
     </main>
   );
 };

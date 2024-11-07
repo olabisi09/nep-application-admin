@@ -21,6 +21,8 @@ export const validator = {
   careerProspectItemName: string().required(
     "Career prospect item name is required"
   ),
+  tabNumber: Yup.number().required('Tab number is required'),
+  tabName: string().required('Tab name is required'),
   email: string()
     .email("Invalid email Address")
     .required("Email Address  is required"),

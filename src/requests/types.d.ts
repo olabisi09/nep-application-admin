@@ -905,9 +905,14 @@ interface DisplayTabResponse extends Response {
 
 interface DisplayTab {
   id: number;
-  batchName: string;
-  sessionId: number;
+  batchId: number;
   tabId: number;
   tabNumber: number;
+  tabName: string;
+  batchName: string;
+  sessionId: number;
+  sessionName: string;
+  programTypeId: number;
+  programTypeName: string;
   isActive: boolean;
 }
