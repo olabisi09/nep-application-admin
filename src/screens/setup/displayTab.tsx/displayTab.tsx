@@ -197,7 +197,7 @@ const DisplayTabSetup = () => {
         </Modal>
       )}
 
-      {displayTab?.id && openDelete && (
+      {/* {displayTab?.id && openDelete && (
         <Modal
           open={openDelete}
           onCancel={() => setOpenDelete(false)}
@@ -212,7 +212,7 @@ const DisplayTabSetup = () => {
             isActive={false}
           />
         </Modal>
-      )}
+      )} */}
     </main>
   );
 };

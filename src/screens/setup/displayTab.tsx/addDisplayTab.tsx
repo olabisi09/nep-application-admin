@@ -4,7 +4,6 @@ import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
 import {
   createUpdateDisplayTab,
-  createUpdateTab,
   getAllAcademicSession,
   getAllApplicationBatch,
   getAllTab,
@@ -40,7 +39,10 @@ const AddDisplayTab = ({ handleClose }: { handleClose: () => void }) => {
   });
 
   const validate = Yup.object().shape({
-    tabName: Yup.string().required("Tab Name is required"),
+    tabNumber: Yup.string().required("Tab Number is required"),
+    batchName: Yup.string().required("Batch Name is required"),
+    sessionId: Yup.string().required("Session is required"),
+    tabName: Yup.string().required("Tap Name is required"),
     isActive: Yup.string().required("Status is required"),
   });
   const handleAddDisplayTab = async (
@@ -48,7 +50,7 @@ const AddDisplayTab = ({ handleClose }: { handleClose: () => void }) => {
     resetForm: () => void
   ) => {
     const payload: Partial<DisplayTab> = {
-      id: displayTab?.id,
+      id: values?.id,
       tabNumber: values?.tabNumber,
       batchName: values?.batchName,
       sessionId: values?.sessionId,
@@ -170,11 +172,38 @@ const EditDisplayTab = ({
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
+  const queries = useQueries({
+    queries: [
+      {
+        queryKey: ["get-application-batch"],
+        queryFn: getAllApplicationBatch,
+      },
+      { queryKey: ["get-all-session"], queryFn: getAllAcademicSession },
+      { queryKey: ["get-all-tab"], queryFn: getAllTab },
+    ],
+  });
+
+  const batchTypeQuery = queries[0];
+  const sessionTypeQuery = queries[1];
+  const tabTypeQuery = queries[2];
+
+  const { data: batchType } = batchTypeQuery;
+  const { data: sessionType } = sessionTypeQuery;
+  const { data: tabType } = tabTypeQuery;
+
+  const batchTypeData = batchType?.data ?? [];
+  const sessionTypeData = sessionType?.data ?? [];
+  const tabTypeData = tabType?.data ?? [];
+
   const validate = Yup.object().shape({
-    tabNUmber: Yup.string().required("Tab Number is required"),
+    tabNumber: Yup.string().required("Tab Number is required"),
+    batchName: Yup.string().required("Batch Name is required"),
+    sessionId: Yup.string().required("Session is required"),
     isActive: Yup.string().required("Status is required"),
   });
-  const editDisplayTabMutation = useMutation({ mutationFn: createUpdateDisplayTab });
+  const editDisplayTabMutation = useMutation({
+    mutationFn: createUpdateDisplayTab,
+  });
   const handleEditDisplayTab = async (
     values: FormikValues,
     resetForm: () => void
@@ -182,6 +211,7 @@ const EditDisplayTab = ({
     const payload: Partial<DisplayTab> = {
       id: displayTab?.id,
       tabNumber: values.tabNumber,
+      sessionId: values.sessionId,
       isActive: values?.isActive === "true",
     };
 
@@ -192,7 +222,7 @@ const EditDisplayTab = ({
             message: "Success",
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-tab"] });
+          queryClient.refetchQueries({ queryKey: ["get-displayTab"] });
           handleClose();
           resetForm();
         },
@@ -204,6 +234,24 @@ const EditDisplayTab = ({
       });
     }
   };
+
+  const batchTypesOptions = batchTypeData?.map((item) => (
+    <option key={item?.id} value={item?.batchName}>
+      {item?.batchName}
+    </option>
+  ));
+
+  const sessionTypesOptions = sessionTypeData?.map((item) => (
+    <option key={item?.id} value={item?.name}>
+      {item?.name}
+    </option>
+  ));
+
+  const tabTypesOptions = tabTypeData?.map((item) => (
+    <option key={item?.id} value={item?.tabName}>
+      {item?.tabName}
+    </option>
+  ));
   return (
     <Formik
       initialValues={{
@@ -247,6 +295,21 @@ const EditDisplayTab = ({
           placeholder="Select Tab Name"
           label="Tab Name"
           options={tabTypesOptions}
+        />
+
+        <Select
+          name="isActive"
+          placeholder="Select Status"
+          label="Status"
+          options={
+            <>
+              {StatusOptions.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </>
+          }
         />
 
         <div className="btn-group">
