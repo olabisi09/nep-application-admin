@@ -72,76 +72,80 @@ const AddTuitionYears = ({
       onSubmit={(values, { resetForm }) =>
         handleAddTuitionYear(values, resetForm)
       }
-      validationSchema={validationSchema}
-    >
-      <Form className="fields">
-        <Select
-          name="tuition"
-          placeholder="Select Tuition"
-          label="Tuition"
-          options={
-            <>
-              {tuitionFeeItem?.map((option: Tuition) => (
-                <option key={option?.id} value={option?.id}>
-                  {option?.programName}
-                </option>
-              ))}
-            </>
-          }
-        />
-
-        <Select
-          name="level"
-          placeholder="Select Level"
-          label="Level"
-          options={
-            <>
-              {levelItem?.map((option: Level) => (
-                <option key={option?.id} value={option.id}>
-                  {option.levelName}
-                </option>
-              ))}
-            </>
-          }
-        />
-
-        <Input
-          name="description"
-          placeholder="Input Description "
-          label="Description"
-        />
-
-        <Select
-          name="status"
-          placeholder="Select Status"
-          label="Status"
-          options={
-            <>
-              {StatusOptions.map((option: any) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </>
-          }
-        />
-
-        <div className="btn-group">
-          <Button
-            type="button"
-            onClick={handleClose}
-            variant="text"
-            text="Cancel"
+      validationSchema={validationSchema}>
+      {({ setFieldValue }) => (
+        <Form className="fields">
+          <Select
+            name="tuition"
+            placeholder="Select Tuition"
+            label="Tuition"
+            options={
+              <>
+                {tuitionFeeItem?.map((option: Tuition) => (
+                  <option key={option?.id} value={option?.id}>
+                    {option?.programName}
+                  </option>
+                ))}
+              </>
+            }
           />
 
-          <Button
-            type="submit"
-            text="Create"
-            isLoading={addTuitionYearMutation.isPending}
-            disabled={addTuitionYearMutation.isPending}
+          <Select
+            name="level"
+            placeholder="Select Level"
+            label="Level"
+            options={
+              <>
+                {levelItem?.map((option: Level) => (
+                  <option key={option?.id} value={option.id}>
+                    {option.levelName}
+                  </option>
+                ))}
+              </>
+            }
           />
-        </div>
-      </Form>
+
+          <Editor
+            name="description"
+            label="Description"
+            onChange={(_, editor) => {
+              const data = editor.getData();
+              setFieldValue("description", data);
+            }}
+          />
+
+          <Select
+            name="status"
+            placeholder="Select Status"
+            label="Status"
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
+          />
+
+          <div className="btn-group">
+            <Button
+              type="button"
+              onClick={handleClose}
+              variant="text"
+              text="Cancel"
+            />
+
+            <Button
+              type="submit"
+              text="Create"
+              isLoading={addTuitionYearMutation.isPending}
+              disabled={addTuitionYearMutation.isPending}
+            />
+          </div>
+        </Form>
+      )}
     </Formik>
   );
 };
@@ -213,8 +217,7 @@ export const EditTuitionYears = ({
       onSubmit={(values, { resetForm }) =>
         handleEditTuitionYear(values, resetForm)
       }
-      enableReinitialize
-    >
+      enableReinitialize>
       {({ setFieldValue }) => (
         <Form className="fields">
           <Select
@@ -225,7 +228,7 @@ export const EditTuitionYears = ({
               <>
                 {tuitionFeeItem?.map((option: Tuition) => (
                   <option key={option?.id} value={option?.id}>
-                    {option?.description}
+                    {option?.programName}
                   </option>
                 ))}
               </>
