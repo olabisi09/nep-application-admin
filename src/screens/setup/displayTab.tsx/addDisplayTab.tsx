@@ -136,8 +136,7 @@ const AddDisplayTab = ({
         handleAddDisplayTab(values, resetForm);
       }}
       validationSchema={validate}
-      enableReinitialize
-    >
+      enableReinitialize>
       {() => {
         return (
           <Form className="fields">
