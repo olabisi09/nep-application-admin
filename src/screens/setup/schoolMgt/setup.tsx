@@ -112,6 +112,7 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
             </>
           }
         />
+
         <div className="btn-group">
           <Button
             onClick={handleClose}
@@ -119,6 +120,7 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
             variant="text"
             text="Cancel"
           />
+          
           <Button
             text="Create"
             disabled={addSchoolMgtMutation.isPending}
@@ -160,7 +162,7 @@ const EditSchoolMgt = ({
       Id: item.id,
       Title: values.title,
       Description: values.description,
-      ActiveStatus: values.status === "true",
+      ActiveStatus: !!values.status,
       IsDeleted: false,
     };
 
