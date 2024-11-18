@@ -130,7 +130,7 @@ const AddDisplayTab = ({
         sessionId: displayTab?.sessionId ?? "",
         tabName: displayTab?.tabId ?? "",
         programType: displayTab?.programTypeId ?? "",
-        isActive: initialStatus,
+        isActive: initialStatus ? initialStatus : "",
       }}
       onSubmit={(values, { resetForm }) => {
         handleAddDisplayTab(values, resetForm);
