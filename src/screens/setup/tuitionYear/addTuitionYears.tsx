@@ -72,7 +72,8 @@ const AddTuitionYears = ({
       onSubmit={(values, { resetForm }) =>
         handleAddTuitionYear(values, resetForm)
       }
-      validationSchema={validationSchema}>
+      validationSchema={validationSchema}
+    >
       {({ setFieldValue }) => (
         <Form className="fields">
           <Select
@@ -181,7 +182,7 @@ export const EditTuitionYears = ({
       tuitionId: values?.tuition,
       levelId: values?.level,
       feeDescription: values?.description,
-      isActive: values?.status === "true",
+      isActive: !!values?.status,
     };
 
     try {
@@ -217,81 +218,86 @@ export const EditTuitionYears = ({
       onSubmit={(values, { resetForm }) =>
         handleEditTuitionYear(values, resetForm)
       }
-      enableReinitialize>
-      {({ setFieldValue }) => (
-        <Form className="fields">
-          <Select
-            name="tuition"
-            placeholder="Select Tuition"
-            label="tuition"
-            options={
-              <>
-                {tuitionFeeItem?.map((option: Tuition) => (
-                  <option key={option?.id} value={option?.id}>
-                    {option?.programName}
-                  </option>
-                ))}
-              </>
-            }
-          />
-
-          <Select
-            name="level"
-            placeholder="Select Level"
-            label="level"
-            options={
-              <>
-                {levelItem?.map((option: Level) => (
-                  <option key={option.id} value={option.id}>
-                    {option?.levelName}
-                  </option>
-                ))}
-              </>
-            }
-          />
-
-          <Editor
-            name="description"
-            label="Description"
-            onChange={(_, editor) => {
-              const data = editor.getData();
-              setFieldValue("description", data);
-            }}
-            initialData={item?.feeDescription ?? ""}
-          />
-
-          <Select
-            name="status"
-            placeholder="Select Status"
-            label="Status"
-            options={
-              <>
-                {StatusOptions.map((option: any) => (
-                  <option key={option?.value} value={option?.value}>
-                    {option?.label}
-                  </option>
-                ))}
-              </>
-            }
-          />
-
-          <div className="btn-group">
-            <Button
-              type="button"
-              onClick={handleClose}
-              variant="text"
-              text="Cancel"
+      enableReinitialize
+    >
+      {({ setFieldValue, values }) => {
+        console.log(values);
+        
+        return (
+          <Form className="fields">
+            <Select
+              name="tuition"
+              placeholder="Select Tuition"
+              label="Tuition Program Name"
+              options={
+                <>
+                  {tuitionFeeItem?.map((option: Tuition) => (
+                    <option key={option?.id} value={option?.id}>
+                      {option?.programName}
+                    </option>
+                  ))}
+                </>
+              }
             />
 
-            <Button
-              type="submit"
-              text="Update"
-              isLoading={editTuitionYearMutation?.isPending}
-              disabled={editTuitionYearMutation?.isPending}
+            <Select
+              name="level"
+              placeholder="Select Level"
+              label="Level"
+              options={
+                <>
+                  {levelItem?.map((option: Level) => (
+                    <option key={option.id} value={option.id}>
+                      {option?.levelName}
+                    </option>
+                  ))}
+                </>
+              }
             />
-          </div>
-        </Form>
-      )}
+
+            <Editor
+              name="description"
+              label="Description"
+              onChange={(_, editor) => {
+                const data = editor.getData();
+                setFieldValue("description", data);
+              }}
+              initialData={item?.feeDescription ?? ""}
+            />
+
+            <Select
+              name="status"
+              placeholder="Select Status"
+              label="Status"
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option?.value} value={option?.value}>
+                      {option?.label}
+                    </option>
+                  ))}
+                </>
+              }
+            />
+
+            <div className="btn-group">
+              <Button
+                type="button"
+                onClick={handleClose}
+                variant="text"
+                text="Cancel"
+              />
+
+              <Button
+                type="submit"
+                text="Update"
+                isLoading={editTuitionYearMutation?.isPending}
+                disabled={editTuitionYearMutation?.isPending}
+              />
+            </div>
+          </Form>
+        );
+      }}
     </Formik>
   );
 };
