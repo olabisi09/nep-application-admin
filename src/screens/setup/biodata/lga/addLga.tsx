@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import Input from "../../../../custom/input/input";
 import { Form, Formik, FormikValues } from "formik";
 import Button from "../../../../custom/button/button";
@@ -21,12 +20,12 @@ const AddLga = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const CreateLgaMutation = useMutation({
+  const createLgaMutation = useMutation({
     mutationFn: createOrUpdateLGA,
     mutationKey: ["create-Lga"],
   });
 
-  const CreateLgaHandler = async (
+  const createLgaHandler = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
@@ -38,7 +37,7 @@ const AddLga = ({ handleClose, data }: Props) => {
     };
 
     try {
-      await CreateLgaMutation.mutateAsync(payload, {
+      await createLgaMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -59,16 +58,15 @@ const AddLga = ({ handleClose, data }: Props) => {
     }
   };
 
-  // Fetch states independently, without country selection dependency
-  const { data: stateData, refetch: refetchStates } = useQuery({
+  const { data: stateData } = useQuery({
     queryKey: ["get-states"],
-    queryFn: getState,
+    queryFn: () => getState({}),
     refetchOnWindowFocus: false,
     retry: 0,
-    enabled: true, // Fetch all states on load
+    enabled: true,
   });
 
-  const StateOptions: any =
+  const stateOptions: any =
     stateData?.data &&
     stateData?.data.length > 0 &&
     stateData?.data.map((item: any, index: number) => (
@@ -92,10 +90,11 @@ const AddLga = ({ handleClose, data }: Props) => {
           data?.activeStatus !== undefined ? String(data?.activeStatus) : "",
       }}
       onSubmit={(values, { resetForm }) => {
-        CreateLgaHandler(values, resetForm);
+        createLgaHandler(values, resetForm);
       }}
       enableReinitialize={true}
-      validationSchema={validationSchema}>
+      validationSchema={validationSchema}
+    >
       {({ handleSubmit, setFieldValue }) => {
         return (
           <Form className="fields">
@@ -103,14 +102,16 @@ const AddLga = ({ handleClose, data }: Props) => {
               name="stateName"
               placeholder="Input State/Province/District Name"
               label="State/Province/District Name"
-              options={StateOptions}
+              options={stateOptions}
               onChange={(e) => setFieldValue("stateName", e.target.value)}
             />
+
             <Input
               name="lgaName"
               placeholder="Input LGA Name"
               label="LGA Name"
             />
+
             <Select
               name="status"
               placeholder="Select Status"
@@ -126,17 +127,18 @@ const AddLga = ({ handleClose, data }: Props) => {
               }
               onChange={(e) => setFieldValue("status", e.target.value)}
             />
+            
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button
                 onClick={handleSubmit as any}
-                disabled={CreateLgaMutation?.isPending}
+                disabled={createLgaMutation?.isPending}
                 text={
                   data
-                    ? CreateLgaMutation?.isPending
+                    ? createLgaMutation?.isPending
                       ? "Updating"
                       : "Update"
-                    : CreateLgaMutation?.isPending
+                    : createLgaMutation?.isPending
                     ? "Creating"
                     : "Create"
                 }

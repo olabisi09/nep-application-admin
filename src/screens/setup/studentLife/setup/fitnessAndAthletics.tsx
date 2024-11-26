@@ -50,37 +50,6 @@ const FitnessAndAthletics = ({
     }
   };
 
-  const handleEditFitnessAthletics = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
-    const payload: Partial<Setup> = {
-      id: item.id,
-      title: values.title,
-      description: values.description,
-      activeStatus: values.status === "Active",
-    };
-
-    try {
-      await addFitnessAthleticsMutation.mutateAsync(payload, {
-        onSuccess: (data) => {
-          notification.success({
-            message: "Success",
-            description: data?.message,
-          });
-          queryClient.refetchQueries({ queryKey: ["get-student-life"] });
-          handleClose();
-          resetForm();
-        },
-      });
-    } catch (error: any) {
-      notification.error({
-        message: "Error",
-        description: error?.response?.data?.message,
-      });
-    }
-  };
-
   const statusOptions = (
     <>
       <option>-- select an option --</option>
@@ -105,7 +74,8 @@ const FitnessAndAthletics = ({
       onSubmit={(values, { resetForm }) =>
         handleAddFitnessAthletics(values, resetForm)
       }
-      validationSchema={validationSchema}>
+      validationSchema={validationSchema}
+    >
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />
         <Input

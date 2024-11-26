@@ -20,12 +20,12 @@ const AddState = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const CreateStateMutation = useMutation({
+  const createStateMutation = useMutation({
     mutationFn: createOrUpdateState,
     mutationKey: ["create-state"],
   });
 
-  const CreateStateHandler = async (
+  const createStateHandler = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
@@ -37,7 +37,7 @@ const AddState = ({ handleClose, data }: Props) => {
     };
 
     try {
-      await CreateStateMutation.mutateAsync(payload, {
+      await createStateMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -58,22 +58,17 @@ const AddState = ({ handleClose, data }: Props) => {
     }
   };
 
-  const {
-    data: countryData,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
+  const { data: country } = useQuery({
     queryKey: ["get-country"],
-    queryFn: getCountry,
+    queryFn: () => getCountry({}),
   });
 
-  const CountryData = countryData?.data as Country[];
+  const countryData = country?.data as Country[];
 
-  const CountryOptions: any =
-    CountryData &&
-    CountryData?.length > 0 &&
-    CountryData?.map((item: any, index: number) => (
+  const countryOptions: any =
+    countryData &&
+    countryData?.length > 0 &&
+    countryData?.map((item: any, index: number) => (
       <option value={item?.id} key={index}>
         {item?.countryName}
       </option>
@@ -96,10 +91,11 @@ const AddState = ({ handleClose, data }: Props) => {
             : "true",
       }}
       onSubmit={(values, { resetForm }) => {
-        CreateStateHandler(values, resetForm);
+        createStateHandler(values, resetForm);
       }}
       enableReinitialize={true}
-      validationSchema={validationSchema}>
+      validationSchema={validationSchema}
+    >
       {({ handleSubmit }) => {
         return (
           <Form className="fields">
@@ -107,13 +103,15 @@ const AddState = ({ handleClose, data }: Props) => {
               name="countryId"
               placeholder="Input Country Name"
               label="Country Name"
-              options={CountryOptions}
+              options={countryOptions}
             />
+
             <Input
               name="stateName"
               placeholder="Input State/Province/District Name"
               label="State/Province/District Name"
             />
+
             <Select
               name="status"
               placeholder="Select Status"
@@ -128,17 +126,18 @@ const AddState = ({ handleClose, data }: Props) => {
                 </>
               }
             />
+
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button
                 onClick={handleSubmit as any}
-                disabled={CreateStateMutation?.isPending}
+                disabled={createStateMutation?.isPending}
                 text={
                   data
-                    ? CreateStateMutation?.isPending
+                    ? createStateMutation?.isPending
                       ? "Updating"
                       : "Update"
-                    : CreateStateMutation?.isPending
+                    : createStateMutation?.isPending
                     ? "Creating"
                     : "Create"
                 }

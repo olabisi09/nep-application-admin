@@ -1,6 +1,5 @@
 import { App, Card, Image, Modal, Spin } from "antd";
 import { ReactComponent as Plus } from "../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import { EditTemplate, SetupSchoolInfoTemplate } from "./setup";

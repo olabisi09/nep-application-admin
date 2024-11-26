@@ -16,10 +16,10 @@ import { CreateEvent, EditEvent } from "./setup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteEvents, getEvents } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
-import DOMPurify from "dompurify";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { formatDate } from "../../../utils/formatDate";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import { usePagination } from "../../../hooks/usePagination";
 
 const NewsAndEvents = () => {
   const [open, setOpen] = useState(false);
@@ -27,11 +27,13 @@ const NewsAndEvents = () => {
   const [event, setEvent] = useState<Setup>({} as Setup);
   const [openDelete, setOpenDelete] = useState(false);
 
+  const { currentPage, onChange } = usePagination();
+
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-events"],
-    queryFn: getEvents,
+    queryFn: () => getEvents({ pageNumber: currentPage, pageSize: 10 }),
   });
 
   const deleteNewsAndEventMutation = useMutation({
@@ -59,11 +61,6 @@ const NewsAndEvents = () => {
   };
 
   const columns: ColumnsType<Setup> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "title",
       title: "Title",
@@ -134,6 +131,7 @@ const NewsAndEvents = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -153,7 +151,13 @@ const NewsAndEvents = () => {
         <Table
           dataSource={events}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
           rowKey={(record) => record.id}
           scroll={{ x: true }}
         />

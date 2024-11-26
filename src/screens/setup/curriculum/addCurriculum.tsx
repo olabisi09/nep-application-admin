@@ -11,7 +11,7 @@ import {
 } from "../../../requests";
 import { Button } from "../../../custom";
 import Editor from "../../../custom/editor/editor";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 interface Props {
   details?: CurriculumPayload;
@@ -21,7 +21,6 @@ interface Props {
 const AddCurriculum = ({ handleClose, details }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const [Id, setId] = useState<number | null>(null);
 
   const validate = Yup.object().shape({
     readmoreId: Yup.string().required("Program name is required"),
@@ -47,7 +46,7 @@ const AddCurriculum = ({ handleClose, details }: Props) => {
 
   useEffect(() => {
     formik.setFieldValue('description', details?.description);
-  }, [details?.description])
+  }, [details?.description, formik])
 
   const addCurriculumMutation = useMutation({
     mutationFn: createOrUpdateCurriculum,
@@ -56,7 +55,7 @@ const AddCurriculum = ({ handleClose, details }: Props) => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-all-programs"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(),
   });
 
   const {
@@ -106,14 +105,14 @@ const AddCurriculum = ({ handleClose, details }: Props) => {
   const handleProgramChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedProgramName = event.target.value;
     setFieldValue("programName", selectedProgramName);
-    const selectedProgram = data?.data.find(
-      (program: Program) => program.name === selectedProgramName
-    );
-    if (selectedProgram) {
-      setId(selectedProgram.id);
-    } else {
-      setId(null);
-    }
+    // const selectedProgram = data?.data.find(
+    //   (program: Program) => program.name === selectedProgramName
+    // );
+    // if (selectedProgram) {
+    //   setId(selectedProgram.id);
+    // } else {
+    //   setId(null);
+    // }
   };
 
   return (

@@ -26,7 +26,7 @@ const AddDisplayTab = ({
   const queries = useQueries({
     queries: [
       { queryKey: ["get-application-batch"], queryFn: getAllApplicationBatch },
-      { queryKey: ["get-all-session"], queryFn: getAllAcademicSession },
+      { queryKey: ["get-all-session"], queryFn: () => getAllAcademicSession() },
       { queryKey: ["get-all-tab"], queryFn: getAllTab },
       { queryKey: ["get-program-types"], queryFn: getProgramTypes },
     ],

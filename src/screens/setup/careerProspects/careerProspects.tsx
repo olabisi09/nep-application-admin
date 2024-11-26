@@ -22,6 +22,7 @@ import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import { usePagination } from "../../../hooks/usePagination";
 
 const CareerProspects = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -31,7 +32,9 @@ const CareerProspects = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [careerProspectItems, setCareerProspectItems] =
     useState<CareerProspect>({} as CareerProspect);
-  const [openDelete, setOpenDelete] = useState(false); // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
+  const [openDelete, setOpenDelete] = useState(false);
+
+  const { currentPage, onChange } = usePagination();
 
   const { notification } = App.useApp();
 
@@ -47,7 +50,7 @@ const CareerProspects = () => {
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-career-prospect"],
-    queryFn: getCareerProspects,
+    queryFn: () => getCareerProspects(currentPage, 10),
   });
 
   const careerProspectData = data?.data as CareerProspect[];
@@ -73,11 +76,6 @@ const CareerProspects = () => {
   };
 
   const columns: ColumnsType<CareerProspect> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "programName",
       title: "Program Name",
@@ -125,6 +123,7 @@ const CareerProspects = () => {
             },
           },
         ];
+        
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />
@@ -153,11 +152,7 @@ const CareerProspects = () => {
     <main>
       <section className="space-between">
         <h3>Career Prospects Setup</h3>
-        <Button
-          onClick={handleOpenModal}
-          iconBefore={<Add />}
-          text="Setup"
-        />
+        <Button onClick={handleOpenModal} iconBefore={<Add />} text="Setup" />
       </section>
 
       <section className={styles.card}>
@@ -188,8 +183,13 @@ const CareerProspects = () => {
         <Table
           dataSource={careerProspectData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 

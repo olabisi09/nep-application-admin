@@ -1,8 +1,14 @@
 import api from "../../../utils/api";
 
-export const getAllCourseOverview = async () => {
-  return (await api.get("/ReadMore/GetAllCourseOverviews"))
-    ?.data as ReadMoreOverviewResponse;
+export const getAllCourseOverview = async (
+  pageNumber?: number,
+  pageSize?: number
+) => {
+  return (
+    await api.get(
+      `/ReadMore/GetAllCourseOverviews/?PageNumber=${pageNumber}&PageSize=${pageSize}`
+    )
+  )?.data as ReadMoreOverviewResponse;
 };
 
 export const createOrUpdateCourseOverview = async (

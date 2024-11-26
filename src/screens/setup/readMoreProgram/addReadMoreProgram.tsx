@@ -26,7 +26,7 @@ const AddReadMoreProgramme = ({ handleClose }: { handleClose: () => void }) => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-all-programs"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(),
   });
 
   const programsData = data?.data ?? [];
@@ -163,7 +163,7 @@ const EditReadMoreProgramme = ({
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-all-programs"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(),
   });
 
   const programsData = data?.data ?? [];

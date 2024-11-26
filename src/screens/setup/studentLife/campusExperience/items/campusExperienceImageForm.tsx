@@ -7,7 +7,6 @@ import { createOrUpdateCampusExperienceImage } from "../../../../../requests";
 import { object } from "yup";
 import { useParams } from "react-router-dom";
 import { validator } from "../../../../../utils/validator";
-import { useEffect, useState } from "react";
 
 interface SetupInit {
   name: string;
@@ -21,15 +20,9 @@ const CampusExperienceImageForm = ({
   handleClose: () => void;
   item: Partial<CampusExperienceImage>;
 }) => {
-  const [imageUrl, setImageUrl] = useState("");
-
   const { id } = useParams();
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    setImageUrl(item?.imageUrl ?? "");
-  }, [item?.imageUrl]);
 
   const campusExperienceImageMutation = useMutation({
     mutationFn: createOrUpdateCampusExperienceImage,
@@ -86,10 +79,6 @@ const CampusExperienceImageForm = ({
 
   const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
   const hasRecords = Object.keys(item).length > 0;
-
-  const handleRemoveImageUrl = () => {
-    setImageUrl("");
-  };
 
   return (
     <Formik

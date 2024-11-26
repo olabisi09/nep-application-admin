@@ -1,5 +1,3 @@
-import DispalyTabSetup from "./screens/setup/displayTab.tsx/displayTab";
-
 export const routes = {
   auth: {
     login: "/",

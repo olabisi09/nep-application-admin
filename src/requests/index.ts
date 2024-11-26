@@ -17,9 +17,15 @@ export const deleteAboutUs = async (id: number) => {
     ?.data as Response;
 };
 
-export const getAllAcademicSession = async () => {
-  return (await api.get("/ReadMore/GetAllAcademicSessions"))
-    ?.data as SessionResponse;
+export const getAllAcademicSession = async (
+  pageNumber?: number,
+  pageSize?: number
+) => {
+  return (
+    await api.get(
+      `/ReadMore/GetAllAcademicSessions/?PageNumber=${pageNumber}&PageSize=${pageSize}`
+    )
+  )?.data as SessionResponse;
 };
 
 export const createUpdateSession = async (payload: Partial<Session>) => {
@@ -59,8 +65,15 @@ export const createUpdateTuition = async (payload: Partial<Tuition>) => {
     ?.data as Response;
 };
 
-export const getAllTuitionFee = async () => {
-  return (await api.get("/ReadMore/GetAllTuition"))?.data as TuitionResponse;
+export const getAllTuitionFee = async (
+  pageNumber?: number,
+  pageSize?: number
+) => {
+  return (
+    await api.get(
+      `/ReadMore/GetAllTuition/?PageNumber=${pageNumber}&PageSize=${pageSize}`
+    )
+  )?.data as TuitionResponse;
 };
 
 export const deleteTuition = async (id: number) => {
@@ -75,9 +88,15 @@ export const createUpdateTuitionYear = async (
     ?.data as Response;
 };
 
-export const getAllTuitionYear = async () => {
-  return (await api.get("/ReadMore/GetAllTuitionYear"))
-    ?.data as TuitionYearResponse;
+export const getAllTuitionYear = async (
+  pageNumber?: number,
+  pageSize?: number
+) => {
+  return (
+    await api.get(
+      `/ReadMore/GetAllTuitionYear/?PageNumber=${pageNumber}&PageSize=${pageSize}`
+    )
+  )?.data as TuitionYearResponse;
 };
 
 export const deleteTuitionYear = async (id: number) => {
@@ -168,9 +187,12 @@ export const createOrUpdateMaritalStatus = async (
   )?.data as Response;
 };
 
-export const getCountry = async () => {
-  return (await api.get("/Utilities/Utilities/GetAllCountries"))
-    ?.data as CountryResponse;
+export const getCountry = async (query: PaginationProps) => {
+  return (
+    await api.get(
+      `/Utilities/Utilities/GetAllCountries?PageNumber=${query.pageNumber}&PageSize=${query.pageSize}`
+    )
+  )?.data as CountryResponse;
 };
 
 export const createOrUpdateCountry = async (payload: Partial<Country>) => {
@@ -206,9 +228,12 @@ export const createOrUpdateQualificationType = async (
   )?.data as Response;
 };
 
-export const getState = async () => {
-  return (await api.get("/Utilities/Utilities/GetAllStates"))
-    ?.data as StateResponse;
+export const getState = async (query: PaginationProps) => {
+  return (
+    await api.get(
+      `/Utilities/Utilities/GetAllStates?PageNumber=${query.pageNumber}&PageSize=${query.pageSize}`
+    )
+  )?.data as StateResponse;
 };
 
 export const getStateByCountryId = async (id: number) => {
@@ -221,9 +246,12 @@ export const createOrUpdateState = async (payload: Partial<State>) => {
     ?.data as Response;
 };
 
-export const getLGA = async () => {
-  return (await api.get("/Utilities/Utilities/GetAllLgas"))
-    ?.data as LGAResponse;
+export const getLGA = async (query: PaginationProps) => {
+  return (
+    await api.get(
+      `/Utilities/Utilities/GetAllLgas?PageNumber=${query.pageNumber}&PageSize=${query.pageSize}`
+    )
+  )?.data as LGAResponse;
 };
 
 export const createOrUpdateLGA = async (payload: Partial<LGA>) => {
@@ -267,9 +295,12 @@ export const deleteSchoolMgt = async (id: number) => {
     ?.data as Response;
 };
 
-export const getEvents = async () => {
-  return (await api.get(`/HomePage/HomePage/GetAllNewEvent`))
-    ?.data as GetResponse;
+export const getEvents = async (query: PaginationProps) => {
+  return (
+    await api.get(
+      `/HomePage/HomePage/GetAllNewEvent?PageNumber=${query.pageNumber}&PageSize=${query.pageSize}`
+    )
+  )?.data as GetResponse;
 };
 
 export const createOrUpdateEvent = async (payload: FormData) => {
@@ -546,9 +577,15 @@ export const deleteSubject = async (id: number) => {
     ?.data as Response;
 };
 
-export const getAdmissionRequirements = async () => {
-  return (await api.get("/ReadMore/GetAllAdmissionRequirements"))
-    ?.data as AdmissionRequirementResponse;
+export const getAdmissionRequirements = async (
+  pageNumber?: number,
+  pageSize?: number
+) => {
+  return (
+    await api.get(
+      `/ReadMore/GetAllAdmissionRequirements/?PageNumber=${pageNumber}&PageSize=${pageSize}`
+    )
+  )?.data as AdmissionRequirementResponse;
 };
 
 export const createOrUpdateAdmissionRequirement = async (
@@ -563,9 +600,15 @@ export const deleteAdmissionRequirement = async (id: number) => {
     ?.data as Response;
 };
 
-export const getAllPrograms = async () => {
-  return (await api.get("/Academics/GetAllProgramAsync"))
-    ?.data as ProgramResponse;
+export const getAllPrograms = async (
+  pageNumber?: number,
+  pageSize?: number
+) => {
+  return (
+    await api.get(
+      `/Academics/GetAllProgramAsync/?PageNumber=${pageNumber}&PageSize=${pageSize}`
+    )
+  )?.data as ProgramResponse;
 };
 
 export const createProgram = async (payload: DepartmentPayload) => {
@@ -586,9 +629,12 @@ export const deleteQualificationType = async (id: number) => {
   )?.data as Response;
 };
 
-export const getAllAccreditation = async () => {
-  return (await api.get("/ReadMore/GetAllAccreditations"))
-    ?.data as AccreditationResponse;
+export const getAllAccreditation = async (query: PaginationProps) => {
+  return (
+    await api.get(
+      `/ReadMore/GetAllAccreditations?PageNumber=${query.pageNumber}&PageSize=${query.pageSize}`
+    )
+  )?.data as AccreditationResponse;
 };
 
 export const createOrUpdateScholarship = async (
@@ -598,9 +644,12 @@ export const createOrUpdateScholarship = async (
     ?.data as Response;
 };
 
-export const getAllScholarships = async () => {
-  return (await api.get("/ReadMore/GetAllScholarship"))
-    ?.data as ScholarshipResponse;
+export const getAllScholarships = async (query: PaginationProps) => {
+  return (
+    await api.get(
+      `/ReadMore/GetAllScholarship?PageNumber=${query.pageNumber}&PageSize=${query.pageSize}`
+    )
+  )?.data as ScholarshipResponse;
 };
 
 export const deleteScholarship = async (id: number) => {
@@ -752,9 +801,15 @@ export const getStudentActivitiesByStudentActivityId = async (
   )?.data as StudentActivityResponse;
 };
 
-export const getCareerProspects = async () => {
-  return (await api.get("/ReadMore/GetAllCareerProspects"))
-    ?.data as CareerProspectResponse;
+export const getCareerProspects = async (
+  pageNumber?: number,
+  pageSize?: number
+) => {
+  return (
+    await api.get(
+      `/ReadMore/GetAllCareerProspects?PageNumber=${pageNumber}&PageSize=${pageSize}`
+    )
+  )?.data as CareerProspectResponse;
 };
 
 export const createOrUpdateCareerProspect = async (
@@ -879,9 +934,15 @@ export const resetPasswordAdmin = async (payload: Partial<ResetPayload>) => {
     ?.data as ResetResponse;
 };
 
-export const getAllFeeSetup = async () => {
-  return (await api.get("/ReadMore/GetAllFeeSetup"))
-    ?.data as getAllFeeSetupResponse;
+export const getAllFeeSetup = async (
+  pageNumber?: number,
+  pageSize?: number
+) => {
+  return (
+    await api.get(
+      `/ReadMore/GetAllFeeSetup/?PageNumber=${pageNumber}&PageSize=${pageSize}`
+    )
+  )?.data as getAllFeeSetupResponse;
 };
 
 export const deleteFeeSetup = async (id: number) => {
@@ -929,9 +990,12 @@ export const createOrUpdateTestimonial = async (
   )?.data as Response;
 };
 
-export const getAllTestimonials = async () => {
-  return (await api.get(`/ReadMore/GetAllTestimonials`))
-    ?.data as TestimonialResponse;
+export const getAllTestimonials = async (query: PaginationProps) => {
+  return (
+    await api.get(
+      `/ReadMore/GetAllTestimonials?PageNumber=${query.pageNumber}&PageSize=${query.pageSize}`
+    )
+  )?.data as TestimonialResponse;
 };
 
 export const deleteTestimonial = async (id: number) => {
@@ -979,9 +1043,12 @@ export const createFaculty = async (
     ?.data as FacultyResponse;
 };
 
-export const getFaculty = async () => {
-  return (await api.get("/Academics/GetAllCategoryAsync"))
-    ?.data as GetFacultyResponse;
+export const getFaculty = async (pageNumber?: number, pageSize?: number) => {
+  return (
+    await api.get(
+      `/Academics/GetAllCategoryAsync?PageNumber=${pageNumber}&PageSize=${pageSize}`
+    )
+  )?.data as GetFacultyResponse;
 };
 
 export const deleteFaculty = async (id: number) => {
@@ -1001,9 +1068,12 @@ export const updateFaculty = async ({
   )?.data as updateFacultyResponse;
 };
 
-export const getAllCurriculum = async () => {
-  return (await api.get("/ReadMore/GetAllCurriculum"))
-    ?.data as CurriculumResponse;
+export const getAllCurriculum = async (query: PaginationProps) => {
+  return (
+    await api.get(
+      `/ReadMore/GetAllCurriculum?PageNumber=${query.pageNumber}&PageSize=${query.pageSize}`
+    )
+  )?.data as CurriculumResponse;
 };
 
 export const createOrUpdateCurriculum = async (
@@ -1119,9 +1189,12 @@ export const deleteTab = async (id: number) => {
     ?.data as TabResponse;
 };
 
-export const getAllDisplayTab = async () => {
-  return (await api.get("/Utilities/Utilities/GetAllTabDisplay"))
-    ?.data as DisplayTabResponse;
+export const getAllDisplayTab = async (query: PaginationProps) => {
+  return (
+    await api.get(
+      `/Utilities/Utilities/GetAllTabDisplay?PageNumber=${query.pageNumber}&PageSize=${query.pageSize}`
+    )
+  )?.data as DisplayTabResponse;
 };
 
 export const createUpdateDisplayTab = async (payload: Partial<DisplayTab>) => {

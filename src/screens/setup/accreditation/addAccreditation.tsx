@@ -66,7 +66,7 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
 
   const { data, error, isError, isLoading } = useQuery({
     queryKey: ["get-programs"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(),
     retry: 1,
   });
 

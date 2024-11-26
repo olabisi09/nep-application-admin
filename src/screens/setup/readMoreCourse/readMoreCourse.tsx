@@ -25,6 +25,7 @@ import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { deleteReadMoreOverView } from "../../../requests";
+import { usePagination } from "../../../hooks/usePagination";
 
 const ReadMoreCourse = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -37,13 +38,15 @@ const ReadMoreCourse = () => {
   );
   const [openDelete, setOpenDelete] = useState(false);
 
+  const { currentPage, onChange } = usePagination();
+
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-all-course-overview"],
-    queryFn: getAllCourseOverview,
+    queryFn: () => getAllCourseOverview(currentPage, 10),
   });
 
   const courseOverviewData = data?.data ?? [];
@@ -106,9 +109,9 @@ const ReadMoreCourse = () => {
           {
             key: "1",
             label: "Edit",
-            onClick: () => {              
-              setCourseOverview( {...courseOverview, ...record} );
-              setOpenEdit(prevState => !prevState);
+            onClick: () => {
+              setCourseOverview({ ...courseOverview, ...record });
+              setOpenEdit((prevState) => !prevState);
             },
           },
           {
@@ -182,8 +185,13 @@ const ReadMoreCourse = () => {
         <Table
           dataSource={courseOverviewData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 
@@ -192,16 +200,18 @@ const ReadMoreCourse = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Create Read More - Course Overview Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddReadMoreCourseOverview handleClose={handleCloseModal} />
       </Modal>
 
       <Modal
         open={openEdit}
-        onCancel={() => setOpenEdit(prevState => !prevState)}
+        onCancel={() => setOpenEdit((prevState) => !prevState)}
         centered
         title="Edit Read More - Course Overview Setup"
-        footer={null}>
+        footer={null}
+      >
         <EditReadMoreCourseOverview
           handleClose={handleCloseModal}
           record={courseOverview}
@@ -213,7 +223,8 @@ const ReadMoreCourse = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Application Fee Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteReadMoreOverViewMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

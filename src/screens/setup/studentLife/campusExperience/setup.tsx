@@ -1,5 +1,5 @@
 import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Input, Select, Upload } from "../../../../custom";
+import { Button, Editor, Input, Select } from "../../../../custom";
 import { App } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createOrUpdateCampusExperience } from "../../../../requests";

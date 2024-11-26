@@ -19,7 +19,7 @@ const EditProgram = ({ handleClose, record }: Props) => {
   const queries = useQueries({
     queries: [
       { queryKey: ["get-program-types"], queryFn: getProgramTypes },
-      { queryKey: ["get-all-department"], queryFn: getAllPrograms },
+      { queryKey: ["get-all-department"], queryFn: () => getAllPrograms() },
     ],
   });
 
@@ -48,7 +48,7 @@ const EditProgram = ({ handleClose, record }: Props) => {
       id: record?.id,
       programTypeId: Number(values.programType),
       programId: Number(values.department),
-      activeStatus: values.status === 'Active',
+      activeStatus: values.status === "Active",
     };
 
     try {

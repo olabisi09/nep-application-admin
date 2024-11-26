@@ -1,7 +1,4 @@
-import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward.svg";
 import { ReactComponent as Add } from "../../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -14,7 +11,6 @@ import {
 import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../../custom/searchInput/searchInput";
 import { AddMarital } from "./addMaritalStatus";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { deleteMaritalStatus, getMaritalStatus } from "../../../../requests";
@@ -23,18 +19,16 @@ import DeleteModalContent from "../../../deleteModal/deleteModal";
 
 const MaritalSetup = () => {
   const { notification } = App.useApp();
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
+  // const [searchTerm, setSearchTerm] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [indexData, setIndexData] = useState({} as MaritalStatus);
   const queryClient = useQueryClient();
 
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
+  // const handleSearch = (e: any) => {
+  //   setSearchTerm(e.target.value);
+  // };
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-marital-status"],

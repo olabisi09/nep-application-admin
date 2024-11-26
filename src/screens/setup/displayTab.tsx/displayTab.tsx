@@ -19,6 +19,7 @@ import { deleteDisplayTab, getAllDisplayTab } from "../../../requests";
 import { Button, SearchInput } from "../../../custom";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { AddDisplayTab } from "./addDisplayTab";
+import { usePagination } from "../../../hooks/usePagination";
 
 const DisplayTabSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -28,11 +29,14 @@ const DisplayTabSetup = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [displayTab, setDisplayTab] = useState<DisplayTab>({} as DisplayTab);
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { currentPage, onChange } = usePagination();
+
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-displayTab"],
-    queryFn: getAllDisplayTab,
+    queryFn: () => getAllDisplayTab({ pageNumber: currentPage, pageSize: 10 }),
   });
 
   const deleteDisplayTabMutation = useMutation({
@@ -183,7 +187,13 @@ const DisplayTabSetup = () => {
         <Table
           dataSource={displayTabData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
           rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>

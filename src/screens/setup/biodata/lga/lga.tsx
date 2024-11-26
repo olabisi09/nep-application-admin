@@ -10,7 +10,6 @@ import {
   Spin,
   App,
 } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
 import { useState } from "react";
@@ -20,6 +19,7 @@ import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteLGA, getLGA } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
+import { usePagination } from "../../../../hooks/usePagination";
 
 const LgaSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -29,6 +29,9 @@ const LgaSetup = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as LGA);
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { currentPage, onChange } = usePagination();
+
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -48,10 +51,10 @@ const LgaSetup = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-lga"],
-    queryFn: getLGA,
+    queryFn: () => getLGA({ pageNumber: currentPage, pageSize: 10 }),
   });
 
-  const LgaData = data?.data as LGA[];
+  const lgaData = data?.data as LGA[];
 
   const items = (record: LGA): MenuProps["items"] => [
     {
@@ -175,10 +178,15 @@ const LgaSetup = () => {
           </div>
         </div>
         <Table
-          dataSource={LgaData}
+          dataSource={lgaData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 
@@ -187,7 +195,8 @@ const LgaSetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="LGA Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddLga handleClose={() => setShowAddModal(false)} />
       </Modal>
 
@@ -196,15 +205,18 @@ const LgaSetup = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit LGA Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddLga handleClose={() => setOpenEdit(false)} data={indexData} />
       </Modal>
+      
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete LGA Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteLgaMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

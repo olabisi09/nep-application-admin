@@ -30,7 +30,7 @@ const AddAdmissionRequirement = ({
     error,
   } = useQuery({
     queryKey: ["get-all-programs"],
-    queryFn: getAllPrograms,
+    queryFn: () =>  getAllPrograms(),
   });
 
   const validate = Yup.object().shape({
@@ -163,7 +163,7 @@ const EditAdmissionRequirement = ({
     error,
   } = useQuery({
     queryKey: ["get-all-programs"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(),
   });
 
   const validate = Yup.object().shape({

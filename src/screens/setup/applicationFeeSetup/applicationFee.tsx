@@ -20,6 +20,7 @@ import { deleteFeeSetup, getAllFeeSetup } from "../../../requests";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import { usePagination } from "../../../hooks/usePagination";
 
 const ApplicationFee = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -29,11 +30,13 @@ const ApplicationFee = () => {
   const [item, setItem] = useState<GetAllFeeSetup>({} as GetAllFeeSetup);
   const [openDelete, setOpenDelete] = useState(false);
 
+  const { currentPage, onChange } = usePagination();
+
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-all-fee-setup"],
-    queryFn: getAllFeeSetup,
+    queryFn: () => getAllFeeSetup(currentPage, 10),
   });
 
   const applicationFeeData = data?.data ?? [];
@@ -67,11 +70,6 @@ const ApplicationFee = () => {
   };
 
   const columns: ColumnsType<GetAllFeeSetup> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "program",
       title: "Program",
@@ -152,13 +150,9 @@ const ApplicationFee = () => {
     <main>
       <section className="space-between">
         <h3>Application Fee Setup</h3>
-        <Button
-          onClick={handleShowModal}
-          iconBefore={<Add />}
-          text="Setup"
-        />
+        <Button onClick={handleShowModal} iconBefore={<Add />} text="Setup" />
       </section>
-      
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -186,9 +180,14 @@ const ApplicationFee = () => {
         <Table
           dataSource={applicationFeeData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
           scroll={{ x: 400 }}
-          //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 

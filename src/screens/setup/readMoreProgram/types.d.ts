@@ -1,9 +1,10 @@
 interface GenericResponse {
   statusCode: number;
+  totalSize: number;
   message: string;
 }
 
-interface ReadMoreProgrammeResponse {
+interface ReadMoreProgrammeResponse extends GenericResponse {
   data: ReadMoreProgramme[];
 }
 

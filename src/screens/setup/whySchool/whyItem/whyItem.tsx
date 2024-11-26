@@ -12,7 +12,7 @@ import { ReactComponent as Plus } from "../../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { Button } from "../../../../custom";
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteWhyItem, getAllWhyItemsByWhyId } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
 import { useParams } from "react-router-dom";
@@ -26,8 +26,9 @@ const WhyItem = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [indexData, setIndexData] = useState({} as WhyItem);
+
   const { notification } = App.useApp();
-  const queryClient = useQueryClient();
+
   const deleteWhyItemMutation = useMutation({ mutationFn: deleteWhyItem });
 
   const handleEdit = (data: WhyItem) => {

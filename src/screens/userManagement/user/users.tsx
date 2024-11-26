@@ -1,32 +1,16 @@
-import {
-  Card,
-  Dropdown,
-  MenuProps,
-  Table,
-  Button as AntButton,
-  Spin,
-  PaginationProps,
-} from "antd";
-//   import { ReactComponent as Plus } from "../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-//   import Button from "../../../custom/button/button";
+import { Card, Table, Spin } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
 import { getAllStudentUser } from "./request";
-import { useState } from "react";
-//   import { CreateSchoolID, EditSchoolID } from "./form";
+import { usePagination } from "../../../hooks/usePagination";
 
 const StudentUser = () => {
-  const [current, setCurrent] = useState(1);
+  const { currentPage, onChange } = usePagination();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-student-users"],
-    queryFn: () => getAllStudentUser(current, 10),
+    queryFn: () => getAllStudentUser(currentPage, 10),
   });
-
-  const onChange: PaginationProps["onChange"] = (page) => {
-    setCurrent(page);
-  };
 
   const columns: ColumnsType<User> = [
     {
@@ -60,13 +44,13 @@ const StudentUser = () => {
       dataIndex: "phoneNumber",
     },
   ];
-
+  
   const userData = data?.data as User[];
 
   if (isLoading) {
     return <Spin />;
   }
-
+  
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -87,45 +71,13 @@ const StudentUser = () => {
           scroll={{ x: true }}
           pagination={{
             position: ["bottomCenter"],
-            current: current,
+            current: currentPage,
             total: data?.totalSize,
             onChange: onChange,
+            pageSize: 10,
           }}
         />
       </Card>
-
-      {/* <Modal
-          open={open}
-          onCancel={() => setOpen(false)}
-          centered
-          title="Create School ID Setup"
-          footer={null}
-        >
-          <CreateSchoolID handleClose={() => setOpen(false)} />
-        </Modal>
-        <Modal
-          open={openEdit}
-          onCancel={() => setOpenEdit(false)}
-          centered
-          title="Edit School ID Setup"
-          footer={null}
-        >
-          <EditSchoolID item={record} handleClose={() => setOpenEdit(false)} />
-        </Modal> */}
-      {/* <Modal
-          open={openDelete}
-          onCancel={() => setOpenDelete(false)}
-          centered
-          title="Delete About Us Setup"
-          footer={null}
-        >
-          <DeleteModalContent
-            isLoading={deleteAboutUsMutation?.isPending}
-            handleCloseModal={() => setOpenDelete(false)}
-            handleSubmit={deleteAboutUsHandler}
-            title={about?.title}
-          />
-        </Modal> */}
     </div>
   );
 };

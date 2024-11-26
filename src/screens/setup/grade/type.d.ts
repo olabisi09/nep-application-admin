@@ -1,6 +1,7 @@
 interface GradeResponse {
   statusCode: number;
   message: string;
+  totalSize: number;
   data: Grade[];
 }
 

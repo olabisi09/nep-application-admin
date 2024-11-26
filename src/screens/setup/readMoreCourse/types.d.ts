@@ -1,5 +1,6 @@
 interface GenericResponse {
   statusCode: number;
+  totalSize: number;
   message: string;
 }
 

@@ -16,7 +16,6 @@ import { getStudentLife } from "../../../requests";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import {
-  CampusExperience,
   CreateStudentLife,
   EditStudentLife,
   FitnessAthletics,
@@ -67,8 +66,7 @@ const StudentLife = () => {
         return <Overview handleClose={() => setOpen(false)} />;
       case "School Summary":
         return <SchoolSummary handleClose={() => setOpen(false)} />;
-      case "Campus Experience":
-        return <CampusExperience handleClose={() => setOpen(false)} />;
+
       case "Fitness & Athletics":
         return (
           <FitnessAthletics item={item} handleClose={() => setOpen(false)} />
@@ -209,7 +207,8 @@ const StudentLife = () => {
         centered
         title={currentForm || "Student Life Setup"}
         footer={null}
-        width={500}>
+        width={500}
+      >
         {renderForms()}
       </Modal>
     </div>

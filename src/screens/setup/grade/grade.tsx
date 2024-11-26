@@ -19,6 +19,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { deleteGrade, getGrades } from "./request";
 import AddGrade from "./addGrade";
+import { usePagination } from "../../../hooks/usePagination";
 
 const GradeSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -28,6 +29,9 @@ const GradeSetUp = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as Grade);
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { currentPage, onChange } = usePagination();
+
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -47,7 +51,7 @@ const GradeSetUp = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-all-grade"],
-    queryFn: getGrades,
+    queryFn: () => getGrades({ pageNumber: currentPage, pageSize: 10 }),
   });
 
   const gradeData = data?.data as Grade[];
@@ -72,11 +76,6 @@ const GradeSetUp = () => {
   ];
 
   const columns = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "grade",
       title: "Grade Name",
@@ -127,6 +126,7 @@ const GradeSetUp = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -141,6 +141,7 @@ const GradeSetUp = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -168,8 +169,13 @@ const GradeSetUp = () => {
         <Table
           dataSource={gradeData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 

@@ -1,7 +1,15 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+  App,
+} from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
@@ -13,9 +21,9 @@ import { ColumnsType } from "antd/es/table";
 import AddSession from "./AddSession";
 import { deleteSession, getAllAcademicSession } from "../../../requests";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import { usePagination } from "../../../hooks/usePagination";
 
 const Session = () => {
-  const { notification } = App.useApp();
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAllFilter, setShowAllFilter] = useState(false);
@@ -24,10 +32,14 @@ const Session = () => {
   const [session, setSession] = useState<Session>({} as Session);
   const [openDelete, setOpenDelete] = useState(false);
 
-  const {data, isLoading, isError, error, refetch } = useQuery({
+  const { notification } = App.useApp();
+
+  const { currentPage, onChange } = usePagination();
+
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["getAll-sessions"],
-    queryFn: getAllAcademicSession
-  })
+    queryFn: () => getAllAcademicSession(currentPage, 10),
+  });
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -36,11 +48,11 @@ const Session = () => {
   const handleDelete = (data: Session) => {
     setSession(data);
     setOpenDelete(true);
-  }
+  };
 
-  const deleteSessionMutation = useMutation({ mutationFn: deleteSession});
+  const deleteSessionMutation = useMutation({ mutationFn: deleteSession });
 
-  const  DeleteSessionHandler = async () => {
+  const deleteSessionHandler = async () => {
     try {
       await deleteSessionMutation.mutateAsync(session?.id, {
         onSuccess: (data) => {
@@ -58,15 +70,9 @@ const Session = () => {
         description: error?.response?.data?.message,
       });
     }
-
-  }
+  };
 
   const columns: ColumnsType<Session> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "name",
       title: "Session",
@@ -76,7 +82,7 @@ const Session = () => {
       key: "status",
       title: "Status",
       dataIndex: "activeStatus",
-      render: (_, {activeStatus}) => (activeStatus ? "Active" : "Inactive"),
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
     },
     {
       key: "action",
@@ -89,28 +95,30 @@ const Session = () => {
             onClick: () => {
               setSession(record);
               setOpenEdit(true);
-            }
+            },
           },
           {
             key: "2",
             label: "Delete",
             onClick: async () => {
-             handleDelete(record);
-            }
-          }
+              handleDelete(record);
+            },
+          },
         ];
-        return(
+
+        return (
           <Dropdown menu={{ items }} trigger={["click"]}>
-          <AntButton type="text" icon={<Ellipsis />} />
-        </Dropdown>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
         );
       },
     },
   ];
 
   if (isLoading) {
-    return <Spin/>;
+    return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -119,15 +127,15 @@ const Session = () => {
 
   return (
     <main>
-  
       <section className="space-between">
-      <h3>Session Setup</h3>
-      <Button
-        onClick={() => setOpen(true)}
-        iconBefore={<Add />}
-        text="Setup"
-      />
+        <h3>Session Setup</h3>
+        <Button
+          onClick={() => setOpen(true)}
+          iconBefore={<Add />}
+          text="Setup"
+        />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -139,6 +147,7 @@ const Session = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
@@ -152,15 +161,22 @@ const Session = () => {
             )}
           </div>
         </div>
+
         <Table
           dataSource={sessionData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
           rowKey={(record) => record?.id}
-          scroll={{ x: true}}
+          scroll={{ x: true }}
         />
       </section>
-     
+
       <Modal
         open={open}
         onCancel={() => setOpen(false)}
@@ -168,7 +184,7 @@ const Session = () => {
         title="Session Setup "
         footer={null}
       >
-        <AddSession handleClose={() => setOpen(false)}/>
+        <AddSession handleClose={() => setOpen(false)} />
       </Modal>
 
       <Modal
@@ -178,7 +194,7 @@ const Session = () => {
         title="Edit Session Setup"
         footer={null}
       >
-        <EditSession item={session} handleClose={() => setOpenEdit(false)}/>
+        <EditSession item={session} handleClose={() => setOpenEdit(false)} />
       </Modal>
 
       <Modal
@@ -191,11 +207,10 @@ const Session = () => {
         <DeleteModalContent
           isLoading={deleteSessionMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteSessionHandler}
+          handleSubmit={deleteSessionHandler}
           title={session?.name}
         />
       </Modal>
-
     </main>
   );
 };

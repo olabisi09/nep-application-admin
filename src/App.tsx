@@ -17,8 +17,6 @@ import TuitionYearsSetup from "./screens/setup/tuitionYear/tuitionYears";
 import LevelSetup from "./screens/setup/level/level";
 
 import { routes } from "./routes";
-import AddUsers from "./screens/userManagement/user/addUsers";
-import AdminRoles from "./screens/userManagement/role/adminRoles";
 import SignIn from "./screens/auth/signIn";
 import AuthLayout from "./layouts/authLayout/authLayout";
 import ForgotPassword from "./screens/auth/forgotPassword";
@@ -72,7 +70,6 @@ import StudentUser from "./screens/userManagement/user/users";
 import ApplicationBatchSetup from "./screens/setup/applicationBatch/applicationBatch";
 import GradeSetUp from "./screens/setup/grade/grade";
 import TabSetUp from "./screens/setup/tab/tab";
-import DispalyTabSetup from "./screens/setup/displayTab.tsx/displayTab";
 import DisplayTabSetup from "./screens/setup/displayTab.tsx/displayTab";
 
 function App() {
@@ -345,25 +342,25 @@ function App() {
     },
   ];
 
-  const userMgtRoutes = [
-    {
-      path: routes.userMgt.addUsers,
-      element: <AddUsers />,
-    },
-    {
-      path: routes.userMgt.addRoles,
-      element: <AdminRoles />,
-    },
+  // const userMgtRoutes = [
+  //   {
+  //     path: routes.userMgt.addUsers,
+  //     element: <AddUsers />,
+  //   },
+  //   {
+  //     path: routes.userMgt.addRoles,
+  //     element: <AdminRoles />,
+  //   },
 
-    {
-      path: routes.userMgt.addSchoolId,
-      element: <SchoolID />,
-    },
-    {
-      path: routes.userMgt.contactUs,
-      element: <ContactUs />,
-    },
-  ];
+  //   {
+  //     path: routes.userMgt.addSchoolId,
+  //     element: <SchoolID />,
+  //   },
+  //   {
+  //     path: routes.userMgt.contactUs,
+  //     element: <ContactUs />,
+  //   },
+  // ];
 
   return (
     <Routes>

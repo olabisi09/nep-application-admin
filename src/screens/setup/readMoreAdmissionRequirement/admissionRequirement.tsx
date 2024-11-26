@@ -28,6 +28,7 @@ import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { useNavigate } from "react-router-dom";
+import { usePagination } from "../../../hooks/usePagination";
 
 const AdmissionRequirement = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -35,11 +36,14 @@ const AdmissionRequirement = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const { notification } = App.useApp();
   const [admissionReq, setAdmissionReq] = useState<AdmissionRequirement>(
     {} as AdmissionRequirement
   );
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { notification } = App.useApp();
+
+  const { currentPage, onChange } = usePagination();
 
   const navigate = useNavigate();
 
@@ -49,22 +53,19 @@ const AdmissionRequirement = () => {
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-admission-requirement"],
-    queryFn: getAdmissionRequirements,
+    queryFn: () => getAdmissionRequirements(currentPage, 10),
   });
+  
   const handleDelete = (data: AdmissionRequirement) => {
     setAdmissionReq(data);
     setOpenDelete(true);
   };
+
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
 
   const columns: ColumnsType<AdmissionRequirement> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "description",
       title: "Description",
@@ -125,7 +126,7 @@ const AdmissionRequirement = () => {
     },
   ];
 
-  const DeleteAdmissionReqHandler = async () => {
+  const deleteAdmissionReqHandler = async () => {
     try {
       await deleteAdmissionReqMutation.mutateAsync(admissionReq?.id, {
         onSuccess: (data) => {
@@ -194,8 +195,13 @@ const AdmissionRequirement = () => {
         <Table
           dataSource={admissionRequirements}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 
@@ -236,7 +242,7 @@ const AdmissionRequirement = () => {
             isLoading={deleteAdmissionReqMutation?.isPending}
             // data={Data}
             handleCloseModal={() => setOpenDelete(false)}
-            handleSubmit={DeleteAdmissionReqHandler}
+            handleSubmit={deleteAdmissionReqHandler}
             title={"this item"}
             isActive={false}
             // btnText={"Disable"}

@@ -18,7 +18,7 @@ const AddProgram = ({ handleClose }: Props) => {
   const queries = useQueries({
     queries: [
       { queryKey: ["get-program-types"], queryFn: getProgramTypes },
-      { queryKey: ["get-all-department"], queryFn: getAllPrograms },
+      { queryKey: ["get-all-department"], queryFn: () => getAllPrograms() },
     ],
   });
 

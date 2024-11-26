@@ -13,6 +13,7 @@ interface ApplicationBatchPayload {
 interface ApplicationBatchResponse {
   statusCode: number;
   message: string;
+  totalSize: number;
   data: ApplicationBatch[];
 }
 

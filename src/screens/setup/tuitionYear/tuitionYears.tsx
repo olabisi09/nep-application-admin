@@ -27,6 +27,7 @@ import {
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import { usePagination } from "../../../hooks/usePagination";
 
 const TuitionYears = () => {
   const { notification } = App.useApp();
@@ -40,12 +41,13 @@ const TuitionYears = () => {
   );
   const [openDelete, setOpenDelete] = useState(false);
 
-  // Merged useQueries
+  const { currentPage, onChange } = usePagination();
+
   const queryResults = useQueries({
     queries: [
       {
         queryKey: ["getAll-TuitionYear"],
-        queryFn: getAllTuitionYear,
+        queryFn: () => getAllTuitionYear(currentPage, 10),
       },
       {
         queryKey: ["getAll-Level"],
@@ -53,11 +55,11 @@ const TuitionYears = () => {
       },
       {
         queryKey: ["getAll-Tuition"],
-        queryFn: getAllTuitionFee,
+        queryFn: () => getAllTuitionFee(),
       },
       {
         queryKey: ["getAll-programs"],
-        queryFn: getAllPrograms,
+        queryFn: () => getAllPrograms(),
       },
     ],
   });
@@ -243,7 +245,13 @@ const TuitionYears = () => {
         <Table
           dataSource={tuitionYears}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: tuitionYearData?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 

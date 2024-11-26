@@ -8,6 +8,7 @@ interface SubjectPayload {
 interface SubjectResponse {
   statusCode: number;
   message: string;
+  totalSize: number;
   data: Subject[];
 }
 

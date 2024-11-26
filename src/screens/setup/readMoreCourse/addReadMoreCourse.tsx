@@ -29,7 +29,7 @@ const AddReadMoreCourseOverview = ({
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-all-programs"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(),
   });
 
   const programsData = data?.data ?? [];
@@ -153,7 +153,7 @@ const EditReadMoreCourseOverview = ({
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-all-programs"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(),
   });
 
   const programsData = data?.data ?? [];

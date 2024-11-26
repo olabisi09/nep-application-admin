@@ -23,6 +23,7 @@ import { getApplicationBatch } from "./request";
 import AddApplicationBatch from "./addApplicationBatch";
 import EditApplicationBatch from "./editApplicationBatch";
 import { formatDate } from "../../../utils/formatDate";
+import { usePagination } from "../../../hooks/usePagination";
 
 const ApplicationBatchSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -32,6 +33,8 @@ const ApplicationBatchSetup = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as ApplicationBatch);
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { currentPage, onChange } = usePagination();
 
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
@@ -59,7 +62,7 @@ const ApplicationBatchSetup = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-all-application-batch"],
-    queryFn: getApplicationBatch,
+    queryFn: () => getApplicationBatch(currentPage, 10),
   });
 
   const applicationBatchData = data?.data ?? [];
@@ -212,7 +215,13 @@ const ApplicationBatchSetup = () => {
         <Table
           dataSource={applicationBatchData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 
@@ -221,7 +230,8 @@ const ApplicationBatchSetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Create Application Batch"
-        footer={null}>
+        footer={null}
+      >
         <AddApplicationBatch handleClose={() => setShowAddModal(false)} />
       </Modal>
 
@@ -230,7 +240,8 @@ const ApplicationBatchSetup = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Application Batch"
-        footer={null}>
+        footer={null}
+      >
         <EditApplicationBatch
           handleClose={() => setOpenEdit(false)}
           record={indexData}
@@ -242,7 +253,8 @@ const ApplicationBatchSetup = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Application Batch"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteApplicationBatchMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

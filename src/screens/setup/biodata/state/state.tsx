@@ -1,4 +1,3 @@
-import { ReactComponent as GraterThan } from "../../../../assets/chevron_forward.svg";
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
 import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
@@ -21,6 +20,7 @@ import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteState, getState } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
+import { usePagination } from "../../../../hooks/usePagination";
 
 const StateSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -30,6 +30,9 @@ const StateSetup = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as State);
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { currentPage, onChange } = usePagination();
+
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -49,10 +52,10 @@ const StateSetup = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-state"],
-    queryFn: getState,
+    queryFn: () => getState({ pageNumber: currentPage, pageSize: 10 }),
   });
 
-  const StateData = data?.data as State[];
+  const stateData = data?.data as State[];
 
   const items = (record: State): MenuProps["items"] => [
     {
@@ -173,10 +176,15 @@ const StateSetup = () => {
           </div>
         </div>
         <Table
-          dataSource={StateData}
+          dataSource={stateData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 
@@ -185,7 +193,8 @@ const StateSetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="State/Province/District Setup"
-        footer={null}>
+        footer={null}
+      >
         <Formik initialValues={{}} onSubmit={() => {}}>
           <Form>
             <AddState handleClose={() => setShowAddModal(false)} />
@@ -198,7 +207,8 @@ const StateSetup = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit State/Province/District Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddState handleClose={() => setOpenEdit(false)} data={indexData} />
       </Modal>
       <Modal
@@ -206,7 +216,8 @@ const StateSetup = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete State/Province/District Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteStateMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

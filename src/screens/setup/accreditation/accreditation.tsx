@@ -24,6 +24,7 @@ import {
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import { ColumnsType } from "antd/es/table";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import { usePagination } from "../../../hooks/usePagination";
 
 const AccreditationSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -33,6 +34,8 @@ const AccreditationSetup = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [item, setItem] = useState<AccreditationData>({} as AccreditationData);
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { currentPage, onChange } = usePagination();
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -44,7 +47,8 @@ const AccreditationSetup = () => {
 
   const { data, error, isError, isLoading, refetch } = useQuery({
     queryKey: ["get-all-accreditation"],
-    queryFn: getAllAccreditation,
+    queryFn: () =>
+      getAllAccreditation({ pageNumber: currentPage, pageSize: 10 }),
     retry: 1,
   });
 
@@ -130,8 +134,8 @@ const AccreditationSetup = () => {
   ];
 
   const handleOpenModal = () => {
-    setShowAddModal(prevState => !prevState);
-    setItem({} as AccreditationData)
+    setShowAddModal((prevState) => !prevState);
+    setItem({} as AccreditationData);
   };
 
   if (isLoading) {
@@ -146,11 +150,7 @@ const AccreditationSetup = () => {
     <main>
       <section className="space-between">
         <h3>Accreditation Setup</h3>
-        <Button
-          onClick={handleOpenModal}
-          iconBefore={<Add />}
-          text="Setup"
-        />
+        <Button onClick={handleOpenModal} iconBefore={<Add />} text="Setup" />
       </section>
 
       <section className={styles.card}>
@@ -181,7 +181,13 @@ const AccreditationSetup = () => {
         <Table
           dataSource={accreditationData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 
@@ -222,7 +228,7 @@ const AccreditationSetup = () => {
           isLoading={deleteAccreditationMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={handleDeleteHandler}
-          title='this accreditation'
+          title="this accreditation"
         />
       </Modal>
     </main>

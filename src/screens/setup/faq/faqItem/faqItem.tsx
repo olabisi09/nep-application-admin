@@ -12,7 +12,7 @@ import { ReactComponent as Plus } from "../../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { Button } from "../../../../custom";
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteFAQItem, getFAQItemsByFaqId } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
 import { useParams } from "react-router-dom";
@@ -25,8 +25,9 @@ const FaqItem = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [indexData, setIndexData] = useState({} as FaqItem);
+
   const { notification } = App.useApp();
-  const queryClient = useQueryClient();
+
   const deleteFaqItemMutation = useMutation({ mutationFn: deleteFAQItem });
 
   const handleEdit = (data: FaqItem) => {
@@ -48,11 +49,6 @@ const FaqItem = () => {
   const faqItems = data?.data as FaqItem[];
 
   const columns: ColumnsType<FaqItem> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "question",
       title: "Question",
@@ -95,7 +91,7 @@ const FaqItem = () => {
     },
   ];
 
-  const DeleteFAQHandler = async () => {
+  const deleteFAQHandler = async () => {
     try {
       await deleteFaqItemMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
@@ -114,9 +110,11 @@ const FaqItem = () => {
       });
     }
   };
+
   if (isLoading) {
     return <Spin />;
   }
+  
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -177,7 +175,7 @@ const FaqItem = () => {
         <DeleteModalContent
           isLoading={deleteFaqItemMutation.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteFAQHandler}
+          handleSubmit={deleteFAQHandler}
           title={indexData.question}
         />
       </Modal>

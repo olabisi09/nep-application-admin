@@ -22,7 +22,7 @@ const CreateSocialMediaSetup = ({
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
   const [upload, setUpload] = useState<File | null>(null);
-  const { data, isLoading, isError, error, refetch } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-general-template"],
     queryFn: getGeneralTemplates,
   });
@@ -170,7 +170,7 @@ const EditSocialMediaLink = ({
   const { notification } = App.useApp();
   const [upload, setUpload] = useState<File | null>(null);
 
-  const { data, isLoading, isError, error, refetch } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-general-template"],
     queryFn: getGeneralTemplates,
   });

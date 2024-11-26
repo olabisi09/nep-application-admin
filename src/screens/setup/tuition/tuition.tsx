@@ -25,6 +25,7 @@ import {
 import { ColumnsType } from "antd/es/table";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import { usePagination } from "../../../hooks/usePagination";
 
 const Tuition = () => {
   const { notification } = App.useApp();
@@ -36,16 +37,17 @@ const Tuition = () => {
   const [tuition, setTuition] = useState<Tuition>({} as Tuition);
   const [openDelete, setOpenDelete] = useState(false);
 
-  // Merged useQueries
+  const { currentPage, onChange } = usePagination();
+
   const queryResults = useQueries({
     queries: [
       {
         queryKey: ["getAll-tuition"],
-        queryFn: getAllTuitionFee,
+        queryFn: () => getAllTuitionFee(),
       },
       {
         queryKey: ["getAll-programs"],
-        queryFn: getAllPrograms,
+        queryFn: () => getAllPrograms(currentPage, 10),
       },
     ],
   });
@@ -92,11 +94,6 @@ const Tuition = () => {
   };
 
   const columns: ColumnsType<Tuition> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "description",
       title: "Description",
@@ -195,7 +192,13 @@ const Tuition = () => {
         <Table
           dataSource={tuitions}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: tuitionData?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
           rowKey={(record) => record?.id}
           scroll={{ x: true }}
         />
@@ -206,7 +209,8 @@ const Tuition = () => {
         onCancel={() => setOpen(false)}
         centered
         title="Tuition Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddTuition
           programItem={programsData?.data || []}
           handleClose={() => setOpen(false)}
@@ -218,7 +222,8 @@ const Tuition = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Tuition Setup"
-        footer={null}>
+        footer={null}
+      >
         <EditTuition
           programItem={programsData?.data || []}
           item={tuition}
@@ -231,14 +236,13 @@ const Tuition = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Tuition Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteTuitionMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteTuitionHandler}
-          // title={tuition?.description}
           title={"this item"}
-          
         />
       </Modal>
     </main>

@@ -1,5 +1,4 @@
 import { Form, Formik, FormikValues } from "formik";
-import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
 import Button from "../../../custom/button/button";
 import { App, Spin } from "antd";
@@ -19,7 +18,7 @@ const AddScholarship = ({ handleClose }: { handleClose: () => void }) => {
     error,
   } = useQuery({
     queryKey: ["get-all-programs"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(),
   });
 
   const validate = Yup.object().shape({
@@ -135,7 +134,7 @@ const EditScholarship = ({ handleClose, scholarship }: { handleClose: () => void
     error,
   } = useQuery({
     queryKey: ["get-all-programs"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(),
   });
 
   const validate = Yup.object().shape({

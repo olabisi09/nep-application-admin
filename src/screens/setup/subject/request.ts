@@ -5,11 +5,15 @@ export const CreateUpdateSubject = async (payload: SubjectPayload) => {
     ?.data;
 };
 
-export const getSubjects = async () => {
-  return (await api.get("/Utilities/Utilities/GetAllSubj"))
-    ?.data as SubjectResponse;
+export const getSubjects = async (query: PaginationProps) => {
+  return (
+    await api.get(
+      `/Utilities/Utilities/GetAllSubj?PageNumber=${query.pageNumber}&PageSize=${query.pageSize}`
+    )
+  )?.data as SubjectResponse;
 };
 
 export const deleteSubjects = async (id: number) => {
-  return (await api.delete(`/Utilities/Utilities/DeleteSubj?Id=${id}`))?.data as SubjectResponse;
+  return (await api.delete(`/Utilities/Utilities/DeleteSubj?Id=${id}`))
+    ?.data as SubjectResponse;
 };

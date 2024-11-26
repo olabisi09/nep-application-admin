@@ -19,6 +19,7 @@ import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { deleteCountry, getCountry } from "../../../../requests";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
+import { usePagination } from "../../../../hooks/usePagination";
 
 const CountrySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -28,6 +29,9 @@ const CountrySetup = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as Country);
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { currentPage, onChange } = usePagination();
+
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -47,10 +51,10 @@ const CountrySetup = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-country"],
-    queryFn: getCountry,
+    queryFn: () => getCountry({ pageNumber: currentPage, pageSize: 10 }),
   });
 
-  const CountryData = data?.data as Country[];
+  const countryData = data?.data as Country[];
 
   const items = (record: Country): MenuProps["items"] => [
     {
@@ -71,11 +75,6 @@ const CountrySetup = () => {
     },
   ];
   const columns = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "countryName",
       title: "country Name",
@@ -122,14 +121,15 @@ const CountrySetup = () => {
       });
     }
   };
+
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
 
-  
   return (
     <main>
       <section className="space-between">
@@ -140,6 +140,7 @@ const CountrySetup = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -164,11 +165,17 @@ const CountrySetup = () => {
             )}
           </div>
         </div>
+
         <Table
-          dataSource={CountryData}
+          dataSource={countryData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 
@@ -191,6 +198,7 @@ const CountrySetup = () => {
       >
         <AddCountry handleClose={() => setOpenEdit(false)} data={indexData} />
       </Modal>
+      
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}

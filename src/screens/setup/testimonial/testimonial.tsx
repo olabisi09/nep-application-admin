@@ -21,6 +21,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import { usePagination } from "../../../hooks/usePagination";
 
 const TestimonySetup = () => {
   const { notification } = App.useApp();
@@ -29,47 +30,33 @@ const TestimonySetup = () => {
   const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [testimonial, setTestimonial] = useState<Testimonial>(
     {} as Testimonial
   );
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { currentPage, onChange } = usePagination();
+
   const deleteTestimonialMutation = useMutation({
     mutationFn: deleteTestimonial,
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-testimonials"],
-    queryFn: getAllTestimonials,
+    queryFn: () =>
+      getAllTestimonials({ pageNumber: currentPage, pageSize: 10 }),
   });
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
+
   const handleDelete = (data: Testimonial) => {
     setTestimonial(data);
     setOpenDelete(true);
   };
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
-          Edit
-        </button>
-      ),
-    },
-  ];
+
   const columns: ColumnsType<Testimonial> = [
-    // {
-    //   title: "S/N",
-    //   dataIndex: "index",
-    //   key: "index",
-    //   render: (text: any, record: any, index: number) => (
-    //     <span>{(currentPage - 1) * pageSize + index + 1}</span>
-    //   ),
-    // },
     {
       key: "programName",
       title: "Program Name",
@@ -151,9 +138,11 @@ const TestimonySetup = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+  
   return (
     <main>
       <section className="space-between">
@@ -188,10 +177,17 @@ const TestimonySetup = () => {
             )}
           </div>
         </div>
+
         <Table
           dataSource={testimonialsData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
           rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
@@ -201,7 +197,8 @@ const TestimonySetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Testimonial Setup "
-        footer={null}>
+        footer={null}
+      >
         <AddTestimonial
           handleClose={() => {
             setShowAddModal(false);
@@ -214,7 +211,8 @@ const TestimonySetup = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Testimonial Setup"
-        footer={null}>
+        footer={null}
+      >
         <EditTestimonial
           handleClose={() => setOpenEdit(false)}
           testimonial={testimonial}
@@ -226,14 +224,14 @@ const TestimonySetup = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Testimonial Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteTestimonialMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteTestimonialHandler}
           title={"this item"}
           isActive={false}
-         
         />
       </Modal>
     </main>

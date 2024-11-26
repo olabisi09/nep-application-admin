@@ -19,6 +19,7 @@ import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { deleteSubjects, getSubjects } from "./request";
+import { usePagination } from "../../../hooks/usePagination";
 
 const SubjectSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -28,6 +29,9 @@ const SubjectSetUp = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as Subject);
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { currentPage, onChange } = usePagination();
+
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -47,7 +51,7 @@ const SubjectSetUp = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-subject"],
-    queryFn: getSubjects,
+    queryFn: () => getSubjects({ pageNumber: currentPage, pageSize: 10 }),
   });
 
   const SubjectData = data?.data as Subject[];
@@ -168,8 +172,13 @@ const SubjectSetUp = () => {
         <Table
           dataSource={SubjectData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 

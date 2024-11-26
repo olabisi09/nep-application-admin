@@ -1,8 +1,14 @@
 import api from "../../../utils/api";
 
-export const getReadMoreProgrammes = async () => {
-  return (await api.get("/ReadMore/GetAllReadMoreProgrammes"))
-    ?.data as ReadMoreProgrammeResponse;
+export const getReadMoreProgrammes = async (
+  pageNumber?: number,
+  pageSize?: number
+) => {
+  return (
+    await api.get(
+      `/ReadMore/GetAllReadMoreProgrammes?PageNumber=${pageNumber}&PageSize=${pageSize}`
+    )
+  )?.data as ReadMoreProgrammeResponse;
 };
 
 export const createOrUpdateReadMoreProgrammes = async (

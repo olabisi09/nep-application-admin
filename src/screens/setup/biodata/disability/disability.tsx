@@ -10,7 +10,6 @@ import {
   App,
   Spin,
 } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../../styles.module.scss";
 
 import { useState } from "react";
@@ -31,6 +30,7 @@ const DisabilitySetup = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [disability, setDisability] = useState<Disability>({} as Disability);
   const [openDelete, setOpenDelete] = useState(false);
+  
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({

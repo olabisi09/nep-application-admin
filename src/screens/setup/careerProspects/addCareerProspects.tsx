@@ -29,7 +29,7 @@ const AddCareerProspects = ({
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-all-program"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(),
   });
 
   const programmeData = data?.data ?? [];

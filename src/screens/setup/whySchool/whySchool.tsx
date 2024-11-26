@@ -21,7 +21,6 @@ import DeleteModalContent from "../../deleteModal/deleteModal";
 const WhySchool = () => {
   const { notification } = App.useApp();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
@@ -83,7 +82,7 @@ const WhySchool = () => {
         <h3>Why School Setup</h3>
         {!whyData && (
           <Button
-            onClick={() => setOpen(true)}
+            // onClick={() => setOpen(true)}
             iconBefore={<Plus />}
             text="Setup"
           />

@@ -28,7 +28,7 @@ const SignIn = () => {
     if (user && user?.token && user?.isAdmin === true) {
       navigate("/about-us");
     }
-  }, [user]);
+  }, [user, navigate]);
 
   // console.log(user?.isAdmin);
 

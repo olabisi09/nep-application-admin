@@ -10,7 +10,6 @@ import {
   App,
   Spin,
 } from "antd";
-import { Form, Formik } from "formik";
 import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
 import { useState } from "react";
@@ -30,6 +29,7 @@ const TitleSetup = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [title, setTitle] = useState<Title>({} as Title);
   const [openDelete, setOpenDelete] = useState(false);
+
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -46,7 +46,7 @@ const TitleSetup = () => {
     setOpenDelete(true);
   };
 
-  const DeleteTitleHandler = async () => {
+  const deleteTitleHandler = async () => {
     try {
       await deleteTitleMutation.mutateAsync(title?.id, {
         onSuccess: (data) => {
@@ -125,9 +125,11 @@ const TitleSetup = () => {
   if (isLoading) {
     return <Spin />;
   }
+  
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
   return (
     <main>
       <section className="space-between">
@@ -138,6 +140,7 @@ const TitleSetup = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
@@ -203,7 +206,7 @@ const TitleSetup = () => {
           <DeleteModalContent
             isLoading={deleteTitleMutation?.isPending}
             handleCloseModal={() => setOpenDelete(false)}
-            handleSubmit={DeleteTitleHandler}
+            handleSubmit={deleteTitleHandler}
             title={title?.titleName}
             isActive={false}
           />

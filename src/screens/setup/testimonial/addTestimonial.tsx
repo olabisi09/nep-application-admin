@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
 import { ReactComponent as Image } from "../../../assets/image.svg";
 import Button from "../../../custom/button/button";
@@ -29,7 +28,7 @@ const AddTestimonial = ({ handleClose }: { handleClose: () => void }) => {
     error,
   } = useQuery({
     queryKey: ["get-all-programs"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(),
   });
 
   const validate = Yup.object().shape({
@@ -174,7 +173,7 @@ const EditTestimonial = ({
     error,
   } = useQuery({
     queryKey: ["get-all-programs"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(),
   });
 
   const validate = Yup.object().shape({

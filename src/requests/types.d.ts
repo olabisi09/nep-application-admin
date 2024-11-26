@@ -1,5 +1,6 @@
 interface Response {
   statusCode: number;
+  totalSize: number;
   message: string;
 }
 
@@ -735,6 +736,7 @@ interface DeleteFacultyPayload {
 interface GetFacultyResponse {
   code: number;
   message: string;
+  totalSize: number;
   data: FacultyResponse[];
 }
 
@@ -915,4 +917,9 @@ interface DisplayTab {
   programTypeId: number;
   programTypeName: string;
   isActive: boolean;
+}
+
+interface PaginationProps {
+  pageNumber?: number;
+  pageSize?: number;
 }

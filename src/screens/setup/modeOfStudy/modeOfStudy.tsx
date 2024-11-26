@@ -12,7 +12,7 @@ import {
 } from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
 import { AddModeOfStudy, EditModeOfStudy } from "./addModeOfStudy";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
@@ -31,9 +31,8 @@ const ModeOfStudy = () => {
     {} as ModeOfStudy
   );
   const [openDelete, setOpenDelete] = useState(false);
+  
   const { notification } = App.useApp();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-mode-of-study"],
@@ -73,25 +72,7 @@ const ModeOfStudy = () => {
     setSearchTerm(e.target.value);
   };
 
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <button style={{ border: "0rem" }} onClick={() => setOpenEdit(true)}>
-          Edit
-        </button>
-      ),
-    },
-  ];
   const columns: ColumnsType<ModeOfStudy> = [
-    // {
-    //   title: "S/N",
-    //   dataIndex: "index",
-    //   key: "index",
-    //   render: (text: any, record: any, index: number) => (
-    //     <span>{(currentPage - 1) * pageSize + index + 1}</span>
-    //   ),
-    // },
     {
       key: "name",
       title: "Name",

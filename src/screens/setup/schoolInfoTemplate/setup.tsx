@@ -3,10 +3,9 @@ import Upload from "../../../custom/upload/upload";
 import { ReactComponent as Image } from "../../../assets/image.svg";
 import Button from "../../../custom/button/button";
 import { Form, Formik, FormikValues } from "formik";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createUpdateGeneralTemplate,
-  getGeneralTemplateById,
   StatusOptions,
 } from "../../../requests";
 import Select from "../../../custom/select/select";

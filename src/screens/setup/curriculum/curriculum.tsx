@@ -21,6 +21,7 @@ import { deleteCurriculum, getAllCurriculum } from "../../../requests";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import { usePagination } from "../../../hooks/usePagination";
 
 const CurriculumSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -30,6 +31,8 @@ const CurriculumSetup = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as Curriculum);
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { currentPage, onChange } = usePagination();
 
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
@@ -50,7 +53,7 @@ const CurriculumSetup = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-curriculum"],
-    queryFn: getAllCurriculum,
+    queryFn: () => getAllCurriculum({ pageNumber: currentPage, pageSize: 10 }),
   });
 
   const curriculumData = data?.data as Curriculum[];
@@ -59,21 +62,16 @@ const CurriculumSetup = () => {
     {
       key: "1",
       label: "Edit",
-      onClick: () => handleEdit(record)
+      onClick: () => handleEdit(record),
     },
     {
       key: "2",
       label: "Delete",
-      onClick: () => handleDelete(record)
+      onClick: () => handleDelete(record),
     },
   ];
 
   const columns: ColumnsType<Curriculum> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "programName",
       title: "Program Name",
@@ -110,11 +108,13 @@ const CurriculumSetup = () => {
     },
   ];
 
-  const deleteCuriculumMutation = useMutation({ mutationFn: deleteCurriculum });
+  const deleteCurriculumMutation = useMutation({
+    mutationFn: deleteCurriculum,
+  });
 
   const deleteCurriculumHandler = async () => {
     try {
-      await deleteCuriculumMutation.mutateAsync(indexData.id, {
+      await deleteCurriculumMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -181,8 +181,13 @@ const CurriculumSetup = () => {
         <Table
           dataSource={curriculumData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 
@@ -217,7 +222,7 @@ const CurriculumSetup = () => {
         footer={null}
       >
         <DeleteModalContent
-          isLoading={deleteCuriculumMutation?.isPending}
+          isLoading={deleteCurriculumMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={deleteCurriculumHandler}
           title={indexData?.programName}

@@ -25,6 +25,7 @@ import {
 } from "./addReadMoreProgram";
 import { deleteReadMoreProgram } from "../../../requests";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import { usePagination } from "../../../hooks/usePagination";
 
 const ReadMoreProgram = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -35,8 +36,9 @@ const ReadMoreProgram = () => {
   const [programme, setProgramme] = useState<ReadMoreProgramme>(
     {} as ReadMoreProgramme
   );
-
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { currentPage, onChange } = usePagination();
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -44,7 +46,7 @@ const ReadMoreProgram = () => {
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-read-more-programmes"],
-    queryFn: getReadMoreProgrammes,
+    queryFn: () => getReadMoreProgrammes(currentPage, 10),
   });
 
   const courseOverviewData = data?.data ?? [];
@@ -74,11 +76,6 @@ const ReadMoreProgram = () => {
   };
 
   const columns: ColumnsType<ReadMoreProgramme> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "programName",
       title: "Program Name",
@@ -193,8 +190,13 @@ const ReadMoreProgram = () => {
         <Table
           dataSource={courseOverviewData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 
@@ -203,7 +205,8 @@ const ReadMoreProgram = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Read More - Program Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddReadMoreProgramme handleClose={handleCloseModal} />
       </Modal>
 
@@ -212,7 +215,8 @@ const ReadMoreProgram = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Read More - Program Setup"
-        footer={null}>
+        footer={null}
+      >
         <EditReadMoreProgramme
           handleClose={handleCloseModal}
           record={programme}
@@ -224,7 +228,8 @@ const ReadMoreProgram = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Read More Program Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteReadProgramViewMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

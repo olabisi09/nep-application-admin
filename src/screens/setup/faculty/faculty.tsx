@@ -22,6 +22,7 @@ import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import AddFaculty from "./addFaculty";
 import { deleteFaculty, getFaculty } from "../../../requests";
 import EditFaculty from "./editFaculty";
+import { usePagination } from "../../../hooks/usePagination";
 
 const FacultySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -32,8 +33,18 @@ const FacultySetup = () => {
   const [indexData, setIndexData] = useState({} as FacultyResponse);
   const [openDelete, setOpenDelete] = useState(false);
 
+  const { currentPage, onChange } = usePagination();
+
   const { notification } = App.useApp();
+
   const queryClient = useQueryClient();
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["get-faculty"],
+    queryFn: () => getFaculty(currentPage, 10),
+  });
+
+  const facultyData = data?.data ?? [];
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -55,13 +66,6 @@ const FacultySetup = () => {
       });
     }
   };
-
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-faculty"],
-    queryFn: getFaculty,
-  });
-
-  const facultyData = data?.data ?? [];
 
   const items = (record: FacultyResponse): MenuProps["items"] => [
     {
@@ -194,7 +198,13 @@ const FacultySetup = () => {
         <Table
           dataSource={facultyData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
         />
       </section>
 
@@ -203,7 +213,8 @@ const FacultySetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Faculty Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddFaculty handleClose={() => setShowAddModal(false)} />
       </Modal>
 
@@ -212,7 +223,8 @@ const FacultySetup = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Faculty"
-        footer={null}>
+        footer={null}
+      >
         <EditFaculty
           handleClose={() => setOpenEdit(false)}
           record={indexData}
@@ -224,7 +236,8 @@ const FacultySetup = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Faculty Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteFacultyMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

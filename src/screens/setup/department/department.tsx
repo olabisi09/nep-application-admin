@@ -21,6 +21,7 @@ import {
 import { ColumnsType } from "antd/es/table";
 import { CreateDepartment, EditDepartment } from "./setup";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import { usePagination } from "../../../hooks/usePagination";
 
 const Department = () => {
   const { notification } = App.useApp();
@@ -29,13 +30,15 @@ const Department = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const [department, setDepartment] = useState<Program>({} as Program);
 
+  const { currentPage, onChange } = usePagination();
+
   const deleteDepartmentMutation = useMutation({
     mutationFn: deleteDepartment,
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-department"],
-    queryFn: getAllPrograms,
+    queryFn: () => getAllPrograms(currentPage, 10),
   });
 
   const facultyQuery = useQuery({
@@ -44,11 +47,6 @@ const Department = () => {
   });
 
   const columns: ColumnsType<Program> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "name",
       title: "Department name",
@@ -142,45 +140,59 @@ const Department = () => {
           text="Setup"
         />
       </section>
+
       <br />
+
       <Card bordered={false}>
         <Table
           dataSource={departments}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{
+            position: ["bottomCenter"],
+            current: currentPage,
+            total: data?.totalSize,
+            onChange: onChange,
+            pageSize: 10,
+          }}
           rowKey={(record) => record.id}
           scroll={{ x: true }}
         />
       </Card>
+
       <Modal
         open={open}
         onCancel={() => setOpen(false)}
         centered
         title="Create Department"
-        footer={null}>
+        footer={null}
+      >
         <CreateDepartment
           handleClose={() => setOpen(false)}
           faculties={faculties}
         />
       </Modal>
+
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Department"
-        footer={null}>
+        footer={null}
+      >
         <EditDepartment
           item={department}
           handleClose={() => setOpenEdit(false)}
           faculties={faculties}
         />
       </Modal>
+
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Department"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           handleCloseModal={() => setOpenDelete(false)}
           handleSubmit={() => handleDeleteDepartment(department)}

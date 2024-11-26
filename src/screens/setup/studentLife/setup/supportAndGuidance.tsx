@@ -48,37 +48,6 @@ const SupportAndGuidance = ({
     }
   };
 
-  const handleEditSupportGuidance = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
-    const payload: Partial<Setup> = {
-      id: item.id,
-      title: values.title,
-      description: values.description,
-      activeStatus: values.status === "Active",
-    };
-
-    try {
-      await addSupportGuidanceMutation.mutateAsync(payload, {
-        onSuccess: (data) => {
-          notification.success({
-            message: "Success",
-            description: data?.message,
-          });
-          queryClient.refetchQueries({ queryKey: ["get-student-life"] });
-          handleClose();
-          resetForm();
-        },
-      });
-    } catch (error: any) {
-      notification.error({
-        message: "Error",
-        description: error?.response?.data?.message,
-      });
-    }
-  };
-
   const statusOptions = (
     <>
       <option>Active</option>
