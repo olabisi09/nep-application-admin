@@ -22,7 +22,7 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
 
   const queries = useQueries({
     queries: [
-      { queryKey: ["get-all-session"], queryFn: () => getAllAcademicSession() },
+      { queryKey: ["get-all-session"], queryFn: () => getAllAcademicSession(1, 10) },
       { queryKey: ["get-all-program"], queryFn: getAllProgram },
     ],
   });

@@ -1,6 +1,6 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+// import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -20,17 +20,18 @@ import { Button, SearchInput } from "../../../custom";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { AddDisplayTab } from "./addDisplayTab";
 import { usePagination } from "../../../hooks/usePagination";
+import { useSearchTerms } from "../../../hooks/useSearchTerms";
 
 const DisplayTabSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
+  // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [displayTab, setDisplayTab] = useState<DisplayTab>({} as DisplayTab);
   const [openDelete, setOpenDelete] = useState(false);
 
   const { currentPage, onChange } = usePagination();
+  const { searchTerm, handleSearch } = useSearchTerms();
 
   const { notification } = App.useApp();
 
@@ -66,10 +67,6 @@ const DisplayTabSetup = () => {
         description: error?.response?.data?.message,
       });
     }
-  };
-
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
   };
 
   const columns: ColumnsType<DisplayTab> = [
@@ -140,6 +137,16 @@ const DisplayTabSetup = () => {
 
   const displayTabData = data?.data;
 
+  const filteredData = displayTabData?.filter(
+    (item) =>
+      item?.programTypeName
+        ?.toLowerCase()
+        ?.includes(searchTerm.toLowerCase()) ||
+      item?.sessionName?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
+      item?.tabName?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
+      item?.batchName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
+
   const handleOpenModal = () => {
     setDisplayTab({} as DisplayTab);
     setShowAddModal((prevState) => !prevState);
@@ -162,7 +169,10 @@ const DisplayTabSetup = () => {
 
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {displayTabData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -171,21 +181,23 @@ const DisplayTabSetup = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
+
         <Table
-          dataSource={displayTabData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],

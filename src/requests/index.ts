@@ -644,10 +644,10 @@ export const createOrUpdateScholarship = async (
     ?.data as Response;
 };
 
-export const getAllScholarships = async (query: PaginationProps) => {
+export const getAllScholarships = async (pageNumber?: number, pageSize?: number) => {
   return (
     await api.get(
-      `/ReadMore/GetAllScholarship?PageNumber=${query.pageNumber}&PageSize=${query.pageSize}`
+      `/ReadMore/GetAllScholarship?PageNumber=${pageNumber}&PageSize=${pageSize}`
     )
   )?.data as ScholarshipResponse;
 };
@@ -1068,10 +1068,10 @@ export const updateFaculty = async ({
   )?.data as updateFacultyResponse;
 };
 
-export const getAllCurriculum = async (query: PaginationProps) => {
+export const getAllCurriculum = async (pageNumber?: number, pageSize?: number) => {
   return (
     await api.get(
-      `/ReadMore/GetAllCurriculum?PageNumber=${query.pageNumber}&PageSize=${query.pageSize}`
+      `/ReadMore/GetAllCurriculum?PageNumber=${pageNumber}&PageSize=${pageSize}`
     )
   )?.data as CurriculumResponse;
 };

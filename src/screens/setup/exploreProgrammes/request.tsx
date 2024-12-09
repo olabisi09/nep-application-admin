@@ -1,7 +1,8 @@
 import api from "../../../utils/api";
 
 export const CreateUpdateExplore = async (payload: ExplorePayload) => {
-  return (await api.post("/Utilities/Utilities/CreateUpdateExplore", payload))?.data;
+  return (await api.post("/Utilities/Utilities/CreateUpdateExplore", payload))
+    ?.data;
 };
 
 export const getAllExplore = async () => {
@@ -9,3 +10,6 @@ export const getAllExplore = async () => {
     ?.data as ExploreResponse;
 };
 
+export const deleteExplore = async (id: number) => {
+  return (await api.delete(`/Utilities/Utilities/DeleteExplor?Id=${id}`))?.data;
+};

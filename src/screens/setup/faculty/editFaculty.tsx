@@ -23,7 +23,7 @@ const EditFaculty = ({ handleClose, record }: Props) => {
 
   const editFacultyMutation = useMutation({
     mutationFn: editFaculty,
-  });
+  });  
 
   const facultyHandler = async (
     values: FormikValues,
@@ -34,6 +34,7 @@ const EditFaculty = ({ handleClose, record }: Props) => {
       description: values.description,
       categoryCode: values.categoryCode,
       name: values.name,
+      activeStatus: values.activeStatus === "true",
     };
 
     try {
@@ -63,6 +64,7 @@ const EditFaculty = ({ handleClose, record }: Props) => {
         name: record?.name ?? "",
         description: record?.description ?? "",
         categoryCode: record?.categoryCode ?? "",
+        activeStatus: record?.activeStatus,
       }}
       onSubmit={(values, { resetForm }) => {
         facultyHandler(values, resetForm);
@@ -70,7 +72,9 @@ const EditFaculty = ({ handleClose, record }: Props) => {
       validationSchema={validate}
       enableReinitialize={true}
     >
-      {() => {
+      {({ values }) => {
+        console.log(values.activeStatus);
+
         return (
           <Form className="fields">
             <Input

@@ -181,7 +181,7 @@ export const EditEvent = ({
     } catch (error: any) {
       notification.error({
         message: "Error",
-        description: error?.response?.data?.message,
+        description: error?.response?.data?.message ?? error?.response?.data?.errors?.Image[0],
       });
     }
   };

@@ -1,6 +1,4 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -13,7 +11,6 @@ import {
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import {
   deleteQualificationType,
@@ -24,19 +21,13 @@ import DeleteModalContent from "../../deleteModal/deleteModal";
 import AddQualificationType from "./addQualificationType";
 
 const Qualification = () => {
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as QualificationType);
   const [openDelete, setOpenDelete] = useState(false);
   const { notification } = App.useApp();
-  const queryClient = useQueryClient();
 
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
+  const queryClient = useQueryClient();
 
   const handleEdit = (data: QualificationType) => {
     setIndexData(data);
@@ -75,11 +66,6 @@ const Qualification = () => {
   ];
 
   const columns = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "qualificationName",
       title: "Qualification Name",
@@ -149,7 +135,7 @@ const Qualification = () => {
       </section>
 
       <section className={styles.card}>
-        <div className={styles.inside}>
+        {/* <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
           <div>
             {!showSearch && (
@@ -171,7 +157,7 @@ const Qualification = () => {
               />
             )}
           </div>
-        </div>
+        </div> */}
 
         <Table
           dataSource={QualificationTypeData}

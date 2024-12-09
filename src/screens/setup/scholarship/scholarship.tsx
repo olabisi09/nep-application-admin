@@ -1,6 +1,6 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+// import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -22,11 +22,11 @@ import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { usePagination } from "../../../hooks/usePagination";
+import { useSearchTerms } from "../../../hooks/useSearchTerms";
 
 const ScholarShip = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
+  // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [scholarship, setScholarship] = useState<CommonPayload>(
@@ -35,13 +35,12 @@ const ScholarShip = () => {
   const [openDelete, setOpenDelete] = useState(false);
 
   const { currentPage, onChange } = usePagination();
-
+  const { searchTerm, handleSearch } = useSearchTerms();
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-scholarship"],
-    queryFn: () =>
-      getAllScholarships({ pageNumber: currentPage, pageSize: 10 }),
+    queryFn: () => getAllScholarships(currentPage, 10),
   });
 
   const deleteScholarshipMutation = useMutation({
@@ -71,10 +70,6 @@ const ScholarShip = () => {
         description: error?.response?.data?.message,
       });
     }
-  };
-
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
   };
 
   const columns: ColumnsType<CommonPayload> = [
@@ -123,6 +118,7 @@ const ScholarShip = () => {
             ),
           },
         ];
+
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />
@@ -132,7 +128,11 @@ const ScholarShip = () => {
     },
   ];
 
-  const scholarships = data?.data;
+  const scholarshipData = data?.data;
+
+  const filteredData = scholarshipData?.filter((item) =>
+    item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
 
   if (isLoading) {
     return <Spin />;
@@ -155,7 +155,10 @@ const ScholarShip = () => {
 
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {scholarshipData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -168,17 +171,18 @@ const ScholarShip = () => {
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
+
         <Table
-          dataSource={scholarships}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],

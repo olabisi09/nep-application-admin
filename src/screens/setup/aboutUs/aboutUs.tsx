@@ -117,9 +117,11 @@ const AboutUs = () => {
   if (isLoading) {
     return <Spin />;
   }
+  
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
   return (
     <div>
       <section className="space-between">

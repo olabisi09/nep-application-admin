@@ -181,7 +181,7 @@ export const EditTuitionYears = ({
       tuitionId: values?.tuition,
       levelId: values?.level,
       feeDescription: values?.description,
-      isActive: !!values?.status,
+      isActive: values?.status === 'true',
     };
 
     try {

@@ -54,7 +54,7 @@ const SetupWhySchool = ({ data, handleClose }: Props) => {
   };
 
   const validationSchema = object().shape({
-    title: string().required("Title is required"),
+    title: string().required("Why us title is required"),
     status: string().required("Status is required"),
   });
 
@@ -78,12 +78,14 @@ const SetupWhySchool = ({ data, handleClose }: Props) => {
       {() => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />
+
           <Select
             name="status"
             label="Status"
             placeholder="Active"
             options={statusOptions}
           />
+
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button

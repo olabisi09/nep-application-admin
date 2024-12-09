@@ -1,6 +1,5 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -26,7 +25,6 @@ import { usePagination } from "../../../hooks/usePagination";
 const CurriculumSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as Curriculum);
@@ -37,7 +35,7 @@ const CurriculumSetup = () => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -53,10 +51,14 @@ const CurriculumSetup = () => {
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-curriculum"],
-    queryFn: () => getAllCurriculum({ pageNumber: currentPage, pageSize: 10 }),
+    queryFn: () => getAllCurriculum(currentPage, 10),
   });
 
   const curriculumData = data?.data as Curriculum[];
+
+  const filteredData = curriculumData?.filter((item) =>
+    item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
 
   const items = (record: Curriculum): MenuProps["items"] => [
     {
@@ -136,6 +138,11 @@ const CurriculumSetup = () => {
     }
   };
 
+  const handleModalOpen = () => {
+    setIndexData({} as Curriculum);
+    setShowAddModal((prevState) => !prevState);
+  };
+
   if (isLoading) {
     return <Spin />;
   }
@@ -148,15 +155,15 @@ const CurriculumSetup = () => {
     <main>
       <section className="space-between">
         <h3>Curriculum Setup</h3>
-        <Button
-          onClick={() => setShowAddModal(true)}
-          iconBefore={<Add />}
-          text="Setup"
-        />
+        <Button onClick={handleModalOpen} iconBefore={<Add />} text="Setup" />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {curriculumData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -165,21 +172,23 @@ const CurriculumSetup = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
+
         <Table
-          dataSource={curriculumData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],

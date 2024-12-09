@@ -156,7 +156,7 @@ const EditTitle = ({
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button
-            text="Create"
+            text="Update"
             isLoading={editTitleMutation.isPending}
             disabled={editTitleMutation.isPending}
           />

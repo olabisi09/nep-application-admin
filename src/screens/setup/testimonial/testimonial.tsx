@@ -1,6 +1,6 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+// import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -22,20 +22,20 @@ import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { usePagination } from "../../../hooks/usePagination";
+import { useSearchTerms } from "../../../hooks/useSearchTerms";
 
 const TestimonySetup = () => {
   const { notification } = App.useApp();
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
+  // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [testimonial, setTestimonial] = useState<Testimonial>(
     {} as Testimonial
   );
   const [openDelete, setOpenDelete] = useState(false);
-
   const { currentPage, onChange } = usePagination();
+  const { searchTerm, handleSearch } = useSearchTerms();
 
   const deleteTestimonialMutation = useMutation({
     mutationFn: deleteTestimonial,
@@ -46,10 +46,6 @@ const TestimonySetup = () => {
     queryFn: () =>
       getAllTestimonials({ pageNumber: currentPage, pageSize: 10 }),
   });
-
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
 
   const handleDelete = (data: Testimonial) => {
     setTestimonial(data);
@@ -135,6 +131,10 @@ const TestimonySetup = () => {
 
   const testimonialsData = data?.data;
 
+  const filteredData = testimonialsData?.filter((item) =>
+    item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
+
   if (isLoading) {
     return <Spin />;
   }
@@ -142,7 +142,7 @@ const TestimonySetup = () => {
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
-  
+
   return (
     <main>
       <section className="space-between">
@@ -153,9 +153,13 @@ const TestimonySetup = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {testimonialsData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -164,22 +168,23 @@ const TestimonySetup = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
 
         <Table
-          dataSource={testimonialsData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],

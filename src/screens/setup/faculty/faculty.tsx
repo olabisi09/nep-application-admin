@@ -1,6 +1,6 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+// import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -18,7 +18,6 @@ import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { ColumnsType } from "antd/es/table";
-import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import AddFaculty from "./addFaculty";
 import { deleteFaculty, getFaculty } from "../../../requests";
 import EditFaculty from "./editFaculty";
@@ -27,12 +26,11 @@ import { usePagination } from "../../../hooks/usePagination";
 const FacultySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
+  // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as FacultyResponse);
   const [openDelete, setOpenDelete] = useState(false);
-
   const { currentPage, onChange } = usePagination();
 
   const { notification } = App.useApp();
@@ -46,7 +44,11 @@ const FacultySetup = () => {
 
   const facultyData = data?.data ?? [];
 
-  const handleSearch = (e: any) => {
+  const filteredData = facultyData?.filter((faculty) =>
+    faculty?.name?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -81,11 +83,6 @@ const FacultySetup = () => {
   ];
 
   const columns: ColumnsType<FacultyResponse> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "name",
       title: "Faculty Name",
@@ -95,15 +92,6 @@ const FacultySetup = () => {
       key: "categoryCode",
       title: "Faculty Code ",
       dataIndex: "categoryCode",
-    },
-    {
-      key: "description",
-      title: "Description",
-      dataIndex: "description",
-      render: (_, { description }) => {
-        const limitedCleanHtml = sanitizeAndLimitString(description);
-        return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
-      },
     },
     {
       key: "status",
@@ -172,7 +160,10 @@ const FacultySetup = () => {
 
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {facultyData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -181,22 +172,15 @@ const FacultySetup = () => {
                 />
               </span>
             )}
+            
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
-            )}
-
-            {!showAllFilter && (
-              <Filter
-                onClick={() =>
-                  setShowAllFilter((showAllFilter) => !showAllFilter)
-                }
-              />
             )}
           </div>
         </div>
 
         <Table
-          dataSource={facultyData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],

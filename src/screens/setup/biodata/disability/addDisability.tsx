@@ -18,6 +18,7 @@ const AddDisability = ({ handleClose }: { handleClose: () => void }) => {
     name: Yup.string().required("Disability Name is required"),
     isActive: Yup.string().required("Status is required"),
   });
+
   const handleAddDisability = async (
     values: FormikValues,
     resetForm: () => void
@@ -46,6 +47,7 @@ const AddDisability = ({ handleClose }: { handleClose: () => void }) => {
       });
     }
   };
+
   return (
     <Formik
       initialValues={{ name: "", isActive: "" }}
@@ -97,9 +99,11 @@ const EditDisability = ({
     name: Yup.string().required("Title Name is required"),
     isActive: Yup.string().required("Status is required"),
   });
+
   const editDisabilityMutation = useMutation({
     mutationFn: createOrUpdateDisability,
   });
+
   const handleEditTitle = async (
     values: FormikValues,
     resetForm: () => void
@@ -144,6 +148,7 @@ const EditDisability = ({
     >
       <Form className="fields">
         <Input name="name" label="Disability" placeholder="Input Disability" />
+        
         <Select
           name="isActive"
           placeholder="Select Status"

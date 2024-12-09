@@ -1,7 +1,7 @@
 import { Form, Formik, FormikValues } from "formik";
 import Input from "../../custom/input/input";
 import Button from "../../custom/button/button";
-import { App, Checkbox } from "antd";
+import { App, Checkbox, Spin } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
 import { validator } from "../../utils/validator";
@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { signInUser } from "../../requests";
 import { userAtom } from "../../utils/store";
 import { useEffect } from "react";
+import { useValidateUser } from "../../hooks/useValidateUser";
 
 const SignIn = () => {
   const setUser = useSetAtom(userAtom);
@@ -18,27 +19,27 @@ const SignIn = () => {
 
   const { notification } = App.useApp();
   const navigate = useNavigate();
+  const { isLoading } = useValidateUser();
 
-  const SignInMutation = useMutation({
+  const signInMutation = useMutation({
     mutationKey: ["SignIn"],
     mutationFn: signInUser,
   });
 
   useEffect(() => {
     if (user && user?.token && user?.isAdmin === true) {
-      navigate("/about-us");
+      navigate("/about-us", { replace: true });
     }
-  }, [user, navigate]);
+  }, [navigate, user]);
 
-  // console.log(user?.isAdmin);
-
-  const handleSignIn = async (values: FormikValues) => {
+  const handleSignIn = async (values: FormikValues, resetForm: () => void) => {
     const payload: SignInPayload = {
       email: values.email,
       password: values.password,
     };
+
     try {
-      await SignInMutation.mutateAsync(payload, {
+      await signInMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -54,6 +55,8 @@ const SignIn = () => {
             role: data?.data?.role,
             isAdmin: data?.data?.isAdmin,
           });
+
+          resetForm();
         },
       });
     } catch (error: any) {
@@ -69,22 +72,28 @@ const SignIn = () => {
     password: validator.password,
   });
 
+  if (isLoading) {
+    return <Spin />;
+  }
+
   return (
     <div className="formContainer">
       <h4 className="text-center">Welcome!</h4>
       <small className="text-center">Log in to your account</small>
       <br />
+
       <Formik
         initialValues={{
           email: "",
           password: "",
         }}
-        onSubmit={(values) => {
-          handleSignIn(values);
+        onSubmit={(values, { resetForm }) => {
+          handleSignIn(values, resetForm);
         }}
         validationSchema={validationSchema}
+        enableReinitialize
       >
-        {(props) => {
+        {() => {
           return (
             <Form className="fields">
               <Input
@@ -92,6 +101,7 @@ const SignIn = () => {
                 label="Email Address"
                 placeholder="Input email"
               />
+
               <Input
                 name="password"
                 type="password"
@@ -103,12 +113,12 @@ const SignIn = () => {
                 <Checkbox>Remember me</Checkbox>
                 <Link to={routes.auth.forgotPassword}>Forgot Password?</Link>
               </div>
-              
+
               <Button
                 type="submit"
                 text="Login"
-                disabled={SignInMutation?.isPending}
-                isLoading={SignInMutation?.isPending}
+                disabled={signInMutation?.isPending}
+                isLoading={signInMutation?.isPending}
               />
             </Form>
           );

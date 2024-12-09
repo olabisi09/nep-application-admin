@@ -1,6 +1,5 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -31,7 +30,6 @@ const Tuition = () => {
   const { notification } = App.useApp();
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [tuition, setTuition] = useState<Tuition>({} as Tuition);
@@ -43,11 +41,11 @@ const Tuition = () => {
     queries: [
       {
         queryKey: ["getAll-tuition"],
-        queryFn: () => getAllTuitionFee(),
+        queryFn: () => getAllTuitionFee(currentPage, 10),
       },
       {
         queryKey: ["getAll-programs"],
-        queryFn: () => getAllPrograms(currentPage, 10),
+        queryFn: () => getAllPrograms(1, 10),
       },
     ],
   });
@@ -67,7 +65,7 @@ const Tuition = () => {
     error: programsError,
   } = queryResults[1];
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -145,6 +143,12 @@ const Tuition = () => {
     },
   ];
 
+  const tuitions = tuitionData?.data as Tuition[];
+
+  const filteredData = tuitions?.filter((item) =>
+    item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
+
   if (isTuitionLoading || isProgramsLoading) {
     return <Spin />;
   }
@@ -152,8 +156,6 @@ const Tuition = () => {
   if (isTuitionError || isProgramsError) {
     return <div>Error: {tuitionError?.message || programsError?.message}</div>;
   }
-
-  const tuitions = tuitionData?.data as Tuition[];
 
   return (
     <main>
@@ -165,9 +167,13 @@ const Tuition = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {tuitions?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -176,21 +182,23 @@ const Tuition = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
+
         <Table
-          dataSource={tuitions}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],

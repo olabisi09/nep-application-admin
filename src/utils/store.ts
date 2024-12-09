@@ -13,7 +13,7 @@ type UserData = {
 
 const defaultUser = localStorage.getItem("student-info");
 
-export const userAtom = atomWithStorage<UserData>(
+export const userAtom = atomWithStorage<UserData | undefined>(
   "student-info",
   JSON.parse(defaultUser!) ?? undefined
 );

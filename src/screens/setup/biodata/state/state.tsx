@@ -36,7 +36,7 @@ const StateSetup = () => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -57,6 +57,10 @@ const StateSetup = () => {
 
   const stateData = data?.data as State[];
 
+  const filteredData = stateData?.filter((state) =>
+    state?.stateName?.toLowerCase()?.includes(searchTerm.toLowerCase()) 
+  );
+
   const items = (record: State): MenuProps["items"] => [
     {
       key: "1",
@@ -75,13 +79,8 @@ const StateSetup = () => {
       ),
     },
   ];
-  const columns = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
 
+  const columns = [
     {
       key: "countryId",
       title: "Country Name",
@@ -112,7 +111,7 @@ const StateSetup = () => {
 
   const deleteStateMutation = useMutation({ mutationFn: deleteState });
 
-  const DeleteStateHandler = async () => {
+  const deleteStateHandler = async () => {
     try {
       await deleteStateMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
@@ -134,9 +133,12 @@ const StateSetup = () => {
     }
   };
 
+  // const currentPageSize = 
+
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -151,9 +153,11 @@ const StateSetup = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>Showing 1-{filteredData?.length} of {stateData?.length}</p>
+
           <div>
             {!showSearch && (
               <span>
@@ -162,21 +166,23 @@ const StateSetup = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
+
         <Table
-          dataSource={stateData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],
@@ -221,7 +227,7 @@ const StateSetup = () => {
         <DeleteModalContent
           isLoading={deleteStateMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteStateHandler}
+          handleSubmit={deleteStateHandler}
           title={indexData?.stateName}
         />
       </Modal>

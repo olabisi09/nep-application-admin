@@ -24,7 +24,10 @@ const AddMarital = ({ handleClose, data }: Props) => {
     mutationKey: ["create-marital-status"],
   });
 
-  const createMaritalStatusHandler = async (values: FormikValues) => {
+  const createMaritalStatusHandler = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     const payload: Partial<MaritalStatus> = {
       id: data?.id || 0,
       statusName: values.maritalName,
@@ -42,6 +45,7 @@ const AddMarital = ({ handleClose, data }: Props) => {
             queryKey: ["get-marital-status"],
           });
           handleClose();
+          resetForm();
         },
       });
     } catch (error: any) {
@@ -60,12 +64,12 @@ const AddMarital = ({ handleClose, data }: Props) => {
   return (
     <Formik
       initialValues={{
-        maritalName: data?.statusName,
+        maritalName: data?.statusName ?? "",
         status:
           data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
       }}
-      onSubmit={(values) => {
-        createMaritalStatusHandler(values);
+      onSubmit={(values, { resetForm }) => {
+        createMaritalStatusHandler(values, resetForm);
       }}
       enableReinitialize={true}
       validationSchema={validationSchema}
@@ -77,6 +81,7 @@ const AddMarital = ({ handleClose, data }: Props) => {
             placeholder="Input Marital Status Name"
             label="Marital Status Name"
           />
+
           <Select
             name="status"
             placeholder="Select Status"
@@ -91,6 +96,7 @@ const AddMarital = ({ handleClose, data }: Props) => {
               </>
             }
           />
+          
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button

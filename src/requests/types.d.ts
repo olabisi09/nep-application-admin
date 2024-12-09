@@ -292,6 +292,7 @@ interface AdmissionRequirement {
   id: number;
   isDeleted: boolean;
   readMoreId: number;
+  programName: string;
 }
 
 interface AdmissionRequirementResponse extends Response {
@@ -318,6 +319,7 @@ interface CommonPayload {
   readmoreId: number;
   description: string;
   activeStatus: boolean;
+  programName: string;
   isDeleted: boolean;
 }
 
@@ -331,6 +333,7 @@ interface Testimonial {
   image: any;
   imageUrl: string;
   description: string;
+  programName: string;
   activeStatus: boolean;
   isDeleted: boolean;
 }
@@ -646,7 +649,7 @@ interface ResetPayload {
 }
 
 interface getAllFeeSetupResponse extends Response {
-  data: getAllFeeSetup[];
+  data: GetAllFeeSetup[];
 }
 
 interface GetAllFeeSetup {
@@ -728,6 +731,7 @@ interface createOrUpdateFacultyPayload {
   categoryCode: string;
   name: string;
   description: string;
+  activeStatus: boolean;
 }
 
 interface DeleteFacultyPayload {

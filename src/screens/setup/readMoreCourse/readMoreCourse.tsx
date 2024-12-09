@@ -1,6 +1,6 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+// import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -30,7 +30,7 @@ import { usePagination } from "../../../hooks/usePagination";
 const ReadMoreCourse = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
+  // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [courseOverview, setCourseOverview] = useState<ReadMoreOverview>(
@@ -40,7 +40,7 @@ const ReadMoreCourse = () => {
 
   const { currentPage, onChange } = usePagination();
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -50,6 +50,10 @@ const ReadMoreCourse = () => {
   });
 
   const courseOverviewData = data?.data ?? [];
+
+  const filteredData = courseOverviewData?.filter((item) =>
+    item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
 
   const deleteReadMoreOverViewMutation = useMutation({
     mutationFn: deleteReadMoreOverView,
@@ -76,11 +80,6 @@ const ReadMoreCourse = () => {
   };
 
   const columns: ColumnsType<ReadMoreOverview> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "programName",
       title: "Program Name",
@@ -138,6 +137,10 @@ const ReadMoreCourse = () => {
     setOpenEdit(false);
   }, []);
 
+  const handleOpenModal = () => {
+    setShowAddModal((prevState) => !prevState);
+  };
+
   if (isLoading) {
     return <Spin size="large" />;
   }
@@ -151,7 +154,7 @@ const ReadMoreCourse = () => {
       <section className="space-between">
         <h3>Read More - Course Overview Setup</h3>
         <Button
-          onClick={() => setShowAddModal(true)}
+          onClick={handleOpenModal}
           iconBefore={<Add />}
           text="Setup"
         />
@@ -168,22 +171,23 @@ const ReadMoreCourse = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
 
         <Table
-          dataSource={courseOverviewData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],

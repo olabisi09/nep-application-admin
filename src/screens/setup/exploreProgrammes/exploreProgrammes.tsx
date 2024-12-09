@@ -6,6 +6,7 @@ import {
   Table,
   Button as AntButton,
   Spin,
+  App,
 } from "antd";
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
@@ -13,43 +14,45 @@ import Button from "../../../custom/button/button";
 import { useState } from "react";
 import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import { getAllExplore } from "./request";
+import { deleteExplore, getAllExplore } from "./request";
 import { CreateExplore, EditExplore } from "./addExploreProgrammes";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const ExploreProgrammes = () => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [explore, setExplore] = useState<Explore>({} as Explore);
-  // const [openDelete, setOpenDelete] = useState(false);  
-  // const [record, setRecord] = useState<AboutUs>({} as AboutUs);
+  const [openDelete, setOpenDelete] = useState(false);
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { notification } = App.useApp();
+
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-explore"],
     queryFn: getAllExplore,
   });
 
-  // const deleteAboutUsMutation = useMutation({ mutationFn: deleteAboutUs });
+  const deleteExploreMutation = useMutation({ mutationFn: deleteExplore });
 
-  // const deleteAboutUsHandler = async () => {
-  //   try {
-  //     await deleteAboutUsMutation.mutateAsync(about?.id, {
-  //       onSuccess: (data) => {
-  //         notification.success({
-  //           message: "Success",
-  //           description: data?.message,
-  //         });
-  //         refetch();
-  //         setOpenDelete((prevState) => !prevState);
-  //       },
-  //     });
-  //   } catch (error: any) {
-  //     notification.error({
-  //       message: "Error",
-  //       description: error?.response?.data?.message,
-  //     });
-  //   }
-  // };
+  const deleteExploreHandler = async () => {
+    try {
+      await deleteExploreMutation.mutateAsync(explore?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
+    } catch (error: any) {
+      notification.error({
+        message: "Error",
+        description: error?.response?.data?.message,
+      });
+    }
+  };
 
   const columns: ColumnsType<Explore> = [
     {
@@ -85,14 +88,14 @@ const ExploreProgrammes = () => {
               setOpenEdit(true);
             },
           },
-          // {
-          //   key: "2",
-          //   label: "Delete",
-          //   onClick: () => {
-          //     setAbout(record);
-          //     setOpenDelete(true);
-          //   },
-          // },
+          {
+            key: "2",
+            label: "Delete",
+            onClick: () => {
+              setExplore(record);
+              setOpenDelete((prevState) => !prevState);
+            },
+          },
         ];
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
@@ -104,6 +107,11 @@ const ExploreProgrammes = () => {
   ];
 
   const aboutUs = data?.data as Explore[];
+
+  const handleOpenModal = () => {
+    setExplore({} as Explore);
+    setOpen((prevState) => !prevState);
+  };
 
   if (isLoading) {
     return <Spin />;
@@ -118,7 +126,7 @@ const ExploreProgrammes = () => {
       <section className="space-between">
         <h3>Explore Programmes Setup</h3>
         <Button
-          onClick={() => setOpen(true)}
+          onClick={handleOpenModal}
           iconBefore={<Plus />}
           text="Setup"
         />
@@ -156,19 +164,20 @@ const ExploreProgrammes = () => {
         <EditExplore item={explore} handleClose={() => setOpenEdit(false)} />
       </Modal>
 
-      {/* <Modal
-          open={openDelete}
-          onCancel={() => setOpenDelete(false)}
-          centered
-          title="Delete About Us Setup"
-          footer={null}>
-          <DeleteModalContent
-            isLoading={deleteAboutUsMutation?.isPending}
-            handleCloseModal={() => setOpenDelete(false)}
-            handleSubmit={deleteAboutUsHandler}
-            title={about?.title}
-          />
-        </Modal> */}
+      <Modal
+        open={openDelete}
+        onCancel={() => setOpenDelete(false)}
+        centered
+        title="Delete About Us Setup"
+        footer={null}
+      >
+        <DeleteModalContent
+          isLoading={deleteExploreMutation?.isPending}
+          handleCloseModal={() => setOpenDelete(false)}
+          handleSubmit={deleteExploreHandler}
+          title={explore?.title}
+        />
+      </Modal>
     </div>
   );
 };

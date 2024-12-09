@@ -1,11 +1,16 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+  App,
+} from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
 import AddLevel, { EditLevel } from "./addLevel";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -14,31 +19,24 @@ import { ColumnsType } from "antd/es/table";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const Level = () => {
-  const { notification } = App.useApp();
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [level, setLevel] = useState<Level>({} as Level);
   const [openDelete, setOpenDelete] = useState(false);
 
+  const { notification } = App.useApp();
 
-  const {data, isLoading, isError, error, refetch } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["getAll-level"],
-    queryFn: getAllLevel
-  })
-
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
+    queryFn: getAllLevel,
+  });
 
   const handleDelete = (data: Level) => {
     setLevel(data);
     setOpenDelete(true);
-  }
+  };
 
-  const deleteLevelMutation = useMutation({ mutationFn: deleteLevel});
+  const deleteLevelMutation = useMutation({ mutationFn: deleteLevel });
 
   const DeleteLevelHandler = async () => {
     try {
@@ -58,15 +56,9 @@ const Level = () => {
         description: error?.response?.data?.message,
       });
     }
+  };
 
-  }
-    
   const columns: ColumnsType<Level> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "levelName",
       title: "Level Name",
@@ -89,34 +81,35 @@ const Level = () => {
             onClick: () => {
               setLevel(record);
               setOpenEdit(true);
-            }
+            },
           },
           {
             key: "2",
             label: "Delete",
             onClick: async () => {
-             handleDelete(record);
-            }
-          }
+              handleDelete(record);
+            },
+          },
         ];
-        return(
+
+        return (
           <Dropdown menu={{ items }} trigger={["click"]}>
-          <AntButton type="text" icon={<Ellipsis />} />
-        </Dropdown>
+            <AntButton type="text" icon={<Ellipsis />} />
+          </Dropdown>
         );
       },
     },
   ];
 
-  
- if (isLoading){
-  return <Spin/>
- }
- if (isError){
-  return <div>{error?.message}</div>
- }
-
   const levelData = data?.data as Level[];
+
+  if (isLoading) {
+    return <Spin />;
+  }
+  
+  if (isError) {
+    return <div>{error?.message}</div>;
+  }
 
   return (
     <main>
@@ -128,8 +121,9 @@ const Level = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
-        <div className={styles.inside}>
+        {/* <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
           <div>
             {!showSearch && (
@@ -139,6 +133,7 @@ const Level = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
@@ -151,13 +146,14 @@ const Level = () => {
               />
             )}
           </div>
-        </div>
+        </div> */}
+
         <Table
           dataSource={levelData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record) => record?.id}
-          scroll={{ x: true}}
+          scroll={{ x: true }}
         />
       </section>
 
@@ -168,7 +164,7 @@ const Level = () => {
         title="Level Setup"
         footer={null}
       >
-        <AddLevel handleClose={() => setOpen(false)}/>
+        <AddLevel handleClose={() => setOpen(false)} />
       </Modal>
 
       <Modal
@@ -178,7 +174,7 @@ const Level = () => {
         title="Edit Level Setup"
         footer={null}
       >
-        <EditLevel item={level} handleClose={() => setOpenEdit(false)}/>
+        <EditLevel item={level} handleClose={() => setOpenEdit(false)} />
       </Modal>
 
       <Modal

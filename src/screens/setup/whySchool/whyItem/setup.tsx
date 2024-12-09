@@ -1,7 +1,7 @@
 import { Select, Input, Button, Upload } from "../../../../custom";
 import { Form, Formik, FormikValues } from "formik";
 import { useMutation } from "@tanstack/react-query";
-import { createUpdateWhyItem } from "../../../../requests";
+import { createUpdateWhyItem, StatusOptions } from "../../../../requests";
 import { App } from "antd";
 import { ReactComponent as Image } from "../../../../assets/image.svg";
 import { object } from "yup";
@@ -77,7 +77,7 @@ export const SetupWhyItem = ({
     </>
   );
 
-  const initialStatus = whyItem?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = whyItem?.activeStatus;
 
   return (
     <Formik
@@ -124,12 +124,22 @@ export const SetupWhyItem = ({
               }}
             />
           )}
+
           <Select
             name="status"
+            placeholder="Select Status"
             label="Status"
-            placeholder="Active"
-            options={statusOptions}
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
           />
+
           <div className="btn-group">
             <Button
               onClick={handleClose}
@@ -137,6 +147,7 @@ export const SetupWhyItem = ({
               variant="text"
               text="Cancel"
             />
+
             <Button
               type="submit"
               text={!!whyItem ? "Update" : "Create"}

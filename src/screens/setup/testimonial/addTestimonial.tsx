@@ -43,9 +43,11 @@ const AddTestimonial = ({ handleClose }: { handleClose: () => void }) => {
       setUpload(file[0]);
     }
   };
+
   const clearFile = () => {
     setUpload(null);
   };
+
   const handleCreateTestimonial = async (
     values: FormikValues,
     resetForm: () => void
@@ -76,6 +78,7 @@ const AddTestimonial = ({ handleClose }: { handleClose: () => void }) => {
       });
     }
   };
+
   return (
     <Formik
       initialValues={{ programName: "", description: "", status: "" }}
@@ -153,6 +156,7 @@ const AddTestimonial = ({ handleClose }: { handleClose: () => void }) => {
     </Formik>
   );
 };
+
 const EditTestimonial = ({
   testimonial,
   handleClose,

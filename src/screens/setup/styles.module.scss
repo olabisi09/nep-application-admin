@@ -33,19 +33,16 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .inside div {
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin-block-end: 1rem;
 }
 
-//modal styles
-.modalHeading {
-  // background-color: #E7F5E8;
-  // padding-block: 2rem;
-}
 .btnSection {
   display: flex;
   justify-content: center;

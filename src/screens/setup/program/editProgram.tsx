@@ -48,7 +48,7 @@ const EditProgram = ({ handleClose, record }: Props) => {
       id: record?.id,
       programTypeId: Number(values.programType),
       programId: Number(values.department),
-      activeStatus: values.status === "Active",
+      activeStatus: !!values.status,
     };
 
     try {
@@ -84,7 +84,7 @@ const EditProgram = ({ handleClose, record }: Props) => {
     </option>
   ));
 
-  const initialStatus = record?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = record?.activeStatus;
 
   return (
     <Formik

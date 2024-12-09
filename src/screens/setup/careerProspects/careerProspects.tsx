@@ -1,6 +1,6 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+// import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -27,7 +27,7 @@ import { usePagination } from "../../../hooks/usePagination";
 const CareerProspects = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
+  // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [careerProspectItems, setCareerProspectItems] =
@@ -40,7 +40,7 @@ const CareerProspects = () => {
 
   const navigate = useNavigate();
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -54,6 +54,10 @@ const CareerProspects = () => {
   });
 
   const careerProspectData = data?.data as CareerProspect[];
+
+  const filteredData = careerProspectData?.filter((item) =>
+    item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
 
   const deleteCareerProspectHandler = async () => {
     try {
@@ -123,7 +127,7 @@ const CareerProspects = () => {
             },
           },
         ];
-        
+
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />
@@ -157,7 +161,10 @@ const CareerProspects = () => {
 
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {careerProspectData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -166,22 +173,23 @@ const CareerProspects = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
 
         <Table
-          dataSource={careerProspectData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],

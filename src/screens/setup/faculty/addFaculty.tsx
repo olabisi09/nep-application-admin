@@ -33,10 +33,11 @@ const AddFaculty = ({ handleClose }: Props) => {
       description: values.description,
       categoryCode: values.categoryCode,
       name: values.name,
+      activeStatus: !!values.activeStatus,
     };
 
     try {
-      await addFacultyMutation.mutateAsync(payload,  {
+      await addFacultyMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -47,7 +48,7 @@ const AddFaculty = ({ handleClose }: Props) => {
           handleClose();
           resetForm();
         },
-      })
+      });
     } catch (error: any) {
       notification.error({
         message: "Error",
@@ -58,7 +59,12 @@ const AddFaculty = ({ handleClose }: Props) => {
 
   return (
     <Formik
-      initialValues={{ name: "", description: "", categoryCode: "" }}
+      initialValues={{
+        name: "",
+        description: "",
+        categoryCode: "",
+        activeStatus: "",
+      }}
       onSubmit={(values, { resetForm }) => {
         facultyHandler(values, resetForm);
       }}

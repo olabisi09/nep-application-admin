@@ -1,6 +1,6 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+// import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -20,24 +20,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { deleteSubjects, getSubjects } from "./request";
 import { usePagination } from "../../../hooks/usePagination";
+import { useSearchTerms } from "../../../hooks/useSearchTerms";
 
 const SubjectSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
+  // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as Subject);
   const [openDelete, setOpenDelete] = useState(false);
 
   const { currentPage, onChange } = usePagination();
-
+  const { searchTerm, handleSearch } = useSearchTerms();
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
 
   const handleEdit = (data: Subject) => {
     setIndexData(data);
@@ -54,7 +50,11 @@ const SubjectSetUp = () => {
     queryFn: () => getSubjects({ pageNumber: currentPage, pageSize: 10 }),
   });
 
-  const SubjectData = data?.data as Subject[];
+  const subjectData = data?.data as Subject[];
+
+  const filteredData = subjectData?.filter((item) =>
+    item?.subject?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
 
   const items = (record: Subject): MenuProps["items"] => [
     {
@@ -76,11 +76,6 @@ const SubjectSetUp = () => {
   ];
 
   const columns = [
-    {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
     {
       key: "subject",
       title: "Subject Name",
@@ -131,6 +126,7 @@ const SubjectSetUp = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -145,9 +141,13 @@ const SubjectSetUp = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {subjectData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -156,21 +156,23 @@ const SubjectSetUp = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
+
         <Table
-          dataSource={SubjectData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],

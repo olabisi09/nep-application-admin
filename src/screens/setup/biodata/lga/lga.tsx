@@ -1,6 +1,6 @@
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
+// import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -24,7 +24,7 @@ import { usePagination } from "../../../../hooks/usePagination";
 const LgaSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
+  // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as LGA);
@@ -35,7 +35,7 @@ const LgaSetup = () => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -56,6 +56,10 @@ const LgaSetup = () => {
 
   const lgaData = data?.data as LGA[];
 
+  const filteredData = lgaData?.filter((lga) =>
+    lga?.lgaName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
+
   const items = (record: LGA): MenuProps["items"] => [
     {
       key: "1",
@@ -75,11 +79,6 @@ const LgaSetup = () => {
     },
   ];
   const columns = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "countryName",
       title: "country Name",
@@ -115,7 +114,7 @@ const LgaSetup = () => {
 
   const deleteLgaMutation = useMutation({ mutationFn: deleteLGA });
 
-  const DeleteLgaHandler = async () => {
+  const deleteLgaHandler = async () => {
     try {
       await deleteLgaMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
@@ -153,9 +152,13 @@ const LgaSetup = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {lgaData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -164,21 +167,22 @@ const LgaSetup = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
         <Table
-          dataSource={lgaData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],
@@ -209,7 +213,7 @@ const LgaSetup = () => {
       >
         <AddLga handleClose={() => setOpenEdit(false)} data={indexData} />
       </Modal>
-      
+
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
@@ -220,7 +224,7 @@ const LgaSetup = () => {
         <DeleteModalContent
           isLoading={deleteLgaMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteLgaHandler}
+          handleSubmit={deleteLgaHandler}
           title={indexData?.lgaName}
         />
       </Modal>

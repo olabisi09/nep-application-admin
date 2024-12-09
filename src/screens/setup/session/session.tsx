@@ -1,6 +1,6 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+// import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -26,7 +26,7 @@ import { usePagination } from "../../../hooks/usePagination";
 const Session = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
+  // const [showAllFilter, setShowAllFilter] = useState(false);
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [session, setSession] = useState<Session>({} as Session);
@@ -41,7 +41,7 @@ const Session = () => {
     queryFn: () => getAllAcademicSession(currentPage, 10),
   });
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -115,6 +115,16 @@ const Session = () => {
     },
   ];
 
+  const sessionData = data?.data as Session[];
+
+  const filteredData = sessionData?.filter((item) =>
+    item?.name?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
+
+  const handleShowModal = () => {
+    setOpen((prevState) => !prevState);
+  };
+
   if (isLoading) {
     return <Spin />;
   }
@@ -123,22 +133,19 @@ const Session = () => {
     return <div>Error: {error?.message}</div>;
   }
 
-  const sessionData = data?.data as Session[];
-
   return (
     <main>
       <section className="space-between">
         <h3>Session Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Add />}
-          text="Setup"
-        />
+        <Button onClick={handleShowModal} iconBefore={<Add />} text="Setup" />
       </section>
 
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {sessionData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -152,18 +159,18 @@ const Session = () => {
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
 
         <Table
-          dataSource={sessionData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],

@@ -54,6 +54,8 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
           queryClient.refetchQueries({
             queryKey: ["get-all-fee-setup"],
           });
+
+          resetForm();
           handleClose();
         },
       });
@@ -130,7 +132,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
         modeOfStudy: record?.modeOfStudyId ?? "",
         applicationBatch: record?.applicationBatchId ?? "",
         amount: record?.amount ?? "",
-        status: record?.activeStatus,
+        status: record?.activeStatus ?? "",
       }}
       onSubmit={(values, { resetForm }) => {
         createUpdateApplicationFeeHandler(values, resetForm);
@@ -148,12 +150,14 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
                 label="Program Name"
                 options={programOptions}
               />
+
               <Select
                 name="programType"
                 placeholder="Select Program Type"
                 label="Program Type"
                 options={programTypesOptions}
               />
+
               <Select
                 name="modeOfStudy"
                 label="Mode of Study"

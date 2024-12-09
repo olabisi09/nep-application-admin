@@ -1,6 +1,5 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -28,7 +27,6 @@ import { usePagination } from "../../../hooks/usePagination";
 const ApplicationBatchSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as ApplicationBatch);
@@ -39,7 +37,7 @@ const ApplicationBatchSetup = () => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -67,6 +65,10 @@ const ApplicationBatchSetup = () => {
 
   const applicationBatchData = data?.data ?? [];
 
+  const filteredData = applicationBatchData?.filter((item) =>
+    item?.batchName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
+
   const items = (record: ApplicationBatch): MenuProps["items"] => [
     {
       key: "1",
@@ -91,11 +93,11 @@ const ApplicationBatchSetup = () => {
       title: "Session",
       dataIndex: "sessionName",
     },
-    {
-      key: "programName",
-      title: "Program",
-      dataIndex: "programName",
-    },
+    // {
+    //   key: "programName",
+    //   title: "Program",
+    //   dataIndex: "programName",
+    // },
     {
       key: "startDate",
       title: "Start Date",
@@ -189,7 +191,10 @@ const ApplicationBatchSetup = () => {
 
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {applicationBatchData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -201,19 +206,11 @@ const ApplicationBatchSetup = () => {
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
-
-            {!showAllFilter && (
-              <Filter
-                onClick={() =>
-                  setShowAllFilter((showAllFilter) => !showAllFilter)
-                }
-              />
-            )}
           </div>
         </div>
 
         <Table
-          dataSource={applicationBatchData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],

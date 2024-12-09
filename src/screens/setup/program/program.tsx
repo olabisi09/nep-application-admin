@@ -1,10 +1,19 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import { Dropdown, Modal, Table, Button as AntButton, MenuProps, Spin, App } from "antd";
+import {
+  Dropdown,
+  Modal,
+  Table,
+  Button as AntButton,
+  MenuProps,
+  Spin,
+  App,
+} from "antd";
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
+
 import { useCallback, useState } from "react";
+
 import SearchInput from "../../../custom/searchInput/searchInput";
 import AddProgram from "./addProgram";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
@@ -18,7 +27,6 @@ import { deleteProgram } from "./request";
 const ProgramSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [record, setRecord] = useState<ProgramData>({} as ProgramData);
@@ -26,7 +34,7 @@ const ProgramSetUp = () => {
 
   const { notification } = App.useApp();
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -37,25 +45,30 @@ const ProgramSetUp = () => {
 
   const programTypesData = data?.data ?? [];
 
+  const filteredData = programTypesData?.filter(
+    (item) =>
+      item?.programTypeName
+        ?.toLowerCase()
+        ?.includes(searchTerm.toLowerCase()) ||
+      item?.program?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
+
   const deleteProgramMutation = useMutation({
     mutationFn: deleteProgram,
   });
 
   const deleteProgramTypeHandler = async () => {
     try {
-      await deleteProgramMutation.mutateAsync(
-        record?.id,
-        {
-          onSuccess: (data) => {
-            notification.success({
-              message: "Success",
-              description: data?.message,
-            });
-            refetch();
-            setOpenDelete((prevState) => !prevState);
-          },
-        }
-      );
+      await deleteProgramMutation.mutateAsync(record?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: "Success",
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
     } catch (error: any) {
       notification.error({
         message: "Error",
@@ -139,9 +152,13 @@ const ProgramSetUp = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {programTypesData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -150,21 +167,23 @@ const ProgramSetUp = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
+
         <Table
-          dataSource={programTypesData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}

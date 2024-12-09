@@ -1,6 +1,5 @@
 import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -25,12 +24,11 @@ import DeleteModalContent from "../../../deleteModal/deleteModal";
 const DisabilitySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [disability, setDisability] = useState<Disability>({} as Disability);
   const [openDelete, setOpenDelete] = useState(false);
-  
+
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -47,7 +45,7 @@ const DisabilitySetup = () => {
     setOpenDelete(true);
   };
 
-  const DeleteDisabilityHandler = async () => {
+  const deleteDisabilityHandler = async () => {
     try {
       await deleteDisabilityMutation.mutateAsync(disability?.id, {
         onSuccess: (data) => {
@@ -67,16 +65,11 @@ const DisabilitySetup = () => {
     }
   };
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
   const columns: ColumnsType<Disability> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "name",
       title: "Name",
@@ -106,7 +99,8 @@ const DisabilitySetup = () => {
             label: (
               <button
                 style={{ border: "0rem", background: "none" }}
-                onClick={() => handleDelete(record)}>
+                onClick={() => handleDelete(record)}
+              >
                 Delete
               </button>
             ),
@@ -123,12 +117,18 @@ const DisabilitySetup = () => {
 
   const disabilityData = data?.data;
 
+  const filteredData = disabilityData?.filter((item) =>
+    item?.name?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
+
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
   return (
     <main>
       <section className="space-between">
@@ -139,9 +139,13 @@ const DisabilitySetup = () => {
           text="Setup"
         />
       </section>
+
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {disabilityData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -150,21 +154,15 @@ const DisabilitySetup = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
-
-            {!showAllFilter && (
-              <Filter
-                onClick={() =>
-                  setShowAllFilter((showAllFilter) => !showAllFilter)
-                }
-              />
-            )}
           </div>
         </div>
+
         <Table
-          dataSource={disabilityData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           rowKey={(record, index) => `${record.id}${index}`}
@@ -176,7 +174,8 @@ const DisabilitySetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Disability Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddDisability handleClose={() => setShowAddModal(false)} />
       </Modal>
 
@@ -186,7 +185,8 @@ const DisabilitySetup = () => {
           onCancel={() => setOpenEdit(false)}
           centered
           title="Disability Setup"
-          footer={null}>
+          footer={null}
+        >
           <EditDisability
             title={disability}
             handleClose={() => setOpenEdit(false)}
@@ -200,11 +200,12 @@ const DisabilitySetup = () => {
           onCancel={() => setOpenDelete(false)}
           centered
           title="Delete Disability Setup"
-          footer={null}>
+          footer={null}
+        >
           <DeleteModalContent
             isLoading={deleteDisabilityMutation?.isPending}
             handleCloseModal={() => setOpenDelete(false)}
-            handleSubmit={DeleteDisabilityHandler}
+            handleSubmit={deleteDisabilityHandler}
             title={disability?.name}
             isActive={false}
           />

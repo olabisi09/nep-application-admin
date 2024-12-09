@@ -1,6 +1,4 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -13,7 +11,6 @@ import {
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
 import { AddModeOfStudy, EditModeOfStudy } from "./addModeOfStudy";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -22,9 +19,6 @@ import { ColumnsType } from "antd/es/table";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 
 const ModeOfStudy = () => {
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [modeOfStudy, setModeOfStudy] = useState<ModeOfStudy>(
@@ -66,10 +60,6 @@ const ModeOfStudy = () => {
         description: error?.response?.data?.message,
       });
     }
-  };
-
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
   };
 
   const columns: ColumnsType<ModeOfStudy> = [
@@ -135,7 +125,7 @@ const ModeOfStudy = () => {
       </section>
 
       <section className={styles.card}>
-        <div className={styles.inside}>
+        {/* <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
           <div>
             {!showSearch && (
@@ -157,7 +147,8 @@ const ModeOfStudy = () => {
               />
             )}
           </div>
-        </div>
+        </div> */}
+
         <Table
           dataSource={modeOfStudyData}
           columns={columns}

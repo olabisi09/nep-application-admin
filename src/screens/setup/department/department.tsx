@@ -8,8 +8,7 @@ import {
   Spin,
   App,
 } from "antd";
-import { ReactComponent as Plus } from "../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+
 import Button from "../../../custom/button/button";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -22,15 +21,25 @@ import { ColumnsType } from "antd/es/table";
 import { CreateDepartment, EditDepartment } from "./setup";
 import DeleteModalContent from "../../deleteModal/deleteModal";
 import { usePagination } from "../../../hooks/usePagination";
+import styles from "../styles.module.scss";
+
+import { ReactComponent as Plus } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
+import { SearchInput } from "../../../custom";
+
 
 const Department = () => {
-  const { notification } = App.useApp();
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [department, setDepartment] = useState<Program>({} as Program);
 
   const { currentPage, onChange } = usePagination();
+
+  const { notification } = App.useApp();
 
   const deleteDepartmentMutation = useMutation({
     mutationFn: deleteDepartment,
@@ -119,7 +128,16 @@ const Department = () => {
     }
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
   const departments = data?.data as Program[];
+
+  const filteredData = departments?.filter((item) =>
+    item?.name?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
+
   const faculties = facultyQuery.data?.data as Category[];
 
   if (isLoading) {
@@ -134,6 +152,7 @@ const Department = () => {
     <div>
       <section className="space-between">
         <h3>Department Setup</h3>
+
         <Button
           onClick={() => setOpen(true)}
           iconBefore={<Plus />}
@@ -144,8 +163,27 @@ const Department = () => {
       <br />
 
       <Card bordered={false}>
+        <div className={styles.inside}>
+          <p>
+            Showing 1-{filteredData?.length} of {departments?.length}
+          </p>
+
+          <div>
+            {!showSearch && (
+              <span>
+                <Search
+                  onClick={() => setShowSearch((showSearch) => !showSearch)}
+                />
+              </span>
+            )}
+            {showSearch && (
+              <SearchInput value={searchTerm} onChange={handleSearch} />
+            )}
+          </div>
+        </div>
+
         <Table
-          dataSource={departments}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],

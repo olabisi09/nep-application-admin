@@ -1,6 +1,4 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -13,7 +11,6 @@ import {
 import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
 import AddTuitionYears, { EditTuitionYears } from "./addTuitionYears";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { useMutation, useQueries } from "@tanstack/react-query";
@@ -30,18 +27,15 @@ import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import { usePagination } from "../../../hooks/usePagination";
 
 const TuitionYears = () => {
-  const { notification } = App.useApp();
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [tuitionYear, setTuitionYear] = useState<TuitionYear>(
     {} as TuitionYear
   );
   const [openDelete, setOpenDelete] = useState(false);
-
   const { currentPage, onChange } = usePagination();
+
+  const { notification } = App.useApp();
 
   const queryResults = useQueries({
     queries: [
@@ -55,7 +49,7 @@ const TuitionYears = () => {
       },
       {
         queryKey: ["getAll-Tuition"],
-        queryFn: () => getAllTuitionFee(),
+        queryFn: () => getAllTuitionFee(1, 10),
       },
       {
         queryKey: ["getAll-programs"],
@@ -92,10 +86,6 @@ const TuitionYears = () => {
     isError: isProgramsError,
     error: programsError,
   } = queryResults[3];
-
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
 
   const handleDelete = (data: TuitionYear) => {
     setTuitionYear(data);
@@ -219,7 +209,7 @@ const TuitionYears = () => {
         />
       </section>
       <section className={styles.card}>
-        <div className={styles.inside}>
+        {/* <div className={styles.inside}>
           <p>Showing 1-11 of 88</p>
           <div>
             {!showSearch && (
@@ -241,7 +231,8 @@ const TuitionYears = () => {
               />
             )}
           </div>
-        </div>
+        </div> */}
+
         <Table
           dataSource={tuitionYears}
           columns={columns}

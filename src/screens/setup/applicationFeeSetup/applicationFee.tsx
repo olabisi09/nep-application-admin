@@ -1,6 +1,6 @@
 import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+// import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import {
   Dropdown,
   Modal,
@@ -25,7 +25,7 @@ import { usePagination } from "../../../hooks/usePagination";
 const ApplicationFee = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
+  // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [item, setItem] = useState<GetAllFeeSetup>({} as GetAllFeeSetup);
   const [openDelete, setOpenDelete] = useState(false);
@@ -40,6 +40,18 @@ const ApplicationFee = () => {
   });
 
   const applicationFeeData = data?.data ?? [];
+
+  const filteredData = applicationFeeData?.filter(
+    (item) =>
+      item?.program?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
+      item?.programTypeName
+        ?.toLowerCase()
+        ?.includes(searchTerm.toLowerCase()) ||
+      item?.applicationBatchName
+        ?.toLowerCase()
+        ?.includes(searchTerm.toLowerCase()) ||
+      item?.modeOfStudy?.toLowerCase()?.includes(searchTerm.toLowerCase())
+  );
 
   const deleteApplicationFeeMutation = useMutation({
     mutationFn: deleteFeeSetup,
@@ -65,7 +77,7 @@ const ApplicationFee = () => {
     }
   };
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
@@ -155,7 +167,10 @@ const ApplicationFee = () => {
 
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
+          <p>
+            Showing 1-{filteredData?.length} of {applicationFeeData?.length}
+          </p>
+
           <div>
             {!showSearch && (
               <span>
@@ -164,21 +179,23 @@ const ApplicationFee = () => {
                 />
               </span>
             )}
+
             {showSearch && (
               <SearchInput value={searchTerm} onChange={handleSearch} />
             )}
 
-            {!showAllFilter && (
+            {/* {!showAllFilter && (
               <Filter
                 onClick={() =>
                   setShowAllFilter((showAllFilter) => !showAllFilter)
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
+
         <Table
-          dataSource={applicationFeeData}
+          dataSource={filteredData}
           columns={columns}
           pagination={{
             position: ["bottomCenter"],
