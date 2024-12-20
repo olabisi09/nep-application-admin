@@ -1,34 +1,33 @@
-import { ReactComponent as Add } from "../../../../assets/add.svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../../styles.module.scss";
-import Button from "../../../../custom/button/button";
+/* eslint-disable no-undef */
 import { useState } from "react";
-import { AddMarital } from "./addMaritalStatus";
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { deleteMaritalStatus, getMaritalStatus } from "../../../../requests";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
+
+import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import Button from "../../../../custom/button/button";
+import { deleteMaritalStatus, getMaritalStatus } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
+import styles from "../../styles.module.scss";
+
+import { AddMarital } from "./addMaritalStatus";
 
 const MaritalSetup = () => {
   const { notification } = App.useApp();
-  // const [searchTerm, setSearchTerm] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [indexData, setIndexData] = useState({} as MaritalStatus);
   const queryClient = useQueryClient();
-
-  // const handleSearch = (e: any) => {
-  //   setSearchTerm(e.target.value);
-  // };
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["get-marital-status"],
@@ -63,9 +62,11 @@ const MaritalSetup = () => {
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({
             queryKey: ["get-marital-status"],
           });
+
           setOpenDelete(false);
         },
       });
@@ -97,11 +98,6 @@ const MaritalSetup = () => {
   ];
 
   const columns = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "statusName",
       title: "Status",
@@ -125,7 +121,8 @@ const MaritalSetup = () => {
     },
   ];
 
-  const maritalStatus = data?.data as MaritalStatus[];
+  const maritalStatus =
+    data?.data?.map((item) => ({ ...item, key: item?.id })) ?? [];
 
   if (isLoading) {
     return <Spin />;
@@ -147,34 +144,10 @@ const MaritalSetup = () => {
       </section>
 
       <section className={styles.card}>
-        <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
-          {/* <div>
-            {!showSearch && (
-              <span>
-                <Search
-                  onClick={() => setShowSearch((showSearch) => !showSearch)}
-                />
-              </span>
-            )}
-            {showSearch && (
-              <SearchInput value={searchTerm} onChange={handleSearch} />
-            )}
-
-            {!showAllFilter && (
-              <Filter
-                onClick={() =>
-                  setShowAllFilter((showAllFilter) => !showAllFilter)
-                }
-              />
-            )}
-          </div> */}
-        </div>
         <Table
           dataSource={maritalStatus}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          //rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 

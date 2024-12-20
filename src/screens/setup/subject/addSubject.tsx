@@ -1,10 +1,14 @@
-import { App } from "antd";
-import Input from "../../../custom/input/input";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FormikValues, Form, FormikProvider, useFormik } from "formik";
+import { App } from "antd";
+import { Form, FormikProvider, FormikValues, useFormik } from "formik";
 import * as Yup from "yup";
-import Select from "../../../custom/select/select";
+
 import Button from "../../../custom/button/button";
+import Input from "../../../custom/input/input";
+import Select from "../../../custom/select/select";
+import { StatusOptions } from "../../../requests";
+
 import { CreateUpdateSubject } from "./request";
 
 interface Props {
@@ -16,32 +20,34 @@ const AddSubject = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const CreateSubjectMutation = useMutation({
+  const createSubjectMutation = useMutation({
     mutationFn: CreateUpdateSubject,
     mutationKey: ["create-subject"],
   });
 
-  const CreateSubjectHandler = async (
+  const createSubjectHandler = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
     const payload: SubjectPayload = {
       id: data?.id || 0,
       subject: values.subject,
-      activeStatus: values?.status === "true",
+      activeStatus: values?.activeStatus === "true",
       isDeleted: false,
     };
 
     try {
-      await CreateSubjectMutation.mutateAsync(payload, {
+      await createSubjectMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
+
           queryClient.invalidateQueries({
             queryKey: ["get-subject"],
           });
+
           resetForm();
           handleClose();
         },
@@ -56,27 +62,20 @@ const AddSubject = ({ handleClose, data }: Props) => {
 
   const validationSchema = Yup.object().shape({
     subject: Yup.string().required("Subject is required"),
-    status: Yup.string().required("Status is required"),
+    activeStatus: Yup.string().required("Status is required"),
   });
 
   const formik = useFormik<FormikValues>({
     initialValues: {
       subject: data?.subject || "",
-      status: data?.activeStatus ? "true" : "false",
+      activeStatus: String(data?.activeStatus ?? ''),
     },
     onSubmit: (values, { resetForm }) => {
-      CreateSubjectHandler(values, resetForm);
+      createSubjectHandler(values, resetForm);
     },
     validationSchema: validationSchema,
     enableReinitialize: true,
   });
-
-  const statusOptions = (
-    <>
-      <option value="true">Active</option>
-      <option value="false">Inactive</option>
-    </>
-  );
 
   return (
     <FormikProvider value={formik}>
@@ -86,19 +85,29 @@ const AddSubject = ({ handleClose, data }: Props) => {
           placeholder="Input Subject Name"
           label="Subject Name"
         />
+
         <Select
-          name="status"
+          name="activeStatus"
           placeholder="Select Status"
           label="Status"
-          options={statusOptions}
+          options={
+            <>
+              {StatusOptions.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </>
+          }
         />
+
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button
             type="submit"
-            disabled={CreateSubjectMutation.isPending}
-            isLoading={CreateSubjectMutation.isPending}
-            text={CreateSubjectMutation.isPending ? "Submiting..." : "Submit"}
+            disabled={createSubjectMutation.isPending}
+            isLoading={createSubjectMutation.isPending}
+            text={createSubjectMutation.isPending ? "Submitting..." : "Submit"}
           />
         </div>
       </Form>

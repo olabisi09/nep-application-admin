@@ -1,26 +1,30 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
+/* eslint-disable no-undef */
 // import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  App,
-  Spin,
-} from "antd";
-import styles from "../styles.module.scss";
 import { useState } from "react";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
-import { deleteDisplayTab, getAllDisplayTab } from "../../../requests";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
 import { Button, SearchInput } from "../../../custom";
-import DeleteModalContent from "../../deleteModal/deleteModal";
-import { AddDisplayTab } from "./addDisplayTab";
 import { usePagination } from "../../../hooks/usePagination";
 import { useSearchTerms } from "../../../hooks/useSearchTerms";
+import { deleteDisplayTab, getAllDisplayTab } from "../../../requests";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
+import { AddDisplayTab } from "./addDisplayTab";
 
 const DisplayTabSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -36,7 +40,7 @@ const DisplayTabSetup = () => {
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-displayTab"],
+    queryKey: ["get-displayTab", currentPage],
     queryFn: () => getAllDisplayTab({ pageNumber: currentPage, pageSize: 10 }),
   });
 
@@ -137,15 +141,17 @@ const DisplayTabSetup = () => {
 
   const displayTabData = data?.data;
 
-  const filteredData = displayTabData?.filter(
-    (item) =>
-      item?.programTypeName
-        ?.toLowerCase()
-        ?.includes(searchTerm.toLowerCase()) ||
-      item?.sessionName?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
-      item?.tabName?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
-      item?.batchName?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = displayTabData
+    ?.filter(
+      (item) =>
+        item?.programTypeName
+          ?.toLowerCase()
+          ?.includes(searchTerm.toLowerCase()) ||
+        item?.sessionName?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
+        item?.tabName?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
+        item?.batchName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   const handleOpenModal = () => {
     setDisplayTab({} as DisplayTab);
@@ -206,7 +212,6 @@ const DisplayTabSetup = () => {
             onChange: onChange,
             pageSize: 10,
           }}
-          rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 

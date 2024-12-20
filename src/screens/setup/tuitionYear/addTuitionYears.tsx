@@ -1,9 +1,11 @@
-import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Select } from "../../../custom";
-import * as Yup from "yup";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
-import { createUpdateTuitionYear, StatusOptions } from "../../../requests";
+import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
+import { Button, Editor, Select } from "../../../custom";
+import { StatusOptions, createUpdateTuitionYear } from "../../../requests";
 
 const validationSchema = Yup.object().shape({
   tuition: Yup.string().required("Tuition is required"),
@@ -14,7 +16,6 @@ const validationSchema = Yup.object().shape({
 
 const AddTuitionYears = ({
   handleClose,
-  programItem,
   levelItem,
   tuitionFeeItem,
 }: {
@@ -77,8 +78,8 @@ const AddTuitionYears = ({
         <Form className="fields">
           <Select
             name="tuition"
-            placeholder="Select Tuition"
-            label="Tuition"
+            placeholder="Select Tuition Program Name"
+            label="Tuition Program Name"
             options={
               <>
                 {tuitionFeeItem?.map((option: Tuition) => (
@@ -154,7 +155,6 @@ export default AddTuitionYears;
 
 export const EditTuitionYears = ({
   item,
-  programItem,
   levelItem,
   tuitionFeeItem,
   handleClose,
@@ -181,7 +181,7 @@ export const EditTuitionYears = ({
       tuitionId: values?.tuition,
       levelId: values?.level,
       feeDescription: values?.description,
-      isActive: values?.status === 'true',
+      isActive: values?.status === "true",
     };
 
     try {
@@ -191,6 +191,7 @@ export const EditTuitionYears = ({
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({ queryKey: ["getAll-TuitionYear"] });
           handleClose();
           resetForm();
@@ -211,7 +212,7 @@ export const EditTuitionYears = ({
         tuition: item?.tuitionId,
         level: item?.levelId,
         description: item?.feeDescription,
-        status: item?.isActive,
+        status: String(item?.isActive),
       }}
       validationSchema={validationSchema}
       onSubmit={(values, { resetForm }) =>
@@ -219,9 +220,7 @@ export const EditTuitionYears = ({
       }
       enableReinitialize
     >
-      {({ setFieldValue, values }) => {
-        console.log(values);
-        
+      {({ setFieldValue }) => {
         return (
           <Form className="fields">
             <Select

@@ -1,10 +1,12 @@
-import { App } from "antd";
-import Input from "../../../custom/input/input";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
+import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
 import { Button, Select } from "../../../custom";
-import { createFaculty, StatusOptions } from "../../../requests";
+import Input from "../../../custom/input/input";
+import { StatusOptions, createFaculty } from "../../../requests";
 
 interface Props {
   handleClose: () => void;

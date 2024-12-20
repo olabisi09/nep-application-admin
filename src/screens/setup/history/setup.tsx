@@ -1,14 +1,17 @@
-import { useState } from "react";
-import Input from "../../../custom/input/input";
-import Upload from "../../../custom/upload/upload";
+/* eslint-disable no-undef */
+import { ChangeEvent, useState } from "react";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
 import { ReactComponent as Image } from "../../../assets/image.svg";
 import Button from "../../../custom/button/button";
-import { Form, Formik, FormikValues } from "formik";
+import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
-import { App } from "antd";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Upload from "../../../custom/upload/upload";
 import { createOrUpdateHistory } from "../../../requests";
-import * as Yup from "yup";
 import { validator } from "../../../utils/validator";
 
 export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
@@ -23,7 +26,7 @@ export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
     status: validator.status,
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
     if (file) {
       setUpload(file[0]);
@@ -50,7 +53,9 @@ export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({ queryKey: ["get-history"] });
+
           handleClose();
           resetForm();
           clearFile();
@@ -89,6 +94,7 @@ export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
           label="Description"
           placeholder="Input description"
         />
+        
         {upload ? (
           <div className="small-gap">
             <Image />
@@ -98,12 +104,14 @@ export const CreateHistory = ({ handleClose }: { handleClose: () => void }) => {
         ) : (
           <Upload name="image" label="Image" onChange={handleFileChange} />
         )}
+
         <Select
           name="status"
           label="Status"
           placeholder="Select status"
           options={statusOptions}
         />
+
         <div className="btn-group">
           <Button
             type="button"

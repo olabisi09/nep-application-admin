@@ -1,28 +1,32 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
+/* eslint-disable no-undef */
 // import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import AddCareerProspects from "./addCareerProspects";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteCareerProspect, getCareerProspects } from "../../../requests";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useNavigate } from "react-router-dom";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
+import Button from "../../../custom/button/button";
+import SearchInput from "../../../custom/searchInput/searchInput";
+import { usePagination } from "../../../hooks/usePagination";
+import { deleteCareerProspect, getCareerProspects } from "../../../requests";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../deleteModal/deleteModal";
-import { usePagination } from "../../../hooks/usePagination";
+import styles from "../styles.module.scss";
+
+import AddCareerProspects from "./addCareerProspects";
 
 const CareerProspects = () => {
   const [showSearch, setShowSearch] = useState(false);

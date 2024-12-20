@@ -1,26 +1,30 @@
+/* eslint-disable no-undef */
+import { useState } from "react";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
+
 import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 // import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../styles.module.scss";
 import Button from "../../../custom/button/button";
-import { useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
-import AddSubject from "./addSubject";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import DeleteModalContent from "../../deleteModal/deleteModal";
-import { deleteSubjects, getSubjects } from "./request";
 import { usePagination } from "../../../hooks/usePagination";
 import { useSearchTerms } from "../../../hooks/useSearchTerms";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
+import AddSubject from "./addSubject";
+import { deleteSubjects, getSubjects } from "./request";
 
 const SubjectSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -32,6 +36,7 @@ const SubjectSetUp = () => {
 
   const { currentPage, onChange } = usePagination();
   const { searchTerm, handleSearch } = useSearchTerms();
+  
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -46,15 +51,17 @@ const SubjectSetUp = () => {
   };
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-subject"],
+    queryKey: ["get-subject", currentPage],
     queryFn: () => getSubjects({ pageNumber: currentPage, pageSize: 10 }),
   });
 
   const subjectData = data?.data as Subject[];
 
-  const filteredData = subjectData?.filter((item) =>
-    item?.subject?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = subjectData
+    ?.filter((item) =>
+      item?.subject?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   const items = (record: Subject): MenuProps["items"] => [
     {

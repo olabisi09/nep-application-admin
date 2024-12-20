@@ -1,9 +1,11 @@
-import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Select } from "../../../custom";
-import * as Yup from "yup";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
-import { createUpdateTuition, StatusOptions } from "../../../requests";
+import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
+import { Button, Editor, Select } from "../../../custom";
+import { StatusOptions, createUpdateTuition } from "../../../requests";
 
 const validationSchema = Yup.object().shape({
   description: Yup.string().required("Description is required"),
@@ -179,7 +181,7 @@ export const EditTuition = ({
         id: item?.id,
         description: item?.description,
         readmoreId: item?.readmoreId,
-        status: item?.activeStatus,
+        status: String(item?.activeStatus),
       }}
       validationSchema={validationSchema}
       onSubmit={(values, { resetForm }) => handleEditTuition(values, resetForm)}

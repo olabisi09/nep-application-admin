@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import api from "../../../utils/api";
 
 export const getProgramTypes = async () => {
@@ -5,8 +6,8 @@ export const getProgramTypes = async () => {
     ?.data as ProgramTypeResponse;
 };
 
-export const getAllProgram = async () => {
-  return (await api.get("/Utilities/Utilities/GetAllProgramDetails"))
+export const getAllProgram = async (pageNumber?: number, pageSize?: number) => {
+  return (await api.get(`/Utilities/Utilities/GetAllProgramDetails?PageNumber=${pageNumber}&PageSize=${pageSize}`))
     ?.data as ProgramDataResponse;
 };
 
@@ -16,12 +17,13 @@ export const getAllDepartment = async () => {
 };
 
 export const createUpdateProgram = async (payload: ProgramPayload) => {
-  return (await api.post("/Utilities/Utilities/CreateUpdateProgramDeytails", payload))
-    ?.data as Response;
+  return (
+    await api.post("/Utilities/Utilities/CreateUpdateProgramDeytails", payload)
+  )?.data as Response;
 };
 
 export const deleteProgram = async (id: number) => {
-  return (await api.delete(`/Utilities/Utilities/DeleteProgramDetailsId?Id=${id}`))
-    ?.data as Response;
+  return (
+    await api.delete(`/Utilities/Utilities/DeleteProgramDetailsId?Id=${id}`)
+  )?.data as Response;
 };
-

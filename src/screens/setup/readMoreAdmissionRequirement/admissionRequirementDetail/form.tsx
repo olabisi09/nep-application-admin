@@ -1,14 +1,17 @@
-import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Input, Select } from "../../../../custom";
-import { App } from "antd";
+/* eslint-disable no-undef */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
+import { useParams } from "react-router-dom";
+import { object } from "yup";
+
+import { Button, Editor, Input, Select } from "../../../../custom";
+import { StatusOptions } from "../../../../requests";
+import { validator } from "../../../../utils/validator";
 import {
   createOrUpdateAdmissionRequirementDetail,
   getProgramTypes,
 } from "../request";
-import { useParams } from "react-router-dom";
-import { object } from "yup";
-import { validator } from "../../../../utils/validator";
 
 const validationSchema = object().shape({
   description: validator.description,
@@ -63,8 +66,9 @@ export const CreateAdmissionReqDetail = ({
           queryClient.refetchQueries({
             queryKey: ["get-admission-requirement-details-by-Id"],
           });
-          handleClose();
+          
           resetForm();
+          handleClose();
         },
       });
     } catch (error: any) {
@@ -135,7 +139,7 @@ export const CreateAdmissionReqDetail = ({
               variant="text"
               text="Cancel"
             />
-            
+
             <Button
               type="submit"
               isLoading={addAdmissionRequirementDetailMutation.isPending}
@@ -181,7 +185,7 @@ export const EditAdmissionReqDetail = ({
       admissionRequirementId: Number(id),
       description: values.description,
       noOfSittings: 0,
-      activeStatus: values.status === "Active" ? true : false,
+      activeStatus: values.status === "true",
       programTypeId: Number(values.programType),
       isDeleted: false,
     };
@@ -197,6 +201,7 @@ export const EditAdmissionReqDetail = ({
           queryClient.refetchQueries({
             queryKey: ["get-admission-requirement-details-by-Id"],
           });
+
           handleClose();
           resetForm();
         },
@@ -209,14 +214,7 @@ export const EditAdmissionReqDetail = ({
     }
   };
 
-  const statusOptions = (
-    <>
-      <option>Active</option>
-      <option>Inative</option>
-    </>
-  );
-
-  const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = item?.activeStatus;
 
   const programTypeOptions = programTypeData?.map((item) => (
     <option key={item?.id} value={item?.id}>
@@ -228,8 +226,8 @@ export const EditAdmissionReqDetail = ({
     <Formik
       initialValues={{
         name: item?.name ?? "",
-        description: "",
-        status: initialStatus,
+        description: item?.description ?? "",
+        status: String(initialStatus),
         programType: item?.programTypeId,
       }}
       enableReinitialize
@@ -260,9 +258,17 @@ export const EditAdmissionReqDetail = ({
 
           <Select
             name="status"
+            placeholder="Select Status"
             label="Status"
-            placeholder="Select status"
-            options={statusOptions}
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
           />
 
           <div className="btn-group">

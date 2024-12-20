@@ -1,11 +1,15 @@
-import { App } from "antd";
+/* eslint-disable no-undef */
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
+import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
 import { Button, Select } from "../../../custom";
-import { createUpdateProgram, getProgramTypes } from "./request";
+import { StatusOptions, getAllPrograms } from "../../../requests";
 import { validator } from "../../../utils/validator";
-import { getAllPrograms, StatusOptions } from "../../../requests";
+
+import { createUpdateProgram, getProgramTypes } from "./request";
+
 
 interface Props {
   handleClose: () => void;
@@ -48,7 +52,7 @@ const EditProgram = ({ handleClose, record }: Props) => {
       id: record?.id,
       programTypeId: Number(values.programType),
       programId: Number(values.department),
-      activeStatus: !!values.status,
+      activeStatus: values.status === "true",
     };
 
     try {
@@ -91,13 +95,13 @@ const EditProgram = ({ handleClose, record }: Props) => {
       initialValues={{
         programType: record.programTypeId ?? "",
         department: record?.programId ?? "",
-        status: initialStatus,
+        status: String(initialStatus),
       }}
       onSubmit={(values, { resetForm }) => {
         editProgramHandler(values, resetForm);
       }}
       validationSchema={validate}
-      enableReinitialize={true}
+      enableReinitialize
     >
       {() => {
         return (

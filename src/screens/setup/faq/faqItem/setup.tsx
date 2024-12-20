@@ -1,10 +1,12 @@
-import Input from "../../../../custom/input/input";
-import Button from "../../../../custom/button/button";
-import { Form, Formik, FormikValues } from "formik";
+/* eslint-disable no-undef */
 import { useMutation } from "@tanstack/react-query";
-import { createOrUpdateFaqItem, StatusOptions } from "../../../../requests";
 import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
+
 import { Select } from "../../../../custom";
+import Button from "../../../../custom/button/button";
+import Input from "../../../../custom/input/input";
+import { StatusOptions, createOrUpdateFaqItem } from "../../../../requests";
 
 export const CreateFaqItem = ({
   faqId,

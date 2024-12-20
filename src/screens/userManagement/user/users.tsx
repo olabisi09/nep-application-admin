@@ -1,12 +1,17 @@
-import { Card, Table, Spin } from "antd";
-import { useQuery } from "@tanstack/react-query";
-import { ColumnsType } from "antd/es/table";
-import { getAllStudentUser } from "./request";
-import { usePagination } from "../../../hooks/usePagination";
+/* eslint-disable no-undef */
 import { useState } from "react";
-import styles from "../styles.module.scss";
+
+import { useQuery } from "@tanstack/react-query";
+import { Card, Spin, Table } from "antd";
+import { ColumnsType } from "antd/es/table";
+
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { SearchInput } from "../../../custom";
+import { usePagination } from "../../../hooks/usePagination";
+import styles from "../styles.module.scss";
+
+import { getAllStudentUser } from "./request";
+
 
 const StudentUser = () => {
   const [searchTerm, setSearchTerm] = useState("");

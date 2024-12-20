@@ -1,22 +1,26 @@
+/* eslint-disable no-undef */
+import { useState } from "react";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  Card,
-  Dropdown,
-  MenuProps,
-  Modal,
   Button as AntButton,
   App,
-  Spin,
+  Card,
+  Dropdown,
   Empty,
+  MenuProps,
+  Modal,
+  Spin,
 } from "antd";
+import { useNavigate } from "react-router-dom";
+
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
-import { useState } from "react";
-import SetupWhySchool from "./setup";
-import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteWhy, getAllWhy } from "../../../requests";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+
+import SetupWhySchool from "./setup";
 
 const WhySchool = () => {
   const { notification } = App.useApp();
@@ -98,6 +102,7 @@ const WhySchool = () => {
                 icon={<Ellipsis />}
               />
             </Dropdown>
+
             <section className="fields">
               <div className="space-between-grid">
                 <b>Title</b>
@@ -109,6 +114,7 @@ const WhySchool = () => {
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         )}
       </Card>
+
       <Modal
         open={openEdit}
         onCancel={() => setOpenEdit(false)}
@@ -118,6 +124,7 @@ const WhySchool = () => {
       >
         <SetupWhySchool data={whyData} handleClose={() => setOpenEdit(false)} />
       </Modal>
+      
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}

@@ -1,31 +1,35 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
+/* eslint-disable no-undef */
 // import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+import { useState } from "react";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  Dropdown,
-  Modal,
-  Table,
   Button as AntButton,
+  Dropdown,
   MenuProps,
+  Modal,
   Spin,
+  Table,
   notification,
 } from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
-import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import AddAccreditation from "./addAccreditation";
+import { ColumnsType } from "antd/es/table";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { ReactComponent as Search } from "../../../assets/search.svg";
+import Button from "../../../custom/button/button";
+import SearchInput from "../../../custom/searchInput/searchInput";
+import { usePagination } from "../../../hooks/usePagination";
+import { useSearchTerms } from "../../../hooks/useSearchTerms";
 import {
   deleteAccreditationById,
   getAllAccreditation,
 } from "../../../requests";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import { ColumnsType } from "antd/es/table";
 import DeleteModalContent from "../../deleteModal/deleteModal";
-import { usePagination } from "../../../hooks/usePagination";
-import { useSearchTerms } from "../../../hooks/useSearchTerms";
+import styles from "../styles.module.scss";
+
+import AddAccreditation from "./addAccreditation";
 
 const AccreditationSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -43,7 +47,7 @@ const AccreditationSetup = () => {
   });
 
   const { data, error, isError, isLoading, refetch } = useQuery({
-    queryKey: ["get-all-accreditation"],
+    queryKey: ["get-all-accreditation", currentPage],
     queryFn: () =>
       getAllAccreditation({ pageNumber: currentPage, pageSize: 10 }),
     retry: 1,
@@ -71,9 +75,11 @@ const AccreditationSetup = () => {
 
   const accreditationData = data?.data ?? [];
 
-  const filteredData = accreditationData?.filter((item) =>
-    item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = accreditationData
+    ?.filter((item) =>
+      item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   const columns: ColumnsType<AccreditationData> = [
     {

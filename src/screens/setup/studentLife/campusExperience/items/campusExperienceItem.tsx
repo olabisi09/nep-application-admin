@@ -1,104 +1,92 @@
-import {
-  Card,
-  Dropdown,
-  MenuProps,
-  Modal,
-  Table,
-  Button as AntButton,
-  Spin,
-  App,
-} from "antd";
-import { ReactComponent as Plus } from "../../../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../../../assets/ellipsis.svg";
-import { Button } from "../../../../../custom";
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  deleteCampusExperience,
-  getCampusExperienceItemByCampusExperienceId,
-} from "../../../../../requests";
-import { ColumnsType } from "antd/es/table";
-import { sanitizeAndLimitString } from "../../../../../utils/sanitizeAndLimitString";
-import { useParams } from "react-router-dom";
-import CampusExperienceItemForm from "./form";
-import DeleteModalContent from "../../../../deleteModal/deleteModal";
+/* eslint-disable no-undef */
+import { useState } from 'react';
+
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Button as AntButton, App, Card, Dropdown, MenuProps, Modal, Spin, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import { useParams } from 'react-router-dom';
+
+import { ReactComponent as Plus } from '../../../../../assets/add.svg';
+import { ReactComponent as Ellipsis } from '../../../../../assets/ellipsis.svg';
+import { Button } from '../../../../../custom';
+import { deleteCampusExperienceItem, getCampusExperienceItemByCampusExperienceId } from '../../../../../requests';
+import { sanitizeAndLimitString } from '../../../../../utils/sanitizeAndLimitString';
+import DeleteModalContent from '../../../../deleteModal/deleteModal';
+
+import CampusExperienceItemForm from './form';
 
 const CampusExperienceItem = () => {
-  const { notification } = App.useApp();
-  const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [campus, setCampus] = useState<CampusExperienceItem>(
-    {} as CampusExperienceItem
-  );
+  const [campus, setCampus] = useState<CampusExperienceItem>({} as CampusExperienceItem);
 
-  const deleteCampusExperienceMutation = useMutation({
-    mutationFn: deleteCampusExperience,
+  const { notification } = App.useApp();
+  const { id } = useParams();
+
+  const deleteCampusExperienceItemMutation = useMutation({
+    mutationFn: deleteCampusExperienceItem,
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-campus-experience-by-id"],
+    queryKey: ['get-campus-experience-by-id'],
     queryFn: () => getCampusExperienceItemByCampusExperienceId(id!),
     enabled: !!id,
   });
 
-  const deleteCampusExperienceHandler = async () => {
+  const deleteCampusExperienceItemHandler = async () => {
     try {
-      await deleteCampusExperienceMutation.mutateAsync(campus?.id, {
+      await deleteCampusExperienceItemMutation.mutateAsync(campus?.id, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
+
           refetch();
+          setOpenDelete((prevState) => !prevState);
         },
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
 
   const columns: ColumnsType<CampusExperienceItem> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
-      key: "description",
-      title: "Description",
-      dataIndex: "description",
+      key: 'description',
+      title: 'Description',
+      dataIndex: 'description',
       render: (_, { description }) => {
         const limitedCleanHtml = sanitizeAndLimitString(description);
         return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
     },
     {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+      key: 'status',
+      title: 'Status',
+      dataIndex: 'activeStatus',
+      render: (_, { activeStatus }) => (activeStatus ? 'Active' : 'Inactive'),
     },
     {
-      key: "action",
-      title: "",
+      key: 'action',
+      title: '',
       render: (_, record) => {
-        const items: MenuProps["items"] = [
+        const items: MenuProps['items'] = [
           {
-            key: "1",
-            label: "Edit",
+            key: '1',
+            label: 'Edit',
             onClick: () => {
               setCampus(record);
               setOpenEdit(true);
             },
           },
           {
-            key: "2",
-            label: "Delete",
+            key: '2',
+            label: 'Delete',
             onClick: () => {
               setCampus(record);
               setOpenDelete((prevState) => !prevState);
@@ -106,7 +94,7 @@ const CampusExperienceItem = () => {
           },
         ];
         return (
-          <Dropdown menu={{ items }} trigger={["click"]}>
+          <Dropdown menu={{ items }} trigger={['click']}>
             <AntButton type="text" icon={<Ellipsis />} />
           </Dropdown>
         );
@@ -124,9 +112,11 @@ const CampusExperienceItem = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
   return (
     <div>
       <section className="space-between">
@@ -140,23 +130,14 @@ const CampusExperienceItem = () => {
         <Table
           dataSource={campusData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{ position: ['bottomCenter'] }}
           rowKey={(record) => record.id}
           scroll={{ x: true }}
         />
       </Card>
 
-      <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
-        centered
-        title="Create Campus Experience Item"
-        footer={null}
-      >
-        <CampusExperienceItemForm
-          item={campus}
-          handleClose={() => setOpen(false)}
-        />
+      <Modal open={open} onCancel={() => setOpen(false)} centered title="Create Campus Experience Item" footer={null}>
+        <CampusExperienceItemForm item={campus} handleClose={() => setOpen(false)} />
       </Modal>
 
       <Modal
@@ -166,10 +147,7 @@ const CampusExperienceItem = () => {
         title="Edit Campus Experience Item"
         footer={null}
       >
-        <CampusExperienceItemForm
-          item={campus}
-          handleClose={() => setOpenEdit(false)}
-        />
+        <CampusExperienceItemForm item={campus} handleClose={() => setOpenEdit(false)} />
       </Modal>
 
       <Modal
@@ -180,10 +158,10 @@ const CampusExperienceItem = () => {
         footer={null}
       >
         <DeleteModalContent
-          isLoading={deleteCampusExperienceMutation?.isPending}
+          isLoading={deleteCampusExperienceItemMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={deleteCampusExperienceHandler}
-          title='this item'
+          handleSubmit={deleteCampusExperienceItemHandler}
+          title="this item"
         />
       </Modal>
     </div>

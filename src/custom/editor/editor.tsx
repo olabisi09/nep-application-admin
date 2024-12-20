@@ -1,16 +1,16 @@
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import {
-  ClassicEditor,
   Bold,
+  ClassicEditor,
   Essentials,
+  Heading,
   Italic,
-  Mention,
-  Paragraph,
-  Undo,
   Link,
   List,
-  Heading,
+  Mention,
+  Paragraph,
   Underline,
+  Undo,
 } from "ckeditor5";
 import { ErrorMessage } from "formik";
 const Editor = ({
@@ -18,11 +18,13 @@ const Editor = ({
   label,
   onChange,
   initialData,
+  onReady
 }: {
   label: string;
   name?: string;
   onChange?: (...args: any[]) => void;
   initialData?: string;
+  onReady?: ((editor: ClassicEditor) => void) | undefined;
 }) => {
   return (
     <div>
@@ -59,6 +61,7 @@ const Editor = ({
           ],
           initialData: initialData,
         }}
+        onReady={onReady}
         onChange={onChange}
         data={initialData}
       />

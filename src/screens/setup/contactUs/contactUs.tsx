@@ -1,6 +1,8 @@
-import { Card, Table, Spin } from "antd";
+/* eslint-disable no-undef */
 import { useQuery } from "@tanstack/react-query";
+import { Card, Spin, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
+
 import { getAllContactForm } from "../../../requests";
 
 const ContactUs = () => {

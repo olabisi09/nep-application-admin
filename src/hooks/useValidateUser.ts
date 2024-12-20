@@ -1,5 +1,7 @@
-import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
+
+import { useAtom } from "jotai";
+
 import { userAtom } from "../utils/store";
 
 export const useValidateUser = () => {

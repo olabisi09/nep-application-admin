@@ -1,13 +1,19 @@
-import { Form, Formik, FormikValues } from "formik";
-import Select from "../../../custom/select/select";
-import Button from "../../../custom/button/button";
-import { App, Spin } from "antd";
-import { getAllPrograms, StatusOptions } from "../../../requests";
+/* eslint-disable no-undef */
+import { useRef } from "react";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { App, Spin } from "antd";
+import { Form, Formik, FormikValues } from "formik";
 import * as Yup from "yup";
+
+import Button from "../../../custom/button/button";
 import Editor from "../../../custom/editor/editor";
-import { createOrUpdateCourseOverview } from "./request";
+import Select from "../../../custom/select/select";
+import { StatusOptions, getAllPrograms } from "../../../requests";
 import { validator } from "../../../utils/validator";
+
+import { createOrUpdateCourseOverview } from "./request";
+
 
 const validationSchema = Yup.object().shape({
   programName: validator.programName,
@@ -20,6 +26,8 @@ const AddReadMoreCourseOverview = ({
 }: {
   handleClose: () => void;
 }) => {
+  const editorRef = useRef<any>(null);
+
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -51,9 +59,13 @@ const AddReadMoreCourseOverview = ({
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({ queryKey: ["get-all-course-overview"] });
-          handleClose();
+
+          editorRef.current?.setData("");
           resetForm();
+
+          handleClose();
         },
       });
     } catch (error: any) {
@@ -105,6 +117,9 @@ const AddReadMoreCourseOverview = ({
             onChange={(_, editor) => {
               const data = editor.getData();
               setFieldValue("description", data);
+            }}
+            onReady={(editor) => {
+              editorRef.current = editor;
             }}
           />
 
@@ -177,8 +192,8 @@ const EditReadMoreCourseOverview = ({
             description: data?.message,
           });
           queryClient.refetchQueries({ queryKey: ["get-all-course-overview"] });
-          handleClose();
           resetForm();
+          handleClose();
         },
       });
     } catch (error: any) {
@@ -208,7 +223,7 @@ const EditReadMoreCourseOverview = ({
       initialValues={{
         programName: record?.readMoreId || "",
         description: record?.description || "",
-        status: record?.activeStatus ? "true" : "false",
+        status: String(record?.activeStatus),
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditCourseOverview(values, resetForm);
@@ -216,7 +231,7 @@ const EditReadMoreCourseOverview = ({
       validationSchema={validationSchema}
       enableReinitialize
     >
-      {({ handleChange, setFieldValue }) => {        
+      {({ handleChange, setFieldValue }) => {
         return (
           <Form className="fields">
             <Select

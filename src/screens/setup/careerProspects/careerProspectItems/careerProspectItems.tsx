@@ -1,29 +1,33 @@
-import { ReactComponent as Add } from "../../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../../styles.module.scss";
+/* eslint-disable no-undef */
 import { useCallback, useState } from "react";
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
-import { CreateCareerProspectItem, EditCareerProspectItem } from "./addItem";
-import { Button, SearchInput } from "../../../../custom";
 import { useParams } from "react-router-dom";
+
+import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
+import { ReactComponent as Search } from "../../../../assets/search.svg";
+import { Button, SearchInput } from "../../../../custom";
+import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
+import styles from "../../styles.module.scss";
 import {
   deleteCareerProspectItem,
   getCareerProspectItemByCareerProspectId,
 } from "../request";
-import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
-import DeleteModalContent from "../../../deleteModal/deleteModal";
+
+import { CreateCareerProspectItem, EditCareerProspectItem } from "./addItem";
 
 const CareerProspectItems = () => {
   const [showSearch, setShowSearch] = useState(false);

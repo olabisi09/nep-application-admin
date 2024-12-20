@@ -1,14 +1,15 @@
+/* eslint-disable no-undef */
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { App, Spin } from "antd";
 import { Form, Formik, FormikValues } from "formik";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { object } from "yup";
 
+import { Button, Editor } from "../../../custom";
 import Select from "../../../custom/select/select";
 import {
   createOrUpdateCareerProspect,
   getAllPrograms,
 } from "../../../requests";
-import { Button, Editor } from "../../../custom";
 import { validator } from "../../../utils/validator";
 
 const validationSchema = object().shape({
@@ -111,7 +112,7 @@ const AddCareerProspects = ({
       }}
       validationSchema={validationSchema}
     >
-      {({ values, setFieldValue }) => {
+      {({ setFieldValue }) => {
         return (
           <Form>
             <section className="fields">

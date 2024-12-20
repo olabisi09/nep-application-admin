@@ -1,23 +1,27 @@
+import { useState } from "react";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  Button as AntButton,
+  App,
   Card,
   Dropdown,
   MenuProps,
   Modal,
-  Button as AntButton,
   Spin,
-  App,
 } from "antd";
+import { useNavigate } from "react-router-dom";
+
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
-import { useState } from "react";
-import SetupFaq from "./setup";
-import QAndA from "./qAndA";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteFAQ, getAllFAQ } from "../../../requests";
-import DeleteModalContent from "../../deleteModal/deleteModal";
-import { useNavigate } from "react-router-dom";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+
+
+import QAndA from "./qAndA";
+import SetupFaq from "./setup";
 
 const Faq = () => {
   const [open, setOpen] = useState(false);
@@ -31,7 +35,7 @@ const Faq = () => {
 
   const handleEdit = () => setOpenEdit(true);
 
-  const handleDelete = (id: number) => {
+  const handleDelete = () => {
     setOpenDelete(true);
   };
 
@@ -41,6 +45,7 @@ const Faq = () => {
     queryFn: getAllFAQ,
   });
 
+  // eslint-disable-next-line no-undef
   const faqData = data?.data as FAQ;
   const limitedCleanHtml = sanitizeAndLimitString(faqData?.description);
 
@@ -58,7 +63,7 @@ const Faq = () => {
     {
       key: "3",
       label: "Delete",
-      onClick: () => handleDelete(faqData?.id),
+      onClick: () => handleDelete(),
     },
   ];
 

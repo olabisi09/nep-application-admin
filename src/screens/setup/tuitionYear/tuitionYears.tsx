@@ -1,19 +1,22 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
+/* eslint-disable no-undef */
 import { useState } from "react";
-import AddTuitionYears, { EditTuitionYears } from "./addTuitionYears";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+
 import { useMutation, useQueries } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
+import { ColumnsType } from "antd/es/table";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import Button from "../../../custom/button/button";
+import { usePagination } from "../../../hooks/usePagination";
 import {
   deleteTuitionYear,
   getAllLevel,
@@ -21,10 +24,11 @@ import {
   getAllTuitionFee,
   getAllTuitionYear,
 } from "../../../requests";
-import DeleteModalContent from "../../deleteModal/deleteModal";
-import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import { usePagination } from "../../../hooks/usePagination";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
+import AddTuitionYears, { EditTuitionYears } from "./addTuitionYears";
 
 const TuitionYears = () => {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -33,14 +37,14 @@ const TuitionYears = () => {
     {} as TuitionYear
   );
   const [openDelete, setOpenDelete] = useState(false);
-  const { currentPage, onChange } = usePagination();
 
+  const { currentPage, onChange } = usePagination();
   const { notification } = App.useApp();
 
   const queryResults = useQueries({
     queries: [
       {
-        queryKey: ["getAll-TuitionYear"],
+        queryKey: ["getAll-TuitionYear", currentPage],
         queryFn: () => getAllTuitionYear(currentPage, 10),
       },
       {
@@ -100,6 +104,7 @@ const TuitionYears = () => {
             message: "Success",
             description: data?.message,
           });
+
           refetchTuitionYear();
           setOpenDelete(false);
         },
@@ -117,11 +122,11 @@ const TuitionYears = () => {
   });
 
   const columns: ColumnsType<TuitionYear> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
+    {
+      key: "programName",
+      title: "Program Name",
+      dataIndex: "programName",
+    },
     {
       key: "level",
       title: "Level",

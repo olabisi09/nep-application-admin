@@ -1,11 +1,15 @@
+/* eslint-disable no-undef */
+import { useState } from "react";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { App, Card, Image, Modal, Spin } from "antd";
+
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import Button from "../../../custom/button/button";
-import { useState } from "react";
-import { EditTemplate, SetupSchoolInfoTemplate } from "./setup";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteGeneralTemplate, getGeneralTemplates } from "../../../requests";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+
+import { EditTemplate, SetupSchoolInfoTemplate } from "./setup";
 
 const SchoolInfoTemplate = () => {
   const [open, setOpen] = useState(false);

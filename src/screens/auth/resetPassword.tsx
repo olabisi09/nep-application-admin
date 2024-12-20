@@ -1,15 +1,17 @@
+import { useMutation } from "@tanstack/react-query";
+import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
-import Input from "../../custom/input/input";
-import Button from "../../custom/button/button";
+import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+
 import { ReactComponent as Arrow } from "../../assets/arrow.svg";
 import { ReactComponent as Info } from "../../assets/info.svg";
-import { useNavigate } from "react-router-dom";
-import { routes } from "../../routes";
-import { App } from "antd";
-import { useMutation } from "@tanstack/react-query";
+import Button from "../../custom/button/button";
+import Input from "../../custom/input/input";
 import { resetPasswordAdmin } from "../../requests";
+import { routes } from "../../routes";
 import { validator } from "../../utils/validator";
-import * as Yup from "yup";
+
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -24,6 +26,7 @@ const ResetPassword = () => {
   });
 
   const handleResetPassword = async (values: FormikValues) => {
+    // eslint-disable-next-line no-undef
     const payload: Partial<ResetPayload> = {
       password: values.newPassword,
       confirmPassword: values.confirmPassword,
@@ -66,7 +69,7 @@ const ResetPassword = () => {
           handleResetPassword(values);
         }}
         validationSchema={validationSchema}>
-        {(props) => {
+        {() => {
           return (
             <Form className="fields">
               <Input

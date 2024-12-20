@@ -1,43 +1,43 @@
+/* eslint-disable no-undef */
+import { useState } from "react";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
+
 import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
 // import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
-import { useState } from "react";
 import SearchInput from "../../../../custom/searchInput/searchInput";
-import AddLga from "./addLga";
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { usePagination } from "../../../../hooks/usePagination";
+import { useSearchTerms } from "../../../../hooks/useSearchTerms";
 import { deleteLGA, getLGA } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
-import { usePagination } from "../../../../hooks/usePagination";
+import styles from "../../styles.module.scss";
+
+import AddLga from "./addLga";
 
 const LgaSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as LGA);
   const [openDelete, setOpenDelete] = useState(false);
 
   const { currentPage, onChange } = usePagination();
+  const { searchTerm, handleSearch } = useSearchTerms();
 
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
 
   const handleEdit = (data: LGA) => {
     setIndexData(data);
@@ -50,15 +50,17 @@ const LgaSetup = () => {
   };
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-lga"],
+    queryKey: ["get-lga", currentPage],
     queryFn: () => getLGA({ pageNumber: currentPage, pageSize: 10 }),
   });
 
   const lgaData = data?.data as LGA[];
 
-  const filteredData = lgaData?.filter((lga) =>
-    lga?.lgaName?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = lgaData
+    ?.filter((lga) =>
+      lga?.lgaName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   const items = (record: LGA): MenuProps["items"] => [
     {
@@ -135,9 +137,11 @@ const LgaSetup = () => {
       });
     }
   };
+
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -181,6 +185,7 @@ const LgaSetup = () => {
             )} */}
           </div>
         </div>
+        
         <Table
           dataSource={filteredData}
           columns={columns}

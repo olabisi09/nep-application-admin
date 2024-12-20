@@ -1,22 +1,17 @@
-import {
-  Card,
-  Dropdown,
-  MenuProps,
-  Modal,
-  Table,
-  Button as AntButton,
-  App,
-  Spin,
-} from "antd";
-import { ReactComponent as Plus } from "../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import Button from "../../../custom/button/button";
-import { useState } from "react";
-import { CreateSchoolMgt, EditSchoolMgt } from "./setup";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteSchoolMgt, getSchoolMgt } from "../../../requests";
-import { ColumnsType } from "antd/es/table";
-import DeleteModalContent from "../../deleteModal/deleteModal";
+/* eslint-disable no-undef */
+import { useState } from 'react';
+
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Button as AntButton, App, Card, Dropdown, MenuProps, Modal, Spin, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+
+import { ReactComponent as Plus } from '../../../assets/add.svg';
+import { ReactComponent as Ellipsis } from '../../../assets/ellipsis.svg';
+import Button from '../../../custom/button/button';
+import { deleteSchoolMgt, getSchoolMgt } from '../../../requests';
+import DeleteModalContent from '../../deleteModal/deleteModal';
+
+import { CreateSchoolMgt, EditSchoolMgt } from './setup';
 
 const SchoolMgt = () => {
   const { notification } = App.useApp();
@@ -27,7 +22,7 @@ const SchoolMgt = () => {
 
   const deleteMgtMutation = useMutation({ mutationFn: deleteSchoolMgt });
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-school-mgt"],
+    queryKey: ['get-school-mgt'],
     queryFn: getSchoolMgt,
   });
 
@@ -36,7 +31,7 @@ const SchoolMgt = () => {
       await deleteMgtMutation.mutateAsync(mgt?.id, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
           refetch();
@@ -45,58 +40,51 @@ const SchoolMgt = () => {
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
 
   const columns: ColumnsType<Setup> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
-      key: "title",
-      title: "Title",
-      dataIndex: "title",
+      key: 'title',
+      title: 'Title',
+      dataIndex: 'title',
     },
     {
-      key: "description",
-      title: "Description",
-      dataIndex: "description",
+      key: 'description',
+      title: 'Description',
+      dataIndex: 'description',
     },
     {
-      key: "pictureUrl",
-      title: "Picture",
-      dataIndex: "imageUrl",
-      render: (_, { imageUrl }) => (
-        <img className="table-img" src={imageUrl} alt="" />
-      ),
+      key: 'pictureUrl',
+      title: 'Picture',
+      dataIndex: 'imageUrl',
+      render: (_, { imageUrl }) => <img className="table-img" src={imageUrl} alt="" />,
     },
     {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+      key: 'status',
+      title: 'Status',
+      dataIndex: 'activeStatus',
+      render: (_, { activeStatus }) => (activeStatus ? 'Active' : 'Inactive'),
     },
     {
-      key: "action",
-      title: "",
+      key: 'action',
+      title: '',
       render: (_, record) => {
-        const items: MenuProps["items"] = [
+        const items: MenuProps['items'] = [
           {
-            key: "1",
-            label: "Edit",
+            key: '1',
+            label: 'Edit',
             onClick: () => {
               setMgt(record);
               setOpenEdit(true);
             },
           },
           {
-            key: "2",
-            label: "Delete",
+            key: '2',
+            label: 'Delete',
             onClick: () => {
               setMgt(record);
               setOpenDelete(true);
@@ -104,7 +92,7 @@ const SchoolMgt = () => {
           },
         ];
         return (
-          <Dropdown menu={{ items }} trigger={["click"]}>
+          <Dropdown menu={{ items }} trigger={['click']}>
             <AntButton type="text" icon={<Ellipsis />} />
           </Dropdown>
         );
@@ -125,11 +113,7 @@ const SchoolMgt = () => {
     <div>
       <section className="space-between">
         <h3>School Management Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+        <Button onClick={() => setOpen(true)} iconBefore={<Plus />} text="Setup" />
       </section>
       <br />
 
@@ -137,18 +121,13 @@ const SchoolMgt = () => {
         <Table
           dataSource={schoolMgt}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{ position: ['bottomCenter'] }}
           rowKey={(record) => record.id}
           scroll={{ x: true }}
         />
       </Card>
 
-      <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
-        centered
-        title="School Management Setup"
-        footer={null}>
+      <Modal open={open} onCancel={() => setOpen(false)} centered title="School Management Setup" footer={null}>
         <CreateSchoolMgt handleClose={() => setOpen(false)} />
       </Modal>
 
@@ -157,7 +136,8 @@ const SchoolMgt = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit School Management Setup"
-        footer={null}>
+        footer={null}
+      >
         <EditSchoolMgt item={mgt} handleClose={() => setOpenEdit(false)} />
       </Modal>
 
@@ -166,7 +146,8 @@ const SchoolMgt = () => {
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete School Management Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteMgtMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

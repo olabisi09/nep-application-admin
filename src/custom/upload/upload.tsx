@@ -1,11 +1,16 @@
-import { Field, FieldProps } from "formik";
-import { ReactComponent as File } from "../../assets/cloud.svg";
-import styles from "./upload.module.scss";
+import React from "react";
+
 import classNames from "classnames";
+import { Field, FieldProps } from "formik";
+
+import { ReactComponent as File } from "../../assets/cloud.svg";
+
+import styles from "./upload.module.scss";
 
 interface UploadProps extends React.DetailedHTMLProps <React.InputHTMLAttributes<HTMLInputElement>,HTMLInputElement
   > {
   label?: string;
+  // eslint-disable-next-line no-undef
   description?: JSX.Element | string;
   allowedFormats?: string[];
   icon?: React.ReactNode;
@@ -14,7 +19,6 @@ interface UploadProps extends React.DetailedHTMLProps <React.InputHTMLAttributes
 }
 
 const Upload: React.FC<UploadProps> = ({
-  fileSize,
   fileName,
   label,
   description,

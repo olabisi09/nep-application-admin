@@ -1,20 +1,23 @@
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
 import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
-import { createUpdateTab, StatusOptions } from "../../../requests";
+import * as Yup from "yup";
+
 import { Button, Input, Select } from "../../../custom";
+import { StatusOptions, createUpdateTab } from "../../../requests";
 
 const AddTab = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  
+
   const addTabMutation = useMutation({ mutationFn: createUpdateTab });
 
   const validate = Yup.object().shape({
     tabName: Yup.string().required("Tab Name is required"),
     isActive: Yup.string().required("Status is required"),
   });
+
   const handleAddTab = async (values: FormikValues, resetForm: () => void) => {
     const payload: Partial<Tab> = {
       tabName: values?.tabName,
@@ -28,9 +31,11 @@ const AddTab = ({ handleClose }: { handleClose: () => void }) => {
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({ queryKey: ["get-tab"] });
-          handleClose();
+
           resetForm();
+          handleClose();
         },
       });
     } catch (error: any) {
@@ -40,15 +45,18 @@ const AddTab = ({ handleClose }: { handleClose: () => void }) => {
       });
     }
   };
+
   return (
     <Formik
-      initialValues={{ tabName: "", isActive: "true" }} // Default to true
+      initialValues={{ tabName: "", isActive: "" }}
       onSubmit={(values, { resetForm }) => {
         handleAddTab(values, resetForm);
       }}
-      validationSchema={validate}>
+      validationSchema={validate}
+    >
       <Form className="fields">
         <Input name="tabName" label="Tab Name" placeholder="Input Tab" />
+
         <Select
           name="isActive"
           placeholder="Select Status"
@@ -63,6 +71,7 @@ const AddTab = ({ handleClose }: { handleClose: () => void }) => {
             </>
           }
         />
+
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button
@@ -90,7 +99,9 @@ const EditTab = ({
     tabName: Yup.string().required("Tab Name is required"),
     isActive: Yup.string().required("Status is required"),
   });
+
   const editTabMutation = useMutation({ mutationFn: createUpdateTab });
+
   const handleEditTab = async (values: FormikValues, resetForm: () => void) => {
     const payload: Partial<Tab> = {
       id: tab?.id,
@@ -121,15 +132,17 @@ const EditTab = ({
     <Formik
       initialValues={{
         tabName: tab?.tabName,
-        isActive: tab?.isActive !== undefined ? String(tab?.isActive) : "true", // Default to true if undefined
+        isActive: String(tab?.isActive ?? ""),
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditTab(values, resetForm);
       }}
       validationSchema={validate}
-      enableReinitialize>
+      enableReinitialize
+    >
       <Form className="fields">
         <Input name="tabName" label="Tab" placeholder="Input Tab" />
+
         <Select
           name="isActive"
           placeholder="Select Status"
@@ -144,6 +157,7 @@ const EditTab = ({
             </>
           }
         />
+
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button

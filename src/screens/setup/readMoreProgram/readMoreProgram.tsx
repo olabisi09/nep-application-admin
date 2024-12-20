@@ -1,35 +1,39 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
+/* eslint-disable no-undef */
 // import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+import { useCallback, useState } from "react";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  Dropdown,
-  Modal,
-  Table,
   Button as AntButton,
+  Dropdown,
   MenuProps,
+  Modal,
   Spin,
+  Table,
   notification,
 } from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
-import { useCallback, useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getReadMoreProgrammes } from "./request";
 import { ColumnsType } from "antd/es/table";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
+import Button from "../../../custom/button/button";
+import SearchInput from "../../../custom/searchInput/searchInput";
+import { usePagination } from "../../../hooks/usePagination";
+import { useSearchTerms } from "../../../hooks/useSearchTerms";
+import { deleteReadMoreProgram } from "../../../requests";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
 import {
   AddReadMoreProgramme,
   EditReadMoreProgramme,
 } from "./addReadMoreProgram";
-import { deleteReadMoreProgram } from "../../../requests";
-import DeleteModalContent from "../../deleteModal/deleteModal";
-import { usePagination } from "../../../hooks/usePagination";
+import { getReadMoreProgrammes } from "./request";
 
 const ReadMoreProgram = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -39,21 +43,20 @@ const ReadMoreProgram = () => {
   const [openDelete, setOpenDelete] = useState(false);
 
   const { currentPage, onChange } = usePagination();
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
+  const { searchTerm, handleSearch } = useSearchTerms();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-read-more-programmes"],
+    queryKey: ["get-read-more-programmes", currentPage],
     queryFn: () => getReadMoreProgrammes(currentPage, 10),
   });
 
   const programData = data?.data ?? [];
 
-  const filteredData = programData?.filter((item) =>
-    item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = programData
+    ?.filter((item) =>
+      item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   const deleteReadProgramViewMutation = useMutation({
     mutationFn: deleteReadMoreProgram,

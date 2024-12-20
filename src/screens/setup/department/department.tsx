@@ -1,43 +1,47 @@
+/* eslint-disable no-undef */
+
+import { useState } from "react";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  Button as AntButton,
+  App,
   Card,
   Dropdown,
   MenuProps,
   Modal,
-  Table,
-  Button as AntButton,
   Spin,
-  App,
+  Table,
 } from "antd";
-
-import Button from "../../../custom/button/button";
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  deleteDepartment,
-  getAllCategory,
-  getAllPrograms,
-} from "../../../requests";
 import { ColumnsType } from "antd/es/table";
-import { CreateDepartment, EditDepartment } from "./setup";
-import DeleteModalContent from "../../deleteModal/deleteModal";
-import { usePagination } from "../../../hooks/usePagination";
-import styles from "../styles.module.scss";
+
 
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import { ReactComponent as Search } from "../../../assets/search.svg";
 import { SearchInput } from "../../../custom";
+import Button from "../../../custom/button/button";
+import { usePagination } from "../../../hooks/usePagination";
+import { useSearchTerms } from "../../../hooks/useSearchTerms";
+import {
+  deleteDepartment,
+  getAllCategory,
+  getAllPrograms,
+} from "../../../requests";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
 
+import { CreateDepartment, EditDepartment } from "./setup";
 
 const Department = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [department, setDepartment] = useState<Program>({} as Program);
 
   const { currentPage, onChange } = usePagination();
+  const { searchTerm, handleSearch } = useSearchTerms();
 
   const { notification } = App.useApp();
 
@@ -46,7 +50,7 @@ const Department = () => {
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-department"],
+    queryKey: ["get-department", currentPage],
     queryFn: () => getAllPrograms(currentPage, 10),
   });
 
@@ -126,10 +130,6 @@ const Department = () => {
         description: error?.response?.data?.message,
       });
     }
-  };
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
   };
 
   const departments = data?.data as Program[];

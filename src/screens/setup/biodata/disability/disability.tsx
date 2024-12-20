@@ -1,35 +1,39 @@
-import { ReactComponent as Add } from "../../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../../assets/search.svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  App,
-  Spin,
-} from "antd";
-import styles from "../../styles.module.scss";
+/* eslint-disable no-undef */
 
 import { useState } from "react";
 
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
-import { AddDisability, EditDisability } from "./addDisability";
+
+import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../../assets/search.svg";
 import { Button, SearchInput } from "../../../../custom";
+import { useSearchTerms } from "../../../../hooks/useSearchTerms";
 import { deleteDisability, getAllDisability } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
+import styles from "../../styles.module.scss";
+
+import { AddDisability, EditDisability } from "./addDisability";
 
 const DisabilitySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [disability, setDisability] = useState<Disability>({} as Disability);
   const [openDelete, setOpenDelete] = useState(false);
 
   const { notification } = App.useApp();
+  const { searchTerm, handleSearch } = useSearchTerms();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-disability"],
@@ -63,10 +67,6 @@ const DisabilitySetup = () => {
         description: error?.response?.data?.message,
       });
     }
-  };
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
   };
 
   const columns: ColumnsType<Disability> = [
@@ -115,11 +115,13 @@ const DisabilitySetup = () => {
     },
   ];
 
-  const disabilityData = data?.data;
+  const disabilityData = data?.data ?? [];
 
-  const filteredData = disabilityData?.filter((item) =>
-    item?.name?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = disabilityData
+    ?.filter((item) =>
+      item?.name?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   if (isLoading) {
     return <Spin />;
@@ -165,7 +167,6 @@ const DisabilitySetup = () => {
           dataSource={filteredData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 

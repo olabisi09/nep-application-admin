@@ -1,57 +1,64 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
+/* eslint-disable no-undef */
 // import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  App,
-  Spin,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import AddApplicationFee from "./addApplicationFee";
-import { deleteFeeSetup, getAllFeeSetup } from "../../../requests";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
-import DeleteModalContent from "../../deleteModal/deleteModal";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
+import Button from "../../../custom/button/button";
+import SearchInput from "../../../custom/searchInput/searchInput";
 import { usePagination } from "../../../hooks/usePagination";
+import { useSearchTerms } from "../../../hooks/useSearchTerms";
+import { deleteFeeSetup, getAllFeeSetup } from "../../../requests";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
+import AddApplicationFee from "./addApplicationFee";
 
 const ApplicationFee = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [item, setItem] = useState<GetAllFeeSetup>({} as GetAllFeeSetup);
   const [openDelete, setOpenDelete] = useState(false);
 
   const { currentPage, onChange } = usePagination();
+  const { searchTerm, handleSearch } = useSearchTerms();
 
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-all-fee-setup"],
+    queryKey: ["get-all-fee-setup", currentPage],
     queryFn: () => getAllFeeSetup(currentPage, 10),
   });
 
   const applicationFeeData = data?.data ?? [];
 
-  const filteredData = applicationFeeData?.filter(
-    (item) =>
-      item?.program?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
-      item?.programTypeName
-        ?.toLowerCase()
-        ?.includes(searchTerm.toLowerCase()) ||
-      item?.applicationBatchName
-        ?.toLowerCase()
-        ?.includes(searchTerm.toLowerCase()) ||
-      item?.modeOfStudy?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = applicationFeeData
+    ?.filter(
+      (item) =>
+        item?.program?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
+        item?.programTypeName
+          ?.toLowerCase()
+          ?.includes(searchTerm.toLowerCase()) ||
+        item?.applicationBatchName
+          ?.toLowerCase()
+          ?.includes(searchTerm.toLowerCase()) ||
+        item?.modeOfStudy?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   const deleteApplicationFeeMutation = useMutation({
     mutationFn: deleteFeeSetup,
@@ -75,10 +82,6 @@ const ApplicationFee = () => {
         description: error?.response?.data?.message,
       });
     }
-  };
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
   };
 
   const columns: ColumnsType<GetAllFeeSetup> = [
@@ -204,7 +207,7 @@ const ApplicationFee = () => {
             onChange: onChange,
             pageSize: 10,
           }}
-          scroll={{ x: 400 }}
+          // scroll={{ x: 400 }}
         />
       </section>
 

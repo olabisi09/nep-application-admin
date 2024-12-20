@@ -1,54 +1,58 @@
-import { Form, Formik, FormikValues } from "formik";
-import Select from "../../../custom/select/select";
-import Button from "../../../custom/button/button";
-import { App, Spin } from "antd";
-import { createOrUpdateScholarship, getAllPrograms, StatusOptions } from "../../../requests";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
-import Editor from "../../../custom/editor/editor";
+/* eslint-disable no-undef */
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { App, Spin } from 'antd';
+import { Form, Formik, FormikValues } from 'formik';
+import * as Yup from 'yup';
+
+import Button from '../../../custom/button/button';
+import Editor from '../../../custom/editor/editor';
+import Select from '../../../custom/select/select';
+import { StatusOptions, createOrUpdateScholarship, getAllPrograms } from '../../../requests';
 
 const AddScholarship = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const addScholarshipMutation = useMutation({ mutationFn: createOrUpdateScholarship });
+  const addScholarshipMutation = useMutation({
+    mutationFn: createOrUpdateScholarship,
+  });
   const {
     data: programsData,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ["get-all-programs"],
+    queryKey: ['get-all-programs'],
     queryFn: () => getAllPrograms(),
   });
 
   const validate = Yup.object().shape({
-    programName: Yup.string().required("Program is required"),
-    description: Yup.string().required("Description is required"),
-    status: Yup.string().required("Status is required"),
+    programName: Yup.string().required('Program is required'),
+    description: Yup.string().required('Description is required'),
+    status: Yup.string().required('Status is required'),
   });
 
   const handleAddScholarship = async (values: FormikValues, resetForm: () => void) => {
     const payload: Partial<CommonPayload> = {
       description: values.description,
       readmoreId: parseInt(values.programName),
-      activeStatus: values?.status === "false" ? false : true,
+      activeStatus: values?.status === 'false' ? false : true,
     };
 
     try {
       await addScholarshipMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-scholarship"] });
+          queryClient.refetchQueries({ queryKey: ['get-scholarship'] });
           handleClose();
           resetForm();
         },
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -57,9 +61,9 @@ const AddScholarship = ({ handleClose }: { handleClose: () => void }) => {
   return (
     <Formik
       initialValues={{
-        programName: "",
-        description: "",
-        status: "",
+        programName: '',
+        description: '',
+        status: '',
       }}
       onSubmit={(values, { resetForm }) => {
         handleAddScholarship(values, resetForm);
@@ -95,7 +99,7 @@ const AddScholarship = ({ handleClose }: { handleClose: () => void }) => {
             label="Description"
             onChange={(_, editor) => {
               const data = editor.getData();
-              setFieldValue("description", data);
+              setFieldValue('description', data);
             }}
           />
 
@@ -115,7 +119,11 @@ const AddScholarship = ({ handleClose }: { handleClose: () => void }) => {
           />
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
-            <Button text="Create" isLoading={addScholarshipMutation.isPending} disabled={addScholarshipMutation.isPending} />
+            <Button
+              text="Create"
+              isLoading={addScholarshipMutation.isPending}
+              disabled={addScholarshipMutation.isPending}
+            />
           </div>
         </Form>
       )}
@@ -126,21 +134,23 @@ const AddScholarship = ({ handleClose }: { handleClose: () => void }) => {
 const EditScholarship = ({ handleClose, scholarship }: { handleClose: () => void; scholarship: CommonPayload }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const editScholarshipMutation = useMutation({ mutationFn: createOrUpdateScholarship });
+  const editScholarshipMutation = useMutation({
+    mutationFn: createOrUpdateScholarship,
+  });
   const {
     data: programsData,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ["get-all-programs"],
+    queryKey: ['get-all-programs'],
     queryFn: () => getAllPrograms(),
   });
 
   const validate = Yup.object().shape({
-    programName: Yup.string().required("Program is required"),
-    description: Yup.string().required("Description is required"),
-    status: Yup.string().required("Status is required"),
+    programName: Yup.string().required('Program is required'),
+    description: Yup.string().required('Description is required'),
+    status: Yup.string().required('Status is required'),
   });
 
   const handleEditScholarship = async (values: FormikValues, resetForm: () => void) => {
@@ -148,24 +158,25 @@ const EditScholarship = ({ handleClose, scholarship }: { handleClose: () => void
       id: scholarship.id,
       description: values.description,
       readmoreId: parseInt(values.programName),
-      activeStatus: values?.status === "false" ? false : true,
+      activeStatus: values?.status === 'true',
     };
 
     try {
       await editScholarshipMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-scholarship"] });
+
+          queryClient.refetchQueries({ queryKey: ['get-scholarship'] });
           handleClose();
           resetForm();
         },
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -175,14 +186,16 @@ const EditScholarship = ({ handleClose, scholarship }: { handleClose: () => void
       initialValues={{
         programName: scholarship.readmoreId,
         description: scholarship.description,
-        status: scholarship.activeStatus ? "true" : "false",
+        status: String(scholarship.activeStatus),
       }}
-      onSubmit={(values,{resetForm}) => {handleEditScholarship(values,resetForm)}}
+      onSubmit={(values, { resetForm }) => {
+        handleEditScholarship(values, resetForm);
+      }}
       validationSchema={validate}
     >
       {({ setFieldValue }) => (
         <Form className="fields">
-             <Select
+          <Select
             name="programName"
             placeholder="Select Program Name "
             label="Program Name"
@@ -204,12 +217,13 @@ const EditScholarship = ({ handleClose, scholarship }: { handleClose: () => void
               </>
             }
           />
+
           <Editor
             name="description"
             label="Description"
             onChange={(_, editor) => {
               const data = editor.getData();
-              setFieldValue("description", data);
+              setFieldValue('description', data);
             }}
             initialData={scholarship.description}
           />
@@ -230,7 +244,11 @@ const EditScholarship = ({ handleClose, scholarship }: { handleClose: () => void
           />
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
-            <Button text="Update" isLoading={editScholarshipMutation?.isPending} disabled={editScholarshipMutation?.isPending}/>
+            <Button
+              text="Update"
+              isLoading={editScholarshipMutation?.isPending}
+              disabled={editScholarshipMutation?.isPending}
+            />
           </div>
         </Form>
       )}

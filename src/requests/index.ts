@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import api from "../utils/api";
 
 export const getAboutUs = async () => {
@@ -472,6 +473,12 @@ export const deleteCampusExperience = async (id: number) => {
   )?.data as Response;
 };
 
+export const deleteCampusExperienceItem = async (id: number) => {
+  return (
+    await api.delete(`/StudentLife/studentLife/DeleteCampusExperienceExperienceItem?Id=${id}`)
+  )?.data as Response;
+};
+
 export const getOverview = async () => {
   return (await api.get("/StudentLife/studentlife/GetAllOverview"))
     ?.data as GetByStudentLifeResponse;
@@ -606,7 +613,7 @@ export const getAllPrograms = async (
 ) => {
   return (
     await api.get(
-      `/Academics/GetAllProgramAsync/?PageNumber=${pageNumber}&PageSize=${pageSize}`
+      `/Academics/GetAllProgramAsync?PageNumber=${pageNumber}&PageSize=${pageSize}`
     )
   )?.data as ProgramResponse;
 };
@@ -940,7 +947,7 @@ export const getAllFeeSetup = async (
 ) => {
   return (
     await api.get(
-      `/ReadMore/GetAllFeeSetup/?PageNumber=${pageNumber}&PageSize=${pageSize}`
+      `/ReadMore/GetAllFeeSetup?PageNumber=${pageNumber}&PageSize=${pageSize}`
     )
   )?.data as getAllFeeSetupResponse;
 };

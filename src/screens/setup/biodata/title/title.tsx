@@ -1,30 +1,28 @@
-import { ReactComponent as Add } from "../../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  App,
-  Spin,
-} from "antd";
-import styles from "../../styles.module.scss";
-import Button from "../../../../custom/button/button";
+/* eslint-disable no-undef */
 import { useState } from "react";
-import SearchInput from "../../../../custom/searchInput/searchInput";
-import { AddTitle, EditTitle } from "./addTitle";
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteTitle, getAllTitles } from "../../../../requests";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
+
+import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import Button from "../../../../custom/button/button";
+import { deleteTitle, getAllTitles } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
+import styles from "../../styles.module.scss";
+
+import { AddTitle, EditTitle } from "./addTitle";
 
 const TitleSetup = () => {
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [title, setTitle] = useState<Title>({} as Title);
@@ -65,16 +63,8 @@ const TitleSetup = () => {
       });
     }
   };
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
 
   const columns: ColumnsType<Title> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "titleName",
       title: "Name",
@@ -111,6 +101,7 @@ const TitleSetup = () => {
             ),
           },
         ];
+
         return (
           <Dropdown menu={{ items }} trigger={["click"]}>
             <AntButton type="text" icon={<Ellipsis />} />
@@ -120,12 +111,13 @@ const TitleSetup = () => {
     },
   ];
 
-  const titleData = data?.data;
+  const titleData =
+    data?.data?.map((item) => ({ ...item, key: item?.id })) ?? [];
 
   if (isLoading) {
     return <Spin />;
   }
-  
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -142,34 +134,10 @@ const TitleSetup = () => {
       </section>
 
       <section className={styles.card}>
-        <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
-          <div>
-            {!showSearch && (
-              <span>
-                <Search
-                  onClick={() => setShowSearch((showSearch) => !showSearch)}
-                />
-              </span>
-            )}
-            {showSearch && (
-              <SearchInput value={searchTerm} onChange={handleSearch} />
-            )}
-
-            {!showAllFilter && (
-              <Filter
-                onClick={() =>
-                  setShowAllFilter((showAllFilter) => !showAllFilter)
-                }
-              />
-            )}
-          </div>
-        </div>
         <Table
           dataSource={titleData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 

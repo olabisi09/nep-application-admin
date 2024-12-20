@@ -1,4 +1,7 @@
+import { FC, ReactNode } from "react";
+
 import { Dropdown } from "antd";
+
 import styles from "./styles.module.scss";
 
 type Placement =
@@ -10,12 +13,12 @@ type Placement =
   | "topRight";
 
 interface DropdownProps {
-  dropdownButton: React.ReactNode;
-  dropdownContent?: React.ReactNode;
+  dropdownButton: ReactNode;
+  dropdownContent?: ReactNode;
   placement?: Placement;
 }
 
-const CustomDropdown: React.FC<DropdownProps> = ({
+const CustomDropdown: FC<DropdownProps> = ({
   dropdownButton,
   dropdownContent,
   placement,

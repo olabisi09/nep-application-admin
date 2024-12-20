@@ -1,11 +1,13 @@
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Input from "../../../../custom/input/input";
-import { createOrUpdateTitle, StatusOptions } from "../../../../requests";
-import * as Yup from "yup";
 import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
-import Select from "../../../../custom/select/select";
+import * as Yup from "yup";
+
 import Button from "../../../../custom/button/button";
+import Input from "../../../../custom/input/input";
+import Select from "../../../../custom/select/select";
+import { StatusOptions, createOrUpdateTitle } from "../../../../requests";
 
 const AddTitle = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
@@ -46,13 +48,15 @@ const AddTitle = ({ handleClose }: { handleClose: () => void }) => {
   };
   return (
     <Formik
-      initialValues={{ name: "", activeStatus: "true" }} // Default to true
+      initialValues={{ name: "", activeStatus: "" }} // Default to true
       onSubmit={(values, { resetForm }) => {
         handleAddTitle(values, resetForm);
       }}
-      validationSchema={validate}>
+      validationSchema={validate}
+    >
       <Form className="fields">
         <Input name="name" label="Title" placeholder="Input Title" />
+
         <Select
           name="activeStatus"
           placeholder="Select Status"
@@ -67,6 +71,7 @@ const AddTitle = ({ handleClose }: { handleClose: () => void }) => {
             </>
           }
         />
+
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button
@@ -128,15 +133,13 @@ const EditTitle = ({
     <Formik
       initialValues={{
         name: title?.titleName,
-        activeStatus:
-          title?.activeStatus !== undefined
-            ? String(title?.activeStatus)
-            : "true", // Default to true if undefined
+        activeStatus: String(title?.activeStatus ?? ""),
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditTitle(values, resetForm);
       }}
-      validationSchema={validate}>
+      validationSchema={validate}
+    >
       <Form className="fields">
         <Input name="name" label="Title" placeholder="Input Title" />
         <Select

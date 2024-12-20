@@ -1,15 +1,17 @@
-import { App, Spin } from "antd";
+/* eslint-disable no-undef */
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
+import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
 
 import { Button, Select } from "../../../custom";
-import { getAllAcademicSession, StatusOptions } from "../../../requests";
-import { getAllProgram } from "../program/request";
-import { createUpdateApplicationBatch } from "./request";
-import { formatDate } from "../../../utils/formatDate";
 import Input from "../../../custom/input/input";
+import { StatusOptions, getAllAcademicSession } from "../../../requests";
+import { formatDate } from "../../../utils/formatDate";
 import { validator } from "../../../utils/validator";
+import { getAllProgram } from "../program/request";
+
+import { createUpdateApplicationBatch } from "./request";
 
 interface Props {
   handleClose: () => void;
@@ -22,16 +24,19 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
 
   const queries = useQueries({
     queries: [
-      { queryKey: ["get-all-session"], queryFn: () => getAllAcademicSession(1, 10) },
-      { queryKey: ["get-all-program"], queryFn: getAllProgram },
+      {
+        queryKey: ["get-all-session"],
+        queryFn: () => getAllAcademicSession(1, 10),
+      },
+      { queryKey: ["get-all-program"], queryFn: () => getAllProgram() },
     ],
   });
 
   const {
     data: session,
-    isLoading: isSessionLoading,
-    isError: isSessionError,
-    error: sessionError,
+    // isLoading: isSessionLoading,
+    // isError: isSessionError,
+    // error: sessionError,
   } = queries[0];
 
   // const {
@@ -61,7 +66,7 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
       lateEndDate: values.lateRegistrationEndDate,
       startDate: values.startDate,
       endDate: values.endDate,
-      isActive: values.status === 'Active',
+      isActive: values.status === "true",
     };
 
     try {
@@ -72,7 +77,9 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
             description: data?.message,
           });
 
-          queryClient.refetchQueries({ queryKey: ["get-all-application-batch"] });
+          queryClient.refetchQueries({
+            queryKey: ["get-all-application-batch"],
+          });
           handleClose();
           resetForm();
         },
@@ -97,17 +104,11 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
   });
 
   const sessionOptions = () => {
-    if (isSessionLoading) {
-      return [<option value="">{<Spin size="small" />}</option>];
-    } else if (isSessionError) {
-      return [<option value="">{sessionError?.message}</option>];
-    } else {
-      return sessionData?.map((item) => (
-        <option key={item?.id} value={item?.id}>
-          {item?.name}
-        </option>
-      ));
-    }
+    return sessionData?.map((item) => (
+      <option key={item?.id} value={item?.id}>
+        {item?.name}
+      </option>
+    ));
   };
 
   // const programOptions = () => {
@@ -124,7 +125,7 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
   //   }
   // };
 
-  const initialStatus = record?.isActive === true ? "Active" : "Inactive";
+  const initialStatus = record?.isActive;
 
   return (
     <Formik
@@ -136,7 +137,7 @@ const EditApplicationBatch = ({ handleClose, record }: Props) => {
         endDate: formatDate(record?.endDate) ?? "",
         lateRegistrationStartDate: formatDate(record?.lateStartDate) ?? "",
         lateRegistrationEndDate: formatDate(record?.lateEndDate) ?? "",
-        status: initialStatus,
+        status: String(initialStatus),
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditApplicationBatch(values, resetForm);

@@ -1,11 +1,15 @@
+import { memo, useState } from "react";
+
+import { Breadcrumb, Drawer } from "antd";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+
+import { useScreenWidth } from "../../hooks/useScreenWidth";
+import { breadcrumbNames } from "../../routes";
+
+import styles from "./dashboardLayout.module.scss";
 import Header from "./header";
 import Sidebar from "./sidebar";
-import styles from "./dashboardLayout.module.scss";
-import { Breadcrumb, Drawer } from "antd";
-import { useState, memo } from "react";
-import { breadcrumbNames } from "../../routes";
-import { useScreenWidth } from "../../utils/useScreenWidth";
+
 
 const DashboardLayout = () => {
   const location = useLocation();

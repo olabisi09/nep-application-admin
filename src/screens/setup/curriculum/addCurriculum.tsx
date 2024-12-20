@@ -1,16 +1,18 @@
-import { App, Spin } from "antd";
-import Select from "../../../custom/select/select";
+/* eslint-disable no-undef */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
+import { App, Spin } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
+import { Button } from "../../../custom";
+import Editor from "../../../custom/editor/editor";
+import Select from "../../../custom/select/select";
 import {
+  StatusOptions,
   createOrUpdateCurriculum,
   getAllLevel,
   getAllPrograms,
-  StatusOptions,
 } from "../../../requests";
-import { Button } from "../../../custom";
-import Editor from "../../../custom/editor/editor";
 
 interface Props {
   details?: CurriculumPayload;
@@ -22,7 +24,7 @@ const AddCurriculum = ({ handleClose, details }: Props) => {
   const queryClient = useQueryClient();
 
   const validate = Yup.object().shape({
-    readmoreId: Yup.string().required("Program name is required"),
+    programName: Yup.string().required("Program name is required"),
     description: Yup.string().required("Description is required"),
     levelId: Yup.string().required("Level name is required"),
     activeStatus: Yup.string().required("Active status is required"),
@@ -86,8 +88,8 @@ const AddCurriculum = ({ handleClose, details }: Props) => {
         programName: details?.readmoreId || "",
         description: details?.description || "",
         levelId: details?.levelId || "",
-        readmoreId: details?.readmoreId || "",
-        activeStatus: details?.activeStatus ?? "",
+        // readmoreId: details?.readmoreId || "",
+        activeStatus: String(details?.activeStatus ?? ""),
       }}
       onSubmit={(values, { resetForm }) => {
         curriculumHandler(values, resetForm);
@@ -98,7 +100,7 @@ const AddCurriculum = ({ handleClose, details }: Props) => {
       {({ setFieldValue }) => (
         <Form className="fields">
           <Select
-            name="readmoreId"
+            name="programName"
             label="Program Name"
             placeholder="Select Program Name"
             // onChange={handleProgramChange}
@@ -171,6 +173,7 @@ const AddCurriculum = ({ handleClose, details }: Props) => {
 
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
+
             <Button
               text={
                 addCurriculumMutation.isPending ? "Submitting..." : "Submit"

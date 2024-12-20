@@ -1,14 +1,17 @@
-import { Form, Formik, FormikValues } from "formik";
-import Select from "../../../custom/select/select";
-import Button from "../../../custom/button/button";
-import { App, Spin } from "antd";
-import { getAllPrograms, StatusOptions } from "../../../requests";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
-import Editor from "../../../custom/editor/editor";
-import { createOrUpdateReadMoreProgrammes } from "./request";
-import { validator } from "../../../utils/validator";
-import { Input } from "../../../custom";
+/* eslint-disable no-undef */
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { App, Spin } from 'antd';
+import { Form, Formik, FormikValues } from 'formik';
+import * as Yup from 'yup';
+
+import { Input } from '../../../custom';
+import Button from '../../../custom/button/button';
+import Editor from '../../../custom/editor/editor';
+import Select from '../../../custom/select/select';
+import { StatusOptions, getAllPrograms } from '../../../requests';
+import { validator } from '../../../utils/validator';
+
+import { createOrUpdateReadMoreProgrammes } from './request';
 
 const validationSchema = Yup.object().shape({
   programName: validator.programName,
@@ -25,33 +28,30 @@ const AddReadMoreProgramme = ({ handleClose }: { handleClose: () => void }) => {
   });
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-all-programs"],
+    queryKey: ['get-all-programs'],
     queryFn: () => getAllPrograms(),
   });
 
   const programsData = data?.data ?? [];
 
-  const handleAddReadMoreProgramme = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
+  const handleAddReadMoreProgramme = async (values: FormikValues, resetForm: () => void) => {
     const payload: Partial<ReadMoreProgrammePayload> = {
       description: values.description,
       readmoreId: parseInt(values.programName),
       sessionIntake: values.session,
       duration: values.duration,
-      activeStatus: values?.status === "false" ? false : true,
+      activeStatus: values?.status === 'false' ? false : true,
     };
 
     try {
       await addReadMoreProgrammeMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
           queryClient.refetchQueries({
-            queryKey: ["get-read-more-programmes"],
+            queryKey: ['get-read-more-programmes'],
           });
           handleClose();
           resetForm();
@@ -59,7 +59,7 @@ const AddReadMoreProgramme = ({ handleClose }: { handleClose: () => void }) => {
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -82,11 +82,11 @@ const AddReadMoreProgramme = ({ handleClose }: { handleClose: () => void }) => {
   return (
     <Formik
       initialValues={{
-        programName: "",
-        description: "",
-        duration: "",
-        session: "",
-        status: "",
+        programName: '',
+        description: '',
+        duration: '',
+        session: '',
+        status: '',
       }}
       onSubmit={(values, { resetForm }) => {
         handleAddReadMoreProgramme(values, resetForm);
@@ -95,27 +95,18 @@ const AddReadMoreProgramme = ({ handleClose }: { handleClose: () => void }) => {
     >
       {({ setFieldValue }) => (
         <Form className="fields">
-          <Select
-            name="programName"
-            placeholder="Select Program Name "
-            label="Program Name"
-            options={programOptions}
-          />
+          <Select name="programName" placeholder="Select Program Name " label="Program Name" options={programOptions} />
 
           <Editor
             name="description"
             label="Description"
             onChange={(_, editor) => {
               const data = editor.getData();
-              setFieldValue("description", data);
+              setFieldValue('description', data);
             }}
           />
 
-          <Input
-            name="duration"
-            label="Duration (Years)"
-            placeholder="Input Duration in years"
-          />
+          <Input name="duration" label="Duration (Years)" placeholder="Input Duration in years" />
 
           <Input name="session" placeholder="Session Intake" label="Session Intake" />
 
@@ -147,13 +138,7 @@ const AddReadMoreProgramme = ({ handleClose }: { handleClose: () => void }) => {
   );
 };
 
-const EditReadMoreProgramme = ({
-  handleClose,
-  record,
-}: {
-  handleClose: () => void;
-  record: ReadMoreProgramme;
-}) => {
+const EditReadMoreProgramme = ({ handleClose, record }: { handleClose: () => void; record: ReadMoreProgramme }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
@@ -162,34 +147,31 @@ const EditReadMoreProgramme = ({
   });
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-all-programs"],
+    queryKey: ['get-all-programs'],
     queryFn: () => getAllPrograms(),
   });
 
   const programsData = data?.data ?? [];
 
-  const handleAddReadMoreProgramme = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
+  const handleAddReadMoreProgramme = async (values: FormikValues, resetForm: () => void) => {
     const payload: Partial<ReadMoreProgrammePayload> = {
       id: record?.id,
       description: values.description,
       readmoreId: parseInt(values.programName),
       sessionIntake: values.session,
       duration: values.duration,
-      activeStatus: values?.status === "false" ? false : true,
+      activeStatus: values?.status === 'false' ? false : true,
     };
 
     try {
       await addReadMoreProgrammeMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
           queryClient.refetchQueries({
-            queryKey: ["get-read-more-programmes"],
+            queryKey: ['get-read-more-programmes'],
           });
           handleClose();
           resetForm();
@@ -197,7 +179,7 @@ const EditReadMoreProgramme = ({
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -217,16 +199,16 @@ const EditReadMoreProgramme = ({
     </>
   ));
 
-  const initialStatus = record?.activeStatus === true;
+  const initialStatus = record?.activeStatus;
 
   return (
     <Formik
       initialValues={{
-        programName: record?.readmoreId ?? "",
-        description: record?.description ?? "",
-        duration: record?.duration ?? "",
-        session: record?.sessionIntake ?? "",
-        status: initialStatus,
+        programName: record?.readmoreId ?? '',
+        description: record?.description ?? '',
+        duration: record?.duration ?? '',
+        session: record?.sessionIntake ?? '',
+        status: String(initialStatus ?? ''),
       }}
       onSubmit={(values, { resetForm }) => {
         handleAddReadMoreProgramme(values, resetForm);
@@ -236,28 +218,20 @@ const EditReadMoreProgramme = ({
     >
       {({ setFieldValue }) => (
         <Form className="fields">
-          <Select
-            name="programName"
-            placeholder="Select Program Name "
-            label="Program Name"
-            options={programOptions}
-          />
+          <Select name="programName" placeholder="Select Program Name" label="Program Name" options={programOptions} />
 
           <Editor
             name="description"
             label="Description"
             onChange={(_, editor) => {
               const data = editor.getData();
-              setFieldValue("description", data);
+              setFieldValue('description', data);
             }}
             initialData={record?.description}
           />
 
-          <Input
-            name="duration"
-            label="Duration (Years)"
-            placeholder="Input Duration in years"
-          />
+          <Input name="duration" label="Duration (Years)" placeholder="Input Duration in years" />
+
           <Input name="session" placeholder="Select Session" label="Session" />
 
           <Select
@@ -274,6 +248,7 @@ const EditReadMoreProgramme = ({
               </>
             }
           />
+          
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button

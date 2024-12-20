@@ -1,11 +1,13 @@
-import { InputHTMLAttributes } from "react";
+import { FC, InputHTMLAttributes } from "react";
+
 import { ReactComponent as SearchIcon } from "../../assets/search-real.svg";
+
 import styles from "./searchInut.module.scss";
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
   width?: string;
 }
-const SearchInput: React.FC<Props> = ({ placeholder, width, ...rest }) => {
+const SearchInput: FC<Props> = ({ placeholder, width, ...rest }) => {
   return (
     <form className={styles.searchContainer}>
       <input

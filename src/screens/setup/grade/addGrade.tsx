@@ -1,11 +1,14 @@
-import { App } from "antd";
-import Input from "../../../custom/input/input";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FormikValues, Form, FormikProvider, useFormik } from "formik";
+import { App } from "antd";
+import { Form, FormikProvider, FormikValues, useFormik } from "formik";
 import * as Yup from "yup";
-import Select from "../../../custom/select/select";
+
 import Button from "../../../custom/button/button";
-import { CreateUpdateGrade } from "./request";
+import Input from "../../../custom/input/input";
+import Select from "../../../custom/select/select";
+
+import { createUpdateGrade } from "./request";
 
 interface Props {
   data?: Grade;
@@ -17,7 +20,7 @@ const AddGrade = ({ handleClose, data }: Props) => {
   const queryClient = useQueryClient();
 
   const createUpdateGradeMutation = useMutation({
-    mutationFn: CreateUpdateGrade,
+    mutationFn: createUpdateGrade,
     mutationKey: ["create-subject"],
   });
 
@@ -62,10 +65,10 @@ const AddGrade = ({ handleClose, data }: Props) => {
   const formik = useFormik<FormikValues>({
     initialValues: {
       grade: data?.grade || "",
-      status: data?.activeStatus ? "true" : "false",
+      status: String(data?.activeStatus ?? ""),
     },
     onSubmit: (values, { resetForm }) => {
-        createGradeHandler(values, resetForm);
+      createGradeHandler(values, resetForm);
     },
     validationSchema: validationSchema,
     enableReinitialize: true,
@@ -81,11 +84,7 @@ const AddGrade = ({ handleClose, data }: Props) => {
   return (
     <FormikProvider value={formik}>
       <Form className="fields">
-        <Input
-          name="grade"
-          placeholder="Input Grade"
-          label="Grade Name"
-        />
+        <Input name="grade" placeholder="Input Grade" label="Grade Name" />
         <Select
           name="status"
           placeholder="Select Status"
@@ -98,7 +97,9 @@ const AddGrade = ({ handleClose, data }: Props) => {
             type="submit"
             disabled={createUpdateGradeMutation.isPending}
             isLoading={createUpdateGradeMutation.isPending}
-            text={createUpdateGradeMutation.isPending ? "Submitting..." : "Submit"}
+            text={
+              createUpdateGradeMutation.isPending ? "Submitting..." : "Submit"
+            }
           />
         </div>
       </Form>

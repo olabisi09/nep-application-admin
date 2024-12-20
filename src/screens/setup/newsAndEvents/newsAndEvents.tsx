@@ -1,25 +1,20 @@
-import {
-  Card,
-  Dropdown,
-  MenuProps,
-  Modal,
-  Table,
-  Button as AntButton,
-  Spin,
-  App,
-} from "antd";
-import { ReactComponent as Plus } from "../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import Button from "../../../custom/button/button";
-import { useState } from "react";
-import { CreateEvent, EditEvent } from "./setup";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteEvents, getEvents } from "../../../requests";
-import { ColumnsType } from "antd/es/table";
-import DeleteModalContent from "../../deleteModal/deleteModal";
-import { formatDate } from "../../../utils/formatDate";
-import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import { usePagination } from "../../../hooks/usePagination";
+/* eslint-disable no-undef */
+import { useState } from 'react';
+
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Button as AntButton, App, Card, Dropdown, MenuProps, Modal, Spin, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+
+import { ReactComponent as Plus } from '../../../assets/add.svg';
+import { ReactComponent as Ellipsis } from '../../../assets/ellipsis.svg';
+import Button from '../../../custom/button/button';
+import { usePagination } from '../../../hooks/usePagination';
+import { deleteEvents, getEvents } from '../../../requests';
+import { formatDate } from '../../../utils/formatDate';
+import { sanitizeAndLimitString } from '../../../utils/sanitizeAndLimitString';
+import DeleteModalContent from '../../deleteModal/deleteModal';
+
+import { CreateEvent, EditEvent } from './setup';
 
 const NewsAndEvents = () => {
   const [open, setOpen] = useState(false);
@@ -32,7 +27,7 @@ const NewsAndEvents = () => {
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-events"],
+    queryKey: ['get-events'],
     queryFn: () => getEvents({ pageNumber: currentPage, pageSize: 10 }),
   });
 
@@ -45,7 +40,7 @@ const NewsAndEvents = () => {
       await deleteNewsAndEventMutation.mutateAsync(event?.id, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
           refetch();
@@ -54,7 +49,7 @@ const NewsAndEvents = () => {
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -62,55 +57,53 @@ const NewsAndEvents = () => {
 
   const columns: ColumnsType<Setup> = [
     {
-      key: "title",
-      title: "Title",
-      dataIndex: "title",
+      key: 'title',
+      title: 'Title',
+      dataIndex: 'title',
     },
     {
-      key: "description",
-      title: "Description",
-      dataIndex: "description",
+      key: 'description',
+      title: 'Description',
+      dataIndex: 'description',
       render: (_, { description }) => {
         const cleanhtml = sanitizeAndLimitString(description);
         return <div dangerouslySetInnerHTML={{ __html: cleanhtml }} />;
       },
     },
     {
-      key: "eventDate",
-      title: "Event Date",
-      dataIndex: "eventDate",
+      key: 'eventDate',
+      title: 'Event Date',
+      dataIndex: 'eventDate',
       render: (_, { eventDate }) => formatDate(eventDate),
     },
     {
-      key: "picture",
-      title: "Picture",
-      dataIndex: "imageUrl",
-      render: (_, { imageUrl }) => (
-        <img src={imageUrl} alt="" width="50" height="50" />
-      ),
+      key: 'picture',
+      title: 'Picture',
+      dataIndex: 'imageUrl',
+      render: (_, { imageUrl }) => <img src={imageUrl} alt="" width="50" height="50" />,
     },
     {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+      key: 'status',
+      title: 'Status',
+      dataIndex: 'activeStatus',
+      render: (_, { activeStatus }) => (activeStatus ? 'Active' : 'Inactive'),
     },
     {
-      key: "action",
-      title: "",
+      key: 'action',
+      title: '',
       render: (_, record) => {
-        const items: MenuProps["items"] = [
+        const items: MenuProps['items'] = [
           {
-            key: "1",
-            label: "Edit",
+            key: '1',
+            label: 'Edit',
             onClick: () => {
               setEvent(record);
               setOpenEdit(true);
             },
           },
           {
-            key: "2",
-            label: "Delete",
+            key: '2',
+            label: 'Delete',
             onClick: () => {
               setEvent(record);
               setOpenDelete(true);
@@ -118,7 +111,7 @@ const NewsAndEvents = () => {
           },
         ];
         return (
-          <Dropdown menu={{ items }} trigger={["click"]}>
+          <Dropdown menu={{ items }} trigger={['click']}>
             <AntButton type="text" icon={<Ellipsis />} />
           </Dropdown>
         );
@@ -140,11 +133,7 @@ const NewsAndEvents = () => {
     <div>
       <section className="space-between">
         <h3>News and Events Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+        <Button onClick={() => setOpen(true)} iconBefore={<Plus />} text="Setup" />
       </section>
       <br />
       <Card bordered={false}>
@@ -152,7 +141,7 @@ const NewsAndEvents = () => {
           dataSource={events}
           columns={columns}
           pagination={{
-            position: ["bottomCenter"],
+            position: ['bottomCenter'],
             current: currentPage,
             total: data?.totalSize,
             onChange: onChange,
@@ -163,13 +152,7 @@ const NewsAndEvents = () => {
         />
       </Card>
 
-      <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
-        centered
-        title="News and Events Setup"
-        footer={null}
-      >
+      <Modal open={open} onCancel={() => setOpen(false)} centered title="News and Events Setup" footer={null}>
         <CreateEvent handleClose={() => setOpen(false)} />
       </Modal>
 

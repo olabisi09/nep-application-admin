@@ -1,15 +1,18 @@
+import { useState } from "react";
+
 import {
+  Button as AntButton,
   Card,
   Dropdown,
   MenuProps,
   Modal,
   Table,
-  Button as AntButton,
 } from "antd";
+
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
-import { useState } from "react";
+
 import SetupSchoolMgt from "./setup";
 
 const SchoolForm = () => {
@@ -58,7 +61,9 @@ const SchoolForm = () => {
           text="Setup"
         />
       </section>
+      
       <br />
+
       <Card bordered={false}>
         <Table
           dataSource={data}
@@ -68,6 +73,7 @@ const SchoolForm = () => {
           scroll={{ x: true }}
         />
       </Card>
+
       <Modal
         open={open}
         onCancel={() => setOpen(false)}

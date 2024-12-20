@@ -1,11 +1,13 @@
-import { Select, Input, Button, Upload } from "../../../../custom";
-import { Form, Formik, FormikValues } from "formik";
-import { useMutation } from "@tanstack/react-query";
-import { createUpdateWhyItem, StatusOptions } from "../../../../requests";
-import { App } from "antd";
-import { ReactComponent as Image } from "../../../../assets/image.svg";
-import { object } from "yup";
-import { validator } from "../../../../utils/validator";
+/* eslint-disable no-undef */
+import { useMutation } from '@tanstack/react-query';
+import { App } from 'antd';
+import { Form, Formik, FormikValues } from 'formik';
+import { object } from 'yup';
+
+import { ReactComponent as Image } from '../../../../assets/image.svg';
+import { Button, Input, Select, Upload } from '../../../../custom';
+import { StatusOptions, createUpdateWhyItem } from '../../../../requests';
+import { validator } from '../../../../utils/validator';
 
 export const SetupWhyItem = ({
   whyItem,
@@ -24,37 +26,33 @@ export const SetupWhyItem = ({
     mutationFn: createUpdateWhyItem,
   });
 
+  const hasRecord = Object.keys(whyItem!)?.length > 0;
+  
   const validationSchema = object().shape({
     title: validator.title,
     description: validator.description,
-    image: validator.file,
+    ...(!hasRecord && { image: validator.file }),
     status: validator.status,
   });
 
-  const handleCreateUpdateWhyItem = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
+  const handleCreateUpdateWhyItem = async (values: FormikValues, resetForm: () => void) => {
     const payload = new FormData();
-    payload.append("Id", whyItem?.id ? `${whyItem?.id}` : "0");
-    payload.append("WhyId", `${whyId}`);
-    payload.append("Name", values.title);
-    payload.append("Description", values.description);
-    payload.append("Icon", values.image || "");
+    payload.append('Id', whyItem?.id ? `${whyItem?.id}` : '0');
+    payload.append('WhyId', `${whyId}`);
+    payload.append('Name', values.title);
+    payload.append('Description', values.description);
+    payload.append('Icon', values.image || '');
     if (whyItem?.iconUrl) {
-      payload.append("IconUrl", whyItem.iconUrl);
+      payload.append('IconUrl', whyItem.iconUrl);
     }
-    payload.append(
-      "ActiveStatus",
-      values.status === "Active" ? "true" : "false"
-    );
-    payload.append("IsDeleted", "false");
+    payload.append('ActiveStatus', values.status === 'true' ? 'true' : 'false');
+    payload.append('IsDeleted', 'false');
 
     try {
       await createUpdateWhyItemMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
           handleClose();
@@ -64,18 +62,11 @@ export const SetupWhyItem = ({
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
-
-  const statusOptions = (
-    <>
-      <option>Active</option>
-      <option>Inactive</option>
-    </>
-  );
 
   const initialStatus = whyItem?.activeStatus;
 
@@ -83,9 +74,9 @@ export const SetupWhyItem = ({
     <Formik
       initialValues={{
         image: null,
-        title: whyItem?.name ?? "",
-        description: whyItem?.description ?? "",
-        status: initialStatus ?? "",
+        title: whyItem?.name ?? '',
+        description: whyItem?.description ?? '',
+        status: String(initialStatus ?? ''),
       }}
       onSubmit={(values, { resetForm }) => {
         handleCreateUpdateWhyItem(values, resetForm);
@@ -96,21 +87,13 @@ export const SetupWhyItem = ({
       {({ setFieldValue, values }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />
-          <Input
-            type="textarea"
-            name="description"
-            label="Description"
-            placeholder="Input description"
-          />
+          <Input type="textarea" name="description" label="Description" placeholder="Input description" />
+
           {values.image ? (
             <div className="small-gap">
               <Image />
               <span>{(values.image as File)?.name}</span>
-              <Button
-                onClick={() => setFieldValue("image", null)}
-                variant="text"
-                text="x"
-              />
+              <Button onClick={() => setFieldValue('image', null)} variant="text" text="x" />
             </div>
           ) : (
             <Upload
@@ -119,7 +102,7 @@ export const SetupWhyItem = ({
               onChange={(e) => {
                 const file = e.target.files;
                 if (file) {
-                  setFieldValue("image", file[0]);
+                  setFieldValue('image', file[0]);
                 }
               }}
             />
@@ -141,16 +124,11 @@ export const SetupWhyItem = ({
           />
 
           <div className="btn-group">
-            <Button
-              onClick={handleClose}
-              type="button"
-              variant="text"
-              text="Cancel"
-            />
+            <Button onClick={handleClose} type="button" variant="text" text="Cancel" />
 
             <Button
               type="submit"
-              text={!!whyItem ? "Update" : "Create"}
+              text={whyItem ? 'Update' : 'Create'}
               isLoading={createUpdateWhyItemMutation.isPending}
               disabled={createUpdateWhyItemMutation.isPending}
             />

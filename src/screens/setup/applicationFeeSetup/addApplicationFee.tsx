@@ -1,19 +1,23 @@
-import Input from "../../../custom/input/input";
-import Select from "../../../custom/select/select";
+/* eslint-disable no-undef */
+import { FC } from "react";
+
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
+import { Button } from "../../../custom";
+import Input from "../../../custom/input/input";
+import Select from "../../../custom/select/select";
 import {
+  StatusOptions,
   createOrUpdateApplicationFee,
   getAllApplicationBatch,
   getAllModeOfStudy,
   getAllProgramsApplicationFee,
-  StatusOptions,
 } from "../../../requests";
-import { Formik, FormikValues, Form } from "formik";
-import { FC } from "react";
-import { Button } from "../../../custom";
-import * as Yup from "yup";
 import { validator } from "../../../utils/validator";
+
 import { getProgramTypes } from "./request";
 
 interface ComponentProps {
@@ -46,7 +50,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
 
     try {
       await createUpdateApplicationFeeMutation.mutateAsync(payload, {
-        onSuccess: (data) => {
+        onSuccess: () => {
           notification.success({
             message: "Success",
           });
@@ -132,7 +136,7 @@ const AddApplicationFee: FC<ComponentProps> = ({ record, handleClose }) => {
         modeOfStudy: record?.modeOfStudyId ?? "",
         applicationBatch: record?.applicationBatchId ?? "",
         amount: record?.amount ?? "",
-        status: record?.activeStatus ?? "",
+        status: String(record?.activeStatus) || "",
       }}
       onSubmit={(values, { resetForm }) => {
         createUpdateApplicationFeeHandler(values, resetForm);

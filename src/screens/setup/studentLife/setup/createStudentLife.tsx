@@ -1,9 +1,11 @@
-import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Input, Select } from "../../../../custom";
-import { createOrUpdateStudentLife } from "../../../../requests";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
 import { object } from "yup";
+
+import { Button, Editor, Input, Select } from "../../../../custom";
+import { createOrUpdateStudentLife } from "../../../../requests";
 import { validator } from "../../../../utils/validator";
 
 const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
@@ -72,6 +74,7 @@ const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
       {({ setFieldValue }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />
+
           <Editor
             name="description"
             label="Description"
@@ -80,12 +83,14 @@ const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
               setFieldValue("description", data);
             }}
           />
+
           <Select
             name="status"
             label="Status"
             placeholder="Select status"
             options={statusOptions}
           />
+
           <div className="btn-group">
             <Button
               type="button"
@@ -93,6 +98,7 @@ const CreateStudentLife = ({ handleClose }: { handleClose: () => void }) => {
               variant="text"
               text="Cancel"
             />
+            
             <Button
               type="submit"
               isLoading={addStudentLifeMutation.isPending}

@@ -1,29 +1,33 @@
+/* eslint-disable no-undef */
+import { useState } from "react";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
+
 import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { ReactComponent as Search } from "../../../../assets/search.svg";
 // import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../../styles.module.scss";
 import Button from "../../../../custom/button/button";
-import { useState } from "react";
 import SearchInput from "../../../../custom/searchInput/searchInput";
-import AddCountry from "./addCountry";
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { deleteCountry, getCountry } from "../../../../requests";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import DeleteModalContent from "../../../deleteModal/deleteModal";
 import { usePagination } from "../../../../hooks/usePagination";
+import { useSearchTerms } from "../../../../hooks/useSearchTerms";
+import { deleteCountry, getCountry } from "../../../../requests";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
+import styles from "../../styles.module.scss";
+
+import AddCountry from "./addCountry";
 
 const CountrySetup = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -31,13 +35,10 @@ const CountrySetup = () => {
   const [openDelete, setOpenDelete] = useState(false);
 
   const { currentPage, onChange } = usePagination();
+  const { searchTerm, handleSearch } = useSearchTerms();
 
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
 
   const handleEdit = (data: Country) => {
     setIndexData(data);
@@ -50,15 +51,17 @@ const CountrySetup = () => {
   };
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-country"],
+    queryKey: ["get-country", currentPage],
     queryFn: () => getCountry({ pageNumber: currentPage, pageSize: 10 }),
   });
 
   const countryData = data?.data as Country[];
 
-  const filteredData = countryData?.filter((country) =>
-    country?.countryName?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = countryData
+    ?.filter((country) =>
+      country?.countryName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   const items = (record: Country): MenuProps["items"] => [
     {
@@ -112,9 +115,11 @@ const CountrySetup = () => {
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({
             queryKey: ["get-country"],
           });
+          
           setOpenDelete(false);
         },
       });

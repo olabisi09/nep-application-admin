@@ -1,11 +1,13 @@
-import { useAtomValue } from "jotai";
-
-import { Navigate, useLocation } from "react-router-dom";
-import { userAtom } from "../utils/store";
 import { Spin } from "antd";
+import { useAtomValue } from "jotai";
+import { Navigate, useLocation } from "react-router-dom";
+
+import { userAtom } from "../utils/store";
+
 import { useValidateUser } from "./useValidateUser";
 
 interface ComponentProp {
+  // eslint-disable-next-line no-undef
   children: JSX.Element;
 }
 

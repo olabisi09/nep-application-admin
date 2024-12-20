@@ -1,29 +1,32 @@
+/* eslint-disable no-undef */
 import { useState } from "react";
 
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  Button as AntButton,
+  App,
   Card,
   Dropdown,
   MenuProps,
   Modal,
-  Table,
-  Button as AntButton,
   Spin,
-  App,
+  Table,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useParams } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { ReactComponent as Plus } from "../../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { Button } from "../../../../custom";
 import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
-import { CreateAdmissionReqDetail, EditAdmissionReqDetail } from "./form";
+import DeleteModalContent from "../../../deleteModal/deleteModal";
 import {
   deleteAdmissionRequirementDetailsById,
   getAdmissionRequirementDetailsByAdmissionReqId,
 } from "../request";
-import DeleteModalContent from "../../../deleteModal/deleteModal";
+
+import { CreateAdmissionReqDetail, EditAdmissionReqDetail } from "./form";
+
 
 const AdmissionReqDetail = () => {
   const { id } = useParams();
@@ -89,12 +92,12 @@ const AdmissionReqDetail = () => {
         return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
     },
-    // {
-    //   key: "status",
-    //   title: "Status",
-    //   dataIndex: "activeStatus",
-    //   render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
-    // },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "activeStatus",
+      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+    },
     {
       key: "action",
       title: "",

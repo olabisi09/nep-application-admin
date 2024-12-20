@@ -1,10 +1,12 @@
-import { App } from "antd";
-import Input from "../../../custom/input/input";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
+import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
 import { Button, Select } from "../../../custom";
-import { editFaculty, StatusOptions } from "../../../requests";
+import Input from "../../../custom/input/input";
+import { StatusOptions, editFaculty } from "../../../requests";
 
 interface Props {
   handleClose: () => void;
@@ -23,7 +25,7 @@ const EditFaculty = ({ handleClose, record }: Props) => {
 
   const editFacultyMutation = useMutation({
     mutationFn: editFaculty,
-  });  
+  });
 
   const facultyHandler = async (
     values: FormikValues,
@@ -64,7 +66,7 @@ const EditFaculty = ({ handleClose, record }: Props) => {
         name: record?.name ?? "",
         description: record?.description ?? "",
         categoryCode: record?.categoryCode ?? "",
-        activeStatus: record?.activeStatus,
+        activeStatus: String(record?.activeStatus),
       }}
       onSubmit={(values, { resetForm }) => {
         facultyHandler(values, resetForm);
@@ -72,9 +74,7 @@ const EditFaculty = ({ handleClose, record }: Props) => {
       validationSchema={validate}
       enableReinitialize={true}
     >
-      {({ values }) => {
-        console.log(values.activeStatus);
-
+      {() => {
         return (
           <Form className="fields">
             <Input

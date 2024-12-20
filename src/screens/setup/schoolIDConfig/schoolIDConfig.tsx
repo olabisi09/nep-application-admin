@@ -1,20 +1,24 @@
+/* eslint-disable no-undef */
+import { useState } from "react";
+
+import { useQuery } from "@tanstack/react-query";
 import {
+  Button as AntButton,
   Card,
   Dropdown,
   MenuProps,
   Modal,
-  Table,
-  Button as AntButton,
   Spin,
+  Table,
 } from "antd";
+import { ColumnsType } from "antd/es/table";
+
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { ColumnsType } from "antd/es/table";
-import { getAllSchoolID } from "./request";
+
 import { CreateSchoolID, EditSchoolID } from "./form";
+import { getAllSchoolID } from "./request";
 
 const SchoolID = () => {
   const [open, setOpen] = useState(false);

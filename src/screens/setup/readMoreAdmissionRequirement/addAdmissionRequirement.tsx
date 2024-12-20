@@ -1,15 +1,18 @@
+/* eslint-disable no-undef */
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { App, Spin } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
+import Button from "../../../custom/button/button";
 import Editor from "../../../custom/editor/editor";
 import Select from "../../../custom/select/select";
 import {
+  StatusOptions,
   createOrUpdateAdmissionRequirement,
   getAllPrograms,
-  StatusOptions,
 } from "../../../requests";
-import { App, Spin } from "antd";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
-import Button from "../../../custom/button/button";
+
 
 const AddAdmissionRequirement = ({
   handleClose,

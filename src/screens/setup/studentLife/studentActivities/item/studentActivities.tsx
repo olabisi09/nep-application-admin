@@ -1,27 +1,31 @@
+/* eslint-disable no-undef */
+import { useState } from "react";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  Button as AntButton,
+  App,
   Card,
   Dropdown,
   MenuProps,
   Modal,
-  Table,
-  Button as AntButton,
   Spin,
-  App,
+  Table,
 } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { useParams } from "react-router-dom";
+
 import { ReactComponent as Plus } from "../../../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../../../assets/ellipsis.svg";
 import { Button } from "../../../../../custom";
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   deleteStudentActivityItem,
   getStudentActivitiesByStudentActivityId,
 } from "../../../../../requests";
-import { ColumnsType } from "antd/es/table";
-import { useParams } from "react-router-dom";
-import StudentActivityItemForm from "./studentActivitiesForm";
 import { sanitizeAndLimitString } from "../../../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../../../deleteModal/deleteModal";
+
+import StudentActivityItemForm from "./studentActivitiesForm";
 
 const StudentActivityItem = () => {
   const { notification } = App.useApp();

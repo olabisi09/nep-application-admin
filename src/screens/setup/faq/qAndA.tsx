@@ -1,16 +1,12 @@
-import Input from "../../../custom/input/input";
-import Button from "../../../custom/button/button";
-import { FieldArray, Form, Formik } from "formik";
-import { Fragment } from "react/jsx-runtime";
+import { FieldArray, Form, Formik } from 'formik';
+import { Fragment } from 'react/jsx-runtime';
+
+import Button from '../../../custom/button/button';
+import Input from '../../../custom/input/input';
 
 const QAndA = ({ handleClose }: { handleClose: () => void }) => {
   return (
-    <Formik
-      initialValues={{ title: "", items: [{ question: "", answer: "" }] }}
-      onSubmit={(values) => {
-        console.log(values);
-      }}
-    >
+    <Formik initialValues={{ title: '', items: [{ question: '', answer: '' }] }} onSubmit={() => {}}>
       {({ values }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />
@@ -20,28 +16,20 @@ const QAndA = ({ handleClose }: { handleClose: () => void }) => {
               <>
                 {values.items.map((_, index) => (
                   <Fragment key={index}>
-                    <Input
-                      name={`items.${index}.question`}
-                      label="Question"
-                      placeholder="Input question"
-                    />
-                    <Input
-                      name={`items.${index}.answer`}
-                      type="textarea"
-                      label="Answer"
-                      placeholder="Input answer"
-                    />
+                    <Input name={`items.${index}.question`} label="Question" placeholder="Input question" />
+                    <Input name={`items.${index}.answer`} type="textarea" label="Answer" placeholder="Input answer" />
                   </Fragment>
                 ))}
                 <Button
                   variant="text"
                   iconBefore="+"
-                  onClick={() => push({ question: "", answer: "" })}
+                  onClick={() => push({ question: '', answer: '' })}
                   text="Add Question/Answer"
                 />
               </>
             )}
           </FieldArray>
+
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button text="Create" />

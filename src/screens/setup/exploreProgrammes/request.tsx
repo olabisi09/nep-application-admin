@@ -1,6 +1,7 @@
+/* eslint-disable no-undef */
 import api from "../../../utils/api";
 
-export const CreateUpdateExplore = async (payload: ExplorePayload) => {
+export const createUpdateExplore = async (payload: ExplorePayload) => {
   return (await api.post("/Utilities/Utilities/CreateUpdateExplore", payload))
     ?.data;
 };

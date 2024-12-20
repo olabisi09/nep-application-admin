@@ -1,26 +1,30 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  App,
-  Spin,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
-import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import AddCurriculum from "./addCurriculum";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+/* eslint-disable no-undef */
+import React, { useState } from "react";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteCurriculum, getAllCurriculum } from "../../../requests";
-import DeleteModalContent from "../../deleteModal/deleteModal";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
-import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
+import Button from "../../../custom/button/button";
+import SearchInput from "../../../custom/searchInput/searchInput";
 import { usePagination } from "../../../hooks/usePagination";
+import { deleteCurriculum, getAllCurriculum } from "../../../requests";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
+import AddCurriculum from "./addCurriculum";
 
 const CurriculumSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -56,9 +60,11 @@ const CurriculumSetup = () => {
 
   const curriculumData = data?.data as Curriculum[];
 
-  const filteredData = curriculumData?.filter((item) =>
-    item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = curriculumData
+    ?.filter((item) =>
+      item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   const items = (record: Curriculum): MenuProps["items"] => [
     {

@@ -1,11 +1,13 @@
-import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Input, Select } from "../../../../custom";
-import { App } from "antd";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
 import { useParams } from "react-router-dom";
-import { createOrUpdateCareerProspectItem } from "../request";
 import { object } from "yup";
+
+import { Button, Editor, Input, Select } from "../../../../custom";
 import { validator } from "../../../../utils/validator";
+import { createOrUpdateCareerProspectItem } from "../request";
 
 interface SetupInit {
   name: string;

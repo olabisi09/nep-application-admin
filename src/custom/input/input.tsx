@@ -1,7 +1,10 @@
-import { Field, FieldProps } from "formik";
-import React, { ChangeEventHandler, useState } from "react";
-import styles from "./input.module.scss";
+import { ChangeEventHandler, FC, useState } from "react";
+
 import classNames from "classnames";
+import { Field, FieldProps } from "formik";
+
+import styles from "./input.module.scss";
+
 
 interface ComponentProps {
   label: string;
@@ -15,7 +18,7 @@ interface ComponentProps {
   min?: string | number | undefined;
 }
 
-const Input: React.FC<ComponentProps> = (props) => {
+const Input: FC<ComponentProps> = (props) => {
   const {
     name,
     label,

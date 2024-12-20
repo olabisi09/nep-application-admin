@@ -1,18 +1,21 @@
-import Input from "../../../custom/input/input";
-import Button from "../../../custom/button/button";
-import { Form, Formik, FormikValues } from "formik";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
 import * as Yup from "yup";
-import Editor from "../../../custom/editor/editor";
+
 import { Select } from "../../../custom";
-import { CreateUpdateExplore } from "./request";
+import Button from "../../../custom/button/button";
+import Editor from "../../../custom/editor/editor";
+import Input from "../../../custom/input/input";
+
+import { createUpdateExplore } from "./request";
 
 const CreateExplore = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const addExploreMutation = useMutation({ mutationFn: CreateUpdateExplore });
+  const addExploreMutation = useMutation({ mutationFn: createUpdateExplore });
 
   const validate = Yup.object().shape({
     title: Yup.string().required("Title is required"),
@@ -119,7 +122,7 @@ const EditExplore = ({
   const { notification } = App.useApp();
 
   const editExploreMutation = useMutation({
-    mutationFn: CreateUpdateExplore,
+    mutationFn: createUpdateExplore,
   });
 
   const handleEditExplore = async (

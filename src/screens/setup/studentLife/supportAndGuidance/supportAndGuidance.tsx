@@ -1,35 +1,26 @@
-import {
-  Card,
-  Dropdown,
-  MenuProps,
-  Modal,
-  Table,
-  Button as AntButton,
-  Spin,
-  App,
-} from "antd";
-import { ReactComponent as Plus } from "../../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { Button } from "../../../../custom";
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  deleteSupportGuidance,
-  getSupportAndGuidanceByStudentLifeId,
-} from "../../../../requests";
-import { ColumnsType } from "antd/es/table";
-import { useNavigate, useParams } from "react-router-dom";
-import SupportAndGuidanceForm from "./supportAndGuidanceForm";
-import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
-import DeleteModalContent from "../../../deleteModal/deleteModal";
+/* eslint-disable no-undef */
+import { useState } from 'react';
+
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Button as AntButton, App, Card, Dropdown, MenuProps, Modal, Spin, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { ReactComponent as Plus } from '../../../../assets/add.svg';
+import { ReactComponent as Ellipsis } from '../../../../assets/ellipsis.svg';
+import { Button } from '../../../../custom';
+import { deleteSupportGuidance, getSupportAndGuidanceByStudentLifeId } from '../../../../requests';
+import { sanitizeAndLimitString } from '../../../../utils/sanitizeAndLimitString';
+import DeleteModalContent from '../../../deleteModal/deleteModal';
+
+import SupportAndGuidanceForm from './supportAndGuidanceForm';
 
 const SupportAndGuidance = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [supportAndGuidanceItems, setSupportAndGuidanceItems] =
-    useState<SupportAndGuidance>({} as SupportAndGuidance);
+  const [supportAndGuidanceItems, setSupportAndGuidanceItems] = useState<SupportAndGuidance>({} as SupportAndGuidance);
   const [openDelete, setOpenDelete] = useState(false);
 
   const navigate = useNavigate();
@@ -39,83 +30,75 @@ const SupportAndGuidance = () => {
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-support-guidance"],
+    queryKey: ['get-support-guidance'],
     queryFn: () => getSupportAndGuidanceByStudentLifeId(id!),
     enabled: !!id,
   });
 
   const deleteSupportGuidanceHandler = async () => {
     try {
-      await deleteSupportAndStudentMutation.mutateAsync(
-        supportAndGuidanceItems?.id,
-        {
-          onSuccess: (data) => {
-            notification.success({
-              message: "Success",
-              description: data?.message,
-            });
-            refetch();
-            setOpenDelete((prevState) => !prevState);
-          },
-        }
-      );
+      await deleteSupportAndStudentMutation.mutateAsync(supportAndGuidanceItems?.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: 'Success',
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
 
   const columns: ColumnsType<SupportAndGuidance> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
-      key: "title",
-      title: "Title",
-      dataIndex: "title",
+      key: 'title',
+      title: 'Title',
+      dataIndex: 'title',
     },
     {
-      key: "description",
-      title: "Description",
-      dataIndex: "description",
+      key: 'description',
+      title: 'Description',
+      dataIndex: 'description',
       render: (_: any, { description }: any) => {
         const limitedCleanHtml = sanitizeAndLimitString(description);
         return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
     },
     {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+      key: 'status',
+      title: 'Status',
+      dataIndex: 'activeStatus',
+      render: (_, { activeStatus }) => (activeStatus ? 'Active' : 'Inactive'),
     },
     {
-      key: "action",
-      title: "",
+      key: 'action',
+      title: '',
       render: (_, record) => {
-        const items: MenuProps["items"] = [
+        const items: MenuProps['items'] = [
           {
-            key: "1",
-            label: "Add Items",
+            key: '1',
+            label: 'Add Items',
             onClick: () => {
               navigate(`/student-life/${record.id}/support-and-guidance-item`);
             },
           },
           {
-            key: "2",
-            label: "Edit",
+            key: '2',
+            label: 'Edit',
             onClick: () => {
               setSupportAndGuidanceItems(record);
               setOpenEdit(true);
             },
           },
           {
-            key: "2",
-            label: "Delete",
+            key: '3',
+            label: 'Delete',
             onClick: () => {
               setSupportAndGuidanceItems(record);
               setOpenDelete(true);
@@ -124,7 +107,7 @@ const SupportAndGuidance = () => {
         ];
 
         return (
-          <Dropdown menu={{ items }} trigger={["click"]}>
+          <Dropdown menu={{ items }} trigger={['click']}>
             <AntButton type="text" icon={<Ellipsis />} />
           </Dropdown>
         );
@@ -148,34 +131,24 @@ const SupportAndGuidance = () => {
         <h3>Student Life: Support And Guidance Setup</h3>
 
         {supportAndGuidanceData?.length === 0 && (
-          <Button
-            onClick={() => setOpen(true)}
-            iconBefore={<Plus />}
-            text="Setup"
-          />
+          <Button onClick={() => setOpen(true)} iconBefore={<Plus />} text="Setup" />
         )}
       </section>
+
       <br />
+
       <Card bordered={false}>
         <Table
           dataSource={supportAndGuidanceData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{ position: ['bottomCenter'] }}
           rowKey={(record) => record.id}
           scroll={{ x: true }}
         />
       </Card>
 
-      <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
-        centered
-        title="Create Support and Guidance"
-        footer={null}>
-        <SupportAndGuidanceForm
-          item={supportAndGuidanceItems}
-          handleClose={() => setOpen(false)}
-        />
+      <Modal open={open} onCancel={() => setOpen(false)} centered title="Create Support and Guidance" footer={null}>
+        <SupportAndGuidanceForm item={supportAndGuidanceItems} handleClose={() => setOpen(false)} />
       </Modal>
 
       <Modal
@@ -183,18 +156,18 @@ const SupportAndGuidance = () => {
         onCancel={() => setOpenEdit(false)}
         centered
         title="Edit Support and Guidance"
-        footer={null}>
-        <SupportAndGuidanceForm
-          item={supportAndGuidanceItems}
-          handleClose={() => setOpenEdit(false)}
-        />
+        footer={null}
+      >
+        <SupportAndGuidanceForm item={supportAndGuidanceItems} handleClose={() => setOpenEdit(false)} />
       </Modal>
+
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
         centered
         title="Delete Support And Guidance Setup"
-        footer={null}>
+        footer={null}
+      >
         <DeleteModalContent
           isLoading={deleteSupportAndStudentMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

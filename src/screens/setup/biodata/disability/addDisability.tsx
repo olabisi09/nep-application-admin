@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-import * as Yup from "yup";
 import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
-import { createOrUpdateDisability, StatusOptions } from "../../../../requests";
+import * as Yup from "yup";
+
 import { Button, Input, Select } from "../../../../custom";
+import { StatusOptions, createOrUpdateDisability } from "../../../../requests";
 
 const AddDisability = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
@@ -121,9 +122,11 @@ const EditDisability = ({
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({ queryKey: ["get-disability"] });
-          handleClose();
+
           resetForm();
+          handleClose();
         },
       });
     } catch (error: any) {
@@ -138,7 +141,7 @@ const EditDisability = ({
     <Formik
       initialValues={{
         name: title?.name,
-        isActive: title?.isActive,
+        isActive: String(title?.isActive ?? ""),
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditTitle(values, resetForm);
@@ -148,7 +151,7 @@ const EditDisability = ({
     >
       <Form className="fields">
         <Input name="name" label="Disability" placeholder="Input Disability" />
-        
+
         <Select
           name="isActive"
           placeholder="Select Status"

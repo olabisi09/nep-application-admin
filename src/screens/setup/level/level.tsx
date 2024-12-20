@@ -1,22 +1,26 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
+/* eslint-disable no-undef */
 import { useState } from "react";
-import AddLevel, { EditLevel } from "./addLevel";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteLevel, getAllLevel } from "../../../requests";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import Button from "../../../custom/button/button";
+import { deleteLevel, getAllLevel } from "../../../requests";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
+import AddLevel, { EditLevel } from "./addLevel";
 
 const Level = () => {
   const [open, setOpen] = useState(false);

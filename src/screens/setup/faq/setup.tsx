@@ -1,12 +1,14 @@
-import Input from "../../../custom/input/input";
-import Button from "../../../custom/button/button";
-import Select from "../../../custom/select/select";
-import { Form, Formik, FormikValues } from "formik";
-import * as Yup from "yup";
-import { StatusOptions, createFaq } from "../../../requests";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
 import { Editor } from "../../../custom";
+import Button from "../../../custom/button/button";
+import Input from "../../../custom/input/input";
+import Select from "../../../custom/select/select";
+import { StatusOptions, createFaq } from "../../../requests";
 
 interface Props {
   data?: FAQ;
@@ -39,9 +41,12 @@ const SetupFaq = ({ handleClose, data }: Props) => {
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({
             queryKey: ["get-AllFAQ"],
           });
+
+          resetForm();
           handleClose();
         },
       });
@@ -57,6 +62,7 @@ const SetupFaq = ({ handleClose, data }: Props) => {
     name: Yup.string().required("Title is required"),
     status: Yup.string().required("Active status is required"),
   });
+
   return (
     <Formik
       initialValues={{
@@ -84,6 +90,7 @@ const SetupFaq = ({ handleClose, data }: Props) => {
               }}
               initialData={data?.description}
             />
+
             <Select
               name="status"
               placeholder="Select Status"
@@ -98,6 +105,7 @@ const SetupFaq = ({ handleClose, data }: Props) => {
                 </>
               }
             />
+            
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button

@@ -1,15 +1,17 @@
+/* eslint-disable no-undef */
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
 import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
+import { Button, Input, Select } from "../../../custom";
 import {
+  StatusOptions,
   createUpdateDisplayTab,
   getAllAcademicSession,
   getAllApplicationBatch,
   getAllTab,
-  StatusOptions,
 } from "../../../requests";
-import { Button, Input, Select } from "../../../custom";
 import { validator } from "../../../utils/validator";
 import { getProgramTypes } from "../programType/request";
 
@@ -26,7 +28,10 @@ const AddDisplayTab = ({
   const queries = useQueries({
     queries: [
       { queryKey: ["get-application-batch"], queryFn: getAllApplicationBatch },
-      { queryKey: ["get-all-session"], queryFn: () => getAllAcademicSession(1, 10) },
+      {
+        queryKey: ["get-all-session"],
+        queryFn: () => getAllAcademicSession(1, 10),
+      },
       { queryKey: ["get-all-tab"], queryFn: getAllTab },
       { queryKey: ["get-program-types"], queryFn: getProgramTypes },
     ],
@@ -46,9 +51,6 @@ const AddDisplayTab = ({
   const sessionTypeData = sessionType?.data ?? [];
   const tabTypeData = tabType?.data ?? [];
   const programTypeData = programType?.data ?? [];
-
-  console.log(sessionTypeData);
-  
 
   const addDisplayTabMutation = useMutation({
     mutationFn: createUpdateDisplayTab,
@@ -122,7 +124,7 @@ const AddDisplayTab = ({
       </option>
     ));
 
-  const initialStatus = displayTab?.isActive;
+  const initialStatus = displayTab?.isActive ?? "";
   const hasRecord = Object.keys(displayTab)?.length > 0;
 
   return (
@@ -133,13 +135,14 @@ const AddDisplayTab = ({
         sessionId: displayTab?.sessionId ?? "",
         tabName: displayTab?.tabId ?? "",
         programType: displayTab?.programTypeId ?? "",
-        isActive: initialStatus ? initialStatus : "",
+        isActive: String(initialStatus),
       }}
       onSubmit={(values, { resetForm }) => {
         handleAddDisplayTab(values, resetForm);
       }}
       validationSchema={validate}
-      enableReinitialize>
+      enableReinitialize
+    >
       {() => {
         return (
           <Form className="fields">
@@ -207,111 +210,4 @@ const AddDisplayTab = ({
   );
 };
 
-// const EditDisplayTab = ({
-//   displayTab,
-//   handleClose,
-// }: {
-//   displayTab: DisplayTab;
-//   handleClose: () => void;
-// }) => {
-//   const { notification } = App.useApp();
-//   const queryClient = useQueryClient();
-
-//   const validate = Yup.object().shape({
-//     tabNUmber: Yup.string().required("Tab Number is required"),
-//     isActive: Yup.string().required("Status is required"),
-//   });
-
-//   const editDisplayTabMutation = useMutation({
-//     mutationFn: createUpdateDisplayTab,
-//   });
-
-//   const handleEditDisplayTab = async (
-//     values: FormikValues,
-//     resetForm: () => void
-//   ) => {
-//     const payload: Partial<DisplayTab> = {
-//       id: displayTab?.id,
-//       tabNumber: values.tabNumber,
-//       isActive: values?.isActive === "true",
-//     };
-
-//     try {
-//       await editDisplayTabMutation.mutateAsync(payload, {
-//         onSuccess: (data) => {
-//           notification.success({
-//             message: "Success",
-//             description: data?.message,
-//           });
-//           queryClient.refetchQueries({ queryKey: ["get-tab"] });
-//           handleClose();
-//           resetForm();
-//         },
-//       });
-//     } catch (error: any) {
-//       notification.error({
-//         message: "Error",
-//         description: error?.response?.data?.message,
-//       });
-//     }
-//   };
-
-//   return (
-//     <Formik
-//       initialValues={{
-//         tabNumber: displayTab?.tabNumber,
-//         batchName: displayTab?.batchName,
-//         sessionId: displayTab?.sessionId,
-//         tabName: displayTab?.tabId,
-//         isActive:
-//           displayTab?.isActive !== undefined
-//             ? String(displayTab?.isActive)
-//             : "true", // Default to true if undefined
-//       }}
-//       onSubmit={(values, { resetForm }) => {
-//         handleEditDisplayTab(values, resetForm);
-//       }}
-//       validationSchema={validate}
-//       enableReinitialize
-//     >
-//       <Form className="fields">
-//         <Input
-//           name="tabNumber"
-//           label="Tab Number"
-//           placeholder="Input Tab Number"
-//         />
-
-//         <Select
-//           name="batchName"
-//           placeholder="Select Batch Name"
-//           label="Batch Name"
-//           options={batchTypesOptions}
-//         />
-
-//         <Select
-//           name="sessionId"
-//           placeholder="Select Session"
-//           label="Session"
-//           options={sessionTypesOptions}
-//         />
-
-//         <Select
-//           name="tabName"
-//           placeholder="Select Tab Name"
-//           label="Tab Name"
-//           options={tabTypesOptions}
-//         />
-
-//         <div className="btn-group">
-//           <Button onClick={handleClose} variant="text" text="Cancel" />
-//           <Button
-//             text="Edit"
-//             isLoading={editDisplayTabMutation.isPending}
-//             disabled={editDisplayTabMutation.isPending}
-//           />
-//         </div>
-//       </Form>
-//     </Formik>
-//   );
-// };
 export { AddDisplayTab };

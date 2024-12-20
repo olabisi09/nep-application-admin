@@ -1,15 +1,17 @@
-import Input from "../../../../custom/input/input";
-import { Form, Formik, FormikValues } from "formik";
-import Button from "../../../../custom/button/button";
+/* eslint-disable no-undef */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
+import Button from "../../../../custom/button/button";
+import Input from "../../../../custom/input/input";
+import Select from "../../../../custom/select/select";
 import {
   StatusOptions,
   createOrUpdateState,
   getCountry,
 } from "../../../../requests";
-import * as Yup from "yup";
-import { App } from "antd";
-import Select from "../../../../custom/select/select";
 
 interface Props {
   data?: State;
@@ -85,10 +87,7 @@ const AddState = ({ handleClose, data }: Props) => {
       initialValues={{
         countryId: data?.countryId || "",
         stateName: data?.stateName || "",
-        status:
-          data?.activeStatus !== undefined
-            ? String(data?.activeStatus)
-            : "true",
+        status: String(data?.activeStatus ?? ""),
       }}
       onSubmit={(values, { resetForm }) => {
         createStateHandler(values, resetForm);

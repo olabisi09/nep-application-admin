@@ -1,35 +1,39 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-// import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
+/* eslint-disable no-undef */
+import { useCallback, useState } from "react";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  Dropdown,
-  Modal,
-  Table,
   Button as AntButton,
+  Dropdown,
   MenuProps,
+  Modal,
   Spin,
+  Table,
   notification,
 } from "antd";
-import styles from "../styles.module.scss";
+import { ColumnsType } from "antd/es/table";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
+// import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
 import Button from "../../../custom/button/button";
-import { useCallback, useState } from "react";
 import SearchInput from "../../../custom/searchInput/searchInput";
+import { usePagination } from "../../../hooks/usePagination";
+import { useSearchTerms } from "../../../hooks/useSearchTerms";
+import { deleteReadMoreOverView } from "../../../requests";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
 import {
   AddReadMoreCourseOverview,
   EditReadMoreCourseOverview,
 } from "./addReadMoreCourse";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { getAllCourseOverview } from "./request";
-import { ColumnsType } from "antd/es/table";
-import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import DeleteModalContent from "../../deleteModal/deleteModal";
-import { deleteReadMoreOverView } from "../../../requests";
-import { usePagination } from "../../../hooks/usePagination";
 
 const ReadMoreCourse = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -39,10 +43,7 @@ const ReadMoreCourse = () => {
   const [openDelete, setOpenDelete] = useState(false);
 
   const { currentPage, onChange } = usePagination();
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
+  const { searchTerm, handleSearch } = useSearchTerms();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-all-course-overview"],
@@ -153,11 +154,7 @@ const ReadMoreCourse = () => {
     <main>
       <section className="space-between">
         <h3>Read More - Course Overview Setup</h3>
-        <Button
-          onClick={handleOpenModal}
-          iconBefore={<Add />}
-          text="Setup"
-        />
+        <Button onClick={handleOpenModal} iconBefore={<Add />} text="Setup" />
       </section>
 
       <section className={styles.card}>
@@ -196,6 +193,7 @@ const ReadMoreCourse = () => {
             onChange: onChange,
             pageSize: 10,
           }}
+          rowKey={(record) => record.id}
         />
       </section>
 

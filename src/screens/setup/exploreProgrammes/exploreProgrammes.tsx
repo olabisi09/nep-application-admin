@@ -1,23 +1,28 @@
+/* eslint-disable no-undef */
+import { useState } from "react";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  Button as AntButton,
+  App,
   Card,
   Dropdown,
   MenuProps,
   Modal,
-  Table,
-  Button as AntButton,
   Spin,
-  App,
+  Table,
 } from "antd";
+import { ColumnsType } from "antd/es/table";
+
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
-import { useState } from "react";
-import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import { deleteExplore, getAllExplore } from "./request";
-import { CreateExplore, EditExplore } from "./addExploreProgrammes";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+
+import { CreateExplore, EditExplore } from "./addExploreProgrammes";
+import { deleteExplore, getAllExplore } from "./request";
+
 
 const ExploreProgrammes = () => {
   const [open, setOpen] = useState(false);

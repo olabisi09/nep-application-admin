@@ -1,32 +1,29 @@
-import { ReactComponent as Add } from "../../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  App,
-  Spin,
-} from "antd";
-import styles from "../../styles.module.scss";
+/* eslint-disable no-undef */
 
 import { useState } from "react";
 
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 
-import { Button, SearchInput } from "../../../../custom";
+import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import { Button } from "../../../../custom";
 import { deleteReligion, getAllReligion } from "../../../../requests";
-import { AddReligion, EditReligion } from "./addReligion";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
+import styles from "../../styles.module.scss";
+
+import { AddReligion, EditReligion } from "./addReligion";
 
 const ReligionSetup = () => {
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [religion, setReligion] = useState<Religion>({} as Religion);
@@ -47,7 +44,7 @@ const ReligionSetup = () => {
     setOpenDelete(true);
   };
 
-  const DeleteReligionHandler = async () => {
+  const deleteReligionHandler = async () => {
     try {
       await deleteReligionMutation.mutateAsync(religion?.id, {
         onSuccess: (data) => {
@@ -67,16 +64,7 @@ const ReligionSetup = () => {
     }
   };
 
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
-
   const columns: ColumnsType<Religion> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
       key: "name",
       title: "Name",
@@ -106,7 +94,8 @@ const ReligionSetup = () => {
             label: (
               <button
                 style={{ border: "0rem", background: "none" }}
-                onClick={() => handleDelete(record)}>
+                onClick={() => handleDelete(record)}
+              >
                 Delete
               </button>
             ),
@@ -121,7 +110,8 @@ const ReligionSetup = () => {
     },
   ];
 
-  const religionData = data?.data;
+  const religionData =
+    data?.data?.map((item) => ({ ...item, key: item?.id })) ?? [];
 
   if (isLoading) {
     return <Spin />;
@@ -141,35 +131,12 @@ const ReligionSetup = () => {
           text="Setup"
         />
       </section>
-      <section className={styles.card}>
-        <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
-          <div>
-            {!showSearch && (
-              <span>
-                <Search
-                  onClick={() => setShowSearch((showSearch) => !showSearch)}
-                />
-              </span>
-            )}
-            {showSearch && (
-              <SearchInput value={searchTerm} onChange={handleSearch} />
-            )}
 
-            {!showAllFilter && (
-              <Filter
-                onClick={() =>
-                  setShowAllFilter((showAllFilter) => !showAllFilter)
-                }
-              />
-            )}
-          </div>
-        </div>
+      <section className={styles.card}>
         <Table
           dataSource={religionData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 
@@ -178,7 +145,8 @@ const ReligionSetup = () => {
         onCancel={() => setShowAddModal(false)}
         centered
         title="Create Religion Setup"
-        footer={null}>
+        footer={null}
+      >
         <AddReligion handleClose={() => setShowAddModal(false)} />
       </Modal>
 
@@ -188,7 +156,8 @@ const ReligionSetup = () => {
           onCancel={() => setOpenEdit(false)}
           centered
           title="Edit Religion Setup"
-          footer={null}>
+          footer={null}
+        >
           <EditReligion
             religion={religion}
             handleClose={() => setOpenEdit(false)}
@@ -202,11 +171,12 @@ const ReligionSetup = () => {
           onCancel={() => setOpenDelete(false)}
           centered
           title="Delete Religion Setup"
-          footer={null}>
+          footer={null}
+        >
           <DeleteModalContent
             isLoading={deleteReligionMutation?.isPending}
             handleCloseModal={() => setOpenDelete(false)}
-            handleSubmit={DeleteReligionHandler}
+            handleSubmit={deleteReligionHandler}
             title={religion?.name}
             isActive={false}
           />

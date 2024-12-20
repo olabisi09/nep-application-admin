@@ -1,19 +1,15 @@
-import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Input, Select } from "../../../../custom";
-import { createOrUpdateFitnessAthletics } from "../../../../requests";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { App } from "antd";
-import { useParams } from "react-router-dom";
-import { validator } from "../../../../utils/validator";
-import * as Yup from "yup";
+/* eslint-disable no-undef */
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { App } from 'antd';
+import { Form, Formik, FormikValues } from 'formik';
+import { useParams } from 'react-router-dom';
+import * as Yup from 'yup';
 
-const FitnessAndAthleticsForm = ({
-  handleClose,
-  item,
-}: {
-  handleClose: () => void;
-  item: FitnessAthletics;
-}) => {
+import { Button, Editor, Input, Select } from '../../../../custom';
+import { StatusOptions, createOrUpdateFitnessAthletics } from '../../../../requests';
+import { validator } from '../../../../utils/validator';
+
+const FitnessAndAthleticsForm = ({ handleClose, item }: { handleClose: () => void; item: FitnessAthletics }) => {
   const { id } = useParams();
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
@@ -22,18 +18,15 @@ const FitnessAndAthleticsForm = ({
     mutationFn: createOrUpdateFitnessAthletics,
   });
 
-  const studentLifeId = id ?? "";
+  const studentLifeId = id ?? '';
 
-  const handleAddUpdateFitnessAthletics = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
+  const handleAddUpdateFitnessAthletics = async (values: FormikValues, resetForm: () => void) => {
     const payload: Partial<Setup> = {
       id: item?.id ?? 0,
       studentLifeId: studentLifeId,
       title: values.title,
       description: values.description,
-      activeStatus: values.status === "Active" ? true : false,
+      activeStatus: values.status === 'true',
       isDeleted: false,
     };
 
@@ -41,29 +34,23 @@ const FitnessAndAthleticsForm = ({
       await addFitnessAthleticsMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-fitness-athletics"] });
+
+          queryClient.refetchQueries({ queryKey: ['get-fitness-athletics'] });
+          
           handleClose();
           resetForm();
         },
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
-
-  const statusOptions = (
-    <>
-      <option value={""}>-- select an option --</option>
-      <option value="Active">Active</option>
-      <option value="Inactive">Inactive</option>
-    </>
-  );
 
   const validationSchema = Yup.object().shape({
     title: validator.title,
@@ -71,19 +58,17 @@ const FitnessAndAthleticsForm = ({
     description: validator.description,
   });
 
-  const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = item?.activeStatus ?? '';
   const hasRecords = Object.keys(item).length > 0;
 
   return (
     <Formik
       initialValues={{
-        title: item.title ?? "",
-        description: item.description ?? "",
-        status: initialStatus,
+        title: item.title ?? '',
+        description: item.description ?? '',
+        status: String(initialStatus),
       }}
-      onSubmit={(values, { resetForm }) =>
-        handleAddUpdateFitnessAthletics(values, resetForm)
-      }
+      onSubmit={(values, { resetForm }) => handleAddUpdateFitnessAthletics(values, resetForm)}
       validationSchema={validationSchema}
       enableReinitialize
     >
@@ -96,28 +81,33 @@ const FitnessAndAthleticsForm = ({
               label="Description"
               onChange={(_, editor) => {
                 const data = editor.getData();
-                setFieldValue("description", data);
+                setFieldValue('description', data);
               }}
-              initialData={item?.description ?? ""}
+              initialData={item?.description ?? ''}
             />
+
             <Select
               name="status"
+              placeholder="Select Status"
               label="Status"
-              placeholder="Select status"
-              options={statusOptions}
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              }
             />
+
             <div className="btn-group">
-              <Button
-                type="button"
-                onClick={handleClose}
-                variant="text"
-                text="Cancel"
-              />
+              <Button type="button" onClick={handleClose} variant="text" text="Cancel" />
               <Button
                 type="submit"
                 isLoading={addFitnessAthleticsMutation.isPending}
                 disabled={addFitnessAthleticsMutation.isPending}
-                text={hasRecords ? "Update" : "Create"}
+                text={hasRecords ? 'Update' : 'Create'}
               />
             </div>
           </Form>

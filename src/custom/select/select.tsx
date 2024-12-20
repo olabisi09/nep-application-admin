@@ -1,5 +1,7 @@
-import { Field, FieldProps, useFormikContext } from "formik";
 import React, { ChangeEventHandler } from "react";
+
+import { Field, FieldProps, useFormikContext } from "formik";
+
 import styles from "./select.module.scss";
 
 interface ComponentProps {

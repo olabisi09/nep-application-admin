@@ -1,42 +1,33 @@
-import {
-  Card,
-  Dropdown,
-  MenuProps,
-  Modal,
-  Table,
-  Button as AntButton,
-  Spin,
-  App,
-} from "antd";
-import { ReactComponent as Plus } from "../../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { Button } from "../../../../custom";
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  deleteOverview,
-  getOverviewByStudentLifeId,
-} from "../../../../requests";
-import { ColumnsType } from "antd/es/table";
-import { sanitizeAndLimitString } from "../../../../utils/sanitizeAndLimitString";
-import { CreateOverview, EditOverview } from "./setup";
-import { useParams } from "react-router-dom";
-import DeleteModalContent from "../../../deleteModal/deleteModal";
+/* eslint-disable no-undef */
+import { useState } from 'react';
+
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Button as AntButton, App, Card, Dropdown, MenuProps, Modal, Spin, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import { useParams } from 'react-router-dom';
+
+import { ReactComponent as Plus } from '../../../../assets/add.svg';
+import { ReactComponent as Ellipsis } from '../../../../assets/ellipsis.svg';
+import { Button } from '../../../../custom';
+import { deleteOverview, getOverviewByStudentLifeId } from '../../../../requests';
+import { sanitizeAndLimitString } from '../../../../utils/sanitizeAndLimitString';
+import DeleteModalContent from '../../../deleteModal/deleteModal';
+
+import { CreateOverview, EditOverview } from './setup';
 
 const Overview = () => {
   const { notification } = App.useApp();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [overview, setOverview] = useState<ItemByStudentLife>(
-    {} as ItemByStudentLife
-  );
+  const [overview, setOverview] = useState<ItemByStudentLife>({} as ItemByStudentLife);
   const [openDelete, setOpenDelete] = useState(false);
   const [record, setRecord] = useState<Overview>({} as Overview);
 
   const deleteOverviewMutation = useMutation({ mutationFn: deleteOverview });
+  
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-overview"],
+    queryKey: ['get-overview'],
     queryFn: () => getOverviewByStudentLifeId(id!),
     enabled: !!id,
   });
@@ -46,7 +37,7 @@ const Overview = () => {
       await deleteOverviewMutation.mutateAsync(record?.id, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
           refetch();
@@ -55,70 +46,64 @@ const Overview = () => {
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
 
   const columns: ColumnsType<ItemByStudentLife> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
-      key: "title",
-      title: "Title",
-      dataIndex: "title",
+      key: 'title',
+      title: 'Title',
+      dataIndex: 'title',
     },
     {
-      key: "description",
-      title: "Description",
-      dataIndex: "description",
+      key: 'description',
+      title: 'Description',
+      dataIndex: 'description',
       render: (_, { description }) => {
         const limitedCleanHtml = sanitizeAndLimitString(description);
         return <div dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />;
       },
     },
     {
-      key: "pictureUrl",
-      title: "Picture",
-      dataIndex: "imageUrl",
-      render: (_, { imageUrl }) => (
-        <img className="table-img" src={imageUrl} alt="" />
-      ),
+      key: 'pictureUrl',
+      title: 'Picture',
+      dataIndex: 'imageUrl',
+      render: (_, { imageUrl }) => <img className="table-img" src={imageUrl} alt="" />,
     },
     {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+      key: 'status',
+      title: 'Status',
+      dataIndex: 'activeStatus',
+      render: (_, { activeStatus }) => (activeStatus ? 'Active' : 'Inactive'),
     },
     {
-      key: "action",
-      title: "",
+      key: 'action',
+      title: '',
       render: (_, record) => {
-        const items: MenuProps["items"] = [
+        const items: MenuProps['items'] = [
           {
-            key: "1",
-            label: "Edit",
+            key: '1',
+            label: 'Edit',
             onClick: () => {
               setOverview(record);
               setOpenEdit(true);
             },
           },
           {
-            key: "2",
-            label: "Delete",
+            key: '2',
+            label: 'Delete',
             onClick: () => {
               setRecord(record);
               setOpenDelete(true);
             },
           },
         ];
+
         return (
-          <Dropdown menu={{ items }} trigger={["click"]}>
+          <Dropdown menu={{ items }} trigger={['click']}>
             <AntButton type="text" icon={<Ellipsis />} />
           </Dropdown>
         );
@@ -131,57 +116,40 @@ const Overview = () => {
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
+
   return (
     <div>
       <section className="space-between">
         <h3>Student Life: Overview Setup</h3>
 
-        {overviewData?.length === 0 && (
-          <Button
-            onClick={() => setOpen(true)}
-            iconBefore={<Plus />}
-            text="Setup"
-          />
-        )}
+        {overviewData?.length === 0 && <Button onClick={() => setOpen(true)} iconBefore={<Plus />} text="Setup" />}
       </section>
+
       <br />
+
       <Card bordered={false}>
         <Table
           dataSource={overviewData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{ position: ['bottomCenter'] }}
           rowKey={(record) => record.id}
           scroll={{ x: true }}
         />
       </Card>
-      <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
-        centered
-        title="Create Overview"
-        footer={null}>
-        <CreateOverview
-          studentLifeId={id!}
-          handleClose={() => setOpen(false)}
-        />
+
+      <Modal open={open} onCancel={() => setOpen(false)} centered title="Create Overview" footer={null}>
+        <CreateOverview studentLifeId={id!} handleClose={() => setOpen(false)} />
       </Modal>
-      <Modal
-        open={openEdit}
-        onCancel={() => setOpenEdit(false)}
-        centered
-        title="Edit Overview"
-        footer={null}>
+
+      <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Edit Overview" footer={null}>
         <EditOverview item={overview} handleClose={() => setOpenEdit(false)} />
       </Modal>
-      <Modal
-        open={openDelete}
-        onCancel={() => setOpenDelete(false)}
-        centered
-        title="Delete Overview"
-        footer={null}>
+
+      <Modal open={openDelete} onCancel={() => setOpenDelete(false)} centered title="Delete Overview" footer={null}>
         <DeleteModalContent
           isLoading={deleteOverviewMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}

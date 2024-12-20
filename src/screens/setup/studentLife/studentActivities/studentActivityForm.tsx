@@ -1,18 +1,14 @@
-import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Input, Select } from "../../../../custom";
-import { createOrUpdateStudentActivity } from "../../../../requests";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { App } from "antd";
-import { useParams } from "react-router-dom";
-import * as Yup from "yup";
+/* eslint-disable no-undef */
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { App } from 'antd';
+import { Form, Formik, FormikValues } from 'formik';
+import { useParams } from 'react-router-dom';
+import * as Yup from 'yup';
 
-const StudentActivityForm = ({
-  handleClose,
-  item,
-}: {
-  handleClose: () => void;
-  item: StudentActivities;
-}) => {
+import { Button, Editor, Input, Select } from '../../../../custom';
+import { StatusOptions, createOrUpdateStudentActivity } from '../../../../requests';
+
+const StudentActivityForm = ({ handleClose, item }: { handleClose: () => void; item: StudentActivities }) => {
   const { id } = useParams();
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
@@ -21,18 +17,15 @@ const StudentActivityForm = ({
     mutationFn: createOrUpdateStudentActivity,
   });
 
-  const studentLifeId = id ?? "" ?? 0;
+  const studentLifeId = id ?? '';
 
-  const handleAddStudentActivity = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
+  const handleAddStudentActivity = async (values: FormikValues, resetForm: () => void) => {
     const payload: Partial<Setup> = {
       id: item?.id ?? 0,
       studentLifeId: studentLifeId,
       title: values.title,
       description: values.description,
-      activeStatus: values.status === "Active" ? true : false,
+      activeStatus: values.status === 'true',
       isDeleted: false,
     };
 
@@ -40,86 +33,81 @@ const StudentActivityForm = ({
       await addStudentActivityMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-support-guidance"] });
-          handleClose();
+
+          queryClient.refetchQueries({ queryKey: ['get-support-guidance'] });
+
           resetForm();
+          handleClose();
         },
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
 
-  const statusOptions = (
-    <>
-      <option value={""}>-- select an option --</option>
-      <option value="Active"> Active</option>
-      <option value="Inactive">Inactive</option>
-    </>
-  );
-
   const validateSetup = Yup.object().shape({
-    title: Yup.string().required("Title is required"),
-    description: Yup.string().required("Description is required"),
-    status: Yup.string().required("Status is required"),
+    title: Yup.string().required('Title is required'),
+    description: Yup.string().required('Description is required'),
+    status: Yup.string().required('Status is required'),
   });
 
-  const initialStatus = item?.activeStatus
-    ? "Active"
-    : item?.activeStatus === false
-    ? "Inactive"
-    : "";
+  const initialStatus = item?.activeStatus ?? '';
   const hasRecords = Object.keys(item).length > 0;
 
   return (
     <Formik
       initialValues={{
-        title: item.title ?? "",
-        description: item.description ?? "",
-        status: initialStatus,
+        title: item.title ?? '',
+        description: item.description ?? '',
+        status: String(initialStatus),
       }}
-      onSubmit={(values, { resetForm }) =>
-        handleAddStudentActivity(values, resetForm)
-      }
+      onSubmit={(values, { resetForm }) => handleAddStudentActivity(values, resetForm)}
       validationSchema={validateSetup}
       enableReinitialize
     >
       {({ setFieldValue }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />
+
           <Editor
             name="description"
             label="Description"
             onChange={(_, editor) => {
               const data = editor.getData();
-              setFieldValue("description", data);
+              setFieldValue('description', data);
             }}
-            initialData={item?.description ?? ""}
+            initialData={item?.description ?? ''}
           />
+
           <Select
             name="status"
+            placeholder="Select Status"
             label="Status"
-            placeholder="Select status"
-            options={statusOptions}
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
           />
+
           <div className="btn-group">
-            <Button
-              type="button"
-              onClick={handleClose}
-              variant="text"
-              text="Cancel"
-            />
+            <Button type="button" onClick={handleClose} variant="text" text="Cancel" />
+
             <Button
               type="submit"
               isLoading={addStudentActivityMutation.isPending}
               disabled={addStudentActivityMutation.isPending}
-              text={hasRecords ? "Update" : "Create"}
+              text={hasRecords ? 'Update' : 'Create'}
             />
           </div>
         </Form>

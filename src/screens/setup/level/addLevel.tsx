@@ -1,39 +1,43 @@
-import { Form, Formik, FormikValues } from "formik";
-import { Button, Select } from "../../../custom";
-import Input from "../../../custom/input/input";
-import * as Yup from "yup";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
-import { createUpdateLevel, StatusOptions } from "../../../requests";
+import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
 
+import { Button, Select } from "../../../custom";
+import Input from "../../../custom/input/input";
+import { StatusOptions, createUpdateLevel } from "../../../requests";
 
 const validationSchema = Yup.object().shape({
   levelName: Yup.string().required("Level Name is required"),
   status: Yup.string().required("Status is required"),
 });
 
-const AddLevel = ({handleClose}: {handleClose: () => void}) => {
-  const {notification} = App.useApp();
+const AddLevel = ({ handleClose }: { handleClose: () => void }) => {
+  const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  const addLevelMutation = useMutation({ mutationFn: createUpdateLevel});
 
-  const handleAddLevel = async  (values: FormikValues, resetForm: () => void) => {
+  const addLevelMutation = useMutation({ mutationFn: createUpdateLevel });
+
+  const handleAddLevel = async (
+    values: FormikValues,
+    resetForm: () => void,
+  ) => {
     const payload: Partial<Level> = {
       levelName: values?.levelName,
       isActive: values?.status === "true",
     };
-
+    
     try {
       await addLevelMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
-            description: data?.message
+            description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["getAll-level"]});
+          queryClient.refetchQueries({ queryKey: ["getAll-level"] });
           handleClose();
           resetForm();
-
         },
       });
     } catch (error: any) {
@@ -42,62 +46,60 @@ const AddLevel = ({handleClose}: {handleClose: () => void}) => {
         description: error?.response?.data?.message,
       });
     }
-  }
+  };
 
   return (
     <Formik
-    initialValues={{
-      levelName: "",
-      status: "",
-    }}
-    onSubmit={(values, {resetForm}) => handleAddLevel(values, resetForm)}
-    validationSchema={validationSchema}
-  >
-    <Form className="fields">
-    <Input
-      name="levelName"
-      placeholder="Input Level Name "
-      label="Level Name"
-    />
+      initialValues={{
+        levelName: "",
+        status: "",
+      }}
+      onSubmit={(values, { resetForm }) => handleAddLevel(values, resetForm)}
+      validationSchema={validationSchema}
+    >
+      <Form className="fields">
+        <Input
+          name="levelName"
+          placeholder="Input Level Name "
+          label="Level Name"
+        />
 
-    <Select
-      name="status"
-      placeholder="Select Status"
-      label="Status"
-      options={
-        <>
-          {StatusOptions.map((option: any) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </>
-      }
-    />
+        <Select
+          name="status"
+          placeholder="Select Status"
+          label="Status"
+          options={
+            <>
+              {StatusOptions.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </>
+          }
+        />
 
-    <div className="btn-group">
-      <Button
-        type="button"
-        onClick={handleClose}
-        variant="text"
-        text="Cancel"
-      />
+        <div className="btn-group">
+          <Button
+            type="button"
+            onClick={handleClose}
+            variant="text"
+            text="Cancel"
+          />
 
-      <Button
-        type="submit"
-        text="Create"
-        isLoading={addLevelMutation.isPending}
-        disabled={addLevelMutation.isPending}
-      />
-
-    </div>
-  </Form>
-  </Formik>
+          <Button
+            type="submit"
+            text="Create"
+            isLoading={addLevelMutation.isPending}
+            disabled={addLevelMutation.isPending}
+          />
+        </div>
+      </Form>
+    </Formik>
   );
 };
 
 export default AddLevel;
-
 
 export const EditLevel = ({
   item,
@@ -112,21 +114,21 @@ export const EditLevel = ({
     mutationFn: createUpdateLevel,
   });
 
+  const handleEditLevel = async (values: FormikValues) => {
+    const payload: Partial<Level> = {
+      id: item?.id,
+      levelName: values?.levelName,
+      isActive: values?.status === "true",
+    };
 
-    const handleEditLevel = async (values: FormikValues) => {
-      const payload: Partial<Level> = {
-        id: item?.id,
-        levelName: values?.levelName,
-        isActive: values?.status === "true",
-      };
-
-      try {
-        await editLevelMutation.mutateAsync(payload, {
+    try {
+      await editLevelMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
             description: data?.message,
           });
+          
           queryClient.refetchQueries({ queryKey: ["getAll-level"] });
           handleClose();
         },
@@ -143,7 +145,7 @@ export const EditLevel = ({
     <Formik
       initialValues={{
         levelName: item?.levelName,
-        status: item?.isActive,
+        status: String(item?.isActive),
       }}
       validationSchema={validationSchema}
       onSubmit={(values) => handleEditLevel(values)}
@@ -155,7 +157,7 @@ export const EditLevel = ({
           placeholder="Input Level Name "
           label="Level Name"
         />
-        
+
         <Select
           name="status"
           placeholder="Select Status"
@@ -168,7 +170,7 @@ export const EditLevel = ({
                 </option>
               ))}
             </>
-           }
+          }
         />
 
         <div className="btn-group">
@@ -190,4 +192,3 @@ export const EditLevel = ({
     </Formik>
   );
 };
-

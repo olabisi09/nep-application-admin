@@ -1,11 +1,13 @@
-import Input from "../../../../custom/input/input";
-import { Form, Formik, FormikValues } from "formik";
-import Button from "../../../../custom/button/button";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { StatusOptions, createOrUpdateCountry } from "../../../../requests";
-import * as Yup from "yup";
 import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
+import Button from "../../../../custom/button/button";
+import Input from "../../../../custom/input/input";
 import Select from "../../../../custom/select/select";
+import { StatusOptions, createOrUpdateCountry } from "../../../../requests";
 
 interface Props {
   data?: Country;
@@ -16,23 +18,23 @@ const AddCountry = ({ handleClose, data }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  const CreateCountryMutation = useMutation({
+  const createCountryMutation = useMutation({
     mutationFn: createOrUpdateCountry,
     mutationKey: ["create-country"],
   });
 
-  const CreateCountryHandler = async (
+  const createCountryHandler = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
     const payload: Partial<Country> = {
       id: data?.id || 0,
       countryName: values.countryName,
-      activeStatus: values?.status === "true", // Convert "true" to true, "false" to false
+      activeStatus: values?.status === "true", 
     };
 
     try {
-      await CreateCountryMutation.mutateAsync(payload, {
+      await createCountryMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -62,11 +64,10 @@ const AddCountry = ({ handleClose, data }: Props) => {
     <Formik
       initialValues={{
         countryName: data?.countryName || "",
-        status:
-          data?.activeStatus !== undefined ? String(data?.activeStatus) : "", // Initialize with string
+        status: String(data?.activeStatus ?? ""), 
       }}
       onSubmit={(values, { resetForm }) => {
-        CreateCountryHandler(values, resetForm);
+        createCountryHandler(values, resetForm);
       }}
       enableReinitialize={true}
       validationSchema={validationSchema}
@@ -79,6 +80,7 @@ const AddCountry = ({ handleClose, data }: Props) => {
               placeholder="Input Country Name"
               label="Country Name"
             />
+
             <Select
               name="status"
               placeholder="Select Status"
@@ -93,16 +95,20 @@ const AddCountry = ({ handleClose, data }: Props) => {
                 </>
               }
             />
+
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button
                 onClick={handleSubmit as any}
-                disabled={CreateCountryMutation?.isPending}
+                disabled={createCountryMutation?.isPending}
                 text={
                   data
-                  ? (CreateCountryMutation?.isPending ? 'Updating...' : 'Update')
-                  : (CreateCountryMutation?.isPending ? 'Creating...' : 'Create')
-                
+                    ? createCountryMutation?.isPending
+                      ? "Updating..."
+                      : "Update"
+                    : createCountryMutation?.isPending
+                    ? "Creating..."
+                    : "Create"
                 }
               />
             </div>

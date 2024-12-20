@@ -1,17 +1,20 @@
+import { useState } from "react";
+
 import {
+  Button as AntButton,
   Card,
   Dropdown,
   MenuProps,
   Modal,
   Table,
-  Button as AntButton,
 } from "antd";
+import { Form, Formik } from "formik";
+
 import { ReactComponent as Plus } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
 import Button from "../../../custom/button/button";
-import { useState } from "react";
+
 import AddUserForm from "./addUserForm";
-import { Form, Formik } from "formik";
 import EditUserForm from "./editUserForm";
 
 const AddUsers = () => {

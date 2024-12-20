@@ -1,15 +1,19 @@
-import Input from "../../../custom/input/input";
-import Upload from "../../../custom/upload/upload";
+/* eslint-disable no-undef */
+import { FC } from "react";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
+
 import { ReactComponent as Image } from "../../../assets/image.svg";
 import Button from "../../../custom/button/button";
-import { Form, Formik, FormikValues } from "formik";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  createUpdateGeneralTemplate,
-  StatusOptions,
-} from "../../../requests";
+import Input from "../../../custom/input/input";
 import Select from "../../../custom/select/select";
-import { App } from "antd";
+import Upload from "../../../custom/upload/upload";
+import {
+  StatusOptions,
+  createUpdateGeneralTemplate,
+} from "../../../requests";
 import { validateTemplate } from "../../../utils/validations";
 
 interface Init {
@@ -44,6 +48,11 @@ const fileValues: { label: string; name: keyof Init }[] = [
   },
 ];
 
+interface EditTemplateProps {
+  handleClose: () => void;
+  data: GeneralTemplate;
+}
+
 const SetupSchoolInfoTemplate = ({
   handleClose,
 }: {
@@ -52,12 +61,12 @@ const SetupSchoolInfoTemplate = ({
   const queryClient = useQueryClient();
   const { notification } = App.useApp();
 
-  const CreateUpdateGeneralTemplateMutation = useMutation({
+  const createUpdateGeneralTemplateMutation = useMutation({
     mutationFn: createUpdateGeneralTemplate,
     mutationKey: ["create-update-general-template"],
   });
 
-  const CreateUpdateGeneralTemplateHandler = async (
+  const createUpdateGeneralTemplateHandler = async (
     values: FormikValues,
     resetForm: () => void
   ) => {
@@ -73,7 +82,7 @@ const SetupSchoolInfoTemplate = ({
       formData.append("HomePageImage", values?.homePage);
       formData.append("ActiveStatus", values?.status);
 
-      await CreateUpdateGeneralTemplateMutation.mutateAsync(formData, {
+      await createUpdateGeneralTemplateMutation.mutateAsync(formData, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
@@ -108,8 +117,7 @@ const SetupSchoolInfoTemplate = ({
         } as Init
       }
       onSubmit={(values, { resetForm }) => {
-        CreateUpdateGeneralTemplateHandler(values, resetForm);
-        console.log(values);
+        createUpdateGeneralTemplateHandler(values, resetForm);
       }}
       validationSchema={validateTemplate}
     >
@@ -123,7 +131,7 @@ const SetupSchoolInfoTemplate = ({
           <Input name="logoUrl" label="Logo Url" placeholder="Input url" />
           {fileValues.map((value) => (
             <>
-              {!!values[value.name] ? (
+              {values[value.name] ? (
                 <div className="small-gap">
                   <Image />
                   <span>{`${values[value.name]?.name}`}</span>
@@ -176,8 +184,8 @@ const SetupSchoolInfoTemplate = ({
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button
               text="Create"
-              disabled={CreateUpdateGeneralTemplateMutation?.isPending}
-              isLoading={CreateUpdateGeneralTemplateMutation.isPending}
+              disabled={createUpdateGeneralTemplateMutation?.isPending}
+              isLoading={createUpdateGeneralTemplateMutation.isPending}
             />
           </div>
         </Form>
@@ -186,12 +194,7 @@ const SetupSchoolInfoTemplate = ({
   );
 };
 
-interface EditTemplateProps {
-  handleClose: () => void;
-  data: GeneralTemplate;
-}
-
-const EditTemplate: React.FC<EditTemplateProps> = ({ handleClose, data }) => {
+const EditTemplate: FC<EditTemplateProps> = ({ handleClose, data }) => {
   const queryClient = useQueryClient();
   const { notification } = App.useApp();
 
@@ -271,10 +274,12 @@ const EditTemplate: React.FC<EditTemplateProps> = ({ handleClose, data }) => {
             label="School Name"
             placeholder="Input title"
           />
+          
           <Input name="logoUrl" label="Logo Url" placeholder="Input url" />
+
           {fileValues.map((value) => (
             <>
-              {!!values[value.name] ? (
+              {values[value.name] ? (
                 <div className="small-gap">
                   <Image />
                   <span>{`${values[value.name]?.name}`}</span>
@@ -298,17 +303,21 @@ const EditTemplate: React.FC<EditTemplateProps> = ({ handleClose, data }) => {
               )}
             </>
           ))}
+
           <Input name="email" label="Email" placeholder="Input Email" />
+
           <Input
             name="phoneNumber"
             label="Phone Number"
             placeholder="Input Phone Number"
           />
+
           <Input
             name="address"
             label="Contact Address"
             placeholder="Input Address"
           />
+
           <Select
             name="status"
             placeholder="Select Status"
@@ -323,6 +332,7 @@ const EditTemplate: React.FC<EditTemplateProps> = ({ handleClose, data }) => {
               </>
             }
           />
+
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button

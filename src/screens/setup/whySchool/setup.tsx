@@ -1,10 +1,12 @@
-import Input from "../../../custom/input/input";
-import Button from "../../../custom/button/button";
-import Select from "../../../custom/select/select";
-import { App } from "antd";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
 import { object, string } from "yup";
+
+import Button from "../../../custom/button/button";
+import Input from "../../../custom/input/input";
+import Select from "../../../custom/select/select";
 import { createUpdateWhy } from "../../../requests";
 
 interface Props {

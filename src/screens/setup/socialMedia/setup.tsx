@@ -1,29 +1,24 @@
-import { Form, Formik, FormikValues } from "formik";
-import Button from "../../../custom/button/button";
-import Input from "../../../custom/input/input";
-import { App, Spin } from "antd";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  createUpdateSocialMediaLink,
-  getGeneralTemplates,
-  StatusOptions,
-} from "../../../requests";
-import { useState } from "react";
-import * as Yup from "yup";
-import Select from "../../../custom/select/select";
-import Upload from "../../../custom/upload/upload";
-import { ReactComponent as Image } from "../../../assets/image.svg";
+/* eslint-disable no-undef */
+import { useState } from 'react';
 
-const CreateSocialMediaSetup = ({
-  handleClose,
-}: {
-  handleClose: () => void;
-}) => {
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { App, Spin } from 'antd';
+import { Form, Formik, FormikValues } from 'formik';
+import * as Yup from 'yup';
+
+import { ReactComponent as Image } from '../../../assets/image.svg';
+import Button from '../../../custom/button/button';
+import Input from '../../../custom/input/input';
+import Select from '../../../custom/select/select';
+import Upload from '../../../custom/upload/upload';
+import { StatusOptions, createUpdateSocialMediaLink, getGeneralTemplates } from '../../../requests';
+
+const CreateSocialMediaSetup = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
   const [upload, setUpload] = useState<File | null>(null);
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-general-template"],
+    queryKey: ['get-general-template'],
     queryFn: getGeneralTemplates,
   });
   const createUpdateSocialLinkMutation = useMutation({
@@ -31,9 +26,9 @@ const CreateSocialMediaSetup = ({
   });
 
   const validate = Yup.object().shape({
-    socialMediaName: Yup.string().required("The name is required"),
-    socialMediaUrl: Yup.string().required("The url is required"),
-    template: Yup.string().required("The template is required"),
+    socialMediaName: Yup.string().required('The name is required'),
+    socialMediaUrl: Yup.string().required('The url is required'),
+    template: Yup.string().required('The template is required'),
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,23 +47,23 @@ const CreateSocialMediaSetup = ({
       socialMediaUrl: values.socialMediaUrl,
       templateId: parseInt(values.template),
       socialMediaLogo: upload,
-      activeStatus: values.status,
+      activeStatus: values.status === 'true',
     };
 
     try {
       await createUpdateSocialLinkMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-social-media-link"] });
+          queryClient.refetchQueries({ queryKey: ['get-social-media-link'] });
           handleClose();
         },
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -77,10 +72,10 @@ const CreateSocialMediaSetup = ({
   return (
     <Formik
       initialValues={{
-        socialMediaName: "",
-        socialMediaUrl: "",
-        template: "",
-        status: "",
+        socialMediaName: '',
+        socialMediaUrl: '',
+        template: '',
+        status: '',
       }}
       onSubmit={(values) => {
         handleCreateSocialMediaLink(values);
@@ -88,16 +83,8 @@ const CreateSocialMediaSetup = ({
       validationSchema={validate}
     >
       <Form className="fields">
-        <Input
-          name="socialMediaName"
-          label="Social Media Name"
-          placeholder="Input name e.g facebook, twitter"
-        />
-        <Input
-          name="socialMediaUrl"
-          label="Social Media URL"
-          placeholder="Input URL"
-        />
+        <Input name="socialMediaName" label="Social Media Name" placeholder="Input name e.g facebook, twitter" />
+        <Input name="socialMediaUrl" label="Social Media URL" placeholder="Input URL" />
         <Select
           name="template"
           placeholder="Select Template"
@@ -120,7 +107,7 @@ const CreateSocialMediaSetup = ({
             </>
           }
         />
-        
+
         {upload ? (
           <div className="small-gap">
             <Image />
@@ -171,16 +158,18 @@ const EditSocialMediaLink = ({
   const [upload, setUpload] = useState<File | null>(null);
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-general-template"],
+    queryKey: ['get-general-template'],
     queryFn: getGeneralTemplates,
   });
+
   const createUpdateSocialLinkMutation = useMutation({
     mutationFn: createUpdateSocialMediaLink,
   });
+
   const validate = Yup.object().shape({
-    socialMediaName: Yup.string().required("The name is required"),
-    socialMediaUrl: Yup.string().required("The url is required"),
-    template: Yup.string().required("The template is required"),
+    socialMediaName: Yup.string().required('The name is required'),
+    socialMediaUrl: Yup.string().required('The url is required'),
+    template: Yup.string().required('The template is required'),
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -189,6 +178,7 @@ const EditSocialMediaLink = ({
       setUpload(file[0]);
     }
   };
+
   const clearFile = () => {
     setUpload(null);
   };
@@ -201,24 +191,24 @@ const EditSocialMediaLink = ({
       templateId: parseInt(values.template),
       socialMediaLogo: upload,
       socialMediaLogoUrl: socialMediaLink?.socialMediaLogoUrl,
-      activeStatus: values.status,
+      activeStatus: values.status === 'true',
     };
 
     try {
       await createUpdateSocialLinkMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-social-media-link"] });
+          queryClient.refetchQueries({ queryKey: ['get-social-media-link'] });
           handleClose();
           clearFile();
         },
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -230,7 +220,7 @@ const EditSocialMediaLink = ({
         socialMediaName: socialMediaLink?.socialMediaName,
         socialMediaUrl: socialMediaLink?.socialMediaUrl,
         template: socialMediaLink?.templateId,
-        status: socialMediaLink?.activeStatus,
+        status: String(socialMediaLink?.activeStatus),
       }}
       onSubmit={(values) => {
         handleEditSocialMediaLink(values);
@@ -239,16 +229,8 @@ const EditSocialMediaLink = ({
       enableReinitialize
     >
       <Form className="fields">
-        <Input
-          name="socialMediaName"
-          label="Social Media Name"
-          placeholder="Input name e.g facebook, twitter"
-        />
-        <Input
-          name="socialMediaUrl"
-          label="Social Media URL"
-          placeholder="Input URL"
-        />
+        <Input name="socialMediaName" label="Social Media Name" placeholder="Input name e.g facebook, twitter" />
+        <Input name="socialMediaUrl" label="Social Media URL" placeholder="Input URL" />
         <Select
           name="template"
           placeholder="Select Template"
@@ -271,6 +253,7 @@ const EditSocialMediaLink = ({
             </>
           }
         />
+        
         {upload ? (
           <div className="small-gap">
             <Image />
@@ -295,6 +278,7 @@ const EditSocialMediaLink = ({
             </>
           }
         />
+
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button

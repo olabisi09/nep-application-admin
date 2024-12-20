@@ -1,44 +1,45 @@
-import { ReactComponent as Add } from "../../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
+/* eslint-disable no-undef */
+import { useState } from "react";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  Dropdown,
-  Modal,
-  Table,
   Button as AntButton,
-  MenuProps,
-  Spin,
   App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
 } from "antd";
 import { Form, Formik } from "formik";
-import styles from "../../styles.module.scss";
-import Button from "../../../../custom/button/button";
-import { useState } from "react";
-import SearchInput from "../../../../custom/searchInput/searchInput";
-import AddState from "./addState";
+
+import { ReactComponent as Add } from "../../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ReactComponent as Search } from "../../../../assets/search.svg";
+import Button from "../../../../custom/button/button";
+import SearchInput from "../../../../custom/searchInput/searchInput";
+import { usePagination } from "../../../../hooks/usePagination";
+import { useSearchTerms } from "../../../../hooks/useSearchTerms";
 import { deleteState, getState } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
-import { usePagination } from "../../../../hooks/usePagination";
+import styles from "../../styles.module.scss";
+
+
+import AddState from "./addState";
+
 
 const StateSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as State);
   const [openDelete, setOpenDelete] = useState(false);
 
   const { currentPage, onChange } = usePagination();
+  const { searchTerm, handleSearch } = useSearchTerms();
 
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
 
   const handleEdit = (data: State) => {
     setIndexData(data);
@@ -51,15 +52,17 @@ const StateSetup = () => {
   };
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-state"],
+    queryKey: ["get-state", currentPage],
     queryFn: () => getState({ pageNumber: currentPage, pageSize: 10 }),
   });
 
   const stateData = data?.data as State[];
 
-  const filteredData = stateData?.filter((state) =>
-    state?.stateName?.toLowerCase()?.includes(searchTerm.toLowerCase()) 
-  );
+  const filteredData = stateData
+    ?.filter((state) =>
+      state?.stateName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   const items = (record: State): MenuProps["items"] => [
     {
@@ -133,8 +136,6 @@ const StateSetup = () => {
     }
   };
 
-  // const currentPageSize = 
-
   if (isLoading) {
     return <Spin />;
   }
@@ -156,7 +157,9 @@ const StateSetup = () => {
 
       <section className={styles.card}>
         <div className={styles.inside}>
-          <p>Showing 1-{filteredData?.length} of {stateData?.length}</p>
+          <p>
+            Showing 1-{filteredData?.length} of {stateData?.length}
+          </p>
 
           <div>
             {!showSearch && (

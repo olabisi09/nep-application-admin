@@ -1,10 +1,12 @@
-import { App } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
+import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
 import { Button, Input, Select } from "../../../custom";
-import { createProgramType } from "./request";
 import { StatusOptions } from "../../../requests";
+
+import { createProgramType } from "./request";
 
 interface Props {
   handleClose: () => void;
@@ -26,6 +28,7 @@ const AddProgramType = ({ handleClose }: Props) => {
     values: FormikValues,
     resetForm: () => void
   ) => {
+    // eslint-disable-next-line no-undef
     const payload: CreateProgramTypePayload = {
       name: values.name,
       activeStatus: values.activeStatus === "Active"

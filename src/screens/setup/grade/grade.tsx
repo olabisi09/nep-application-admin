@@ -1,25 +1,30 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
+/* eslint-disable no-undef */
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import DeleteModalContent from "../../deleteModal/deleteModal";
-import { deleteGrade, getGrades } from "./request";
-import AddGrade from "./addGrade";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
+import Button from "../../../custom/button/button";
+import SearchInput from "../../../custom/searchInput/searchInput";
 import { usePagination } from "../../../hooks/usePagination";
 import { useSearchTerms } from "../../../hooks/useSearchTerms";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
+import AddGrade from "./addGrade";
+import { deleteGrade, getGrades } from "./request";
+
 
 const GradeSetUp = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -44,16 +49,18 @@ const GradeSetUp = () => {
     setOpenDelete(true);
   };
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-all-grade"],
     queryFn: () => getGrades({ pageNumber: currentPage, pageSize: 10 }),
   });
 
   const gradeData = data?.data as Grade[];
 
-  const filteredData = gradeData?.filter((item) =>
-    item?.grade?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = gradeData
+    ?.filter((item) =>
+      item?.grade?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   const items = (record: Grade): MenuProps["items"] => [
     {
@@ -108,9 +115,12 @@ const GradeSetUp = () => {
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({
             queryKey: ["get-subject"],
           });
+
+          refetch();
           setOpenDelete(false);
         },
       });

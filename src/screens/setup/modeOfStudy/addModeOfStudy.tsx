@@ -1,11 +1,15 @@
-import { App } from "antd";
-import Input from "../../../custom/input/input";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateModeOfStudy, StatusOptions } from "../../../requests";
-import * as Yup from "yup";
+import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
-import Select from "../../../custom/select/select";
+import * as Yup from "yup";
+
 import Button from "../../../custom/button/button";
+import Input from "../../../custom/input/input";
+import Select from "../../../custom/select/select";
+import { StatusOptions, createOrUpdateModeOfStudy } from "../../../requests";
+
+
 
 const AddModeOfStudy = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
@@ -25,7 +29,7 @@ const AddModeOfStudy = ({ handleClose }: { handleClose: () => void }) => {
   ) => {
     const payload: Partial<ModeOfStudy> = {
       name: values?.name,
-      activeStatus: values?.status === "Active",
+      activeStatus: values?.activeStatus === "true",
     };
 
     try {
@@ -35,9 +39,11 @@ const AddModeOfStudy = ({ handleClose }: { handleClose: () => void }) => {
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({ queryKey: ["get-mode-of-study"] });
-          handleClose();
+
           resetForm();
+          handleClose();
         },
       });
     } catch (error: any) {
@@ -63,6 +69,7 @@ const AddModeOfStudy = ({ handleClose }: { handleClose: () => void }) => {
           label="Mode of Study Name"
           placeholder="Input Mode of Study Name"
         />
+
         <Select
           name="activeStatus"
           placeholder="Select Status"
@@ -77,6 +84,7 @@ const AddModeOfStudy = ({ handleClose }: { handleClose: () => void }) => {
             </>
           }
         />
+
         <div className="btn-group">
           <Button onClick={handleClose} variant="text" text="Cancel" />
           <Button
@@ -142,15 +150,14 @@ const EditModeOfStudy = ({
 
   return (
     <Formik
-      initialValues={{ name: modeOfStudy?.name, activeStatus: initialStatus }}
+      initialValues={{ name: modeOfStudy?.name, activeStatus: String(initialStatus) }}
       onSubmit={(values, { resetForm }) => {
         handleEditModeOfStudy(values, resetForm);
       }}
       validationSchema={validate}
       enableReinitialize
     >
-      {({ values }) => {
-        console.log(values.activeStatus);
+      {() => {
         return (
           <Form className="fields">
             <Input

@@ -1,11 +1,18 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Select from "../../../custom/select/select";
-import { createOrUpdateAccreditation, getAllPrograms } from "../../../requests";
-import { Form, Formik, FormikValues } from "formik";
+/* eslint-disable no-undef */
 import { FC } from "react";
-import { Button, Editor } from "../../../custom";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { App, Spin } from "antd";
+import { Form, Formik, FormikValues } from "formik";
 import * as Yup from "yup";
+
+import { Button, Editor } from "../../../custom";
+import Select from "../../../custom/select/select";
+import {
+  StatusOptions,
+  createOrUpdateAccreditation,
+  getAllPrograms,
+} from "../../../requests";
 import { validator } from "../../../utils/validator";
 
 interface ComponentProps {
@@ -17,25 +24,15 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
 
-  console.log(record);
-
   const createUpdateAccreditationMutation = useMutation({
     mutationFn: createOrUpdateAccreditation,
     mutationKey: ["create-update-accreditation"],
   });
 
-  const StatusOptions = [
-    {
-      value: true,
-      label: "Active",
-    },
-    {
-      value: false,
-      label: "Inactive",
-    },
-  ];
-
-  const updateAccreditationHandler = async (values: FormikValues) => {
+  const updateAccreditationHandler = async (
+    values: FormikValues,
+    resetForm: () => void
+  ) => {
     const payload: Partial<AccreditationType> = {
       id: record?.id || 0,
       description: values.description,
@@ -50,9 +47,12 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({
             queryKey: ["get-all-accreditation"],
           });
+
+          resetForm();
           handleClose();
         },
       });
@@ -99,13 +99,10 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
       initialValues={{
         programName: record?.readMoreId?.toString() ?? "",
         description: record?.description || "",
-        status:
-          record?.activeStatus !== undefined
-            ? String(record?.activeStatus)
-            : "", // Initialize with string
+        status: String(record?.activeStatus ?? ''),
       }}
-      onSubmit={(values) => {
-        updateAccreditationHandler(values);
+      onSubmit={(values, { resetForm }) => {
+        updateAccreditationHandler(values, resetForm);
       }}
       validationSchema={validationSchema}
       enableReinitialize
@@ -130,6 +127,7 @@ const AddAccreditation: FC<ComponentProps> = ({ record, handleClose }) => {
                 }}
                 initialData={record?.description ?? ""}
               />
+
               <Select
                 name="status"
                 placeholder="Select Status"

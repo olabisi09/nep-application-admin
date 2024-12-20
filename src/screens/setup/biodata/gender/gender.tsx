@@ -1,45 +1,34 @@
-import { ReactComponent as Add } from "../../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../../assets/search.svg";
-import { ReactComponent as Filter } from "../../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../../styles.module.scss";
-import Button from "../../../../custom/button/button";
+/* eslint-disable no-undef */
 import { useState } from "react";
-import SearchInput from "../../../../custom/searchInput/searchInput";
-import AddGender from "./addGender";
-import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  createOrUpdateGender,
-  deleteGender,
-  getGender,
-} from "../../../../requests";
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
+
+import { ReactComponent as Add } from "../../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../../assets/ellipsis.svg";
+import Button from "../../../../custom/button/button";
+import { deleteGender, getGender } from "../../../../requests";
 import DeleteModalContent from "../../../deleteModal/deleteModal";
+import styles from "../../styles.module.scss";
+
+import AddGender from "./addGender";
 
 const GenderSetup = () => {
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const { notification } = App.useApp();
   const [indexData, setIndexData] = useState({} as Gender);
-  const queryClient = useQueryClient();
 
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["get-gender"],
     queryFn: getGender,
   });
@@ -53,22 +42,22 @@ const GenderSetup = () => {
     setIndexData(data);
     setOpenDelete(true);
   };
-  const DeleteGenderMutation = useMutation({
+
+  const deleteGenderMutation = useMutation({
     mutationFn: deleteGender,
     mutationKey: ["delete-gender"],
   });
 
-  const DeleteGenderHandler = async () => {
+  const deleteGenderHandler = async () => {
     try {
-      await DeleteGenderMutation.mutateAsync(indexData.id, {
+      await deleteGenderMutation.mutateAsync(indexData.id, {
         onSuccess: (data) => {
           notification.success({
             message: "Success",
-            description: "Deleted Successfully" || data?.message,
+            description: data?.message || "Deleted Successfully",
           });
-          queryClient.refetchQueries({
-            queryKey: ["get-gender"],
-          });
+
+          refetch();
           setOpenDelete(false);
         },
       });
@@ -101,11 +90,6 @@ const GenderSetup = () => {
 
   const columns = [
     {
-      key: "id",
-      title: "ID",
-      dataIndex: "id",
-    },
-    {
       key: "genderName",
       title: "Gender",
       dataIndex: "genderName",
@@ -127,11 +111,13 @@ const GenderSetup = () => {
     },
   ];
 
-  const GenderData = data?.data as Gender[];
+  const genderData =
+    data?.data?.map((item) => ({ ...item, key: item?.id })) ?? [];
 
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -147,30 +133,8 @@ const GenderSetup = () => {
         />
       </section>
       <section className={styles.card}>
-        <div className={styles.inside}>
-          <p>Showing 1-11 of 88</p>
-          <div>
-            {!showSearch && (
-              <span>
-                <Search
-                  onClick={() => setShowSearch((showSearch) => !showSearch)}
-                />
-              </span>
-            )}
-            {showSearch && (
-              <SearchInput value={searchTerm} onChange={handleSearch} />
-            )}
-            {!showAllFilter && (
-              <Filter
-                onClick={() =>
-                  setShowAllFilter((showAllFilter) => !showAllFilter)
-                }
-              />
-            )}
-          </div>
-        </div>
         <Table
-          dataSource={GenderData}
+          dataSource={genderData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
         />
@@ -195,6 +159,7 @@ const GenderSetup = () => {
       >
         <AddGender handleClose={() => setOpenEdit(false)} data={indexData} />
       </Modal>
+
       <Modal
         open={openDelete}
         onCancel={() => setOpenDelete(false)}
@@ -203,9 +168,9 @@ const GenderSetup = () => {
         footer={null}
       >
         <DeleteModalContent
-          isLoading={DeleteGenderMutation?.isPending}
+          isLoading={deleteGenderMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteGenderHandler}
+          handleSubmit={deleteGenderHandler}
           title={indexData?.genderName}
         />
       </Modal>

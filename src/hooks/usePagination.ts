@@ -1,5 +1,6 @@
-import { PaginationProps } from "antd";
 import { useState } from "react";
+
+import { PaginationProps } from "antd";
 
 export const usePagination = () => {
   const [currentPage, setCurrentPage] = useState(1);

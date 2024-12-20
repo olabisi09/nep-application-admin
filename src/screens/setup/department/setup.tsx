@@ -1,16 +1,17 @@
-import Input from "../../../custom/input/input";
-import Button from "../../../custom/button/button";
-import { Form, Formik, FormikValues } from "formik";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
+import { Select } from "../../../custom";
+import Button from "../../../custom/button/button";
+import Input from "../../../custom/input/input";
 import {
-  createProgram,
   StatusOptions,
-  updateDepartment,
+  createProgram,
   updateProgram,
 } from "../../../requests";
-import { App } from "antd";
-import * as Yup from "yup";
-import { Select } from "../../../custom";
 
 const validate = Yup.object().shape({
   name: Yup.string().required("Department name is required"),
@@ -32,7 +33,7 @@ const CreateDepartment = ({
   const facultyOptions =
     faculties &&
     faculties.map((item) => (
-      <option value={item.categoryCode}>{item.name}</option>
+      <option key={item?.id} value={item.categoryCode}>{item.name}</option>
     ));
 
   const handleAddDepartment = async (
@@ -193,7 +194,7 @@ const EditDepartment = ({
         name: item?.name,
         code: item?.code,
         faculty: item?.categoryCode,
-        activeStatus: initialStatus,
+        activeStatus: String(initialStatus),
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditDepartment(values, resetForm);

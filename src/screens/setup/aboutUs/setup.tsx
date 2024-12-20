@@ -1,15 +1,18 @@
-import { useState } from "react";
+/* eslint-disable no-undef */
+import React, { useState } from "react";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
+import { ReactComponent as Image } from "../../../assets/image.svg";
+import { Select } from "../../../custom";
+import Button from "../../../custom/button/button";
+import Editor from "../../../custom/editor/editor";
 import Input from "../../../custom/input/input";
 import Upload from "../../../custom/upload/upload";
-import { ReactComponent as Image } from "../../../assets/image.svg";
-import Button from "../../../custom/button/button";
-import { Form, Formik, FormikValues } from "formik";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createOrUpdateAboutUs } from "../../../requests";
-import { App } from "antd";
-import * as Yup from "yup";
-import Editor from "../../../custom/editor/editor";
-import { Select } from "../../../custom";
 
 const CreateAboutUs = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();

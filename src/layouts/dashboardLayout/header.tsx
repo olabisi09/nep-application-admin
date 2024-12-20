@@ -1,6 +1,7 @@
-import styles from "./dashboardLayout.module.scss";
-import { ReactComponent as Menu } from "../../assets/menu.svg";
 import { ReactComponent as Search } from "../../assets/magnifier.svg";
+import { ReactComponent as Menu } from "../../assets/menu.svg";
+
+import styles from "./dashboardLayout.module.scss";
 
 const Header = ({ handleOpenSidebar }: { handleOpenSidebar: () => void }) => {
   return (

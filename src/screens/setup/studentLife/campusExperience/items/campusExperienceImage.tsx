@@ -1,26 +1,18 @@
-import {
-  Card,
-  Dropdown,
-  MenuProps,
-  Modal,
-  Table,
-  Button as AntButton,
-  Spin,
-  App,
-} from "antd";
-import { ReactComponent as Plus } from "../../../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../../../assets/ellipsis.svg";
-import { Button } from "../../../../../custom";
-import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  deleteCampusExperienceImage,
-  getCampusExperienceImagesByCampusExperienceId,
-} from "../../../../../requests";
-import { ColumnsType } from "antd/es/table";
-import { useParams } from "react-router-dom";
-import CampusExperienceImageForm from "./campusExperienceImageForm";
-import DeleteModalContent from "../../../../deleteModal/deleteModal";
+/* eslint-disable no-undef */
+import { useState } from 'react';
+
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Button as AntButton, App, Card, Dropdown, MenuProps, Modal, Spin, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import { useParams } from 'react-router-dom';
+
+import { ReactComponent as Plus } from '../../../../../assets/add.svg';
+import { ReactComponent as Ellipsis } from '../../../../../assets/ellipsis.svg';
+import { Button } from '../../../../../custom';
+import { deleteCampusExperienceImage, getCampusExperienceImagesByCampusExperienceId } from '../../../../../requests';
+import DeleteModalContent from '../../../../deleteModal/deleteModal';
+
+import CampusExperienceImageForm from './campusExperienceImageForm';
 
 const CampusExperienceImages = () => {
   const { notification } = App.useApp();
@@ -28,78 +20,67 @@ const CampusExperienceImages = () => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [campusExperience, setCampusExperience] =
-    useState<CampusExperienceImage>({} as CampusExperienceImage);
+  const [campusExperience, setCampusExperience] = useState<CampusExperienceImage>({} as CampusExperienceImage);
 
   const deleteCampusExperienceImageMutation = useMutation({
     mutationFn: deleteCampusExperienceImage,
   });
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-fitness-image", id],
+    queryKey: ['get-fitness-image', id],
     queryFn: () => getCampusExperienceImagesByCampusExperienceId(id!),
     enabled: !!id,
   });
 
   const deleteCampusExperienceImageHandler = async () => {
     try {
-      await deleteCampusExperienceImageMutation.mutateAsync(
-        campusExperience.id,
-        {
-          onSuccess: (data) => {
-            notification.success({
-              message: "Success",
-              description: data?.message,
-            });
-            refetch();
-            setOpenDelete((prevState) => !prevState);
-          },
-        }
-      );
+      await deleteCampusExperienceImageMutation.mutateAsync(campusExperience.id, {
+        onSuccess: (data) => {
+          notification.success({
+            message: 'Success',
+            description: data?.message,
+          });
+          refetch();
+          setOpenDelete((prevState) => !prevState);
+        },
+      });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
 
   const columns: ColumnsType<CampusExperienceImage> = [
-    // {
-    //   key: "id",
-    //   title: "ID",
-    //   dataIndex: "id",
-    // },
     {
-      key: "pictureUrl",
-      title: "Picture",
-      dataIndex: "imageUrl",
-      render: (_, { imageUrl }) => (
-        <img className="table-img" src={imageUrl} alt="" />
-      ),
+      key: 'pictureUrl',
+      title: 'Picture',
+      dataIndex: 'imageUrl',
+      render: (_, { imageUrl }) => <img className="table-img" src={imageUrl} alt="" />,
     },
     {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+      key: 'status',
+      title: 'Status',
+      dataIndex: 'activeStatus',
+      render: (_, { activeStatus }) => (activeStatus ? 'Active' : 'Inactive'),
     },
     {
-      key: "action",
-      title: "",
+      key: 'action',
+      title: '',
       render: (_, record) => {
-        const items: MenuProps["items"] = [
+        const items: MenuProps['items'] = [
           {
-            key: "1",
-            label: "Edit",
+            key: '1',
+            label: 'Edit',
             onClick: () => {
               setCampusExperience(record);
               setOpenEdit(true);
             },
           },
           {
-            key: "2",
-            label: "Delete",
+            key: '2',
+            label: 'Delete',
             onClick: () => {
               setCampusExperience(record);
               setOpenDelete((prevState) => !prevState);
@@ -108,7 +89,7 @@ const CampusExperienceImages = () => {
         ];
 
         return (
-          <Dropdown menu={{ items }} trigger={["click"]}>
+          <Dropdown menu={{ items }} trigger={['click']}>
             <AntButton type="text" icon={<Ellipsis />} />
           </Dropdown>
         );
@@ -135,11 +116,7 @@ const CampusExperienceImages = () => {
     <div>
       <section className="space-between">
         <h3>Student Life: Campus Experience Images Setup</h3>
-        <Button
-          onClick={handleOpenModal}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+        <Button onClick={handleOpenModal} iconBefore={<Plus />} text="Setup" />
       </section>
 
       <br />
@@ -148,23 +125,14 @@ const CampusExperienceImages = () => {
         <Table
           dataSource={campusExperienceImageData}
           columns={columns}
-          pagination={{ position: ["bottomCenter"] }}
+          pagination={{ position: ['bottomCenter'] }}
           rowKey={(record) => record.id}
           scroll={{ x: true }}
         />
       </Card>
 
-      <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
-        centered
-        title="Create Campus Experience Image"
-        footer={null}
-      >
-        <CampusExperienceImageForm
-          item={campusExperience}
-          handleClose={() => setOpen(false)}
-        />
+      <Modal open={open} onCancel={() => setOpen(false)} centered title="Create Campus Experience Image" footer={null}>
+        <CampusExperienceImageForm item={campusExperience} handleClose={() => setOpen(false)} />
       </Modal>
 
       <Modal
@@ -174,10 +142,7 @@ const CampusExperienceImages = () => {
         title="Edit Campus Experience Image"
         footer={null}
       >
-        <CampusExperienceImageForm
-          item={campusExperience}
-          handleClose={() => setOpenEdit(false)}
-        />
+        <CampusExperienceImageForm item={campusExperience} handleClose={() => setOpenEdit(false)} />
       </Modal>
 
       <Modal

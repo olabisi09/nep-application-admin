@@ -1,12 +1,15 @@
-import Input from "../../../custom/input/input";
-import Button from "../../../custom/button/button";
-import { Form, Formik, FormikValues } from "formik";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { App } from "antd";
-import * as Yup from "yup";
-import { Select } from "../../../custom";
-import { createUpdateSchoolID } from "../schoolIDConfig/request";
-import { validator } from "../../../utils/validator";
+/* eslint-disable no-undef */
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { App } from 'antd';
+import { Form, Formik, FormikValues } from 'formik';
+import * as Yup from 'yup';
+
+import { Select } from '../../../custom';
+import Button from '../../../custom/button/button';
+import Input from '../../../custom/input/input';
+import { StatusOptions } from '../../../requests';
+import { validator } from '../../../utils/validator';
+import { createUpdateSchoolID } from '../schoolIDConfig/request';
 
 const CreateSchoolID = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
@@ -19,32 +22,28 @@ const CreateSchoolID = ({ handleClose }: { handleClose: () => void }) => {
     codeValue: validator.codeValue,
   });
 
-  const handleAddSchoolID = async (
-    values: FormikValues,
-    resetForm: () => void,
-    handleClose: () => void
-  ) => {
+  const handleAddSchoolID = async (values: FormikValues, resetForm: () => void, handleClose: () => void) => {
     const payload: Payload = {
       codeName: values.codeName,
       value: values.codeValue,
-      activeStatus: values.status === "Active" ? true : false,
+      activeStatus: values.status === 'Active' ? true : false,
     };
 
     try {
       await addSchoolIDMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-school-id"] });
+          queryClient.refetchQueries({ queryKey: ['get-school-id'] });
           handleClose();
           resetForm();
         },
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -60,9 +59,9 @@ const CreateSchoolID = ({ handleClose }: { handleClose: () => void }) => {
   return (
     <Formik
       initialValues={{
-        codeName: "",
-        codeValue: "",
-        status: "",
+        codeName: '',
+        codeValue: '',
+        status: '',
       }}
       onSubmit={(values, { resetForm }) => {
         handleAddSchoolID(values, resetForm, handleClose);
@@ -71,31 +70,13 @@ const CreateSchoolID = ({ handleClose }: { handleClose: () => void }) => {
     >
       {() => (
         <Form className="fields">
-          <Input
-            name="codeName"
-            label="Code Name"
-            placeholder="Input code name"
-          />
-          <Input
-            name="codeValue"
-            label="Code Value"
-            placeholder="Input code value"
-          />
+          <Input name="codeName" label="Code Name" placeholder="Input code name" />
+          <Input name="codeValue" label="Code Value" placeholder="Input code value" />
 
-          <Select
-            name="status"
-            label="Status"
-            placeholder="Select status"
-            options={statusOptions}
-          />
+          <Select name="status" label="Status" placeholder="Select status" options={statusOptions} />
 
           <div className="btn-group">
-            <Button
-              onClick={handleClose}
-              type="button"
-              variant="text"
-              text="Cancel"
-            />
+            <Button onClick={handleClose} type="button" variant="text" text="Cancel" />
             <Button
               text="Create"
               type="submit"
@@ -109,13 +90,7 @@ const CreateSchoolID = ({ handleClose }: { handleClose: () => void }) => {
   );
 };
 
-const EditSchoolID = ({
-  item,
-  handleClose,
-}: {
-  item: SchoolID;
-  handleClose: () => void;
-}) => {
+const EditSchoolID = ({ item, handleClose }: { item: SchoolID; handleClose: () => void }) => {
   const queryClient = useQueryClient();
   const { notification } = App.useApp();
 
@@ -123,52 +98,44 @@ const EditSchoolID = ({
     mutationFn: createUpdateSchoolID,
   });
 
-  const handleEditSchoolID = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
+  const handleEditSchoolID = async (values: FormikValues, resetForm: () => void) => {
     let payload: Payload = {
       id: item.id,
       codeName: values.codeName,
       value: values.codeValue,
-      activeStatus: values.status === "Active" ? true : false,
+      activeStatus: values.status === 'true',
     };
 
     try {
       await editSchoolIDMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-school-id"] });
+
+          queryClient.refetchQueries({ queryKey: ['get-school-id'] });
+
           handleClose();
           resetForm();
         },
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
 
-  const statusOptions = (
-    <>
-      <option value="Active">Active</option>
-      <option value="Inactive">Inactive</option>
-    </>
-  );
-
-  const initialStatus = item?.activeStatus === true ? "Active" : "Inactive";
+  const initialStatus = item?.activeStatus ?? '';
 
   return (
     <Formik
       initialValues={{
         codeName: item?.codeName,
         codeValue: item?.value,
-        status: initialStatus,
+        status: String(initialStatus),
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditSchoolID(values, resetForm);
@@ -177,31 +144,26 @@ const EditSchoolID = ({
     >
       {() => (
         <Form className="fields">
-          <Input
-            name="codeName"
-            label="Code Name"
-            placeholder="Input code name"
-          />
-          <Input
-            name="codeValue"
-            label="Code Value"
-            placeholder="Input code value"
-          />
+          <Input name="codeName" label="Code Name" placeholder="Input code name" />
+          <Input name="codeValue" label="Code Value" placeholder="Input code value" />
 
           <Select
             name="status"
+            placeholder="Select Status"
             label="Status"
-            placeholder="Select status"
-            options={statusOptions}
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
           />
 
           <div className="btn-group">
-            <Button
-              onClick={handleClose}
-              type="button"
-              variant="text"
-              text="Cancel"
-            />
+            <Button onClick={handleClose} type="button" variant="text" text="Cancel" />
             <Button
               type="submit"
               text="Update"

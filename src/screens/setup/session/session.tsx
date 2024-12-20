@@ -1,31 +1,27 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
+/* eslint-disable no-undef */
+import { useState } from 'react';
+
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Button as AntButton, App, Dropdown, MenuProps, Modal, Spin, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+
+import { ReactComponent as Add } from '../../../assets/add.svg';
+import { ReactComponent as Ellipsis } from '../../../assets/ellipsis.svg';
+import { ReactComponent as Search } from '../../../assets/search.svg';
 // import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
-import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import { EditSession } from "./AddSession";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { ColumnsType } from "antd/es/table";
-import AddSession from "./AddSession";
-import { deleteSession, getAllAcademicSession } from "../../../requests";
-import DeleteModalContent from "../../deleteModal/deleteModal";
-import { usePagination } from "../../../hooks/usePagination";
+import Button from '../../../custom/button/button';
+import SearchInput from '../../../custom/searchInput/searchInput';
+import { usePagination } from '../../../hooks/usePagination';
+import { deleteSession, getAllAcademicSession } from '../../../requests';
+import DeleteModalContent from '../../deleteModal/deleteModal';
+import styles from '../styles.module.scss';
+
+import { EditSession } from './AddSession';
+import AddSession from './AddSession';
 
 const Session = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   // const [showAllFilter, setShowAllFilter] = useState(false);
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -37,7 +33,7 @@ const Session = () => {
   const { currentPage, onChange } = usePagination();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["getAll-sessions"],
+    queryKey: ['getAll-sessions'],
     queryFn: () => getAllAcademicSession(currentPage, 10),
   });
 
@@ -57,7 +53,7 @@ const Session = () => {
       await deleteSessionMutation.mutateAsync(session?.id, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
           refetch();
@@ -66,7 +62,7 @@ const Session = () => {
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -74,32 +70,32 @@ const Session = () => {
 
   const columns: ColumnsType<Session> = [
     {
-      key: "name",
-      title: "Session",
-      dataIndex: "name",
+      key: 'name',
+      title: 'Session',
+      dataIndex: 'name',
     },
     {
-      key: "status",
-      title: "Status",
-      dataIndex: "activeStatus",
-      render: (_, { activeStatus }) => (activeStatus ? "Active" : "Inactive"),
+      key: 'status',
+      title: 'Status',
+      dataIndex: 'activeStatus',
+      render: (_, { activeStatus }) => (activeStatus ? 'Active' : 'Inactive'),
     },
     {
-      key: "action",
-      title: "",
+      key: 'action',
+      title: '',
       render: (_, record) => {
-        const items: MenuProps["items"] = [
+        const items: MenuProps['items'] = [
           {
-            key: "1",
-            label: "Edit",
+            key: '1',
+            label: 'Edit',
             onClick: () => {
               setSession(record);
               setOpenEdit(true);
             },
           },
           {
-            key: "2",
-            label: "Delete",
+            key: '2',
+            label: 'Delete',
             onClick: async () => {
               handleDelete(record);
             },
@@ -107,7 +103,7 @@ const Session = () => {
         ];
 
         return (
-          <Dropdown menu={{ items }} trigger={["click"]}>
+          <Dropdown menu={{ items }} trigger={['click']}>
             <AntButton type="text" icon={<Ellipsis />} />
           </Dropdown>
         );
@@ -117,9 +113,7 @@ const Session = () => {
 
   const sessionData = data?.data as Session[];
 
-  const filteredData = sessionData?.filter((item) =>
-    item?.name?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = sessionData?.filter((item) => item?.name?.toLowerCase()?.includes(searchTerm.toLowerCase()));
 
   const handleShowModal = () => {
     setOpen((prevState) => !prevState);
@@ -149,15 +143,11 @@ const Session = () => {
           <div>
             {!showSearch && (
               <span>
-                <Search
-                  onClick={() => setShowSearch((showSearch) => !showSearch)}
-                />
+                <Search onClick={() => setShowSearch((showSearch) => !showSearch)} />
               </span>
             )}
 
-            {showSearch && (
-              <SearchInput value={searchTerm} onChange={handleSearch} />
-            )}
+            {showSearch && <SearchInput value={searchTerm} onChange={handleSearch} />}
 
             {/* {!showAllFilter && (
               <Filter
@@ -173,7 +163,7 @@ const Session = () => {
           dataSource={filteredData}
           columns={columns}
           pagination={{
-            position: ["bottomCenter"],
+            position: ['bottomCenter'],
             current: currentPage,
             total: data?.totalSize,
             onChange: onChange,
@@ -184,23 +174,11 @@ const Session = () => {
         />
       </section>
 
-      <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
-        centered
-        title="Session Setup "
-        footer={null}
-      >
+      <Modal open={open} onCancel={() => setOpen(false)} centered title="Session Setup " footer={null}>
         <AddSession handleClose={() => setOpen(false)} />
       </Modal>
 
-      <Modal
-        open={openEdit}
-        onCancel={() => setOpenEdit(false)}
-        centered
-        title="Edit Session Setup"
-        footer={null}
-      >
+      <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Edit Session Setup" footer={null}>
         <EditSession item={session} handleClose={() => setOpenEdit(false)} />
       </Modal>
 

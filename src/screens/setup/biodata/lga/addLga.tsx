@@ -1,15 +1,17 @@
-import Input from "../../../../custom/input/input";
+/* eslint-disable no-undef */
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
 import Button from "../../../../custom/button/button";
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import Input from "../../../../custom/input/input";
+import Select from "../../../../custom/select/select";
 import {
   StatusOptions,
   createOrUpdateLGA,
   getState,
 } from "../../../../requests";
-import * as Yup from "yup";
-import { App } from "antd";
-import Select from "../../../../custom/select/select";
 
 interface Props {
   data?: LGA;
@@ -43,11 +45,13 @@ const AddLga = ({ handleClose, data }: Props) => {
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({
             queryKey: ["get-lga"],
           });
-          handleClose();
+
           resetForm();
+          handleClose();
         },
       });
     } catch (error: any) {
@@ -86,13 +90,12 @@ const AddLga = ({ handleClose, data }: Props) => {
       initialValues={{
         lgaName: data?.lgaName || "",
         stateName: data?.stateId || "",
-        status:
-          data?.activeStatus !== undefined ? String(data?.activeStatus) : "",
+        status: String(data?.activeStatus ?? ""),
       }}
       onSubmit={(values, { resetForm }) => {
         createLgaHandler(values, resetForm);
       }}
-      enableReinitialize={true}
+      enableReinitialize
       validationSchema={validationSchema}
     >
       {({ handleSubmit, setFieldValue }) => {
@@ -127,7 +130,7 @@ const AddLga = ({ handleClose, data }: Props) => {
               }
               onChange={(e) => setFieldValue("status", e.target.value)}
             />
-            
+
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button

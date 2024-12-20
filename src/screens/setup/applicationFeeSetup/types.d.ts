@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 interface ProgramTypeResponse extends GenericResponse {
   data: ProgramType[];
 }

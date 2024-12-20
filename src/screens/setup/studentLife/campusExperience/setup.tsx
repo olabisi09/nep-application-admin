@@ -1,8 +1,10 @@
-import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Input, Select } from "../../../../custom";
-import { App } from "antd";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateCampusExperience } from "../../../../requests";
+/* eslint-disable no-undef */
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { App } from 'antd';
+import { Form, Formik, FormikValues } from 'formik';
+
+import { Button, Editor, Input, Select } from '../../../../custom';
+import { StatusOptions, createOrUpdateCampusExperience } from '../../../../requests';
 
 interface SetupInit {
   title: string;
@@ -21,20 +23,17 @@ export const CreateCampusExperience = ({
 }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
-  
+
   const addCampusExperienceMutation = useMutation({
     mutationFn: createOrUpdateCampusExperience,
   });
 
-  const handleAddCampusExperience = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
+  const handleAddCampusExperience = async (values: FormikValues, resetForm: () => void) => {
     const payload = {
       title: values.title,
       description: values.description,
       studentLifeId: studentLifeId,
-      activeStatus: values.status === "Active",
+      activeStatus: values.status === 'true',
       isDeleted: false,
     };
 
@@ -42,68 +41,66 @@ export const CreateCampusExperience = ({
       await addCampusExperienceMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-campus-experience"] });
+          queryClient.refetchQueries({ queryKey: ['get-campus-experience'] });
           handleClose();
           resetForm();
         },
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
 
-  const statusOptions = (
-    <>
-      <option>Active</option>
-      <option>Inative</option>
-    </>
-  );
-
   return (
     <Formik
       initialValues={
         {
-          title: "",
-          name: "",
-          description: "",
+          title: '',
+          name: '',
+          description: '',
           image: null,
-          status: "",
+          status: '',
         } as SetupInit
       }
-      onSubmit={(values, { resetForm }) =>
-        handleAddCampusExperience(values, resetForm)
-      }
+      onSubmit={(values, { resetForm }) => handleAddCampusExperience(values, resetForm)}
     >
-      {({ values, setFieldValue }) => (
+      {({ setFieldValue }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />
+
           <Editor
             name="description"
             label="Description"
             onChange={(_, editor) => {
               const data = editor.getData();
-              setFieldValue("description", data);
+              setFieldValue('description', data);
             }}
           />
+
           <Select
             name="status"
+            placeholder="Select Status"
             label="Status"
-            placeholder="Select status"
-            options={statusOptions}
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
           />
+
           <div className="btn-group">
-            <Button
-              type="button"
-              onClick={handleClose}
-              variant="text"
-              text="Cancel"
-            />
+            <Button type="button" onClick={handleClose} variant="text" text="Cancel" />
+
             <Button
               type="submit"
               isLoading={addCampusExperienceMutation.isPending}
@@ -117,29 +114,21 @@ export const CreateCampusExperience = ({
   );
 };
 
-export const EditCampusExperience = ({
-  item,
-  handleClose,
-}: {
-  item: ItemByStudentLife;
-  handleClose: () => void;
-}) => {
+export const EditCampusExperience = ({ item, handleClose }: { item: ItemByStudentLife; handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
+  
   const editCampusExperienceMutation = useMutation({
     mutationFn: createOrUpdateCampusExperience,
   });
 
-  const handleEditCampusExperience = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
+  const handleEditCampusExperience = async (values: FormikValues, resetForm: () => void) => {
     const payload = {
       id: item?.id,
       title: values.title,
       description: values.description,
       studentLifeId: item?.studentLifeId,
-      activeStatus: values.status === "Active",
+      activeStatus: values.status === 'true',
       isDeleted: false,
     };
 
@@ -147,28 +136,21 @@ export const EditCampusExperience = ({
       await editCampusExperienceMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-campus-experience"] });
+          queryClient.refetchQueries({ queryKey: ['get-campus-experience'] });
           handleClose();
           resetForm();
         },
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
-
-  const statusOptions = (
-    <>
-      <option>Active</option>
-      <option>Inactive</option>
-    </>
-  );
 
   return (
     <Formik
@@ -177,23 +159,22 @@ export const EditCampusExperience = ({
           title: item?.title,
           description: item?.description,
           image: null,
-          status: item?.activeStatus ? "Active" : "Inactive",
+          status: String(item?.activeStatus),
         } as SetupInit
       }
       enableReinitialize
-      onSubmit={(values, { resetForm }) =>
-        handleEditCampusExperience(values, resetForm)
-      }
+      onSubmit={(values, { resetForm }) => handleEditCampusExperience(values, resetForm)}
     >
-      {({ values, setFieldValue }) => (
+      {({ setFieldValue }) => (
         <Form className="fields">
           <Input name="title" label="Title" placeholder="Input title" />
+
           <Editor
             name="description"
             label="Description"
             onChange={(_, editor) => {
               const data = editor.getData();
-              setFieldValue("description", data);
+              setFieldValue('description', data);
             }}
             initialData={item?.description}
           />
@@ -219,19 +200,24 @@ export const EditCampusExperience = ({
               }}
             />
           )} */}
+
           <Select
             name="status"
+            placeholder="Select Status"
             label="Status"
-            placeholder="Select status"
-            options={statusOptions}
+            options={
+              <>
+                {StatusOptions.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            }
           />
+
           <div className="btn-group">
-            <Button
-              type="button"
-              onClick={handleClose}
-              variant="text"
-              text="Cancel"
-            />
+            <Button type="button" onClick={handleClose} variant="text" text="Cancel" />
             <Button
               type="submit"
               isLoading={editCampusExperienceMutation.isPending}

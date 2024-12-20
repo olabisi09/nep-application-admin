@@ -1,11 +1,12 @@
-import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Input, Select, Upload } from "../../../../../custom";
-import { ReactComponent as Image } from "../../../../../assets/image.svg";
-import { App } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateStudentActivityItem } from "../../../../../requests";
-import { object } from "yup";
+import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
 import { useParams } from "react-router-dom";
+import { object } from "yup";
+
+import { ReactComponent as Image } from "../../../../../assets/image.svg";
+import { Button, Editor, Input, Select, Upload } from "../../../../../custom";
+import { createOrUpdateStudentActivityItem } from "../../../../../requests";
 import { validator } from "../../../../../utils/validator";
 
 interface SetupInit {
@@ -20,6 +21,7 @@ const StudentActivityItemForm = ({
   item,
 }: {
   handleClose: () => void;
+  // eslint-disable-next-line no-undef
   item: Partial<StudentActivity>;
 }) => {
   const { id } = useParams();
@@ -88,6 +90,7 @@ const StudentActivityItemForm = ({
     : item?.activeStatus === false
     ? "Inactive"
     : "";
+    
   const hasRecords = Object.keys(item).length > 0;
 
   return (

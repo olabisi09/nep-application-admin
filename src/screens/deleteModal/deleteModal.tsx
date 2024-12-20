@@ -1,4 +1,5 @@
 import Button from "../../custom/button/button";
+
 import styles from "./styles.module.scss";
 
 interface Props {
@@ -13,7 +14,6 @@ interface Props {
 
 const DeleteModalContent = ({
   handleCloseModal,
-  data,
   handleSubmit,
   isLoading,
   title,

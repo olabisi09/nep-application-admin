@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 interface Response {
   statusCode: number;
   totalSize: number;

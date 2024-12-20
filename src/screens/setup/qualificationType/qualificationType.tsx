@@ -1,23 +1,27 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
+/* eslint-disable no-undef */
 import { useState } from "react";
+
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import Button from "../../../custom/button/button";
 import {
   deleteQualificationType,
   getQualificationType,
 } from "../../../requests";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
 import AddQualificationType from "./addQualificationType";
 
 const Qualification = () => {
@@ -44,7 +48,10 @@ const Qualification = () => {
     queryFn: getQualificationType,
   });
 
-  const QualificationTypeData = data?.data as QualificationType[];
+  const qualificationTypeData = data?.data?.map((item) => ({
+    ...item,
+    key: item?.id,
+  })) ?? [];
 
   const items = (record: QualificationType): MenuProps["items"] => [
     {
@@ -160,7 +167,7 @@ const Qualification = () => {
         </div> */}
 
         <Table
-          dataSource={QualificationTypeData}
+          dataSource={qualificationTypeData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
           //rowKey={(record, index) => `${record.id}${index}`}

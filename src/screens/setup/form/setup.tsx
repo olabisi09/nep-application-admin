@@ -1,6 +1,7 @@
 import { FieldArray, Form, Formik } from "formik";
-import Input from "../../../custom/input/input";
+
 import Button from "../../../custom/button/button";
+import Input from "../../../custom/input/input";
 
 const FormSetup = ({ handleClose }: { handleClose: () => void }) => {
   return (
@@ -14,6 +15,7 @@ const FormSetup = ({ handleClose }: { handleClose: () => void }) => {
       {({ values }) => (
         <Form className="fields">
           <Input name="name" label="Form Name" placeholder="Input name" />
+          
           <FieldArray name="inputs">
             {({ push }) => (
               <>
@@ -34,6 +36,7 @@ const FormSetup = ({ handleClose }: { handleClose: () => void }) => {
               </>
             )}
           </FieldArray>
+
           <div className="btn-group">
             <Button onClick={handleClose} variant="text" text="Cancel" />
             <Button text="Create" />

@@ -1,38 +1,42 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
+/* eslint-disable no-undef */
 // import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  AddAdmissionRequirement,
-  EditAdmissionRequirement,
-} from "./addAdmissionRequirement";
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
+import { ColumnsType } from "antd/es/table";
+import { useNavigate } from "react-router-dom";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
 import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
+import Button from "../../../custom/button/button";
+import SearchInput from "../../../custom/searchInput/searchInput";
+import { usePagination } from "../../../hooks/usePagination";
+import { useSearchTerms } from "../../../hooks/useSearchTerms";
 import {
   deleteAdmissionRequirement,
   getAdmissionRequirements,
 } from "../../../requests";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { ColumnsType } from "antd/es/table";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
 import DeleteModalContent from "../../deleteModal/deleteModal";
-import { useNavigate } from "react-router-dom";
-import { usePagination } from "../../../hooks/usePagination";
+import styles from "../styles.module.scss";
+
+import {
+  AddAdmissionRequirement,
+  EditAdmissionRequirement,
+} from "./addAdmissionRequirement";
 
 const AdmissionRequirement = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -44,6 +48,7 @@ const AdmissionRequirement = () => {
   const { notification } = App.useApp();
 
   const { currentPage, onChange } = usePagination();
+  const { searchTerm, handleSearch } = useSearchTerms();
 
   const navigate = useNavigate();
 
@@ -59,10 +64,6 @@ const AdmissionRequirement = () => {
   const handleDelete = (data: AdmissionRequirement) => {
     setAdmissionReq(data);
     setOpenDelete(true);
-  };
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
   };
 
   const columns: ColumnsType<AdmissionRequirement> = [
@@ -209,6 +210,7 @@ const AdmissionRequirement = () => {
             onChange: onChange,
             pageSize: 10,
           }}
+          rowKey={(record) => record.id}
         />
       </section>
 

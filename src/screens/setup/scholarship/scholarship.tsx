@@ -1,28 +1,32 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
+/* eslint-disable no-undef */
 // import { ReactComponent as Filter } from "../../../assets/Frame 48095998 (1).svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import { AddScholarship, EditScholarship } from "./addScholarship";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteScholarship, getAllScholarships } from "../../../requests";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
-import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import DeleteModalContent from "../../deleteModal/deleteModal";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
+import Button from "../../../custom/button/button";
+import SearchInput from "../../../custom/searchInput/searchInput";
 import { usePagination } from "../../../hooks/usePagination";
 import { useSearchTerms } from "../../../hooks/useSearchTerms";
+import { deleteScholarship, getAllScholarships } from "../../../requests";
+import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
+import { AddScholarship, EditScholarship } from "./addScholarship";
 
 const ScholarShip = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -39,7 +43,7 @@ const ScholarShip = () => {
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-scholarship"],
+    queryKey: ["get-scholarship", currentPage],
     queryFn: () => getAllScholarships(currentPage, 10),
   });
 
@@ -130,9 +134,11 @@ const ScholarShip = () => {
 
   const scholarshipData = data?.data;
 
-  const filteredData = scholarshipData?.filter((item) =>
-    item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = scholarshipData
+    ?.filter((item) =>
+      item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   if (isLoading) {
     return <Spin />;

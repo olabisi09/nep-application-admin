@@ -1,26 +1,31 @@
+/* eslint-disable no-undef */
 import { useState } from "react";
-import Select from "../../../custom/select/select";
-import { ReactComponent as Image } from "../../../assets/image.svg";
-import Button from "../../../custom/button/button";
-import Upload from "../../../custom/upload/upload";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { App, Spin } from "antd";
+import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
+import { ReactComponent as Image } from "../../../assets/image.svg";
+import Button from "../../../custom/button/button";
+import Editor from "../../../custom/editor/editor";
+import Select from "../../../custom/select/select";
+import Upload from "../../../custom/upload/upload";
 import {
+  StatusOptions,
   createOrUpdateTestimonial,
   getAllPrograms,
-  StatusOptions,
 } from "../../../requests";
-import * as Yup from "yup";
-import { Form, Formik, FormikValues } from "formik";
-import Editor from "../../../custom/editor/editor";
 
 const AddTestimonial = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
   const [upload, setUpload] = useState<File | null>(null);
+
   const addTestimonialMutation = useMutation({
     mutationFn: createOrUpdateTestimonial,
   });
+
   const {
     data: programsData,
     isLoading,
@@ -67,6 +72,8 @@ const AddTestimonial = ({ handleClose }: { handleClose: () => void }) => {
             description: data?.message,
           });
           queryClient.refetchQueries({ queryKey: ["get-testimonials"] });
+
+          resetForm();
           handleClose();
           clearFile();
         },
@@ -204,7 +211,7 @@ const EditTestimonial = ({
       description: values.description,
       readMoreId: parseInt(values.programName),
       image: upload,
-      activeStatus: values.status,
+      activeStatus: values.status === "true",
     };
 
     try {
@@ -226,12 +233,13 @@ const EditTestimonial = ({
       });
     }
   };
+
   return (
     <Formik
       initialValues={{
         programName: testimonial?.readMoreId,
         description: testimonial?.description,
-        status: testimonial?.activeStatus,
+        status: String(testimonial?.activeStatus),
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditTestimonial(values, resetForm);

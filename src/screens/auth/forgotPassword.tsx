@@ -1,13 +1,15 @@
-import { Form, Formik, FormikValues } from "formik";
-import Input from "../../custom/input/input";
-import Button from "../../custom/button/button";
-import { ReactComponent as Arrow } from "../../assets/arrow.svg";
-import { useNavigate } from "react-router-dom";
-import { App } from "antd";
 import { useMutation } from "@tanstack/react-query";
+import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
+import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+
+import { ReactComponent as Arrow } from "../../assets/arrow.svg";
+import Button from "../../custom/button/button";
+import Input from "../../custom/input/input";
 import { forgotPasswordAdmin } from "../../requests";
 import { validator } from "../../utils/validator";
-import * as Yup from "yup";
+
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ const ForgotPassword = () => {
   });
 
   const handleForgotPassword = async (values: FormikValues) => {
+    // eslint-disable-next-line no-undef
     const payload: ForgotPayload = {
       email: values.email,
     };
@@ -58,7 +61,7 @@ const ForgotPassword = () => {
           handleForgotPassword(values);
         }}
         validationSchema={validationSchema}>
-        {(props) => {
+        {() => {
           return (
             <Form className="fields">
               <Input

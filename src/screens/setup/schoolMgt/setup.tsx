@@ -1,15 +1,18 @@
-import { useState } from "react";
-import Input from "../../../custom/input/input";
-import Upload from "../../../custom/upload/upload";
-import { ReactComponent as Image } from "../../../assets/image.svg";
-import Button from "../../../custom/button/button";
-import { Form, Formik, FormikValues } from "formik";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateSchoolMgt, StatusOptions } from "../../../requests";
-import { App } from "antd";
-import * as Yup from "yup";
-import { Select } from "../../../custom";
-import { validator } from "../../../utils/validator";
+/* eslint-disable no-undef */
+import { ChangeEvent, useState } from 'react';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { App } from 'antd';
+import { Form, Formik, FormikValues } from 'formik';
+import * as Yup from 'yup';
+
+import { ReactComponent as Image } from '../../../assets/image.svg';
+import { Select } from '../../../custom';
+import Button from '../../../custom/button/button';
+import Input from '../../../custom/input/input';
+import Upload from '../../../custom/upload/upload';
+import { StatusOptions, createOrUpdateSchoolMgt } from '../../../requests';
+import { validator } from '../../../utils/validator';
 
 const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
@@ -21,12 +24,12 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
   });
 
   const validate = Yup.object().shape({
-    title: Yup.string().required("Title is required"),
-    description: Yup.string().required("Description is required"),
+    title: Yup.string().required('Title is required'),
+    description: Yup.string().required('Description is required'),
     status: validator.status,
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files;
     if (file) {
       setUpload(file[0]);
@@ -42,7 +45,7 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
       Title: values.title,
       Description: values.description,
       Image: upload,
-      ActiveStatus: values.activeStatus === "true",
+      ActiveStatus: values.activeStatus === 'true',
       IsDeleted: false,
     };
 
@@ -50,10 +53,10 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
       await addSchoolMgtMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-school-mgt"] });
+          queryClient.refetchQueries({ queryKey: ['get-school-mgt'] });
           handleClose();
           resetForm();
           clearFile();
@@ -61,7 +64,7 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -70,9 +73,9 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
   return (
     <Formik
       initialValues={{
-        title: "",
-        description: "",
-        status: "",
+        title: '',
+        description: '',
+        status: '',
       }}
       onSubmit={(values, { resetForm }) => {
         handleAddSchoolMgt(values, resetForm);
@@ -81,12 +84,7 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
     >
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />
-        <Input
-          type="textarea"
-          name="description"
-          label="Description"
-          placeholder="Input description"
-        />
+        <Input type="textarea" name="description" label="Description" placeholder="Input description" />
 
         {upload ? (
           <div className="small-gap">
@@ -114,31 +112,16 @@ const CreateSchoolMgt = ({ handleClose }: { handleClose: () => void }) => {
         />
 
         <div className="btn-group">
-          <Button
-            onClick={handleClose}
-            type="button"
-            variant="text"
-            text="Cancel"
-          />
-          
-          <Button
-            text="Create"
-            disabled={addSchoolMgtMutation.isPending}
-            isLoading={addSchoolMgtMutation.isPending}
-          />
+          <Button onClick={handleClose} type="button" variant="text" text="Cancel" />
+
+          <Button text="Create" disabled={addSchoolMgtMutation.isPending} isLoading={addSchoolMgtMutation.isPending} />
         </div>
       </Form>
     </Formik>
   );
 };
 
-const EditSchoolMgt = ({
-  item,
-  handleClose,
-}: {
-  item: Setup;
-  handleClose: () => void;
-}) => {
+const EditSchoolMgt = ({ item, handleClose }: { item: Setup; handleClose: () => void }) => {
   const queryClient = useQueryClient();
   const { notification } = App.useApp();
   const [upload, setUpload] = useState<File | null>(null);
@@ -162,7 +145,7 @@ const EditSchoolMgt = ({
       Id: item.id,
       Title: values.title,
       Description: values.description,
-      ActiveStatus: !!values.status,
+      ActiveStatus: values.status === 'true',
       IsDeleted: false,
     };
 
@@ -174,17 +157,17 @@ const EditSchoolMgt = ({
       await editSchoolMgtMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
-          queryClient.refetchQueries({ queryKey: ["get-school-mgt"] });
+          queryClient.refetchQueries({ queryKey: ['get-school-mgt'] });
           handleClose();
           resetForm();
         },
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -195,7 +178,7 @@ const EditSchoolMgt = ({
       initialValues={{
         title: item?.title,
         description: item?.description,
-        status: item?.activeStatus,
+        status: String(item?.activeStatus),
         //image: upload || item?.image,
       }}
       onSubmit={(values, { resetForm }) => {
@@ -205,12 +188,7 @@ const EditSchoolMgt = ({
     >
       <Form className="fields">
         <Input name="title" label="Title" placeholder="Input title" />
-        <Input
-          type="textarea"
-          name="description"
-          label="Description"
-          placeholder="Input description"
-        />
+        <Input type="textarea" name="description" label="Description" placeholder="Input description" />
 
         {upload ? (
           <div className="small-gap">
@@ -238,12 +216,7 @@ const EditSchoolMgt = ({
         />
 
         <div className="btn-group">
-          <Button
-            onClick={handleClose}
-            type="button"
-            variant="text"
-            text="Cancel"
-          />
+          <Button onClick={handleClose} type="button" variant="text" text="Cancel" />
           <Button
             type="submit"
             text="Update"

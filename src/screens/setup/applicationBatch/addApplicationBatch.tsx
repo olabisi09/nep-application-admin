@@ -1,13 +1,15 @@
-import { App, Spin } from "antd";
-import Input from "../../../custom/input/input";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
+import { App, Spin } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
 import { Button, Select } from "../../../custom";
-import { getAllAcademicSession, StatusOptions } from "../../../requests";
-import { getAllProgram } from "../program/request";
-import { createUpdateApplicationBatch } from "./request";
+import Input from "../../../custom/input/input";
+import { StatusOptions, getAllAcademicSession } from "../../../requests";
 import { validator } from "../../../utils/validator";
+import { getAllProgram } from "../program/request";
+
+import { createUpdateApplicationBatch } from "./request";
 
 interface Props {
   handleClose: () => void;
@@ -20,7 +22,7 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
   const queries = useQueries({
     queries: [
       { queryKey: ["get-all-session"], queryFn: () => getAllAcademicSession(1, 10) },
-      { queryKey: ["get-all-program"], queryFn: getAllProgram },
+      { queryKey: ["get-all-program"], queryFn: () => getAllProgram() },
     ],
   });
 
@@ -49,6 +51,7 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
     values: FormikValues,
     resetForm: () => void
   ) => {
+    // eslint-disable-next-line no-undef
     const payload: ApplicationBatchPayload = {
       id: 0,
       batchName: values.batchName,

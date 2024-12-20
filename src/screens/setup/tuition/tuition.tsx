@@ -1,46 +1,52 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  Spin,
-  App,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
+/* eslint-disable no-undef */
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import AddTuition, { EditTuition } from "./addTuition";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+
 import { useMutation, useQueries } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
+import { ColumnsType } from "antd/es/table";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
+import Button from "../../../custom/button/button";
+import SearchInput from "../../../custom/searchInput/searchInput";
+import { usePagination } from "../../../hooks/usePagination";
+import { useSearchTerms } from "../../../hooks/useSearchTerms";
 import {
   deleteTuition,
   getAllPrograms,
   getAllTuitionFee,
 } from "../../../requests";
-import { ColumnsType } from "antd/es/table";
-import DeleteModalContent from "../../deleteModal/deleteModal";
 import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import { usePagination } from "../../../hooks/usePagination";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
+import AddTuition, { EditTuition } from "./addTuition";
 
 const Tuition = () => {
   const { notification } = App.useApp();
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [tuition, setTuition] = useState<Tuition>({} as Tuition);
   const [openDelete, setOpenDelete] = useState(false);
 
   const { currentPage, onChange } = usePagination();
+  const { searchTerm, handleSearch } = useSearchTerms();
 
   const queryResults = useQueries({
     queries: [
       {
-        queryKey: ["getAll-tuition"],
+        queryKey: ["getAll-tuition", currentPage],
         queryFn: () => getAllTuitionFee(currentPage, 10),
       },
       {
@@ -64,10 +70,6 @@ const Tuition = () => {
     isError: isProgramsError,
     error: programsError,
   } = queryResults[1];
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
 
   const deleteTuitionMutation = useMutation({ mutationFn: deleteTuition });
 
@@ -145,9 +147,11 @@ const Tuition = () => {
 
   const tuitions = tuitionData?.data as Tuition[];
 
-  const filteredData = tuitions?.filter((item) =>
-    item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = tuitions
+    ?.filter((item) =>
+      item?.programName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   if (isTuitionLoading || isProgramsLoading) {
     return <Spin />;

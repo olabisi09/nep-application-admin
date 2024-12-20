@@ -1,38 +1,41 @@
-import { Form, Formik, FormikValues } from "formik";
-import Input from "../../custom/input/input";
-import Button from "../../custom/button/button";
-import { App, Checkbox, Spin } from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import { routes } from "../../routes";
-import { validator } from "../../utils/validator";
-import * as Yup from "yup";
-import { useAtom, useSetAtom } from "jotai";
-import { useMutation } from "@tanstack/react-query";
-import { signInUser } from "../../requests";
-import { userAtom } from "../../utils/store";
-import { useEffect } from "react";
-import { useValidateUser } from "../../hooks/useValidateUser";
+import { useEffect } from 'react';
+
+import { useMutation } from '@tanstack/react-query';
+import { App, Checkbox, Spin } from 'antd';
+import { Form, Formik, FormikValues } from 'formik';
+import { useAtom } from 'jotai';
+import { Link, useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
+
+import Button from '../../custom/button/button';
+import Input from '../../custom/input/input';
+import { useValidateUser } from '../../hooks/useValidateUser';
+import { signInUser } from '../../requests';
+import { routes } from '../../routes';
+import { userAtom } from '../../utils/store';
+import { validator } from '../../utils/validator';
 
 const SignIn = () => {
-  const setUser = useSetAtom(userAtom);
-  const [user] = useAtom(userAtom);
+  // const setUser = useSetAtom(userAtom);
+  const [user, setUser] = useAtom(userAtom);
 
   const { notification } = App.useApp();
   const navigate = useNavigate();
   const { isLoading } = useValidateUser();
 
   const signInMutation = useMutation({
-    mutationKey: ["SignIn"],
+    mutationKey: ['SignIn'],
     mutationFn: signInUser,
   });
 
   useEffect(() => {
-    if (user && user?.token && user?.isAdmin === true) {
-      navigate("/about-us", { replace: true });
+    if (user?.token && user?.isAdmin) {
+      navigate('/about-us', { replace: true });
     }
-  }, [navigate, user]);
+  }, [user?.token, user?.isAdmin, navigate]);
 
   const handleSignIn = async (values: FormikValues, resetForm: () => void) => {
+    // eslint-disable-next-line no-undef
     const payload: SignInPayload = {
       email: values.email,
       password: values.password,
@@ -42,7 +45,7 @@ const SignIn = () => {
       await signInMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
 
@@ -61,7 +64,7 @@ const SignIn = () => {
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -84,30 +87,21 @@ const SignIn = () => {
 
       <Formik
         initialValues={{
-          email: "",
-          password: "",
+          email: '',
+          password: '',
         }}
         onSubmit={(values, { resetForm }) => {
           handleSignIn(values, resetForm);
         }}
         validationSchema={validationSchema}
-        enableReinitialize
+        // enableReinitialize
       >
         {() => {
           return (
             <Form className="fields">
-              <Input
-                name="email"
-                label="Email Address"
-                placeholder="Input email"
-              />
+              <Input name="email" label="Email Address" placeholder="Input email" />
 
-              <Input
-                name="password"
-                type="password"
-                label="Password"
-                placeholder="Input password"
-              />
+              <Input name="password" type="password" label="Password" placeholder="Input password" />
 
               <div className="space-between">
                 <Checkbox>Remember me</Checkbox>

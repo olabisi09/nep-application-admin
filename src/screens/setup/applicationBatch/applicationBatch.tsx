@@ -1,28 +1,33 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  App,
-  Spin,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
+/* eslint-disable no-undef */
 import { useState } from "react";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import DeleteModalContent from "../../deleteModal/deleteModal";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
+import Button from "../../../custom/button/button";
+import SearchInput from "../../../custom/searchInput/searchInput";
+import { usePagination } from "../../../hooks/usePagination";
 import { deleteFaculty } from "../../../requests";
-import { getApplicationBatch } from "./request";
+import { formatDate } from "../../../utils/formatDate";
+import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
 import AddApplicationBatch from "./addApplicationBatch";
 import EditApplicationBatch from "./editApplicationBatch";
-import { formatDate } from "../../../utils/formatDate";
-import { usePagination } from "../../../hooks/usePagination";
+import { getApplicationBatch } from "./request";
+
 
 const ApplicationBatchSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -219,6 +224,7 @@ const ApplicationBatchSetup = () => {
             onChange: onChange,
             pageSize: 10,
           }}
+          rowKey={(record) => record.id}
         />
       </section>
 

@@ -1,10 +1,13 @@
-import { App } from "antd";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
+import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
 import { Button, Input, Select } from "../../../custom";
-import { editProgramType } from "./request";
 import { StatusOptions } from "../../../requests";
+
+import { editProgramType } from "./request";
 
 interface Props {
   handleClose: () => void;
@@ -58,7 +61,7 @@ const EditProgramType = ({ handleClose, record }: Props) => {
 
   return (
     <Formik
-      initialValues={{ name: record.name ?? "", activeStatus: initialStatus }}
+      initialValues={{ name: record.name ?? "", activeStatus: String(initialStatus) }}
       onSubmit={(values, { resetForm }) => {
         editProgramTypeHandler(values, resetForm);
       }}

@@ -1,31 +1,37 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  App,
-  Spin,
-} from "antd";
-import styles from "../styles.module.scss";
+/* eslint-disable no-undef */
 import { useState } from "react";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
-import { deleteTab, getAllTab } from "../../../requests";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import { ReactComponent as Search } from "../../../assets/search.svg";
 import { Button, SearchInput } from "../../../custom";
-import { AddTab, EditTab } from "./addTab";
+import { useSearchTerms } from "../../../hooks/useSearchTerms";
+import { deleteTab, getAllTab } from "../../../requests";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
+import { AddTab, EditTab } from "./addTab";
 
 const TabSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [tab, setTab] = useState<Tab>({} as Tab);
   const [openDelete, setOpenDelete] = useState(false);
+
+  const { searchTerm, handleSearch } = useSearchTerms();
   const { notification } = App.useApp();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -60,10 +66,6 @@ const TabSetup = () => {
         description: error?.response?.data?.message,
       });
     }
-  };
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
   };
 
   const columns: ColumnsType<Tab> = [
@@ -114,9 +116,11 @@ const TabSetup = () => {
 
   const tabData = data?.data;
 
-  const filteredData = tabData?.filter((item) =>
-    item?.tabName?.toLowerCase()?.includes(searchTerm.toLowerCase())
-  );
+  const filteredData = tabData
+    ?.filter((item) =>
+      item?.tabName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    )
+    ?.map((item) => ({ ...item, key: item.id }));
 
   if (isLoading) {
     return <Spin />;
@@ -129,7 +133,7 @@ const TabSetup = () => {
   return (
     <main>
       <section className="space-between">
-        <h3>Tap Setup</h3>
+        <h3>Tab Setup</h3>
         <Button
           onClick={() => setShowAddModal(true)}
           iconBefore={<Add />}
@@ -142,7 +146,7 @@ const TabSetup = () => {
           <p>
             Showing 1-{filteredData?.length} of {tabData?.length}
           </p>
-          
+
           <div>
             {!showSearch && (
               <span>
@@ -170,7 +174,6 @@ const TabSetup = () => {
           dataSource={filteredData}
           columns={columns}
           pagination={{ position: ["bottomCenter"] }}
-          rowKey={(record, index) => `${record.id}${index}`}
         />
       </section>
 

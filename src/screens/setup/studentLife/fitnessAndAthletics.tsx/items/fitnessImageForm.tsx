@@ -1,11 +1,13 @@
-import { Form, Formik, FormikValues } from "formik";
-import { Button, Select, Upload } from "../../../../../custom";
-import { ReactComponent as Image } from "../../../../../assets/image.svg";
-import { App } from "antd";
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrUpdateFitnessImage } from "../../../../../requests";
-import { object } from "yup";
+import { App } from "antd";
+import { Form, Formik, FormikValues } from "formik";
 import { useParams } from "react-router-dom";
+import { object } from "yup";
+
+import { ReactComponent as Image } from "../../../../../assets/image.svg";
+import { Button, Select, Upload } from "../../../../../custom";
+import { createOrUpdateFitnessImage } from "../../../../../requests";
 import { validator } from "../../../../../utils/validator";
 
 interface SetupInit {
@@ -138,6 +140,7 @@ const FitnessImageForm = ({
               variant="text"
               text="Cancel"
             />
+            
             <Button
               type="submit"
               isLoading={fitnessImageMutation.isPending}

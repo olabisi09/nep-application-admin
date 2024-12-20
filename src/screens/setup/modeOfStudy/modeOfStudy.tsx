@@ -1,22 +1,26 @@
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import {
-  Dropdown,
-  Modal,
-  Table,
-  Button as AntButton,
-  MenuProps,
-  App,
-  Spin,
-} from "antd";
-import styles from "../styles.module.scss";
-import Button from "../../../custom/button/button";
+/* eslint-disable no-undef */
 import { useState } from "react";
-import { AddModeOfStudy, EditModeOfStudy } from "./addModeOfStudy";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteModeOfStudy, getAllModeOfStudy } from "../../../requests";
+import {
+  Button as AntButton,
+  App,
+  Dropdown,
+  MenuProps,
+  Modal,
+  Spin,
+  Table,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
+
+import { ReactComponent as Add } from "../../../assets/add.svg";
+import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
+import Button from "../../../custom/button/button";
+import { deleteModeOfStudy, getAllModeOfStudy } from "../../../requests";
 import DeleteModalContent from "../../deleteModal/deleteModal";
+import styles from "../styles.module.scss";
+
+import { AddModeOfStudy, EditModeOfStudy } from "./addModeOfStudy";
 
 const ModeOfStudy = () => {
   const [showAddModal, setShowAddModal] = useState(false);

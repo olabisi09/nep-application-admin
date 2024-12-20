@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as Yup from "yup";
 import { App } from "antd";
 import { Form, Formik, FormikValues } from "formik";
+import * as Yup from "yup";
 
 import { Button, Input, Select } from "../../../../custom";
-import { createOrUpdateReligion, StatusOptions } from "../../../../requests";
+import { StatusOptions, createOrUpdateReligion } from "../../../../requests";
 
 const AddReligion = ({ handleClose }: { handleClose: () => void }) => {
   const { notification } = App.useApp();
@@ -121,9 +122,11 @@ const EditReligion = ({
             message: "Success",
             description: data?.message,
           });
+
           queryClient.refetchQueries({ queryKey: ["get-religion"] });
-          handleClose();
+
           resetForm();
+          handleClose();
         },
       });
     } catch (error: any) {
@@ -133,12 +136,12 @@ const EditReligion = ({
       });
     }
   };
-  
+
   return (
     <Formik
       initialValues={{
         name: religion?.name,
-        isActive: religion?.isActive,
+        isActive: String(religion?.isActive ?? ""),
       }}
       onSubmit={(values, { resetForm }) => {
         handleEditTitle(values, resetForm);
@@ -148,6 +151,7 @@ const EditReligion = ({
     >
       <Form className="fields">
         <Input name="name" label="Religion" placeholder="Input Religion" />
+        
         <Select
           name="isActive"
           placeholder="Select Status"

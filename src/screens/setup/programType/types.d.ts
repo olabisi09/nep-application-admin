@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 interface getall {
   code: number;
   message: string;

@@ -1,19 +1,15 @@
-import { Form, Formik, FormikValues } from "formik";
-import { Button, Editor, Select } from "../../../../../custom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { App } from "antd";
-import { useParams } from "react-router-dom";
-import { validator } from "../../../../../utils/validator";
-import * as Yup from "yup";
-import { createOrUpdateCampusExperienceItem } from "../../../../../requests";
+/* eslint-disable no-undef */
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { App } from 'antd';
+import { Form, Formik, FormikValues } from 'formik';
+import { useParams } from 'react-router-dom';
+import * as Yup from 'yup';
 
-const CampusExperienceItemForm = ({
-  handleClose,
-  item,
-}: {
-  handleClose: () => void;
-  item: CampusExperienceItem;
-}) => {
+import { Button, Editor, Select } from '../../../../../custom';
+import { StatusOptions, createOrUpdateCampusExperienceItem } from '../../../../../requests';
+import { validator } from '../../../../../utils/validator';
+
+const CampusExperienceItemForm = ({ handleClose, item }: { handleClose: () => void; item: CampusExperienceItem }) => {
   const { id } = useParams();
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
@@ -22,17 +18,14 @@ const CampusExperienceItemForm = ({
     mutationFn: createOrUpdateCampusExperienceItem,
   });
 
-  const campusExperienceId = parseInt(id ?? "") ?? 0;
+  const campusExperienceId = parseInt(id ?? '') ?? 0;
 
-  const handleCampusExperienceItem = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
+  const handleCampusExperienceItem = async (values: FormikValues, resetForm: () => void) => {
     const payload: Partial<CampusExperienceItem> = {
       id: item?.id ?? 0,
       campusExperienceId,
       description: values.description,
-      activeStatus: values.status === "Active" ? true : false,
+      activeStatus: values.status === 'true',
       isDeleted: false,
     };
 
@@ -40,11 +33,11 @@ const CampusExperienceItemForm = ({
       await addCampusExperienceItemMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
           queryClient.refetchQueries({
-            queryKey: ["get-campus-experience-by-id"],
+            queryKey: ['get-campus-experience-by-id'],
           });
           handleClose();
           resetForm();
@@ -52,37 +45,27 @@ const CampusExperienceItemForm = ({
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
-
-  const statusOptions = (
-    <>
-      <option value="">-- select an option --</option>
-      <option value="Active">Active</option>
-      <option value="Inactive">Inactive</option>
-    </>
-  );
 
   const validationSchema = Yup.object().shape({
     status: validator.status,
     description: validator.description,
   });
 
-  const initialStatus = item?.activeStatus ? "Active" : "Inactive";
+  const initialStatus = item?.activeStatus ?? '';
   const hasRecords = Object.keys(item).length > 0;
 
   return (
     <Formik
       initialValues={{
-        description: item.description ?? "",
-        status: initialStatus ?? '',
+        description: item.description ?? '',
+        status: String(initialStatus),
       }}
-      onSubmit={(values, { resetForm }) =>
-        handleCampusExperienceItem(values, resetForm)
-      }
+      onSubmit={(values, { resetForm }) => handleCampusExperienceItem(values, resetForm)}
       validationSchema={validationSchema}
       enableReinitialize
     >
@@ -94,28 +77,33 @@ const CampusExperienceItemForm = ({
               label="Description"
               onChange={(_, editor) => {
                 const data = editor.getData();
-                setFieldValue("description", data);
+                setFieldValue('description', data);
               }}
-              initialData={item?.description ?? ""}
+              initialData={item?.description ?? ''}
             />
+
             <Select
               name="status"
+              placeholder="Select Status"
               label="Status"
-              placeholder="Select status"
-              options={statusOptions}
+              options={
+                <>
+                  {StatusOptions.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              }
             />
+
             <div className="btn-group">
-              <Button
-                type="button"
-                onClick={handleClose}
-                variant="text"
-                text="Cancel"
-              />
+              <Button type="button" onClick={handleClose} variant="text" text="Cancel" />
               <Button
                 type="submit"
                 isLoading={addCampusExperienceItemMutation.isPending}
                 disabled={addCampusExperienceItemMutation.isPending}
-                text={hasRecords ? "Update" : "Create"}
+                text={hasRecords ? 'Update' : 'Create'}
               />
             </div>
           </Form>
