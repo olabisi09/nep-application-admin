@@ -1,27 +1,18 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  Button as AntButton,
-  App,
-  Card,
-  Dropdown,
-  MenuProps,
-  Modal,
-  Spin,
-} from "antd";
-import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Button as AntButton, App, Card, Dropdown, MenuProps, Modal, Spin } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
-import { ReactComponent as Plus } from "../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import Button from "../../../custom/button/button";
-import { deleteFAQ, getAllFAQ } from "../../../requests";
-import { sanitizeAndLimitString } from "../../../utils/sanitizeAndLimitString";
-import DeleteModalContent from "../../deleteModal/deleteModal";
+import { ReactComponent as Plus } from '../../../assets/add.svg';
+import { ReactComponent as Ellipsis } from '../../../assets/ellipsis.svg';
+import Button from '../../../custom/button/button';
+import { deleteFAQ, getAllFAQ } from '../../../requests';
+import { sanitizeAndLimitString } from '../../../utils/sanitizeAndLimitString';
+import DeleteModalContent from '../../deleteModal/deleteModal';
 
-
-import QAndA from "./qAndA";
-import SetupFaq from "./setup";
+import QAndA from './qAndA';
+import SetupFaq from './setup';
 
 const Faq = () => {
   const [open, setOpen] = useState(false);
@@ -40,39 +31,40 @@ const Faq = () => {
   };
 
   const deleteFAQMutation = useMutation({ mutationFn: deleteFAQ });
+
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["get-AllFAQ"],
+    queryKey: ['get-AllFAQ'],
     queryFn: getAllFAQ,
   });
 
   // eslint-disable-next-line no-undef
-  const faqData = data?.data as FAQ;
+  const faqData = data?.data ?? {} as FAQ;
   const limitedCleanHtml = sanitizeAndLimitString(faqData?.description);
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      key: "1",
-      label: "Edit",
+      key: '1',
+      label: 'Edit',
       onClick: () => handleEdit(),
     },
     {
-      key: "2",
-      label: "Questions & Answers",
+      key: '2',
+      label: 'Questions & Answers',
       onClick: () => navigate(`/faq/${faqData?.id}/faq-items`),
     },
     {
-      key: "3",
-      label: "Delete",
+      key: '3',
+      label: 'Delete',
       onClick: () => handleDelete(),
     },
   ];
 
-  const DeleteFAQHandler = async () => {
+  const deleteFAQHandler = async () => {
     try {
       await deleteFAQMutation.mutateAsync(faqData?.id, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
           refetch();
@@ -81,14 +73,18 @@ const Faq = () => {
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
   };
+
+  const hasFAQ = Object.keys(faqData)?.length > 0;
+
   if (isLoading) {
     return <Spin />;
   }
+
   if (isError) {
     return <div>Error: {error?.message}</div>;
   }
@@ -97,58 +93,42 @@ const Faq = () => {
     <div>
       <section className="space-between">
         <h3>FAQ Setup</h3>
-        <Button
-          onClick={() => setOpen(true)}
-          iconBefore={<Plus />}
-          text="Setup"
-        />
+
+        {!hasFAQ && <Button onClick={() => setOpen(true)} iconBefore={<Plus />} text="Setup" />}
       </section>
+
       <br />
-      <Card bordered={false} style={{ maxWidth: "34.286rem" }}>
-        <Dropdown menu={{ items }} trigger={["click"]}>
-          <AntButton
-            style={{ display: "block", marginLeft: "auto" }}
-            icon={<Ellipsis />}
-          />
+
+      <Card bordered={false} style={{ maxWidth: '34.286rem' }}>
+        <Dropdown menu={{ items }} trigger={['click']}>
+          <AntButton style={{ display: 'block', marginLeft: 'auto' }} icon={<Ellipsis />} />
         </Dropdown>
+
         <section className="fields">
           <div className="space-between-grid">
             <b>Title</b>
             <p>{faqData?.name}</p>
           </div>
+
           <div className="space-between-grid">
             <b>Description</b>
             <p dangerouslySetInnerHTML={{ __html: limitedCleanHtml }} />
           </div>
         </section>
       </Card>
-      <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
-        centered
-        title="FAQ Setup"
-        footer={null}
-      >
+
+      <Modal open={open} onCancel={() => setOpen(false)} centered title="FAQ Setup" footer={null}>
         <SetupFaq handleClose={() => setOpen(false)} />
       </Modal>
-      <Modal
-        open={openEdit}
-        onCancel={() => setOpenEdit(false)}
-        centered
-        title="Edit FAQ Setup"
-        footer={null}
-      >
+
+      <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Edit FAQ Setup" footer={null}>
         <SetupFaq handleClose={() => setOpenEdit(false)} data={faqData} />
       </Modal>
-      <Modal
-        open={openQAndA}
-        onCancel={() => setOpenQAndA(false)}
-        centered
-        title="FAQ Items Setup"
-        footer={null}
-      >
+
+      <Modal open={openQAndA} onCancel={() => setOpenQAndA(false)} centered title="FAQ Items Setup" footer={null}>
         <QAndA handleClose={() => setOpenQAndA(false)} />
       </Modal>
+
       <Modal
         open={openEditQAndA}
         onCancel={() => setOpenEditQAndA(false)}
@@ -158,17 +138,12 @@ const Faq = () => {
       >
         <QAndA handleClose={() => setOpenEditQAndA(false)} />
       </Modal>
-      <Modal
-        open={openDelete}
-        onCancel={() => setOpenDelete(false)}
-        centered
-        title="Delete FAQ"
-        footer={null}
-      >
+
+      <Modal open={openDelete} onCancel={() => setOpenDelete(false)} centered title="Delete FAQ" footer={null}>
         <DeleteModalContent
           isLoading={deleteFAQMutation?.isPending}
           handleCloseModal={() => setOpenDelete(false)}
-          handleSubmit={DeleteFAQHandler}
+          handleSubmit={deleteFAQHandler}
           title={faqData?.name}
         />
       </Modal>
