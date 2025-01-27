@@ -151,7 +151,7 @@ const StudentActivityItem = () => {
   return (
     <div>
       <section className="space-between">
-        <h3>Student Life: Student Activity Items Setup</h3>
+        <h3>Student Life: Student Activity Item Setup</h3>
 
         {studentActivityItemData?.length === 0 && (
           <Button
