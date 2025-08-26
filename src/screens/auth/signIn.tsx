@@ -29,9 +29,9 @@ const SignIn = () => {
   });
 
   useEffect(() => {
-    if (user?.token && user?.isAdmin) {
+    // if (user?.token && user?.isAdmin) {
       navigate('/about-us', { replace: true });
-    }
+    // }
   }, [user?.token, user?.isAdmin, navigate]);
 
   const handleSignIn = async (values: FormikValues, resetForm: () => void) => {
