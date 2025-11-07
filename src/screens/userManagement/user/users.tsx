@@ -1,20 +1,19 @@
 /* eslint-disable no-undef */
-import { useState } from "react";
+import { useState } from 'react';
 
-import { useQuery } from "@tanstack/react-query";
-import { Card, Spin, Table } from "antd";
-import { ColumnsType } from "antd/es/table";
+import { useQuery } from '@tanstack/react-query';
+import { Card, Spin, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import { SearchInput } from "../../../custom";
-import { usePagination } from "../../../hooks/usePagination";
-import styles from "../styles.module.scss";
+import { ReactComponent as Search } from '../../../assets/search.svg';
+import { SearchInput } from '../../../custom';
+import { usePagination } from '../../../hooks/usePagination';
+import styles from '../styles.module.scss';
 
-import { getAllStudentUser } from "./request";
-
+import { getAllStudentUser } from './request';
 
 const StudentUser = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [showSearch, setShowSearch] = useState(false);
 
   const { currentPage, onChange } = usePagination();
@@ -24,40 +23,40 @@ const StudentUser = () => {
   };
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-student-users"],
+    queryKey: ['get-student-users', currentPage],
     queryFn: () => getAllStudentUser(currentPage, 10),
   });
 
   const columns: ColumnsType<User> = [
     {
-      key: "appNo",
-      title: "Application Number",
-      dataIndex: "applicationNumber",
+      key: 'appNo',
+      title: 'Application Number',
+      dataIndex: 'applicationNumber',
     },
     {
-      key: "firstName",
-      title: "First Name",
-      dataIndex: "firstName",
+      key: 'firstName',
+      title: 'First Name',
+      dataIndex: 'firstName',
     },
     {
-      key: "lastName",
-      title: "Last Name",
-      dataIndex: "lastName",
+      key: 'lastName',
+      title: 'Last Name',
+      dataIndex: 'lastName',
     },
     {
-      key: "middleName",
-      title: "Middle Name",
-      dataIndex: "middleName",
+      key: 'middleName',
+      title: 'Middle Name',
+      dataIndex: 'middleName',
     },
     {
-      key: "email",
-      title: "Email",
-      dataIndex: "email",
+      key: 'email',
+      title: 'Email',
+      dataIndex: 'email',
     },
     {
-      key: "phoneNo",
-      title: "Phone Number",
-      dataIndex: "phoneNumber",
+      key: 'phoneNo',
+      title: 'Phone Number',
+      dataIndex: 'phoneNumber',
     },
   ];
 
@@ -67,7 +66,7 @@ const StudentUser = () => {
     (user) =>
       user?.firstName?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
       user?.lastName?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
-      user?.email?.toLowerCase()?.includes(searchTerm.toLowerCase())
+      user?.email?.toLowerCase()?.includes(searchTerm.toLowerCase()),
   );
 
   if (isLoading) {
@@ -95,14 +94,10 @@ const StudentUser = () => {
           <div>
             {!showSearch && (
               <span>
-                <Search
-                  onClick={() => setShowSearch((showSearch) => !showSearch)}
-                />
+                <Search onClick={() => setShowSearch((showSearch) => !showSearch)} />
               </span>
             )}
-            {showSearch && (
-              <SearchInput value={searchTerm} onChange={handleSearch} />
-            )}
+            {showSearch && <SearchInput value={searchTerm} onChange={handleSearch} />}
 
             {/* {!showAllFilter && (
               <Filter
@@ -120,7 +115,7 @@ const StudentUser = () => {
           rowKey={(record) => record.applicantId}
           scroll={{ x: true }}
           pagination={{
-            position: ["bottomCenter"],
+            position: ['bottomCenter'],
             current: currentPage,
             total: data?.totalSize,
             onChange: onChange,
