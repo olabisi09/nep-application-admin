@@ -1,25 +1,25 @@
-import { Menu } from "antd";
-import { NavLink } from "react-router-dom";
+import { Menu } from 'antd';
+import { NavLink } from 'react-router-dom';
 
-import { ReactComponent as Line } from "../../assets/line.svg";
-import { ReactComponent as KwarafaLogo } from "../../assets/logo.svg";
-import { ReactComponent as Logout } from "../../assets/logout.svg";
-import { ReactComponent as Arrow } from "../../assets/menu-arrow.svg";
-import { ReactComponent as Settings } from "../../assets/settings.svg";
-import { routes } from "../../routes";
-import { logout } from "../../utils/logout";
+import { ReactComponent as Line } from '../../assets/line.svg';
+import { ReactComponent as Logo } from '../../assets/logo.svg';
+import { ReactComponent as Logout } from '../../assets/logout.svg';
+import { ReactComponent as Arrow } from '../../assets/menu-arrow.svg';
+import { ReactComponent as Settings } from '../../assets/settings.svg';
+import { routes } from '../../routes';
+import { logout } from '../../utils/logout';
 
-import styles from "./dashboardLayout.module.scss";
+import styles from './dashboardLayout.module.scss';
 
 const Sidebar = () => {
   const items = [
     {
-      key: "userManagement",
-      label: "User Management",
+      key: 'userManagement',
+      label: 'User Management',
       icon: <Settings />,
       children: [
         {
-          key: "users",
+          key: 'users',
           label: <NavLink to={routes.userMgt.users}>Applicants</NavLink>,
           icon: <Line />,
         },
@@ -34,272 +34,244 @@ const Sidebar = () => {
         //   icon: <Line />,
         // },
         {
-          key: "contactUs",
-          label: (
-            <NavLink to={routes.userMgt.contactUs}>Contact Feed Back</NavLink>
-          ),
+          key: 'contactUs',
+          label: <NavLink to={routes.userMgt.contactUs}>Contact Feed Back</NavLink>,
           icon: <Line />,
         },
         {
-          key: "schoolId",
-          label: (
-            <NavLink to={routes.userMgt.addSchoolId}>Add School ID</NavLink>
-          ),
+          key: 'schoolId',
+          label: <NavLink to={routes.userMgt.addSchoolId}>Add School ID</NavLink>,
           icon: <Line />,
         },
       ],
     },
     {
-      key: "biodata",
-      label: "Setup Bio-Data",
+      key: 'biodata',
+      label: 'Setup Bio-Data',
       icon: <Settings />,
       children: [
         {
-          key: "addTitle",
+          key: 'addTitle',
           label: <NavLink to="/title-setup">Add Title</NavLink>,
           icon: <Line />,
         },
         {
-          key: "addDisability",
+          key: 'addDisability',
           label: <NavLink to="/disability-setup">Add Disability</NavLink>,
           icon: <Line />,
         },
         {
-          key: "addReligion",
+          key: 'addReligion',
           label: <NavLink to="/religion-setup">Add Religion</NavLink>,
           icon: <Line />,
         },
         {
-          key: "addGender",
+          key: 'addGender',
           label: <NavLink to="/gender-setup">Add Gender</NavLink>,
           icon: <Line />,
         },
         {
-          key: "addMaritalStatus",
-          label: (
-            <NavLink to="/marital-status-setup">Add Marital Status</NavLink>
-          ),
+          key: 'addMaritalStatus',
+          label: <NavLink to="/marital-status-setup">Add Marital Status</NavLink>,
           icon: <Line />,
         },
         {
-          key: "addCountry",
+          key: 'addCountry',
           label: <NavLink to="/country-setup">Add Country</NavLink>,
           icon: <Line />,
         },
         {
-          key: "addState",
+          key: 'addState',
           label: <NavLink to="/state-setup">Add State</NavLink>,
           icon: <Line />,
         },
         {
-          key: "addLGA",
+          key: 'addLGA',
           label: <NavLink to="/lga-setup">Add LGA</NavLink>,
           icon: <Line />,
         },
       ],
     },
     {
-      key: "programs",
-      label: "Setup Programs",
+      key: 'programs',
+      label: 'Setup Programs',
       icon: <Settings />,
       children: [
         {
-          key: "faculty",
+          key: 'faculty',
           label: <NavLink to="/faculty-setup">Faculty</NavLink>,
           icon: <Line />,
         },
         {
-          key: "department",
+          key: 'department',
           label: <NavLink to="/department-setup">Department</NavLink>,
           icon: <Line />,
         },
         {
-          key: "program",
+          key: 'program',
           label: <NavLink to="/program-setup">Program</NavLink>,
           icon: <Line />,
         },
         {
-          key: "programType",
+          key: 'programType',
           label: <NavLink to="/program-type-setup">Program Type</NavLink>,
           icon: <Line />,
         },
         {
-          key: "applicationBatch",
-          label: (
-            <NavLink to={routes.setup.applicationBatch}>
-              Application Batch
-            </NavLink>
-          ),
+          key: 'applicationBatch',
+          label: <NavLink to={routes.setup.applicationBatch}>Application Batch</NavLink>,
           icon: <Line />,
         },
         {
-          key: "readMoreProgram",
-          label: (
-            <NavLink to="/read-more-program-setup">Read More - Program</NavLink>
-          ),
+          key: 'readMoreProgram',
+          label: <NavLink to="/read-more-program-setup">Read More - Program</NavLink>,
           icon: <Line />,
         },
         {
-          key: "readMoreCourse",
-          label: (
-            <NavLink to="/read-more-course-overview-setup">
-              Read More -Course Overview
-            </NavLink>
-          ),
+          key: 'readMoreCourse',
+          label: <NavLink to="/read-more-course-overview-setup">Read More -Course Overview</NavLink>,
           icon: <Line />,
         },
         {
-          key: "admissionRequirements",
-          label: (
-            <NavLink to="/read-more-admission-requirement-setup">
-              Admission Requirements
-            </NavLink>
-          ),
+          key: 'admissionRequirements',
+          label: <NavLink to="/read-more-admission-requirement-setup">Admission Requirements</NavLink>,
           icon: <Line />,
         },
         {
-          key: "careerProspects",
-          label: (
-            <NavLink to="/career-prospects-setup">Career Prospects</NavLink>
-          ),
+          key: 'careerProspects',
+          label: <NavLink to="/career-prospects-setup">Career Prospects</NavLink>,
           icon: <Line />,
         },
         {
-          key: "sessionSetup",
+          key: 'sessionSetup',
           label: <NavLink to="/session-setup">Session</NavLink>,
           icon: <Line />,
         },
         {
-          key: "modeOfStudy",
+          key: 'modeOfStudy',
           label: <NavLink to="/mode-of-study-setup">Mode Of Study</NavLink>,
           icon: <Line />,
         },
         {
-          key: "applicationFee",
+          key: 'applicationFee',
           label: <NavLink to="/application-setup">Application Fee</NavLink>,
           icon: <Line />,
         },
         {
-          key: "tuitionFee",
+          key: 'tuitionFee',
           label: <NavLink to="/tuition-fee-setup">Tuition Fee</NavLink>,
           icon: <Line />,
         },
         {
-          key: "level",
+          key: 'level',
           label: <NavLink to="/level-setup">Level</NavLink>,
           icon: <Line />,
         },
         {
-          key: "tuitionYears",
+          key: 'tuitionYears',
           label: <NavLink to="/tuition-Years-setup">Tuition Years</NavLink>,
           icon: <Line />,
         },
         {
-          key: "curriculum",
+          key: 'curriculum',
           label: <NavLink to="/curriculum-setup">Curriculum</NavLink>,
           icon: <Line />,
         },
         {
-          key: "scholarship",
+          key: 'scholarship',
           label: <NavLink to="/scholarship-setup">Scholarship</NavLink>,
           icon: <Line />,
         },
         {
-          key: "testimonial",
+          key: 'testimonial',
           label: <NavLink to="/testimonial-setup">Testimonial</NavLink>,
           icon: <Line />,
         },
         {
-          key: "accreditation",
+          key: 'accreditation',
           label: <NavLink to="/accreditation-setup">Accreditation</NavLink>,
           icon: <Line />,
         },
         {
-          key: "qualificationType",
-          label: (
-            <NavLink to="/qualification-type-setup">Qualification Type</NavLink>
-          ),
+          key: 'qualificationType',
+          label: <NavLink to="/qualification-type-setup">Qualification Type</NavLink>,
           icon: <Line />,
         },
         {
-          key: "subject",
+          key: 'subject',
           label: <NavLink to="/subject-setup">Subject</NavLink>,
           icon: <Line />,
         },
         {
-          key: "grade",
+          key: 'grade',
           label: <NavLink to={routes.setup.grade}>Grade</NavLink>,
           icon: <Line />,
         },
         {
-          key: "tab",
+          key: 'tab',
           label: <NavLink to={routes.setup.tab}>Tab</NavLink>,
           icon: <Line />,
         },
         {
-          key: "displayTab",
+          key: 'displayTab',
           label: <NavLink to={routes.setup.DisplayTabSetup}>Display Tab</NavLink>,
           icon: <Line />,
         },
       ],
     },
     {
-      key: "schoolInfo",
-      label: "Setup School Info",
+      key: 'schoolInfo',
+      label: 'Setup School Info',
       icon: <Settings />,
       children: [
         {
-          key: "exploreProgrammes",
-          label: (
-            <NavLink to={routes.setup.exploreProgrammes}>
-              Explore Programmes
-            </NavLink>
-          ),
+          key: 'exploreProgrammes',
+          label: <NavLink to={routes.setup.exploreProgrammes}>Explore Programmes</NavLink>,
           icon: <Line />,
         },
         {
-          key: "aboutUs",
-          label: <NavLink to={"/about-us"}>About Us</NavLink>,
+          key: 'aboutUs',
+          label: <NavLink to={'/about-us'}>About Us</NavLink>,
           icon: <Line />,
         },
         {
-          key: "whyUs",
-          label: <NavLink to={"/why-us"}>Why Us</NavLink>,
+          key: 'whyUs',
+          label: <NavLink to={'/why-us'}>Why Us</NavLink>,
           icon: <Line />,
         },
         {
-          key: "faq",
-          label: <NavLink to={"/faq"}>FAQ</NavLink>,
+          key: 'faq',
+          label: <NavLink to={'/faq'}>FAQ</NavLink>,
           icon: <Line />,
         },
         {
-          key: "newsAndEvents",
-          label: <NavLink to={"/news-and-events"}>News & Events</NavLink>,
+          key: 'newsAndEvents',
+          label: <NavLink to={'/news-and-events'}>News & Events</NavLink>,
           icon: <Line />,
         },
         {
-          key: "history",
-          label: <NavLink to={"/history"}>History</NavLink>,
+          key: 'history',
+          label: <NavLink to={'/history'}>History</NavLink>,
           icon: <Line />,
         },
         {
-          key: "schoolMgt",
-          label: <NavLink to={"/school-management"}>School Mgt</NavLink>,
+          key: 'schoolMgt',
+          label: <NavLink to={'/school-management'}>School Mgt</NavLink>,
           icon: <Line />,
         },
         {
-          key: "schoolInfoTemplate",
-          label: <NavLink to={"/school-info"}>Template</NavLink>,
+          key: 'schoolInfoTemplate',
+          label: <NavLink to={'/school-info'}>Template</NavLink>,
           icon: <Line />,
         },
         {
-          key: "socialMedia",
-          label: <NavLink to={"/social-media"}>Social Media Link</NavLink>,
+          key: 'socialMedia',
+          label: <NavLink to={'/social-media'}>Social Media Link</NavLink>,
           icon: <Line />,
         },
         {
-          key: "studentLife",
-          label: <NavLink to={"/student-life"}>Student Life</NavLink>,
+          key: 'studentLife',
+          label: <NavLink to={'/student-life'}>Student Life</NavLink>,
           icon: <Line />,
         },
       ],
@@ -310,10 +282,7 @@ const Sidebar = () => {
     <>
       <section>
         <div className={styles.wrapper}>
-          <KwarafaLogo />
-          <span className={styles.name}>
-            <p>KWARARAFA</p>
-          </span>
+          <Logo />
         </div>
 
         <div className={styles.menuItems}>
@@ -321,10 +290,8 @@ const Sidebar = () => {
             items={items}
             mode="inline"
             inlineIndent={0}
-            defaultOpenKeys={["schoolInfo"]}
-            expandIcon={(info) => (
-              <Arrow className={info.isOpen ? "rotate" : ""} />
-            )}
+            defaultOpenKeys={['schoolInfo']}
+            expandIcon={(info) => <Arrow className={info.isOpen ? 'rotate' : ''} />}
           />
         </div>
       </section>

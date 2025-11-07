@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { useMutation } from '@tanstack/react-query';
-import { App, Checkbox, Spin } from 'antd';
+import { App, Spin } from 'antd';
 import { Form, Formik, FormikValues } from 'formik';
 import { useAtom } from 'jotai';
 import { Link, useNavigate } from 'react-router-dom';
@@ -30,9 +30,12 @@ const SignIn = () => {
 
   useEffect(() => {
     // if (user?.token && user?.isAdmin) {
-      navigate('/about-us', { replace: true });
+    // navigate('/about-us', { replace: true });
     // }
-  }, [user?.token, user?.isAdmin, navigate]);
+    if (user?.token && user?.isAdmin) {
+      navigate(routes.setup.aboutUs, { replace: true });
+    }
+  }, [user?.token]);
 
   const handleSignIn = async (values: FormikValues, resetForm: () => void) => {
     // eslint-disable-next-line no-undef
@@ -103,10 +106,9 @@ const SignIn = () => {
 
               <Input name="password" type="password" label="Password" placeholder="Input password" />
 
-              <div className="space-between">
-                <Checkbox>Remember me</Checkbox>
-                <Link to={routes.auth.forgotPassword}>Forgot Password?</Link>
-              </div>
+              <Link className="align-end" to={routes.auth.forgotPassword}>
+                Forgot Password?
+              </Link>
 
               <Button
                 type="submit"

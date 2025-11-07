@@ -83,7 +83,7 @@
 
     &:hover {
       background-color: #ce9938;
-      //   color: #11643c;
+      //   color: var(--color-primary);
     }
   }
   span {
@@ -102,7 +102,7 @@
   font-weight: 700;
 
   & svg path {
-    fill: #11643c;
+    fill: var(--color-primary);
   }
 }
 
@@ -309,7 +309,7 @@
   }
 
   & label:first-of-type {
-    color: #11643c;
+    color: var(--color-primary);
   }
 }
 
@@ -352,7 +352,7 @@
   display: flex;
   align-items: center;
   gap: 0.2rem;
-  background-color: #2D7832;
+  background-color: #FFFFFF;
   padding-block: 1.429rem;
   padding-inline: 1.429rem;
   min-height: 5.714rem;

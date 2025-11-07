@@ -25,9 +25,9 @@ body {
   font-size: 62.5%;
   line-height: 1.875rem;
   background-color: #ffffff;
-  --color-primary: #173c19;
+  --color-primary: #800020;
+  --color-secondary: #F6F2F3;
   --color-light-green: #d5e4d6;
-  --color-secondary: #e7f5e8;
   --color-white: #ffffff;
   --color-black: #000000;
 
@@ -177,7 +177,7 @@ button {
 }
 .ant-modal-header {
   padding: 20px 24px !important;
-  background-color: #e7f5e8 !important;
+  background-color: var(--color-secondary) !important;
 }
 .ant-modal-body {
   padding-inline: 40px !important;

@@ -13,7 +13,7 @@
   gap: 1.25rem;
   margin-block-start: 0.31rem;
   // background-color: #eff0ef;
-  border: 1px dashed #2D7832;
+  border: 1px dashed var(--color-primary);
   padding-block: 1.25rem;
   border-radius: 5px;
   cursor: pointer;
@@ -26,7 +26,7 @@
 }
 
 .fileTitle {
-  color: #11643c;
+  color: var(--color-primary);
   font-weight: 500;
   font-size: 0.875rem;
   line-height: 1.125rem;
