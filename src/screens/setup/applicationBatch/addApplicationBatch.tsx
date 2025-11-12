@@ -1,15 +1,17 @@
-import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
-import { App, Spin } from "antd";
-import { Form, Formik, FormikValues } from "formik";
-import * as Yup from "yup";
+import { useState } from 'react';
 
-import { Button, Select } from "../../../custom";
-import Input from "../../../custom/input/input";
-import { StatusOptions, getAllAcademicSession } from "../../../requests";
-import { validator } from "../../../utils/validator";
-import { getAllProgram } from "../program/request";
+import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query';
+import { App, Checkbox, Spin } from 'antd';
+import { Form, Formik, FormikValues } from 'formik';
+import * as Yup from 'yup';
 
-import { createUpdateApplicationBatch } from "./request";
+import { Button, Select } from '../../../custom';
+import Input from '../../../custom/input/input';
+import { StatusOptions, getAllAcademicSession } from '../../../requests';
+import { validator } from '../../../utils/validator';
+import { getAllProgram } from '../program/request';
+
+import { createUpdateApplicationBatch } from './request';
 
 interface Props {
   handleClose: () => void;
@@ -18,20 +20,16 @@ interface Props {
 const AddApplicationBatch = ({ handleClose }: Props) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
+  const [isLateRegistrationEnabled, setIsLateRegistrationEnabled] = useState(false);
 
   const queries = useQueries({
     queries: [
-      { queryKey: ["get-all-session"], queryFn: () => getAllAcademicSession(1, 10) },
-      { queryKey: ["get-all-program"], queryFn: () => getAllProgram() },
+      { queryKey: ['get-all-session'], queryFn: () => getAllAcademicSession(1, 10) },
+      { queryKey: ['get-all-program'], queryFn: () => getAllProgram() },
     ],
   });
 
-  const {
-    data: session,
-    isLoading: isSessionLoading,
-    isError: isSessionError,
-    error: sessionError,
-  } = queries[0];
+  const { data: session, isLoading: isSessionLoading, isError: isSessionError, error: sessionError } = queries[0];
 
   // const {
   //   data: program,
@@ -47,33 +45,33 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
     mutationFn: createUpdateApplicationBatch,
   });
 
-  const handleAddApplicationBatch = async (
-    values: FormikValues,
-    resetForm: () => void
-  ) => {
+  const handleAddApplicationBatch = async (values: FormikValues, resetForm: () => void) => {
     // eslint-disable-next-line no-undef
-    const payload: ApplicationBatchPayload = {
+    let payload: ApplicationBatchPayload = {
       id: 0,
       batchName: values.batchName,
       sessionId: values.session,
       programId: values.program,
-      lateStartDate: values.lateRegistrationStartDate,
-      lateEndDate: values.lateRegistrationEndDate,
       startDate: values.startDate,
       endDate: values.endDate,
       isActive: true,
     };
 
+    if (isLateRegistrationEnabled) {
+      payload.lateEndDate = values.lateRegistrationEndDate;
+      payload.lateStartDate = values.lateRegistrationStartDate;
+    }
+
     try {
       await addApplicationBatchMutation.mutateAsync(payload, {
         onSuccess: (data) => {
           notification.success({
-            message: "Success",
+            message: 'Success',
             description: data?.message,
           });
 
           queryClient.refetchQueries({
-            queryKey: ["get-all-application-batch"],
+            queryKey: ['get-all-application-batch'],
           });
           handleClose();
           resetForm();
@@ -81,7 +79,7 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
       });
     } catch (error: any) {
       notification.error({
-        message: "Error",
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     }
@@ -90,11 +88,33 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
   const validate = Yup.object().shape({
     batchName: validator.applicationBatch,
     session: validator.session,
-    program: validator.program,
     startDate: validator.startDate,
     endDate: validator.endDate,
-    lateRegistrationStartDate: validator.lateApplicationStartDate,
-    lateRegistrationEndDate: validator.lateApplicationEndDate,
+    lateRegistrationStartDate: isLateRegistrationEnabled
+      ? Yup.date()
+          .required('Late Application Start Date is required')
+          .transform((value) => (value ? new Date(value) : null))
+          .typeError('Invalid date format')
+          .min(Yup.ref('startDate'), 'Late Application Start Date cannot be before Start Date')
+          .max(Yup.ref('endDate'), 'Late Application Start Date cannot be after End Date')
+      : Yup.date()
+          .transform((value) => (value ? new Date(value) : null))
+          .nullable()
+          .notRequired(),
+    lateRegistrationEndDate: isLateRegistrationEnabled
+      ? Yup.date()
+          .required('Late Application End Date is required')
+          .transform((value) => (value ? new Date(value) : null))
+          .typeError('Invalid date format')
+          .min(
+            Yup.ref('lateRegistrationStartDate'),
+            'Late Application End Date cannot be before Late Application Start Date',
+          )
+          .max(Yup.ref('endDate'), 'Late Application End Date cannot be after End Date')
+      : Yup.date()
+          .transform((value) => (value ? new Date(value) : null))
+          .nullable()
+          .notRequired(),
   });
 
   const sessionOptions = () => {
@@ -124,37 +144,28 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
   //     ));
   //   }
   // };
-
   return (
     <Formik
       initialValues={{
-        batchName: "",
-        session: "",
-        program: "",
-        startDate: "",
-        endDate: "",
-        lateRegistrationStartDate: "",
+        batchName: '',
+        session: '',
+        startDate: '',
+        endDate: '',
+        lateRegistrationStartDate: '',
+        lateRegistrationEndDate: '',
       }}
       onSubmit={(values, { resetForm }) => {
         handleAddApplicationBatch(values, resetForm);
       }}
       validationSchema={validate}
-      enableReinitialize={true}>
+      enableReinitialize={true}
+    >
       {() => {
         return (
           <Form className="fields">
-            <Input
-              label="Batch Name"
-              placeholder="Batch name"
-              name="batchName"
-            />
+            <Input label="Batch Name" placeholder="Batch name" name="batchName" />
 
-            <Select
-              name="session"
-              placeholder="Select session"
-              label="Session"
-              options={sessionOptions()}
-            />
+            <Select name="session" placeholder="Select session" label="Session" options={sessionOptions()} />
 
             {/* <Select
               name="program"
@@ -163,28 +174,28 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
               options={programOptions()}
             /> */}
 
-            <Input
-              type="date"
-              label="Start Date"
-              placeholder=""
-              name="startDate"
-            />
+            <Input type="date" label="Start Date" placeholder="" name="startDate" />
 
             <Input type="date" label="End Date" placeholder="" name="endDate" />
+            <Checkbox
+              checked={isLateRegistrationEnabled}
+              onChange={(e) => setIsLateRegistrationEnabled(e.target.checked)}
+            >
+              Enable late application period
+            </Checkbox>
 
-            <Input
-              type="date"
-              label="Late registration start date"
-              placeholder=""
-              name="lateRegistrationStartDate"
-            />
+            {isLateRegistrationEnabled && (
+              <>
+                <Input
+                  type="date"
+                  label="Late registration start date"
+                  placeholder=""
+                  name="lateRegistrationStartDate"
+                />
 
-            <Input
-              type="date"
-              label="Late registration End Date"
-              placeholder=""
-              name="lateRegistrationEndDate"
-            />
+                <Input type="date" label="Late registration End Date" placeholder="" name="lateRegistrationEndDate" />
+              </>
+            )}
             <Select
               name="isActive"
               placeholder="Select Status"
@@ -203,11 +214,7 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
             <div className="btn-group">
               <Button onClick={handleClose} variant="text" text="Cancel" />
               <Button
-                text={
-                  addApplicationBatchMutation?.isPending
-                    ? "Submitting..."
-                    : "Submit"
-                }
+                text={addApplicationBatchMutation?.isPending ? 'Submitting...' : 'Submit'}
                 type="submit"
                 isLoading={addApplicationBatchMutation?.isPending}
                 disabled={addApplicationBatchMutation?.isPending}

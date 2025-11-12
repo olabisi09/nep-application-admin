@@ -3,8 +3,8 @@ interface ApplicationBatchPayload {
   batchName: string;
   sessionId: number;
   programId: number;
-  lateStartDate: string;
-  lateEndDate: string;
+  lateStartDate?: string;
+  lateEndDate?: string;
   startDate: string;
   endDate: string;
   isActive: boolean;

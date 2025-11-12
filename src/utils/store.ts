@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 
 type UserData = {
@@ -25,3 +26,5 @@ try {
 }
 
 export const userAtom = atomWithStorage<UserData | undefined>('student-info', parsedUser);
+
+export const isEditAtom = atom<boolean>(false);

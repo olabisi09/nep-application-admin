@@ -158,6 +158,11 @@ const Sidebar = () => {
           icon: <Line />,
         },
         {
+          key: 'discountFee',
+          label: <NavLink to="/discount-fee">Discount Fee</NavLink>,
+          icon: <Line />,
+        },
+        {
           key: 'tuitionFee',
           label: <NavLink to="/tuition-fee-setup">Tuition Fee</NavLink>,
           icon: <Line />,
