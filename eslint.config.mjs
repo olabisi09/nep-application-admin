@@ -89,38 +89,38 @@ export default [
       // ],
       '@typescript-eslint/no-explicit-any': 'off',
       'unused-imports/no-unused-imports': 'error',
-      'sort-imports': [
-        'error',
-        {
-          ignoreDeclarationSort: true,
-        },
-      ],
-      'import/namespace': 0,
-      'import/no-unresolved': 0,
-      'import/order': [
-        'error',
-        {
-          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
-          alphabetize: {
-            order: 'asc',
-            caseInsensitive: true,
-          },
-          'newlines-between': 'always',
-          pathGroups: [
-            {
-              pattern: 'react',
-              group: 'external',
-              position: 'before',
-            },
-            {
-              pattern: '@phx/**/**',
-              group: 'internal',
-              position: 'after',
-            },
-          ],
-          pathGroupsExcludedImportTypes: ['builtin'],
-        },
-      ],
+      // 'sort-imports': [
+      //   'error',
+      //   {
+      //     ignoreDeclarationSort: true,
+      //   },
+      // ],
+      // 'import/namespace': 0,
+      // 'import/no-unresolved': 0,
+      // 'import/order': [
+      //   'error',
+      //   {
+      //     groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+      //     alphabetize: {
+      //       order: 'asc',
+      //       caseInsensitive: true,
+      //     },
+      //     'newlines-between': 'always',
+      //     pathGroups: [
+      //       {
+      //         pattern: 'react',
+      //         group: 'external',
+      //         position: 'before',
+      //       },
+      //       {
+      //         pattern: '@phx/**/**',
+      //         group: 'internal',
+      //         position: 'after',
+      //       },
+      //     ],
+      //     pathGroupsExcludedImportTypes: ['builtin'],
+      //   },
+      // ],
     },
   },
   eslintConfigPrettier,

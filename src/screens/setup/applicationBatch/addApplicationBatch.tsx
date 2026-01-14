@@ -95,8 +95,22 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
           .required('Late Application Start Date is required')
           .transform((value) => (value ? new Date(value) : null))
           .typeError('Invalid date format')
-          .min(Yup.ref('startDate'), 'Late Application Start Date cannot be before Start Date')
-          .max(Yup.ref('endDate'), 'Late Application Start Date cannot be after End Date')
+          .min(Yup.ref('endDate'), 'Late Application Start Date cannot be before application period')
+          .test(
+            'at-least-one-day-after-endDate',
+            'Late Application Start Date must be at least one day after application End Date',
+            function (value) {
+              const { endDate } = this.parent as any;
+              if (!value || !endDate) return true; // required/typeError handle missing values
+              const end = new Date(endDate);
+              end.setHours(0, 0, 0, 0);
+              const minDate = new Date(end);
+              minDate.setDate(minDate.getDate() + 1);
+              const candidate = new Date(value);
+              candidate.setHours(0, 0, 0, 0);
+              return candidate.getTime() >= minDate.getTime();
+            },
+          )
       : Yup.date()
           .transform((value) => (value ? new Date(value) : null))
           .nullable()
@@ -110,7 +124,6 @@ const AddApplicationBatch = ({ handleClose }: Props) => {
             Yup.ref('lateRegistrationStartDate'),
             'Late Application End Date cannot be before Late Application Start Date',
           )
-          .max(Yup.ref('endDate'), 'Late Application End Date cannot be after End Date')
       : Yup.date()
           .transform((value) => (value ? new Date(value) : null))
           .nullable()

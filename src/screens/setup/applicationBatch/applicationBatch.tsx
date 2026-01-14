@@ -1,37 +1,27 @@
 /* eslint-disable no-undef */
-import { useState } from "react";
+import { useState } from 'react';
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Button as AntButton,
-  App,
-  Dropdown,
-  MenuProps,
-  Modal,
-  Spin,
-  Table,
-} from "antd";
-import { ColumnsType } from "antd/es/table";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Button as AntButton, App, Dropdown, MenuProps, Modal, Spin, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 
-import { ReactComponent as Add } from "../../../assets/add.svg";
-import { ReactComponent as Ellipsis } from "../../../assets/ellipsis.svg";
-import { ReactComponent as Search } from "../../../assets/search.svg";
-import Button from "../../../custom/button/button";
-import SearchInput from "../../../custom/searchInput/searchInput";
-import { usePagination } from "../../../hooks/usePagination";
-import { deleteFaculty } from "../../../requests";
-import { formatDate } from "../../../utils/formatDate";
-import DeleteModalContent from "../../deleteModal/deleteModal";
-import styles from "../styles.module.scss";
+import { ReactComponent as Add } from '../../../assets/add.svg';
+import { ReactComponent as Ellipsis } from '../../../assets/ellipsis.svg';
+import { ReactComponent as Search } from '../../../assets/search.svg';
+import Button from '../../../custom/button/button';
+import SearchInput from '../../../custom/searchInput/searchInput';
+import { usePagination } from '../../../hooks/usePagination';
+import { formatDate } from '../../../utils/formatDate';
+import DeleteModalContent from '../../deleteModal/deleteModal';
+import styles from '../styles.module.scss';
 
-import AddApplicationBatch from "./addApplicationBatch";
-import EditApplicationBatch from "./editApplicationBatch";
-import { getApplicationBatch } from "./request";
-
+import AddApplicationBatch from './addApplicationBatch';
+import EditApplicationBatch from './editApplicationBatch';
+import { deleteApplicationBatch, getApplicationBatch } from './request';
 
 const ApplicationBatchSetup = () => {
   const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [indexData, setIndexData] = useState({} as ApplicationBatch);
@@ -57,46 +47,46 @@ const ApplicationBatchSetup = () => {
       setOpenDelete(true);
     } else {
       notification.error({
-        message: "Error",
-        description: "Invalid Application Batch ID",
+        message: 'Error',
+        description: 'Invalid Application Batch ID',
       });
     }
   };
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["get-all-application-batch"],
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ['get-all-application-batch'],
     queryFn: () => getApplicationBatch(currentPage, 10),
   });
 
   const applicationBatchData = data?.data ?? [];
 
   const filteredData = applicationBatchData?.filter((item) =>
-    item?.batchName?.toLowerCase()?.includes(searchTerm.toLowerCase())
+    item?.batchName?.toLowerCase()?.includes(searchTerm.toLowerCase()),
   );
 
-  const items = (record: ApplicationBatch): MenuProps["items"] => [
+  const items = (record: ApplicationBatch): MenuProps['items'] => [
     {
-      key: "1",
-      label: "Edit",
+      key: '1',
+      label: 'Edit',
       onClick: () => handleEdit(record),
     },
     {
-      key: "2",
-      label: "Delete",
+      key: '2',
+      label: 'Delete',
       onClick: () => handleDelete(record),
     },
   ];
 
   const columns: ColumnsType<ApplicationBatch> = [
     {
-      key: "batchName",
-      title: "Batch",
-      dataIndex: "batchName",
+      key: 'batchName',
+      title: 'Batch',
+      dataIndex: 'batchName',
     },
     {
-      key: "session",
-      title: "Session",
-      dataIndex: "sessionName",
+      key: 'session',
+      title: 'Session',
+      dataIndex: 'sessionName',
     },
     // {
     //   key: "programName",
@@ -104,40 +94,40 @@ const ApplicationBatchSetup = () => {
     //   dataIndex: "programName",
     // },
     {
-      key: "startDate",
-      title: "Start Date",
-      dataIndex: "startDate",
+      key: 'startDate',
+      title: 'Start Date',
+      dataIndex: 'startDate',
       render: (_, { startDate }) => formatDate(startDate),
     },
     {
-      key: "endDate",
-      title: "End Date",
-      dataIndex: "endDate",
+      key: 'endDate',
+      title: 'End Date',
+      dataIndex: 'endDate',
       render: (_, { endDate }) => formatDate(endDate),
     },
     {
-      key: "lateStartDate",
-      title: "Late Application Start Date",
-      dataIndex: "lateStartDate",
+      key: 'lateStartDate',
+      title: 'Late Application Start Date',
+      dataIndex: 'lateStartDate',
       render: (_, { lateStartDate }) => formatDate(lateStartDate),
     },
     {
-      key: "lateEndDate",
-      title: "Late Application End Date",
-      dataIndex: "lateEndDate",
+      key: 'lateEndDate',
+      title: 'Late Application End Date',
+      dataIndex: 'lateEndDate',
       render: (_, { lateEndDate }) => formatDate(lateEndDate),
     },
     {
-      key: "isActive",
-      title: "Status",
-      dataIndex: "isActive",
-      render: (_, { isActive }) => (isActive ? "Active" : "Inactive"),
+      key: 'isActive',
+      title: 'Status',
+      dataIndex: 'isActive',
+      render: (_, { isActive }) => (isActive ? 'Active' : 'Inactive'),
     },
     {
-      key: "action",
-      title: "",
+      key: 'action',
+      title: '',
       render: (record: ApplicationBatch) => (
-        <Dropdown menu={{ items: items(record) }} trigger={["click"]}>
+        <Dropdown menu={{ items: items(record) }} trigger={['click']}>
           <AntButton type="text" icon={<Ellipsis />} />
         </Dropdown>
       ),
@@ -145,7 +135,7 @@ const ApplicationBatchSetup = () => {
   ];
 
   const deleteApplicationBatchMutation = useMutation({
-    mutationFn: deleteFaculty,
+    mutationFn: deleteApplicationBatch,
   });
 
   const deleteApplicationBatchHandler = async () => {
@@ -154,23 +144,24 @@ const ApplicationBatchSetup = () => {
         await deleteApplicationBatchMutation.mutateAsync(indexData.id, {
           onSuccess: (data) => {
             notification.success({
-              message: "Success",
+              message: 'Success',
               description: data?.message,
             });
-            queryClient.refetchQueries({ queryKey: ["get-faculty"] });
+            queryClient.refetchQueries({ queryKey: ['get-faculty'] });
+            refetch();
             setOpenDelete(false);
           },
         });
       } catch (error: any) {
         notification.error({
-          message: "Error",
+          message: 'Error',
           description: error?.response?.data?.message,
         });
       }
     } else {
       notification.error({
-        message: "Error",
-        description: "Invalid Faculty ID",
+        message: 'Error',
+        description: 'Invalid Faculty ID',
       });
     }
   };
@@ -187,11 +178,7 @@ const ApplicationBatchSetup = () => {
     <main>
       <section className="space-between">
         <h3>Application Batch Setup</h3>
-        <Button
-          onClick={() => setShowAddModal(true)}
-          iconBefore={<Add />}
-          text="Setup"
-        />
+        <Button onClick={() => setShowAddModal(true)} iconBefore={<Add />} text="Setup" />
       </section>
 
       <section className={styles.card}>
@@ -203,14 +190,10 @@ const ApplicationBatchSetup = () => {
           <div>
             {!showSearch && (
               <span>
-                <Search
-                  onClick={() => setShowSearch((showSearch) => !showSearch)}
-                />
+                <Search onClick={() => setShowSearch((showSearch) => !showSearch)} />
               </span>
             )}
-            {showSearch && (
-              <SearchInput value={searchTerm} onChange={handleSearch} />
-            )}
+            {showSearch && <SearchInput value={searchTerm} onChange={handleSearch} />}
           </div>
         </div>
 
@@ -218,7 +201,7 @@ const ApplicationBatchSetup = () => {
           dataSource={filteredData}
           columns={columns}
           pagination={{
-            position: ["bottomCenter"],
+            position: ['bottomCenter'],
             current: currentPage,
             total: data?.totalSize,
             onChange: onChange,
@@ -238,17 +221,8 @@ const ApplicationBatchSetup = () => {
         <AddApplicationBatch handleClose={() => setShowAddModal(false)} />
       </Modal>
 
-      <Modal
-        open={openEdit}
-        onCancel={() => setOpenEdit(false)}
-        centered
-        title="Edit Application Batch"
-        footer={null}
-      >
-        <EditApplicationBatch
-          handleClose={() => setOpenEdit(false)}
-          record={indexData}
-        />
+      <Modal open={openEdit} onCancel={() => setOpenEdit(false)} centered title="Edit Application Batch" footer={null}>
+        <EditApplicationBatch handleClose={() => setOpenEdit(false)} record={indexData} />
       </Modal>
 
       <Modal

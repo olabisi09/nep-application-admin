@@ -539,12 +539,16 @@ interface ApplicationFee {
   id: number;
   modeOfStudyId: number;
   programId: number;
-  programTypeId: number;
   amount: number;
-  cost: number;
+  lateApplicationAmount: number;
+  applicationBatchId: number;
   activeStatus: boolean;
   isDeleted: boolean;
-  applicationBatchId: number;
+  programTypeId: number;
+  applicationStartDate: string;
+  applicationEndDate: string;
+  lateApplicationStartDate: string;
+  lateApplicationEndDate: string;
 }
 
 interface GetAllProgramApplicationFeeResponse extends Response {
@@ -660,6 +664,8 @@ interface GetAllFeeSetup {
   program: string;
   programId: number;
   amount: number;
+  earlyApplicationAmount: number;
+  lateApplicationAmount: number;
   applicationBatchId: number;
   applicationBatchName: string;
   programTypeId: number;
@@ -668,6 +674,10 @@ interface GetAllFeeSetup {
   programTypeId: number;
   programTypeName: null | string;
   isDeleted: boolean;
+  applicationStartDate: string;
+  applicationEndDate: string;
+  lateApplicationStartDate: string;
+  lateApplicationEndDate: string;
 }
 
 interface applicationBatchResponse extends Response {
@@ -927,4 +937,10 @@ interface DisplayTab {
 interface PaginationProps {
   pageNumber?: number;
   pageSize?: number;
+}
+
+interface APIResponse<T> {
+  statusCode: number;
+  message: string;
+  data: T;
 }

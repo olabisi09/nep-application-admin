@@ -1,13 +1,8 @@
 /* eslint-disable no-undef */
-import api from "../../../utils/api";
+import { buildQuery } from '../../../utils/buildQuery';
+import api from '../../../utils/api';
 
-export const getAllStudentUser = async (
-  pageNumber?: number,
-  pageSize?: number
-) => {
-  return (
-    await api.get(
-      `/Authorization/GetAllApplicant?PageNumber=${pageNumber}&PageSize=${pageSize}`
-    )
-  )?.data as UserResponse;
+export const getAllStudentUser = async (params: ApplicantParams) => {
+  const url = buildQuery(params);
+  return (await api.get(`/Authorization/GetAllApplicant${url}`))?.data as UserResponse;
 };

@@ -21,10 +21,10 @@ export const useCreateDiscountMutation = (handleClose: () => void) => {
 
     formData.append('Name', values.discountName);
     formData.append('Code', values.discountCode);
-    formData.append('ApplicantEmail', values.applicantEmail);
+    //formData.append('ApplicantEmail', values.applicantEmail);
     formData.append('CouponUseLimit', values.couponUseLimit);
     formData.append('CapAmount', values.cap);
-    formData.append('discountType', values.discountType);
+    formData.append('TypeOfDiscount', values.discountType);
     formData.append('DiscountAmount', values.discountAmount);
     formData.append('ApplicationBatchId', values.applicationBatch);
     formData.append('ActiveStatus', values.status);

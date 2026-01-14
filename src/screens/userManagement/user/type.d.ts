@@ -43,3 +43,11 @@ interface User {
   imageUrl: string;
   city: null | string;
 }
+
+interface ApplicantParams {
+  PageNumber?: number;
+  PageSize?: number;
+  programId?: number;
+  modeOfStudyId?: number;
+  programTypeId?: number;
+}
