@@ -38,6 +38,9 @@ export const Theme: FC<PropsWithChildren> = ({ children }) => {
           Card: {
             borderRadiusLG: 16,
           },
+          Select: {
+            optionSelectedBg: 'var(--color-secondary)',
+          },
         },
       }}
     >

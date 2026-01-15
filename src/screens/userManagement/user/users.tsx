@@ -1,23 +1,22 @@
-/* eslint-disable no-undef */
 import { useState } from 'react';
 
-import { useQueries, useQuery } from '@tanstack/react-query';
-import { Button, Card, Flex, Input, Select, Table } from 'antd';
+import { useMutation, useQueries, useQuery } from '@tanstack/react-query';
+import { Card, Flex, Input, Select, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 
 import { ReactComponent as Search } from '../../../assets/magnifier.svg';
-import { ReactComponent as Eye } from '../../../assets/eye.svg';
 import { usePagination } from '../../../hooks/usePagination';
 
-import { getAllStudentUser } from './request';
+import { downloadStudentUsers, getAllStudentUser } from './request';
 import { getAllApplicationBatch, getAllModeOfStudy, getAllPrograms, getAllProgramType } from '../../../requests/index';
 import styles from '../styles.module.scss';
 import { useDebounce } from '../../../hooks/useDebounce';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Button from '../../../custom/button/button';
+import { useDownload } from '../../../hooks/useDownload';
 
 const StudentUser = () => {
   const { currentPage, onChange } = usePagination();
-  const navigate = useNavigate();
   const [filters, setFilters] = useState<ApplicantParams>({
     programId: 0,
     modeOfStudyId: 0,
@@ -26,10 +25,15 @@ const StudentUser = () => {
     name: '',
   });
   const debouncedName = useDebounce(filters.name || '', 500);
+  const { downloadExcelFile } = useDownload();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilters({ ...filters, name: e.target.value });
   };
+
+  const downloadApplicantsMutation = useMutation({
+    mutationFn: downloadStudentUsers,
+  });
 
   const { data, isLoading } = useQuery({
     queryKey: ['get-student-users', currentPage, { ...filters, name: debouncedName }],
@@ -92,8 +96,8 @@ const StudentUser = () => {
   const columns: ColumnsType<User> = [
     {
       key: 'appNo',
-      title: 'Application Number',
-      dataIndex: 'applicationNumber',
+      title: 'S/N',
+      render: (_text, _record, index) => (currentPage - 1) * 10 + index + 1,
     },
     {
       key: 'firstName',
@@ -116,6 +120,11 @@ const StudentUser = () => {
       dataIndex: 'programTypeName',
     },
     {
+      key: 'applicationBatchName',
+      title: 'Application Batch',
+      dataIndex: 'applicationBatchName',
+    },
+    {
       key: 'modeofStudyName',
       title: 'Mode of Study',
       dataIndex: 'modeofStudyName',
@@ -134,7 +143,15 @@ const StudentUser = () => {
       key: 'action',
       title: 'Action',
       render: (_, record) => (
-        <Button type="text" onClick={() => navigate(`/student-user/${record.applicantId}`)} icon={<Eye />} />
+        // <Button
+        //   type="text"
+        //   className="link"
+        //   onClick={() => navigate(`/applicants/${record.applicantId}`)}
+        //   icon={<Eye />}
+        // />
+        <Link className="link" to={`/applicants/${record.applicantId}`}>
+          View details
+        </Link>
       ),
     },
   ];
@@ -142,10 +159,26 @@ const StudentUser = () => {
   const userData = data?.data as User[];
   const userTotal = data?.totalSize as number;
 
+  const handleDownloadApplicants = async () => {
+    await downloadApplicantsMutation.mutateAsync(
+      { ...filters, name: debouncedName },
+      {
+        onSuccess: () => {
+          downloadExcelFile(downloadApplicantsMutation.data as Blob, 'Applicant_Report.xlsx');
+        },
+      },
+    );
+  };
+
   return (
     <div>
       <section className="space-between">
         <h3>Applicants</h3>
+        <Button
+          onClick={handleDownloadApplicants}
+          text="Download Report"
+          isLoading={downloadApplicantsMutation.isPending}
+        />
       </section>
 
       <br />
@@ -188,7 +221,7 @@ const StudentUser = () => {
 
           <Input
             prefix={<Search />}
-            placeholder="Search by applicant name"
+            placeholder="Search applicant by name"
             onChange={handleSearch}
             allowClear
             className={styles.input}

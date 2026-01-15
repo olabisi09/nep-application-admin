@@ -231,3 +231,10 @@ button {
   background: rgb(191, 187, 187);
   border-radius: 1rem;
 }
+
+.link {
+  color: var(--color-primary) !important;
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-primary);
+  white-space: nowrap;
+}

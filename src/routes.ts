@@ -73,8 +73,8 @@ export const routes = {
     addRoles: '/admin-roles',
     contactUs: '/contact-us',
     addSchoolId: '/school-id-config',
-    users: '/student-user',
-    userDetails: '/student-user/:id',
+    users: '/applicants',
+    userDetails: '/applicants/:id',
   },
   onboarding: '/onboarding',
 };
@@ -84,8 +84,8 @@ export const breadcrumbNames = [
     title: 'User Management',
     routes: [
       {
-        path: '/admin-users',
-        title: 'Admin Users',
+        path: '/applicants',
+        title: 'Applicants',
       },
       {
         path: '/admin-roles',

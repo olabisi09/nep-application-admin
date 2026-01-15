@@ -40,7 +40,7 @@ const Sidebar = () => {
         },
         {
           key: 'schoolId',
-          label: <NavLink to={routes.userMgt.addSchoolId}>Add School ID</NavLink>,
+          label: <NavLink to={routes.userMgt.addSchoolId}>Lookup Setup</NavLink>,
           icon: <Line />,
         },
       ],

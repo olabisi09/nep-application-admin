@@ -116,3 +116,23 @@ interface PersonalInfo {
   nextOfKinPhoneNo: null;
   relationshipWithNextOfKin: null;
 }
+
+interface Qualification {
+  id: number;
+  applicantId: string;
+  qualificationType: string;
+  examNumber: string;
+  subjects: Subject[];
+  certificateiUrl: string;
+  isDeleted: boolean;
+}
+
+interface Subject {
+  id: number;
+  qualificationId: number;
+  subject: string;
+  grade: string;
+  activeStatus: boolean;
+  isDeleted: boolean;
+  applicantId: null;
+}

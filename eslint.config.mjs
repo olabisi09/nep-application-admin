@@ -89,6 +89,8 @@ export default [
       // ],
       '@typescript-eslint/no-explicit-any': 'off',
       'unused-imports/no-unused-imports': 'error',
+      'no-undef': 'off',
+      '@typescript-eslint/no-undef': 'off',
       // 'sort-imports': [
       //   'error',
       //   {
