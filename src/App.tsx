@@ -72,6 +72,7 @@ import TuitionYearsSetup from './screens/setup/tuitionYear/tuitionYears';
 import WhyItem from './screens/setup/whySchool/whyItem/whyItem';
 import WhySchool from './screens/setup/whySchool/whySchool';
 import StudentUser from './screens/userManagement/user/users';
+import ViewApplicant from './screens/userManagement/user/viewApplicant';
 
 function App() {
   const authRoute = [
@@ -328,6 +329,10 @@ function App() {
     {
       path: routes.userMgt.users,
       element: <StudentUser />,
+    },
+    {
+      path: routes.userMgt.userDetails,
+      element: <ViewApplicant />,
     },
     {
       path: routes.setup.applicationBatch,

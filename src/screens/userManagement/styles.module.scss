@@ -2,3 +2,20 @@
   border-radius: 0px !important;
   border-block-end: 1px solid #8C8D8C;
 }
+
+.input {
+  width: 300px;
+  margin-left: auto;
+}
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.link {
+  color: var(--color-primary) !important;
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-primary);
+}

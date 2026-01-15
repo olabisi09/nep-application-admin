@@ -74,6 +74,7 @@ export const routes = {
     contactUs: '/contact-us',
     addSchoolId: '/school-id-config',
     users: '/student-user',
+    userDetails: '/student-user/:id',
   },
   onboarding: '/onboarding',
 };

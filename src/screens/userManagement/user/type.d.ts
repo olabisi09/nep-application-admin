@@ -50,4 +50,69 @@ interface ApplicantParams {
   programId?: number;
   modeOfStudyId?: number;
   programTypeId?: number;
+  applicationBatchId?: number;
+  name?: string;
+}
+
+interface Institution {
+  id: number;
+  applicantId: string;
+  institutionName: string;
+  discipline: string;
+  cgpa: string;
+  startDate: string;
+  endDate: string;
+  certificateUrl: string;
+  isDeleted: boolean;
+}
+
+interface WorkHistory {
+  id: number;
+  applicantId: string;
+  companyName: string;
+  position: string;
+  startDate: string;
+  endDate: string;
+  isCurrentJob: boolean;
+  employmentUrl: string;
+  isDeleted: boolean;
+}
+
+interface PersonalInfo {
+  id: number;
+  applicantId: string;
+  applicationNumber: string;
+  fName: string;
+  mNane: string;
+  lName: string;
+  gender: string;
+  genderId: number;
+  maritalStatus: string;
+  maritalStatusId: number;
+  countryId: number;
+  countryName: string;
+  religion: string;
+  religionId: number;
+  phoneNo: string;
+  dateOfBirth: string;
+  lga: string;
+  lgaId: number;
+  stateOfOrigin: string;
+  stateOfOriginId: number;
+  address: string;
+  email: string;
+  zipCode: number;
+  disability: string;
+  disabilityId: number;
+  describeDisability: null;
+  imageUrl: string;
+  isActive: boolean;
+  title: string;
+  titleId: number;
+  city: string;
+  nextOfKinFName: null;
+  nextOfKinLName: null;
+  nextOfKinAdress: null;
+  nextOfKinPhoneNo: null;
+  relationshipWithNextOfKin: null;
 }
