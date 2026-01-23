@@ -1,8 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-
-import { ApiErrorResponse } from '../../types';
-import { DiscountsResponse } from '../../types/discount';
 import api from '../../utils/api';
 
 export const useGetAllDiscountQuery = () => {

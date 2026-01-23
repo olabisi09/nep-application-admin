@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
+import { USER_STORAGE_KEY } from './constants';
 
-type UserData = {
+export type UserData = {
   token: string;
   expiration: string;
   role: string[];
@@ -11,9 +12,10 @@ type UserData = {
   email: any;
   applicantId: string;
   isAdmin?: boolean;
+  institutionShortName?: string;
 };
 
-const defaultUser = localStorage.getItem('student-info');
+const defaultUser = localStorage.getItem(USER_STORAGE_KEY);
 
 let parsedUser: UserData | undefined;
 
@@ -25,6 +27,6 @@ try {
   parsedUser = undefined; // Fallback to undefined on parse failure
 }
 
-export const userAtom = atomWithStorage<UserData | undefined>('student-info', parsedUser);
+export const userAtom = atomWithStorage<UserData | undefined>(USER_STORAGE_KEY, parsedUser);
 
 export const isEditAtom = atom<boolean>(false);

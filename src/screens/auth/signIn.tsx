@@ -60,6 +60,7 @@ const SignIn = () => {
             email: data?.data?.email,
             role: data?.data?.role,
             isAdmin: data?.data?.isAdmin,
+            institutionShortName: data?.data?.institutionShortName,
           });
 
           resetForm();

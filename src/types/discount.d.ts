@@ -1,15 +1,15 @@
-export interface DiscountProps {
-  record: DiscountsDatum;
+interface DiscountProps {
+  record: Discount;
   handleClose: () => void;
 }
 
-export interface DiscountsResponse {
+interface DiscountsResponse {
   code: number;
   message: string;
-  data: DiscountsDatum[];
+  data: Discount[];
 }
 
-interface DiscountsDatum {
+interface Discount {
   id: number;
   created: string;
   createdBy: null;

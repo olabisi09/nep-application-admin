@@ -19,3 +19,69 @@
   font-weight: 600;
   border-bottom: 2px solid var(--color-primary);
 }
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.headerBar {
+  align-items: center;
+}
+
+.sectionStack {
+  width: 100%;
+}
+
+.sectionCard {
+  border-radius: 12px;
+}
+
+.bioHeader {
+  margin-bottom: 4px;
+}
+
+.avatar {
+  border: 1px solid #e6e6e6;
+}
+
+.avatarBlock {
+  min-width: 120px;
+}
+
+.identityBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.noMargin {
+  margin-bottom: 0;
+}
+
+.infoGrid {
+  margin-top: 4px;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.infoLabel {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+.infoValue {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.listActions {
+  margin-top: 6px;
+}

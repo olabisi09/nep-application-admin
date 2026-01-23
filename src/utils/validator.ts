@@ -82,7 +82,8 @@ export const validator = {
   discountName: string().required('Discount name is required'),
   discountCode: string()
     .required('Discount code is required')
-    .max(20, 'Discount code must be at most 20 characters')
+    .min(5, 'Discount code must be at least 5 characters')
+    .max(10, 'Discount code must be at most 10 characters')
     .matches(/^[A-Z0-9_-]+$/i, 'Discount code can contain letters, numbers, dash or underscore'),
   discountType: string().required('Discount type is required'),
   discountAmount: Yup.number()

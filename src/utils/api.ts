@@ -1,4 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
+import { USER_STORAGE_KEY } from './constants';
+import { UserData } from './store';
 
 export const api: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
@@ -13,10 +15,10 @@ api.interceptors.request.use(
   function (config) {
     let token = '';
     if (typeof (config?.headers as any).authorization === 'undefined') {
-      const tokenModel = JSON.parse(localStorage.getItem('new-edu-portal') || '{}');
+      const tokenModel = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '{}') as UserData;
 
-      if (tokenModel?.Token) {
-        token = tokenModel?.Token;
+      if (tokenModel?.token) {
+        token = tokenModel?.token;
       }
     }
     config.headers = {
@@ -24,6 +26,17 @@ api.interceptors.request.use(
       'Content-Type': 'application/json',
       ...config.headers,
     } as any;
+
+    if (config.method === 'post' || config.method === 'put') {
+      const tokenModel = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '{}') as UserData;
+      if (tokenModel?.institutionShortName) {
+        if (config.data instanceof FormData) {
+          config.data.append('InstitutionShortName', tokenModel?.institutionShortName || '');
+        } else if (typeof config.data === 'object' && config.data !== null) {
+          config.data.institutionShortName = tokenModel?.institutionShortName || '';
+        }
+      }
+    }
 
     return config;
   },
@@ -36,8 +49,8 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(null, function (error) {
-//   if (error?.response?.status === 401 || error?.response?.status === 403) {
-//   }
+  //   if (error?.response?.status === 401 || error?.response?.status === 403) {
+  //   }
 
   return Promise.reject(error);
 });

@@ -163,8 +163,8 @@ const StudentUser = () => {
     await downloadApplicantsMutation.mutateAsync(
       { ...filters, name: debouncedName },
       {
-        onSuccess: () => {
-          downloadExcelFile(downloadApplicantsMutation.data as Blob, 'Applicant_Report.xlsx');
+        onSuccess: (data) => {
+          downloadExcelFile(data as Blob, 'Applicant_Report.xlsx');
         },
       },
     );

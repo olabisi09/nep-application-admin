@@ -4,6 +4,7 @@ import { useState } from 'react';
 export const useDownload = () => {
   const { notification } = App.useApp();
   const [isDownloading, setIsDownloading] = useState(false);
+
   const downloadFile = async (fileUrl: string, fileName: string) => {
     setIsDownloading(true);
     try {

@@ -14,7 +14,6 @@ import { useDeleteDiscountMutation } from '../../../hooks/api/useDeleteDiscountM
 import { useGetAllDiscountQuery } from '../../../hooks/api/useGetAllDiscountQuery';
 import { usePagination } from '../../../hooks/usePagination';
 import { useSearchTerms } from '../../../hooks/useSearchTerms';
-import { DiscountsDatum } from '../../../types/discount';
 import { isEditAtom } from '../../../utils/store';
 import DeleteModalContent from '../../deleteModal/deleteModal';
 import styles from '../styles.module.scss';
@@ -25,7 +24,7 @@ const DiscountFee = () => {
   const [showSearch, setShowSearch] = useState(false);
   // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [item, setItem] = useState<DiscountsDatum>({} as DiscountsDatum);
+  const [item, setItem] = useState<Discount>({} as Discount);
   const [openDelete, setOpenDelete] = useState(false);
 
   const setIsEdit = useSetAtom(isEditAtom);
@@ -48,7 +47,7 @@ const DiscountFee = () => {
     )
     ?.map((item) => ({ ...item, key: item.id }));
 
-  const columns: ColumnsType<DiscountsDatum> = [
+  const columns: ColumnsType<Discount> = [
     {
       key: 'name',
       title: 'Discount Name',
@@ -109,7 +108,7 @@ const DiscountFee = () => {
   ];
 
   const handleShowModal = () => {
-    setItem({} as DiscountsDatum);
+    setItem({} as Discount);
     setShowAddModal((prevState) => !prevState);
     setIsEdit(false);
   };

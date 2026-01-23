@@ -622,11 +622,36 @@ interface SignInData {
   token: string;
   expiration: string;
   role: string[];
-  isNewApplicant: null;
+  amount: null;
+  applicationBatchId: null;
+  applicationName: null;
+  modeOfStudyId: null;
+  programId: null;
+  modeOfStudyName: null;
+  programName: null;
   isNewUser: boolean;
   email: null;
   applicantId: string;
+  programTypeName: null;
+  programTypeId: null;
+  applicationNumber: null;
   isAdmin: boolean;
+  fName: null;
+  phoneNo: null;
+  lName: null;
+  isPersonalInfoSubmitted: null;
+  isqualificationSubmitted: null;
+  isworkhistorySubmitted: null;
+  iInstitutionSubmitted: null;
+  isPaymentSubmitted: null;
+  applicationStartDate: null;
+  applicationEndDate: null;
+  lateApplicationStartDate: null;
+  lateApplicationEndDate: null;
+  lateApplicationAmount: null;
+  sessionId: null;
+  earlyApplicationAmount: null;
+  institutionShortName: string;
 }
 
 interface SignInPayload {

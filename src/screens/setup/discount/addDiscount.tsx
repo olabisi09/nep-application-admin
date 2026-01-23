@@ -11,12 +11,11 @@ import { useCreateDiscountMutation } from '../../../hooks/api/useCreateDiscountM
 import { useEditDiscountMutation } from '../../../hooks/api/useEditDiscountMutation';
 import { useGetAllApplicationBatchQuery } from '../../../hooks/api/useGetAllApplicationBatchQuery';
 import { StatusOptions } from '../../../requests';
-import { DiscountsDatum } from '../../../types/discount';
 import { isEditAtom } from '../../../utils/store';
 import { validator } from '../../../utils/validator';
 
 interface ComponentProps {
-  record: DiscountsDatum;
+  record: Discount;
   handleClose: () => void;
 }
 
@@ -100,7 +99,7 @@ const AddDiscount: FC<ComponentProps> = ({ record, handleClose }) => {
               <Select
                 name="applicationBatch"
                 placeholder="Select Application Batch"
-                label="Discount Type"
+                label="Application Batch"
                 options={applicationBatchOptions}
               />
 
