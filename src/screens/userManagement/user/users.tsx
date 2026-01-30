@@ -165,13 +165,13 @@ const StudentUser = () => {
                   viewApplicantDetails(record.applicantId);
                 },
               },
-              {
-                label: 'Admit Student',
-                key: '2',
-                onClick: () => {
-                  console.log('Admit Student clicked');
-                },
-              },
+              // {
+              //   label: 'Admit Student',
+              //   key: '2',
+              //   onClick: () => {
+              //     console.log('Admit Student clicked');
+              //   },
+              // },
             ],
           }}
           trigger={['click']}
@@ -204,6 +204,7 @@ const StudentUser = () => {
           message: 'Success',
           description: data?.message || 'Applicants admitted successfully',
         });
+        setSelectedApplicants([]);
       },
     });
   };
