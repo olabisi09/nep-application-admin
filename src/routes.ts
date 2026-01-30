@@ -75,6 +75,7 @@ export const routes = {
     addSchoolId: '/school-id-config',
     users: '/applicants',
     userDetails: '/applicants/:id',
+    emailTemplates: '/email-templates',
   },
   onboarding: '/onboarding',
 };
@@ -94,6 +95,10 @@ export const breadcrumbNames = [
       {
         path: '/contact-us',
         title: 'Contact Us',
+      },
+      {
+        path: '/email-templates',
+        title: 'Email Templates',
       },
     ],
   },

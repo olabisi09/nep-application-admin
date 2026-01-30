@@ -16,7 +16,6 @@ import { userAtom } from '../../utils/store';
 import { validator } from '../../utils/validator';
 
 const SignIn = () => {
-  // const setUser = useSetAtom(userAtom);
   const [user, setUser] = useAtom(userAtom);
 
   const { notification } = App.useApp();
@@ -29,16 +28,12 @@ const SignIn = () => {
   });
 
   useEffect(() => {
-    // if (user?.token && user?.isAdmin) {
-    // navigate('/about-us', { replace: true });
-    // }
     if (user?.token && user?.isAdmin) {
-      navigate(routes.setup.aboutUs, { replace: true });
+      navigate(routes.userMgt.users, { replace: true });
     }
   }, [user?.token]);
 
   const handleSignIn = async (values: FormikValues, resetForm: () => void) => {
-    // eslint-disable-next-line no-undef
     const payload: SignInPayload = {
       email: values.email,
       password: values.password,

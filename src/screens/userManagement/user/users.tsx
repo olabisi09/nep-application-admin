@@ -1,22 +1,25 @@
 import { useState } from 'react';
 
 import { useMutation, useQueries, useQuery } from '@tanstack/react-query';
-import { Card, Flex, Input, Select, Table } from 'antd';
+import { App, Card, Dropdown, Flex, Input, Select, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 
 import { ReactComponent as Search } from '../../../assets/magnifier.svg';
+import { ReactComponent as Ellipsis } from '../../../assets/ellipsis.svg';
 import { usePagination } from '../../../hooks/usePagination';
 
-import { downloadStudentUsers, getAllStudentUser } from './request';
+import { admitApplicants, downloadStudentUsers, getAllStudentUser } from './request';
 import { getAllApplicationBatch, getAllModeOfStudy, getAllPrograms, getAllProgramType } from '../../../requests/index';
 import styles from '../styles.module.scss';
 import { useDebounce } from '../../../hooks/useDebounce';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../../custom/button/button';
 import { useDownload } from '../../../hooks/useDownload';
 
 const StudentUser = () => {
+  const { notification } = App.useApp();
   const { currentPage, onChange } = usePagination();
+  const navigate = useNavigate();
   const [filters, setFilters] = useState<ApplicantParams>({
     programId: 0,
     modeOfStudyId: 0,
@@ -24,6 +27,7 @@ const StudentUser = () => {
     applicationBatchId: 0,
     name: '',
   });
+  const [selectedApplicants, setSelectedApplicants] = useState<React.Key[]>([]);
   const debouncedName = useDebounce(filters.name || '', 500);
   const { downloadExcelFile } = useDownload();
 
@@ -33,6 +37,9 @@ const StudentUser = () => {
 
   const downloadApplicantsMutation = useMutation({
     mutationFn: downloadStudentUsers,
+  });
+  const admitApplicantsMutation = useMutation({
+    mutationFn: admitApplicants,
   });
 
   const { data, isLoading } = useQuery({
@@ -93,11 +100,16 @@ const StudentUser = () => {
     value: batch.id,
   }));
 
+  const viewApplicantDetails = (applicantId: string) => {
+    navigate(`/applicants/${applicantId}`);
+  };
+
   const columns: ColumnsType<User> = [
     {
       key: 'appNo',
-      title: 'S/N',
-      render: (_text, _record, index) => (currentPage - 1) * 10 + index + 1,
+      title: 'Application No',
+      dataIndex: 'applicationNumber',
+      //render: (_text, _record, index) => (currentPage - 1) * 10 + index + 1,
     },
     {
       key: 'firstName',
@@ -143,15 +155,29 @@ const StudentUser = () => {
       key: 'action',
       title: 'Action',
       render: (_, record) => (
-        // <Button
-        //   type="text"
-        //   className="link"
-        //   onClick={() => navigate(`/applicants/${record.applicantId}`)}
-        //   icon={<Eye />}
-        // />
-        <Link className="link" to={`/applicants/${record.applicantId}`}>
-          View details
-        </Link>
+        <Dropdown
+          menu={{
+            items: [
+              {
+                label: 'View Details',
+                key: '1',
+                onClick: () => {
+                  viewApplicantDetails(record.applicantId);
+                },
+              },
+              {
+                label: 'Admit Student',
+                key: '2',
+                onClick: () => {
+                  console.log('Admit Student clicked');
+                },
+              },
+            ],
+          }}
+          trigger={['click']}
+        >
+          <Ellipsis />
+        </Dropdown>
       ),
     },
   ];
@@ -169,6 +195,29 @@ const StudentUser = () => {
       },
     );
   };
+
+  const handleAdmitApplicants = async () => {
+    const payload = { applicationNumber: selectedApplicants as string[] };
+    await admitApplicantsMutation.mutateAsync(payload, {
+      onSuccess: (data) => {
+        notification.success({
+          message: 'Success',
+          description: data?.message || 'Applicants admitted successfully',
+        });
+      },
+    });
+  };
+
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedApplicants(newSelectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys: selectedApplicants,
+    onChange: onSelectChange,
+  };
+
+  const hasSelected = selectedApplicants.length > 0;
 
   return (
     <div>
@@ -228,6 +277,15 @@ const StudentUser = () => {
           />
         </div>
         <br />
+        {hasSelected && (
+          <Button
+            text="Admit Students"
+            onClick={handleAdmitApplicants}
+            isLoading={admitApplicantsMutation.isPending}
+            disabled={admitApplicantsMutation.isPending}
+          />
+        )}
+        <br />
         <p>
           Showing 1-{userData?.length} of {userTotal}
         </p>
@@ -235,7 +293,8 @@ const StudentUser = () => {
         <Table
           dataSource={userData}
           columns={columns}
-          rowKey={(record) => record.applicantId}
+          rowKey={(record) => record.applicationNumber}
+          rowSelection={rowSelection}
           scroll={{ x: true }}
           loading={isLoading}
           pagination={{

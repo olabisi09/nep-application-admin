@@ -23,16 +23,6 @@ const Sidebar = () => {
           label: <NavLink to={routes.userMgt.users}>Applicants</NavLink>,
           icon: <Line />,
         },
-        // {
-        //   key: "addUsers",
-        //   label: <NavLink to="/admin-users">Add Users</NavLink>,
-        //   icon: <Line />,
-        // },
-        // {
-        //   key: "addRoles",
-        //   label: <NavLink to="/admin-roles">Add Roles</NavLink>,
-        //   icon: <Line />,
-        // },
         {
           key: 'contactUs',
           label: <NavLink to={routes.userMgt.contactUs}>Contact Feed Back</NavLink>,
@@ -41,6 +31,11 @@ const Sidebar = () => {
         {
           key: 'schoolId',
           label: <NavLink to={routes.userMgt.addSchoolId}>Lookup Setup</NavLink>,
+          icon: <Line />,
+        },
+        {
+          key: 'emailTemplates',
+          label: <NavLink to={routes.userMgt.emailTemplates}>Email Templates</NavLink>,
           icon: <Line />,
         },
       ],
@@ -277,6 +272,18 @@ const Sidebar = () => {
         {
           key: 'studentLife',
           label: <NavLink to={'/student-life'}>Student Life</NavLink>,
+          icon: <Line />,
+        },
+      ],
+    },
+    {
+      key: 'admission',
+      label: 'Admission',
+      icon: <Settings />,
+      children: [
+        {
+          key: 'acceptanceFee',
+          label: <NavLink to="/acceptance-fee-setup">Acceptance Fee Setup</NavLink>,
           icon: <Line />,
         },
       ],

@@ -73,6 +73,7 @@ import WhyItem from './screens/setup/whySchool/whyItem/whyItem';
 import WhySchool from './screens/setup/whySchool/whySchool';
 import StudentUser from './screens/userManagement/user/users';
 import ViewApplicant from './screens/userManagement/user/viewApplicant';
+import EmailTemplates from './screens/userManagement/emailTemplates/templates';
 
 function App() {
   const authRoute = [
@@ -349,6 +350,10 @@ function App() {
     {
       path: routes.setup.DisplayTabSetup,
       element: <DisplayTabSetup />,
+    },
+    {
+      path: routes.userMgt.emailTemplates,
+      element: <EmailTemplates />,
     },
   ];
 

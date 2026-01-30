@@ -16,6 +16,8 @@ export const Theme: FC<PropsWithChildren> = ({ children }) => {
             headerBg: 'var(--color-secondary)',
             headerBorderRadius: 0,
             headerColor: 'var(--color-primary)',
+            rowSelectedBg: 'var(--color-secondary)',
+            rowSelectedHoverBg: 'var(--color-secondary)',
           },
           Modal: {
             padding: 0,
@@ -40,6 +42,9 @@ export const Theme: FC<PropsWithChildren> = ({ children }) => {
           },
           Select: {
             optionSelectedBg: 'var(--color-secondary)',
+          },
+          Checkbox: {
+            colorPrimary: 'var(--color-primary)',
           },
         },
       }}
