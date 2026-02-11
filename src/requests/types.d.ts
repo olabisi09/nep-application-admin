@@ -703,6 +703,7 @@ interface GetAllFeeSetup {
   applicationEndDate: string;
   lateApplicationStartDate: string;
   lateApplicationEndDate: string;
+  acceptanceFee: number;
 }
 
 interface applicationBatchResponse extends Response {

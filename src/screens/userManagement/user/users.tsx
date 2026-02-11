@@ -237,7 +237,7 @@ const StudentUser = () => {
         <div className={styles.filters}>
           <div>
             <h5>Filters</h5>
-            <Flex gap="8px" wrap="wrap">
+            <Flex gap="8px">
               <Select
                 placeholder="Program"
                 allowClear

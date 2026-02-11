@@ -15,9 +15,9 @@ import { deleteFeeSetup, getAllFeeSetup } from '../../../requests';
 import DeleteModalContent from '../../deleteModal/deleteModal';
 import styles from '../styles.module.scss';
 
-import AddApplicationFee from './addApplicationFee';
+import AddAcceptanceFee from './addAcceptanceFee';
 
-const ApplicationFee = () => {
+const AcceptanceFee = () => {
   const [showSearch, setShowSearch] = useState(false);
   // const [showAllFilter, setShowAllFilter] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -89,7 +89,7 @@ const ApplicationFee = () => {
     {
       key: 'amount',
       title: 'Amount',
-      dataIndex: 'amount',
+      dataIndex: 'acceptanceFee',
     },
     {
       key: ' applicationBatchName',
@@ -150,7 +150,7 @@ const ApplicationFee = () => {
   return (
     <main>
       <section className="space-between">
-        <h3>Application Fee Setup</h3>
+        <h3>Acceptance Fee Setup</h3>
         <Button onClick={handleShowModal} iconBefore={<Add />} text="Setup" />
       </section>
 
@@ -168,14 +168,6 @@ const ApplicationFee = () => {
             )}
 
             {showSearch && <SearchInput value={searchTerm} onChange={handleSearch} />}
-
-            {/* {!showAllFilter && (
-              <Filter
-                onClick={() =>
-                  setShowAllFilter((showAllFilter) => !showAllFilter)
-                }
-              />
-            )} */}
           </div>
         </div>
 
@@ -200,7 +192,7 @@ const ApplicationFee = () => {
         title="Application Fee Setup"
         footer={null}
       >
-        <AddApplicationFee
+        <AddAcceptanceFee
           record={item}
           handleClose={() => {
             setShowAddModal(false);
@@ -227,4 +219,4 @@ const ApplicationFee = () => {
   );
 };
 
-export default ApplicationFee;
+export default AcceptanceFee;

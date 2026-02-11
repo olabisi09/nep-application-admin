@@ -616,7 +616,7 @@ export const deleteCampusExperienceImage = async (id: number) => {
   return (await api.delete(`/StudentLife/studentlife/DeleteCampusExperienceImage?Id=${id}`))?.data as Response;
 };
 
-export const createOrUpdateApplicationFee = async (payload: Partial<ApplicationFee>) => {
+export const createOrUpdateApplicationFee = async (payload: Partial<ApplicationFee> & { acceptanceFee?: number }) => {
   return (await api.post('/ReadMore/CreateUpdateFeeSetup', payload))?.data as ApplicationFeeResponse;
 };
 

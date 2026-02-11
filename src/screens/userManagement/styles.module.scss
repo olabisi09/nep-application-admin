@@ -12,6 +12,13 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+
+  @media (max-width: 912px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 12px;
+  }
 }
 
 .link {
