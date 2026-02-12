@@ -1,10 +1,12 @@
-import { ChangeEventHandler, FC, useState } from "react";
+import { ChangeEventHandler, FC, useState } from 'react';
 
-import classNames from "classnames";
-import { Field, FieldProps } from "formik";
+import classNames from 'classnames';
+import { Field, FieldProps } from 'formik';
 
-import styles from "./input.module.scss";
+import styles from './input.module.scss';
 
+import { ReactComponent as ShowIcon } from '../../assets/eye.svg';
+import { ReactComponent as HideIcon } from '../../assets/eye-crossed.svg';
 
 interface ComponentProps {
   label: string;
@@ -19,16 +21,7 @@ interface ComponentProps {
 }
 
 const Input: FC<ComponentProps> = (props) => {
-  const {
-    name,
-    label,
-    disabled,
-    type = "text",
-    placeholder,
-    isRow,
-    asterisk = false,
-    min,
-  } = props;
+  const { name, label, disabled, type = 'text', placeholder, isRow, asterisk = false, min } = props;
 
   const [isShowPassword, setIsShowPassword] = useState(false);
 
@@ -36,15 +29,14 @@ const Input: FC<ComponentProps> = (props) => {
     setIsShowPassword((prevState) => !prevState);
   };
 
-  const inputType =
-    type === "password" ? (isShowPassword ? "text" : "password") : type;
+  const inputType = type === 'password' ? (isShowPassword ? 'text' : 'password') : type;
 
   let inputClassName = isRow ? styles.input : styles.inputTwo;
 
   return (
     <Field name={name}>
       {({ field, meta }: FieldProps) => (
-        <div className={isRow ? styles.loginContainer : ""}>
+        <div className={isRow ? styles.loginContainer : ''}>
           <label>
             {asterisk ? (
               <span>
@@ -57,7 +49,7 @@ const Input: FC<ComponentProps> = (props) => {
           </label>
 
           <div className={styles.customInput}>
-            {type !== "textarea" ? (
+            {type !== 'textarea' ? (
               <>
                 <input
                   {...field}
@@ -67,28 +59,22 @@ const Input: FC<ComponentProps> = (props) => {
                   className={classNames(styles.customInput, inputClassName)}
                   min={min}
                 />
-                {type === "password" && (
-                  <button
-                    type="button"
-                    className={styles.showToggle}
-                    onClick={showPasswordHandle}>
-                    {isShowPassword ? "Hide" : "Show"}
+                {type === 'password' && (
+                  <button type="button" className={styles.showToggle} onClick={showPasswordHandle}>
+                    {isShowPassword ? (
+                      <HideIcon width="1.5rem" height="1.5rem" />
+                    ) : (
+                      <ShowIcon width="1.5rem" height="1.5rem" />
+                    )}
                   </button>
                 )}
               </>
             ) : (
-              <textarea
-                className={styles.inputTwo}
-                {...field}
-                placeholder={placeholder}
-                rows={3}
-              />
+              <textarea className={styles.inputTwo} {...field} placeholder={placeholder} rows={3} />
             )}
           </div>
 
-          {meta.touched && meta.error && (
-            <div className={styles.error}>{meta.error}</div>
-          )}
+          {meta.touched && meta.error && <div className={styles.error}>{meta.error}</div>}
         </div>
       )}
     </Field>

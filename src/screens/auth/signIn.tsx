@@ -66,6 +66,9 @@ const SignIn = () => {
         message: 'Error',
         description: error?.response?.data?.message,
       });
+
+      console.log(error);
+      
     }
   };
 

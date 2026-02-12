@@ -10,12 +10,26 @@ export const api: AxiosInstance = axios.create({
   },
 });
 
+// Helper function to safely parse user data from localStorage
+const getStoredUserData = (): UserData | undefined => {
+  const stored = localStorage.getItem(USER_STORAGE_KEY);
+  if (!stored || stored === 'undefined' || stored === 'null') {
+    return undefined;
+  }
+  try {
+    return JSON.parse(stored) as UserData;
+  } catch (error) {
+    console.error('Error parsing user data from localStorage:', error);
+    return undefined;
+  }
+};
+
 // Set up axios request interceptors
 api.interceptors.request.use(
   function (config) {
     let token = '';
     if (typeof (config?.headers as any).authorization === 'undefined') {
-      const tokenModel = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '{}') as UserData;
+      const tokenModel = getStoredUserData();
 
       if (tokenModel?.token) {
         token = tokenModel?.token;
@@ -28,7 +42,7 @@ api.interceptors.request.use(
     } as any;
 
     if (config.method === 'post' || config.method === 'put') {
-      const tokenModel = JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '{}') as UserData;
+      const tokenModel = getStoredUserData();
       if (tokenModel?.institutionShortName) {
         if (config.data instanceof FormData) {
           config.data.append('InstitutionShortName', tokenModel?.institutionShortName || '');

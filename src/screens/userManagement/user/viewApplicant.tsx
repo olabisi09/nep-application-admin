@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useApplicantDetails } from '../../../hooks/api/useApplicantDetails';
 import {
   Avatar,
@@ -27,9 +27,11 @@ const { Text, Title } = Typography;
 const ViewApplicant = () => {
   const { id: applicantId } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { personalInfo, institutions, workHistory, qualifications, isLoading, isError } = useApplicantDetails(
     applicantId || '',
   );
+  const applicationDetails = location.state?.applicationDetails as User | undefined;
 
   return (
     <div className={styles.page}>
@@ -47,6 +49,7 @@ const ViewApplicant = () => {
       ) : (
         <Space direction="vertical" size={16} className={styles.sectionStack}>
           {personalInfo?.fName && <Biodata personalInfo={personalInfo} />}
+          {applicationDetails && <ApplicationDetails applicationDetails={applicationDetails} />}
           {institutions && institutions.length > 0 && <Institution institutions={institutions} />}
           {qualifications && qualifications.length > 0 && <QualificationDetails qualifications={qualifications} />}
           {workHistory && workHistory.length > 0 && <WorkHistory workHistory={workHistory} />}
@@ -88,6 +91,18 @@ const Biodata = ({ personalInfo }: { personalInfo: PersonalInfo }) => (
       <InfoItem label="Country" value={personalInfo?.countryName} />
       <InfoItem label="State of Origin" value={personalInfo?.stateOfOrigin} />
       <InfoItem label="LGA" value={personalInfo?.lga} />
+    </Row>
+  </Card>
+);
+
+const ApplicationDetails = ({ applicationDetails }: { applicationDetails: User }) => (
+  <Card title="Application Details" className={styles.sectionCard} bodyStyle={{ padding: 16 }}>
+    <Row gutter={[16, 12]} className={styles.infoGrid}>
+      <InfoItem label="Application No" value={applicationDetails?.applicationNumber} />
+      <InfoItem label="Program Name" value={applicationDetails?.programName} />
+      <InfoItem label="Program Type" value={applicationDetails?.programTypeName} />
+      <InfoItem label="Application Batch" value={applicationDetails?.applicationBatchName} />
+      <InfoItem label="Mode of Study" value={applicationDetails?.modeofStudyName} />
     </Row>
   </Card>
 );
