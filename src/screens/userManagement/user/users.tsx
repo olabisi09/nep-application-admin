@@ -117,8 +117,10 @@ const StudentUser = () => {
     value: session.id,
   }));
 
-  const viewApplicantDetails = (applicantId: string) => {
-    navigate(`/applicants/${applicantId}`);
+  const viewApplicantDetails = (record: User) => {
+    navigate(`/applicants/${record.applicantId}`, {
+      state: { applicationDetails: record },
+    });
   };
 
   const columns: ColumnsType<User> = [
@@ -179,7 +181,7 @@ const StudentUser = () => {
                 label: 'View Details',
                 key: '1',
                 onClick: () => {
-                  viewApplicantDetails(record.applicantId);
+                  viewApplicantDetails(record);
                 },
               },
               // {

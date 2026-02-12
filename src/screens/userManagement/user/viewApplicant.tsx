@@ -142,6 +142,20 @@ const Biodata = ({ personalInfo }: { personalInfo: PersonalInfo }) => (
   </Card>
 );
 
+const StudyDetailsCard = ({ details }: { details: StudyDetails }) => {
+  return (
+    <Card title="Application Details" className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
+      <Row gutter={[16, 12]} className={styles.infoGrid}>
+        <InfoItem label="Application No" value={details?.applicationNumber} />
+        <InfoItem label="Program" value={details?.programName} />
+        <InfoItem label="Degree Type" value={details?.programTypeName} />
+        <InfoItem label="Batch" value={details?.applicationBatchName} />
+        <InfoItem label="Mode of Study" value={details?.modeOfStudyName} />
+      </Row>
+    </Card>
+  );
+};
+
 const AvatarBlock = ({ personalInfo }: { personalInfo: PersonalInfo }) => {
   const { downloadFile, isDownloading } = useDownload();
   const photoUrl = personalInfo?.imageUrl;
@@ -198,7 +212,7 @@ const Institution = ({ institutions }: { institutions: Institution[] }) => {
     ),
   }));
   return (
-    <Card title="Institutions" className={styles.sectionCard} bodyStyle={{ padding: 16 }}>
+    <Card title="Institutions" className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
       <Collapse items={items} size="small" />
     </Card>
   );
@@ -236,7 +250,7 @@ const QualificationDetails = ({ qualifications }: { qualifications: Qualificatio
     ),
   }));
   return (
-    <Card title="Qualifications" className={styles.sectionCard} bodyStyle={{ padding: 16 }}>
+    <Card title="Qualifications" className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
       <Collapse items={items} size="small" />
     </Card>
   );
@@ -278,21 +292,8 @@ const WorkHistory = ({ workHistory }: { workHistory: WorkHistory[] }) => {
   }));
 
   return (
-    <Card title="Work History" className={styles.sectionCard} bodyStyle={{ padding: 16 }}>
+    <Card title="Work History" className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
       <Collapse items={items} size="small" />
-    </Card>
-  );
-};
-
-const StudyDetailsCard = ({ details }: { details: StudyDetails }) => {
-  return (
-    <Card title="Application Details" className={styles.sectionCard} bodyStyle={{ padding: 16 }}>
-      <Row gutter={[16, 12]} className={styles.infoGrid}>
-        <InfoItem label="Program" value={details?.programName} />
-        <InfoItem label="Degree Type" value={details?.programTypeName} />
-        <InfoItem label="Study Mode" value={details?.modeOfStudyName} />
-        <InfoItem label="Batch" value={details?.applicationBatchName} />
-      </Row>
     </Card>
   );
 };

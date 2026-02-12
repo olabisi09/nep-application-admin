@@ -17,15 +17,21 @@ export type UserData = {
 
 const defaultUser = localStorage.getItem(USER_STORAGE_KEY);
 
-let parsedUser: UserData | undefined;
+const parseStoredUser = (): UserData | undefined => {
+  if (!defaultUser || defaultUser === 'undefined' || defaultUser === 'null') {
+    return undefined;
+  }
 
-try {
-  const storedData = defaultUser ? JSON.parse(defaultUser) : undefined;
-  parsedUser = storedData && storedData.token ? storedData : undefined;
-} catch (error) {
-  console.error('Error parsing user data from localStorage:', error);
-  parsedUser = undefined; // Fallback to undefined on parse failure
-}
+  try {
+    const storedData = JSON.parse(defaultUser);
+    return storedData && storedData.token ? storedData : undefined;
+  } catch (error) {
+    console.error('Error parsing user data from localStorage:', error);
+    return undefined;
+  }
+};
+
+const parsedUser = parseStoredUser();
 
 export const userAtom = atomWithStorage<UserData | undefined>(USER_STORAGE_KEY, parsedUser);
 
