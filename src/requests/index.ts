@@ -1,6 +1,9 @@
-/* eslint-disable no-undef */
 import { buildQuery } from '../utils/buildQuery';
 import api from '../utils/api';
+
+export const downloadFileWithAuth = async (fileUrl: string) => {
+  return await api.get(fileUrl, { responseType: 'blob' });
+};
 
 export const getAboutUs = async () => {
   return (await api.get('/AboutUsPage/GetAllAboutUs'))?.data as GetResponse;
@@ -19,8 +22,11 @@ export const deleteAboutUs = async (id: number) => {
 };
 
 export const getAllAcademicSession = async (pageNumber?: number, pageSize?: number) => {
-  return (await api.get(`/ReadMore/GetAllAcademicSessions/?PageNumber=${pageNumber}&PageSize=${pageSize}`))
-    ?.data as SessionResponse;
+  const url = buildQuery({
+    PageNumber: pageNumber,
+    PageSize: pageSize,
+  });
+  return (await api.get(`/ReadMore/GetAllAcademicSessions${url}`))?.data as SessionResponse;
 };
 
 export const createUpdateSession = async (payload: Partial<Session>) => {
@@ -55,8 +61,11 @@ export const createUpdateTuition = async (payload: Partial<Tuition>) => {
 };
 
 export const getAllTuitionFee = async (pageNumber?: number, pageSize?: number) => {
-  return (await api.get(`/ReadMore/GetAllTuition/?PageNumber=${pageNumber}&PageSize=${pageSize}`))
-    ?.data as TuitionResponse;
+  const url = buildQuery({
+    PageNumber: pageNumber,
+    PageSize: pageSize,
+  });
+  return (await api.get(`/ReadMore/GetAllTuition/${url}`))?.data as TuitionResponse;
 };
 
 export const deleteTuition = async (id: number) => {

@@ -36,3 +36,8 @@ export const getApplicantQualifications = async (applicantId: string) => {
 export const admitApplicants = async (payload: { applicationNumber: string[] }) => {
   return (await api.post(`/Authorization/AdmitApplicantsAsync`, payload))?.data as APIResponse<any>;
 };
+
+export const getApplicantStudyDetails = async (applicantId: string) => {
+  return (await api.get(`/Authorization/GetApplicantBiodataByApplicantId?applicantId=${applicantId}`))
+    ?.data as APIResponse<StudyDetails>;
+};
