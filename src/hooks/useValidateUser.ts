@@ -13,7 +13,7 @@ export const useValidateUser = () => {
       if (!user) {
         setIsLoading(false);
         return;
-      }
+      }      
 
       const isTokenExpired = (expiryDate: string): boolean => {
         const currentTime = new Date().toISOString();
