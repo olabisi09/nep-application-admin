@@ -101,4 +101,5 @@ export const validator = {
     .typeError('Coupon use limit must be a number')
     .integer('Coupon use limit must be an integer')
     .min(0, 'Coupon use limit cannot be negative'),
+  acceptanceFee: Yup.number().required('Acceptance Fee is required'),
 };

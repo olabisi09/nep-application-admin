@@ -51,6 +51,7 @@ interface ApplicantParams {
   modeOfStudyId?: number;
   programTypeId?: number;
   applicationBatchId?: number;
+  sessionId?: number;
   name?: string;
 }
 
@@ -135,4 +136,29 @@ interface Subject {
   activeStatus: boolean;
   isDeleted: boolean;
   applicantId: null;
+}
+
+interface StudyDetails {
+  applicantId: string;
+  applicationNumber: string;
+  lastName: string;
+  firstName: string;
+  middleName: null;
+  email: string;
+  phoneNumber: string;
+  dateOfBirth: string;
+  countyId: number;
+  stateId: number;
+  lgaId: number;
+  programId: number;
+  modeOfStudyId: number;
+  applicationBatchId: number;
+  programName: string;
+  modeOfStudyName: string;
+  applicationBatchName: string;
+  programTypeId: number;
+  programTypeName: string;
+  institutionShortName: string;
+  hasPaidAcceptanceFee: boolean;
+  canPayAcceptanceFee: boolean;
 }

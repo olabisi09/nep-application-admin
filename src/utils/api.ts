@@ -2,6 +2,8 @@ import axios, { AxiosInstance } from 'axios';
 import { USER_STORAGE_KEY } from './constants';
 import { UserData } from './store';
 
+const institution = process.env.REACT_APP_INSTITUTION_NAME || 'JHU';
+
 export const api: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
   env: {
@@ -38,6 +40,7 @@ api.interceptors.request.use(
     config.headers = {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
+      'X-Institution': institution,
       ...config.headers,
     } as any;
 

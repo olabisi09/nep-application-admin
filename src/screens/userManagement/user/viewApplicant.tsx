@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useApplicantDetails } from '../../../hooks/api/useApplicantDetails';
 import {
   Avatar,
@@ -20,6 +20,7 @@ import styles from '../styles.module.scss';
 import { useDownload } from '../../../hooks/useDownload';
 import { ColumnsType } from 'antd/es/table';
 import { ReactComponent as Back } from '../../../assets/arrow.svg';
+import { ReactComponent as DownloadIcon } from '../../../assets/download.svg';
 import { routes } from '../../../routes';
 
 const { Text, Title } = Typography;
@@ -27,11 +28,23 @@ const { Text, Title } = Typography;
 const ViewApplicant = () => {
   const { id: applicantId } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const location = useLocation();
-  const { personalInfo, institutions, workHistory, qualifications, isLoading, isError } = useApplicantDetails(
-    applicantId || '',
-  );
-  const applicationDetails = location.state?.applicationDetails as User | undefined;
+  const {
+    personalInfo,
+    studyDetails,
+    institutions,
+    workHistory,
+    qualifications,
+    personalInfoLoading,
+    studyDetailsLoading,
+    institutionLoading,
+    workHistoryLoading,
+    qualificationsLoading,
+    personalInfoError,
+    studyDetailsError,
+    institutionError,
+    workHistoryError,
+    qualificationsError,
+  } = useApplicantDetails(applicantId || '');
 
   return (
     <div className={styles.page}>
@@ -42,19 +55,47 @@ const ViewApplicant = () => {
         <h3>Applicant Details</h3>
       </Flex>
       <Divider style={{ margin: '12px 0 20px' }} />
-      {isLoading ? (
-        <Spin />
-      ) : isError ? (
-        <div>Error loading applicant details.</div>
-      ) : (
-        <Space direction="vertical" size={16} className={styles.sectionStack}>
-          {personalInfo?.fName && <Biodata personalInfo={personalInfo} />}
-          {applicationDetails && <ApplicationDetails applicationDetails={applicationDetails} />}
-          {institutions && institutions.length > 0 && <Institution institutions={institutions} />}
-          {qualifications && qualifications.length > 0 && <QualificationDetails qualifications={qualifications} />}
-          {workHistory && workHistory.length > 0 && <WorkHistory workHistory={workHistory} />}
-        </Space>
-      )}
+      <Space direction="vertical" size={16} className={styles.sectionStack}>
+        {personalInfoLoading ? (
+          <SectionState title="Bio-data" loading />
+        ) : personalInfoError ? (
+          <SectionState title="Bio-data" error="Unable to load biodata." />
+        ) : (
+          personalInfo?.fName && <Biodata personalInfo={personalInfo} />
+        )}
+
+        {studyDetailsLoading ? (
+          <SectionState title="Study Details" loading />
+        ) : studyDetailsError ? (
+          <SectionState title="Study Details" error="Unable to load study details." />
+        ) : (
+          studyDetails?.programName && <StudyDetailsCard details={studyDetails} />
+        )}
+
+        {institutionLoading ? (
+          <SectionState title="Institutions" loading />
+        ) : institutionError ? (
+          <SectionState title="Institutions" error="Unable to load institutions." />
+        ) : (
+          institutions && institutions.length > 0 && <Institution institutions={institutions} />
+        )}
+
+        {qualificationsLoading ? (
+          <SectionState title="Qualifications" loading />
+        ) : qualificationsError ? (
+          <SectionState title="Qualifications" error="Unable to load qualifications." />
+        ) : (
+          qualifications && qualifications.length > 0 && <QualificationDetails qualifications={qualifications} />
+        )}
+
+        {workHistoryLoading ? (
+          <SectionState title="Work History" loading />
+        ) : workHistoryError ? (
+          <SectionState title="Work History" error="Unable to load work history." />
+        ) : (
+          workHistory && workHistory.length > 0 && <WorkHistory workHistory={workHistory} />
+        )}
+      </Space>
     </div>
   );
 };
@@ -66,8 +107,14 @@ const InfoItem = ({ label, value }: { label: string; value?: React.ReactNode }) 
   </Col>
 );
 
+const SectionState = ({ title, loading, error }: { title: string; loading?: boolean; error?: string }) => (
+  <Card title={title} className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
+    {loading ? <Spin /> : <Text type="danger">{error}</Text>}
+  </Card>
+);
+
 const Biodata = ({ personalInfo }: { personalInfo: PersonalInfo }) => (
-  <Card title="Bio-data" className={styles.sectionCard} bodyStyle={{ padding: 16 }}>
+  <Card title="Bio-data" className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
     <Flex gap="16px" align="center" className={styles.bioHeader}>
       <AvatarBlock personalInfo={personalInfo} />
       <div className={styles.identityBlock}>
@@ -95,17 +142,19 @@ const Biodata = ({ personalInfo }: { personalInfo: PersonalInfo }) => (
   </Card>
 );
 
-const ApplicationDetails = ({ applicationDetails }: { applicationDetails: User }) => (
-  <Card title="Application Details" className={styles.sectionCard} bodyStyle={{ padding: 16 }}>
-    <Row gutter={[16, 12]} className={styles.infoGrid}>
-      <InfoItem label="Application No" value={applicationDetails?.applicationNumber} />
-      <InfoItem label="Program Name" value={applicationDetails?.programName} />
-      <InfoItem label="Program Type" value={applicationDetails?.programTypeName} />
-      <InfoItem label="Application Batch" value={applicationDetails?.applicationBatchName} />
-      <InfoItem label="Mode of Study" value={applicationDetails?.modeofStudyName} />
-    </Row>
-  </Card>
-);
+const StudyDetailsCard = ({ details }: { details: StudyDetails }) => {
+  return (
+    <Card title="Application Details" className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
+      <Row gutter={[16, 12]} className={styles.infoGrid}>
+        <InfoItem label="Application No" value={details?.applicationNumber} />
+        <InfoItem label="Program" value={details?.programName} />
+        <InfoItem label="Degree Type" value={details?.programTypeName} />
+        <InfoItem label="Batch" value={details?.applicationBatchName} />
+        <InfoItem label="Mode of Study" value={details?.modeOfStudyName} />
+      </Row>
+    </Card>
+  );
+};
 
 const AvatarBlock = ({ personalInfo }: { personalInfo: PersonalInfo }) => {
   const { downloadFile, isDownloading } = useDownload();
@@ -153,6 +202,7 @@ const Institution = ({ institutions }: { institutions: Institution[] }) => {
               variant="text"
               loading={isDownloading}
               onClick={() => downloadFile(institution.certificateUrl, 'certificate.pdf')}
+              icon={<DownloadIcon width={16} height={16} />}
             >
               Download Certificate
             </Button>
@@ -162,7 +212,7 @@ const Institution = ({ institutions }: { institutions: Institution[] }) => {
     ),
   }));
   return (
-    <Card title="Institutions" className={styles.sectionCard} bodyStyle={{ padding: 16 }}>
+    <Card title="Institutions" className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
       <Collapse items={items} size="small" />
     </Card>
   );
@@ -200,7 +250,7 @@ const QualificationDetails = ({ qualifications }: { qualifications: Qualificatio
     ),
   }));
   return (
-    <Card title="Qualifications" className={styles.sectionCard} bodyStyle={{ padding: 16 }}>
+    <Card title="Qualifications" className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
       <Collapse items={items} size="small" />
     </Card>
   );
@@ -228,8 +278,10 @@ const WorkHistory = ({ workHistory }: { workHistory: WorkHistory[] }) => {
             </a>
             <Button
               type="text"
+              variant="outlined"
               loading={isDownloading}
-              onClick={() => downloadFile(work.employmentUrl, `employment_letter.pdf`)}
+              onClick={() => downloadFile(work.employmentUrl, 'employment_letter.pdf')}
+              icon={<DownloadIcon width={16} height={16} />}
             >
               Download Employment Letter
             </Button>
@@ -240,7 +292,7 @@ const WorkHistory = ({ workHistory }: { workHistory: WorkHistory[] }) => {
   }));
 
   return (
-    <Card title="Work History" className={styles.sectionCard} bodyStyle={{ padding: 16 }}>
+    <Card title="Work History" className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
       <Collapse items={items} size="small" />
     </Card>
   );

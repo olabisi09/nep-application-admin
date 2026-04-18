@@ -9,7 +9,13 @@ import { ReactComponent as Ellipsis } from '../../../assets/ellipsis.svg';
 import { usePagination } from '../../../hooks/usePagination';
 
 import { admitApplicants, downloadStudentUsers, getAllStudentUser } from './request';
-import { getAllApplicationBatch, getAllModeOfStudy, getAllPrograms, getAllProgramType } from '../../../requests/index';
+import {
+  getAllAcademicSession,
+  getAllApplicationBatch,
+  getAllModeOfStudy,
+  getAllPrograms,
+  getAllProgramType,
+} from '../../../requests/index';
 import styles from '../styles.module.scss';
 import { useDebounce } from '../../../hooks/useDebounce';
 import { useNavigate } from 'react-router-dom';
@@ -25,6 +31,7 @@ const StudentUser = () => {
     modeOfStudyId: 0,
     programTypeId: 0,
     applicationBatchId: 0,
+    sessionId: 0,
     name: '',
   });
   const [selectedApplicants, setSelectedApplicants] = useState<React.Key[]>([]);
@@ -52,11 +59,12 @@ const StudentUser = () => {
         modeOfStudyId: filters.modeOfStudyId,
         programTypeId: filters.programTypeId,
         applicationBatchId: filters.applicationBatchId,
+        sessionId: filters.sessionId,
         name: debouncedName,
       }),
   });
 
-  const [programQuery, modeOfStudyQuery, programTypeQuery, batchQuery] = useQueries({
+  const [programQuery, modeOfStudyQuery, programTypeQuery, batchQuery, sessionQuery] = useQueries({
     queries: [
       {
         queryKey: ['programs'],
@@ -74,6 +82,10 @@ const StudentUser = () => {
         queryKey: ['application-batches'],
         queryFn: getAllApplicationBatch,
       },
+      {
+        queryKey: ['sessions'],
+        queryFn: () => getAllAcademicSession(),
+      },
     ],
   });
 
@@ -81,6 +93,7 @@ const StudentUser = () => {
   const modeOfStudyData = modeOfStudyQuery?.data?.data as ModeOfStudy[];
   const programTypeData = programTypeQuery?.data?.data as ProgramType[];
   const batchData = batchQuery?.data?.data as ApplicationBatch[];
+  const sessionData = sessionQuery?.data?.data as Session[];
 
   const programOptions = programData?.map((program) => ({
     label: program.name,
@@ -98,6 +111,10 @@ const StudentUser = () => {
   const batchOptions = batchData?.map((batch) => ({
     label: batch.batchName,
     value: batch.id,
+  }));
+  const sessionOptions = sessionData?.map((session) => ({
+    label: session.name,
+    value: session.id,
   }));
 
   const viewApplicantDetails = (record: User) => {
@@ -255,7 +272,7 @@ const StudentUser = () => {
                 onChange={(value) => setFilters({ ...filters, modeOfStudyId: value })}
               />
               <Select
-                placeholder="Program Type"
+                placeholder="Degree Type"
                 allowClear
                 options={programTypeOptions}
                 loading={programTypeQuery.isLoading}
@@ -267,6 +284,13 @@ const StudentUser = () => {
                 options={batchOptions}
                 loading={batchQuery.isLoading}
                 onChange={(value) => setFilters({ ...filters, applicationBatchId: value })}
+              />
+              <Select
+                placeholder="Session"
+                allowClear
+                options={sessionOptions}
+                loading={sessionQuery.isLoading}
+                onChange={(value) => setFilters({ ...filters, sessionId: value })}
               />
             </Flex>
           </div>

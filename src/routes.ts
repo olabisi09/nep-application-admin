@@ -67,6 +67,7 @@ export const routes = {
     campusExperience: '/student-life/:id/campus-experience',
     campusExperienceItem: '/student-life/:id/campus-experience-item',
     campusExperienceImage: '/student-life/:id/campus-experience-image',
+    acceptanceFee: '/acceptance-fee',
   },
   userMgt: {
     addUsers: '/admin-users',

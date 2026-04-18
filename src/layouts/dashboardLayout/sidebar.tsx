@@ -283,7 +283,7 @@ const Sidebar = () => {
       children: [
         {
           key: 'acceptanceFee',
-          label: <NavLink to="/acceptance-fee-setup">Acceptance Fee Setup</NavLink>,
+          label: <NavLink to="/acceptance-fee">Acceptance Fee Setup</NavLink>,
           icon: <Line />,
         },
       ],
